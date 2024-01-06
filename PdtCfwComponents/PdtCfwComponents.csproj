@@ -8,7 +8,39 @@
 		<IsTestProject>true</IsTestProject>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<OutputType>Library</OutputType>
+		<AssemblyName>LBS.$(MSBuildProjectName)</AssemblyName>
+		<RootNamespace>LabBenchStudios.Pdt</RootNamespace>
+		<SignAssembly>False</SignAssembly>
+		<DelaySign>False</DelaySign>
+		<ErrorReport>none</ErrorReport>
+		<Title>Lab Bench Studios - Programming Digital Twins - Client Framework Components</Title>
+		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+		<Authors>Lab Bench Studios</Authors>
+		<Description>This library contains basic data processing (data containers and JSON processing) and communications (MQTT) capabilities designed to be used as part of the Building Digital Twins course and as a dependency for the Digital Twin Application.</Description>
+		<Copyright>2024 Andrew D. King</Copyright>
+		<PackageProjectUrl>https://github.com/programming-digital-twins/pdt-cfw-components</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/programming-digital-twins/pdt-cfw-components</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<AssemblyVersion>0.0.1.1</AssemblyVersion>
+		<FileVersion>0.0.1.1</FileVersion>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	  <WarningLevel>5</WarningLevel>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	  <WarningLevel>5</WarningLevel>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Include="..\LICENSE">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	  <None Include="..\README.md" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="DTDLParser" Version="1.0.52" />
