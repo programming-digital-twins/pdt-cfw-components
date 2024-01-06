@@ -40,6 +40,8 @@ namespace LabBenchStudios.Pdt.Common
         public static readonly int DEFAULT_MQTT_PORT = 1883;
         public static readonly int DEFAULT_MQTT_SECURE_PORT = 8883;
         public static readonly int DEFAULT_RTSP_STREAM_PORT = 8554;
+        public static readonly int DEFAULT_INFLUXDB_PORT = 8086;
+        public static readonly int DEFAULT_TSDB_PORT = DEFAULT_INFLUXDB_PORT;
         public static readonly int DEFAULT_KEEP_ALIVE = 60;
         public static readonly int DEFAULT_POLL_CYCLES = 60;
         public static readonly int DEFAULT_COMMAND = 0;
@@ -333,6 +335,13 @@ namespace LabBenchStudios.Pdt.Common
         public static readonly string USER_NAME_TOKEN_KEY = "userToken";
         public static readonly string USER_AUTH_TOKEN_KEY = "authToken";
         public static readonly string API_TOKEN_KEY = "apiToken";
+        public static readonly string CLIENT_TOKEN_KEY = "clientToken";
+
+        public static readonly string ORGANIZATION_ID_KEY = "orgID";
+        public static readonly string ENV_DATA_BUCKET_ID = "envDataBucketID";
+        public static readonly string STATE_DATA_BUCKET_ID = "stateDataBucketID";
+        public static readonly string SYS_PERF_DATA_BUCKET_ID = "sysPerfDataBucketID";
+        public static readonly string CMD_DATA_BUCKET_ID = "cmdDataBucketID";
 
         public static readonly string CERT_FILE_KEY = "certFile";
         public static readonly string CRED_FILE_KEY = "credFile";
