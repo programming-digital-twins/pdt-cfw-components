@@ -25,8 +25,8 @@ This repository is comprised of the following top level paths:
 This repository is comprised of the following top level paths:
 - [PdtCfwComponents.Tests](https://github.com/programming-digital-twins/pdt-cfw-components/tree/alpha/PdtCfwComponents.Tests): Contains the following test (source) trees:
   - LabBenchStudios/Src/Test/ProgrammingDigitalTwins
-    - [Connection](https://github.com/programming-digital-twins/pdt-cfw-components/tree/master/PdtCfwComponents.Tests/LabBenchStudios/Src/Main/ProgrammingDigitalTwins/Connection): Contains unit / integration tests for the integration-related components (e.g., MQTT, persistence, etc.).
-    - [Data](https://github.com/programming-digital-twins/pdt-cfw-components/tree/master/PdtCfwComponents.Tests/LabBenchStudios/Src/Main/ProgrammingDigitalTwins/Data): Contains unit tests for the data serialization / deserialization / translation components.
+    - [Connection](https://github.com/programming-digital-twins/pdt-cfw-components/tree/alpha/PdtCfwComponents.Tests/LabBenchStudios/Src/Main/ProgrammingDigitalTwins/Connection): Contains unit / integration tests for the integration-related components (e.g., MQTT, persistence, etc.).
+    - [Data](https://github.com/programming-digital-twins/pdt-cfw-components/tree/alpha/PdtCfwComponents.Tests/LabBenchStudios/Src/Main/ProgrammingDigitalTwins/Data): Contains unit tests for the data serialization / deserialization / translation components.
 
 Here are some other files at the top level that are important to review:
 - [PdtCfwComponents.sln](https://github.com/programming-digital-twins/pdt-cfw-components/blob/alpha/PdtCfwComponents.sln): The Visual Studio solution file.
