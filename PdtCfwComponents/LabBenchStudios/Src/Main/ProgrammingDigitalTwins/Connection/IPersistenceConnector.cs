@@ -34,7 +34,7 @@ namespace LabBenchStudios.Pdt.Connection
 	 * Interface that defines the contract to a data store.
 	 * 
 	 */
-    public interface IPersistenceConnector
+    public interface IPersistenceConnector : IDataLoader
     {
 		/**
 		 * Connects to the persistence server.
@@ -49,57 +49,6 @@ namespace LabBenchStudios.Pdt.Connection
 		 * @return boolean True on success; false otherwise.
 		 */
 		public Boolean DisconnectClient();
-
-        /**
-		 * Attempts to retrieve the named data instance from the persistence server.
-		 * Will return null if there's no data matching the given type with the
-		 * given parameters.
-		 * 
-		 * @param resource The target resource name.
-		 * @param typeID The type ID of the data to retrieve.
-		 * @param startDate The start date (null if narrowing is not needed).
-		 * @param endDate The end date (null if narrowing is not needed).
-		 * @return List<ActuatorData> The data instance(s) associated with the lookup parameters.
-		 */
-        public List<ActuatorData> GetActuatorData(ResourceNameContainer resource, int typeID, DateTime startDate, DateTime endDate);
-
-        /**
-		 * Attempts to retrieve the named data instance from the persistence server.
-		 * Will return null if there's no data matching the given type with the
-		 * given parameters.
-		 * 
-		 * @param resource The target resource name.
-		 * @param typeID The type ID of the data to retrieve.
-		 * @param startDate The start date (null if narrowing is not needed).
-		 * @param endDate The end date (null if narrowing is not needed).
-		 * @return List<ConnectionStateData> The data instance(s) associated with the lookup parameters.
-		 */
-        public List<ConnectionStateData> GetConnectionStateData(ResourceNameContainer resource, int typeID, DateTime startDate, DateTime endDate);
-
-        /**
-		 * Attempts to retrieve the named data instance from the persistence server.
-		 * Will return null if there's no data matching the given type with the
-		 * given parameters.
-		 * 
-		 * @param resource The target resource name.
-		 * @param typeID The type ID of the data to retrieve.
-		 * @param startDate The start date (null if narrowing is not needed).
-		 * @param endDate The end date (null if narrowing is not needed).
-		 * @return List<SensorData> The data instance(s) associated with the lookup parameters.
-		 */
-        public List<SensorData> GetSensorData(ResourceNameContainer resource, int typeID, DateTime startDate, DateTime endDate);
-
-        /**
-		 * Attempts to retrieve the named data instance from the persistence server.
-		 * Will return null if there's no data matching the given type with the
-		 * given parameters.
-		 * 
-		 * @param resource The target resource name.
-		 * @param startDate The start date (null if narrowing is not needed).
-		 * @param endDate The end date (null if narrowing is not needed).
-		 * @return List<SystemPerformanceData> The data instance(s) associated with the lookup parameters.
-		 */
-        public List<SystemPerformanceData> GetSystemPerformanceData(ResourceNameContainer resource, DateTime startDate, DateTime endDate);
 
         /**
 		 * Attempts to write the source data instance to the persistence server.

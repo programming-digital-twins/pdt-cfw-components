@@ -51,6 +51,8 @@ namespace LabBenchStudios.Pdt.Common
         public static readonly int DEFAULT_QOS = 0;
 
         public static readonly float DEFAULT_VAL = 0.0f;
+        public static readonly int DEFAULT_MAX_CACHED_ITEMS = 86400; // number of seconds in a day
+        public static readonly long DEFAULT_MAX_CACHE_SIZE_IN_MB = 2^29; // 0.5 GB
 
         // for purposes of this library, float precision is more then sufficient
         public static readonly float DEFAULT_LAT = DEFAULT_VAL;
@@ -129,6 +131,11 @@ namespace LabBenchStudios.Pdt.Common
         public static readonly string IS_CONNECTING_PROP = "isConnecting";
         public static readonly string IS_CONNECTED_PROP = "isConnected";
         public static readonly string IS_DISCONNECTED_PROP = "isDisconnected";
+
+        public static readonly string CMD_DATA_PERSISTENCE_NAME = "pdt-cmd-data";
+        public static readonly string CONN_DATA_PERSISTENCE_NAME = "pdt-conn-data";
+        public static readonly string SENSOR_DATA_PERSISTENCE_NAME = "pdt-sensor-data";
+        public static readonly string SYS_DATA_PERSISTENCE_NAME = "pdt-sys-data";
 
         //////////
         // Resource and Topic Names
@@ -304,12 +311,14 @@ namespace LabBenchStudios.Pdt.Common
 
         public static readonly string LOCAL = "Local";
         public static readonly string MQTT = "Mqtt";
+        public static readonly string DATA = "Data";
 
         public static readonly string DEVICE_ID_KEY = "deviceID";
         public static readonly string DEVICE_LOCATION_ID_KEY = "deviceLocationID";
 
         public static readonly string CLOUD_GATEWAY_SERVICE = CLOUD + "." + GATEWAY_SERVICE;
         public static readonly string MQTT_GATEWAY_SERVICE = MQTT + "." + GATEWAY_SERVICE;
+        public static readonly string DATA_GATEWAY_SERVICE = DATA + "." + GATEWAY_SERVICE;
 
         public static readonly string CRED_SECTION = "Credentials";
 

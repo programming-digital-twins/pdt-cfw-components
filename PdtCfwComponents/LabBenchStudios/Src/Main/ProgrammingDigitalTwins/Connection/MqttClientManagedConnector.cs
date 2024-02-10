@@ -48,6 +48,7 @@ namespace LabBenchStudios.Pdt.Connection
         private string clientID = "UnityDTClient";
         private bool isEncrypted = false;
         private bool isConnected = false;
+        private bool areIncomingMessagesPaused = false;
 
         private IManagedMqttClient mqttClient = null;
 
@@ -152,6 +153,22 @@ namespace LabBenchStudios.Pdt.Connection
                 this.eventListener?.OnMessagingSystemStatusUpdate(GetConnectionStateCopy());
             }
         }
+
+        public bool IsIncomingMessageProcessingPaused()
+        {
+            return this.areIncomingMessagesPaused;
+        }
+
+        public void PauseIncomingMessages()
+        {
+            this.areIncomingMessagesPaused = true;
+        }
+
+        public void UnpauseIncomingMessages()
+        {
+            this.areIncomingMessagesPaused = false;
+        }
+
 
         // protected
 
@@ -337,21 +354,23 @@ namespace LabBenchStudios.Pdt.Connection
 
         private void OnMessageReceived(MqttApplicationMessageReceivedEventArgs args)
         {
-            // todo: parse incoming msg
-            MqttApplicationMessage msg = args.ApplicationMessage;
+            if (! this.areIncomingMessagesPaused)
+            {
+                // TODO: parse incoming msg
+                MqttApplicationMessage msg = args.ApplicationMessage;
 
-            string topic = msg.Topic;
-            //string payload = Encoding.UTF8.GetString(msg.PayloadSegment);
-            string payload = msg.ConvertPayloadToString();
+                string topic = msg.Topic;
+                string payload = msg.ConvertPayloadToString();
 
-            this.eventListener?.LogDebugMessage($"Topic: {topic}. Message Received: {payload}");
+                this.eventListener?.LogDebugMessage($"Topic: {topic}. Message Received: {payload}");
 
-            this.connStateData.IncreaseMessageInCount();
-            this.connStateData.SetMessage(payload);
+                this.connStateData.IncreaseMessageInCount();
+                this.connStateData.SetMessage(payload);
 
-            var updatedConnState = this.GetConnectionStateCopy();
+                var updatedConnState = this.GetConnectionStateCopy();
 
-            this.HandleIncomingData(updatedConnState);
+                this.HandleIncomingData(updatedConnState);
+            }
         }
         
         private void HandleIncomingData(ConnectionStateData connStateData)

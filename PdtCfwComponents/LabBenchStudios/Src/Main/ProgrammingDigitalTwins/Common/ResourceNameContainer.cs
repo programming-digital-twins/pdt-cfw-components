@@ -23,6 +23,7 @@
  */
 
 using LabBenchStudios.Pdt.Data;
+using NodaTime;
 
 namespace LabBenchStudios.Pdt.Common
 {
@@ -43,12 +44,52 @@ namespace LabBenchStudios.Pdt.Common
         public bool IsSystemResource { private set; get; } = false;
         public bool IsSubscription { private set; get; } = false;
 
-        public IotDataContext DataContext { private set; get; } = null;
+        public string PersistenceName { set; get; } = null;
 
-        private string fullResourceName = "Not-Set";
+        public IotDataContext DataContext {
+            get => this._dataContext;
+            set {
+                if ((value != null) && (value is IotDataContext))
+                {
+                    this._dataContext = value;
+                    this.DeviceName = this._dataContext.GetDeviceID();
+                    this.TypeID = this._dataContext.GetTypeID();
+                    this.TypeCategoryID = this._dataContext.GetTypeCategoryID();
+
+                    if (this._dataContext is ActuatorData)
+                    {
+                        this.IsActuationResource = true;
+                    }
+                    else if (this._dataContext is ConnectionStateData)
+                    {
+                        this.IsConnStateResource = true;
+                    } else if (this._dataContext is SensorData)
+                    {
+                        this.IsSensingResource = true;
+                    } else if (this._dataContext is SystemPerformanceData)
+                    {
+                        this.IsSystemResource = true;
+                    }
+
+                    this.InitFullResourceName();
+                }
+            }
+        }
+
+        private IotDataContext _dataContext = null;
+
+        private string _fullResourceName = "Not-Set";
 
         public ResourceNameContainer()
         {
+            this.InitFullResourceName();
+        }
+
+        public ResourceNameContainer(string deviceName, string resourceTypeName)
+        {
+            DeviceName = deviceName;
+            ResourceTypeName = resourceTypeName;
+
             this.InitFullResourceName();
         }
 
@@ -68,7 +109,7 @@ namespace LabBenchStudios.Pdt.Common
 
         public string GetFullResourceName()
         {
-            return this.fullResourceName;
+            return this._fullResourceName;
         }
 
 
@@ -76,7 +117,7 @@ namespace LabBenchStudios.Pdt.Common
 
         private void InitFullResourceName()
         {
-            this.fullResourceName = this.ProductPrefix + ConfigConst.RESOURCE_SEPARATOR + this.DeviceName + ConfigConst.RESOURCE_SEPARATOR + this.ResourceTypeName;
+            this._fullResourceName = this.ProductPrefix + ConfigConst.RESOURCE_SEPARATOR + this.DeviceName + ConfigConst.RESOURCE_SEPARATOR + this.ResourceTypeName;
         }
     }
 }

@@ -21,8 +21,8 @@
 		<PackageProjectUrl>https://github.com/programming-digital-twins/pdt-cfw-components</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/programming-digital-twins/pdt-cfw-components</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
-		<AssemblyVersion>0.0.1.1</AssemblyVersion>
-		<FileVersion>0.0.1.1</FileVersion>
+		<AssemblyVersion>0.0.1.2</AssemblyVersion>
+		<FileVersion>0.0.1.2</FileVersion>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 	</PropertyGroup>
 
@@ -49,8 +49,8 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="MQTTnet" Version="4.2.1.781" />
-		<PackageReference Include="MQTTnet.Extensions.ManagedClient" Version="4.2.1.781" />
+		<PackageReference Include="MQTTnet" Version="4.3.3.952" />
+		<PackageReference Include="MQTTnet.Extensions.ManagedClient" Version="4.3.3.952" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	</ItemGroup>
 

@@ -22,41 +22,27 @@
  * SOFTWARE.
  */
 
-using LabBenchStudios.Pdt.Connection;
+using System;
 
-namespace LabBenchStudios.Pdt.Test.Connection
+namespace LabBenchStudios.Pdt.Common
 {
-    public class MqttClientConnectorTest
+    public interface IDataHistorian
     {
-        private string hostName = "localhost";
-        private int hostPort = 1883;
+        public long GetTotalMemory();
 
-        private IPubSubConnector mqttClient = null;
+        public long GetMaxCacheSize();
 
-        [SetUp]
-        public void Setup()
-        {
-            this.mqttClient = new MqttClientManagedConnector(this.hostName, this.hostPort, null, null);
+        public string FillSensorDataCache(string bucketName);
 
-            this.mqttClient.ConnectClient();
-        }
+        public string FillSensorDataCache(string bucketName, DateTime startDate, DateTime endDate);
 
-        [TearDown]
-        public void Teardown()
-        {
-            this.mqttClient.DisconnectClient();
-        }
+        public bool IsCacheReplaying(string cacheName);
 
-        [Test]
-        public void ConnectAndSubscribe()
-        {
-            // TODO: Implement this
-        }
+        public void SetDataLoader(IDataLoader dataLoader);
 
-        [Test]
-        public void ConnectAndPublish()
-        {
-            // TODO: Implement this
-        }
+        public string StartReplayCache(string cacheName, float speed, IDataContextEventListener listener);
+
+        public string StopReplayCache(string cacheName);
+
     }
 }

@@ -121,6 +121,8 @@ namespace LabBenchStudios.Pdt.Data
 
         public int GetTypeCategoryID() { return this.typeCategoryID; }
 
+        public void OverrideTimeStamp(string timeStamp) { this.timeStamp = timeStamp; }
+
         public void SetLatitude(float val) { this.latitude = val; }
 
         public void SetLongitude(float val) { this.longitude = val; }
@@ -138,6 +140,7 @@ namespace LabBenchStudios.Pdt.Data
             StringBuilder sb = new StringBuilder();
 
             sb.Append(ConfigConst.NAME_PROP).Append('=').Append(this.name).Append(',');
+            sb.Append(ConfigConst.DEVICE_ID_PROP).Append('=').Append(this.deviceID).Append(',');
             sb.Append(ConfigConst.TYPE_ID_PROP).Append('=').Append(this.typeID).Append(',');
             sb.Append(ConfigConst.TYPE_CATEGORY_ID_PROP).Append('=').Append(this.typeCategoryID).Append(',');
             sb.Append(ConfigConst.TIMESTAMP_PROP).Append('=').Append(this.timeStamp).Append(',');

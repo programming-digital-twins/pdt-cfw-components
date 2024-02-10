@@ -22,41 +22,15 @@
  * SOFTWARE.
  */
 
-using LabBenchStudios.Pdt.Connection;
-
-namespace LabBenchStudios.Pdt.Test.Connection
+namespace LabBenchStudios.Pdt.Common
 {
-    public class MqttClientConnectorTest
+    public interface IMessageProcessor
     {
-        private string hostName = "localhost";
-        private int hostPort = 1883;
+        public bool IsIncomingMessageProcessingPaused();
 
-        private IPubSubConnector mqttClient = null;
+        public void PauseIncomingMessages();
 
-        [SetUp]
-        public void Setup()
-        {
-            this.mqttClient = new MqttClientManagedConnector(this.hostName, this.hostPort, null, null);
+        public void UnpauseIncomingMessages();
 
-            this.mqttClient.ConnectClient();
-        }
-
-        [TearDown]
-        public void Teardown()
-        {
-            this.mqttClient.DisconnectClient();
-        }
-
-        [Test]
-        public void ConnectAndSubscribe()
-        {
-            // TODO: Implement this
-        }
-
-        [Test]
-        public void ConnectAndPublish()
-        {
-            // TODO: Implement this
-        }
     }
 }

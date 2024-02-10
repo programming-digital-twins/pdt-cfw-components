@@ -22,41 +22,33 @@
  * SOFTWARE.
  */
 
-using LabBenchStudios.Pdt.Connection;
+using System;
 
-namespace LabBenchStudios.Pdt.Test.Connection
+namespace LabBenchStudios.Pdt.Common
 {
-    public class MqttClientConnectorTest
+    public class DateUtil
     {
-        private string hostName = "localhost";
-        private int hostPort = 1883;
-
-        private IPubSubConnector mqttClient = null;
-
-        [SetUp]
-        public void Setup()
+        /**
+         * Convert the ISO 8601 timestamp string into milliseconds.
+         * 
+         * @param timeStampStr
+         * @return long
+         */
+        public static long ConvertIso8601TimeStampToMillis(string timeStampStr)
         {
-            this.mqttClient = new MqttClientManagedConnector(this.hostName, this.hostPort, null, null);
+            DateTime dt = DateTime.Parse(timeStampStr);
+            DateTimeOffset dto = new DateTimeOffset(dt);
+            long millis = dto.ToUnixTimeMilliseconds();
 
-            this.mqttClient.ConnectClient();
+            return millis;
         }
 
-        [TearDown]
-        public void Teardown()
+        public static long ConvertDateTimeToMillis(DateTime dt)
         {
-            this.mqttClient.DisconnectClient();
+            DateTimeOffset dto = new DateTimeOffset(dt);
+
+            return dto.ToUnixTimeMilliseconds();
         }
 
-        [Test]
-        public void ConnectAndSubscribe()
-        {
-            // TODO: Implement this
-        }
-
-        [Test]
-        public void ConnectAndPublish()
-        {
-            // TODO: Implement this
-        }
     }
 }
