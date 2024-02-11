@@ -46,6 +46,7 @@ namespace LabBenchStudios.Pdt.Connection
         private string serverHost = "localhost";
         private int serverPort = 1883;
         private string clientID = "UnityDTClient";
+        private string productName = ConfigConst.PRODUCT_NAME;
         private bool isEncrypted = false;
         private bool isConnected = false;
         private bool areIncomingMessagesPaused = false;
@@ -58,7 +59,17 @@ namespace LabBenchStudios.Pdt.Connection
 
         // constructors
 
-        public MqttClientManagedConnector(string serverHost, int serverPort, string clientID, ISystemStatusEventListener eventListener)
+        public MqttClientManagedConnector(
+            string serverHost, int serverPort, string clientID,
+            ISystemStatusEventListener eventListener) :
+            this(serverHost, serverPort, clientID, ConfigConst.PRODUCT_NAME, eventListener)
+        {
+            // nothing to do - this simply calls the other constructor with defaults
+        }
+
+        public MqttClientManagedConnector(
+            string serverHost, int serverPort, string clientID,
+            string productName, ISystemStatusEventListener eventListener)
         {
             if (serverHost != null)
             {
@@ -70,13 +81,18 @@ namespace LabBenchStudios.Pdt.Connection
                 this.serverPort = serverPort;
             }
 
-            if (clientID != null)
+            if (clientID != null && clientID.Length > 0)
             {
                 this.clientID = clientID;
             }
 
+            if (productName != null && productName.Length > 0)
+            {
+                this.productName = productName;
+            }
+
             this.eventListener = eventListener;
-            this.connStateData = new ConnectionStateData("PDT", "UUID", this.serverHost, this.serverPort);
+            this.connStateData = new ConnectionStateData(this.productName, "UUID", this.serverHost, this.serverPort);
         }
 
         // public methods
@@ -265,7 +281,7 @@ namespace LabBenchStudios.Pdt.Connection
 
                 if (resource == null)
                 {
-                    topicName = "PIOT/#";
+                    topicName = productName + "/#";
                 }
                 else
                 {
