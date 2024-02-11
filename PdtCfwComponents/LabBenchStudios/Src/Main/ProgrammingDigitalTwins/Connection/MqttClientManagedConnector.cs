@@ -265,7 +265,7 @@ namespace LabBenchStudios.Pdt.Connection
 
                 if (resource == null)
                 {
-                    topicName = "PIOT/#";
+                    topicName = ConfigConst.PRODUCT_NAME + "/#";
                 }
                 else
                 {
