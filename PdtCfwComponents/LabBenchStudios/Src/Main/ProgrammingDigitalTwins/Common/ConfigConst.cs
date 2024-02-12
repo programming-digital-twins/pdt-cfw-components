@@ -173,14 +173,14 @@ namespace LabBenchStudios.Pdt.Common
         public static readonly int ENV_DEVICE_TYPE = 1000;
         public static readonly int HVAC_ACTUATOR_TYPE = 1001;
         public static readonly int HUMIDIFIER_ACTUATOR_TYPE = 1002;
-        public static readonly int IMPELLER_RPM_ACTUATOR_TYPE = 1010;
+        public static readonly int IMPELLER_RPM_ACTUATOR_TYPE = 1110;
 
-        public static readonly int TEMP_SENSOR_TYPE = 1101;
-        public static readonly int HUMIDITY_SENSOR_TYPE = 1102;
-        public static readonly int PRESSURE_SENSOR_TYPE = 1103;
-        public static readonly int FLUID_VISCOSITY_SENSOR_TYPE = 1104;
-        public static readonly int FLUID_RATE_SENSOR_TYPE = 1105;
-        public static readonly int IMPELLER_RPM_SENSOR_TYPE = 1110;
+        public static readonly int HUMIDITY_SENSOR_TYPE = 1010;
+        public static readonly int PRESSURE_SENSOR_TYPE = 1012;
+        public static readonly int TEMP_SENSOR_TYPE = 1013;
+        public static readonly int FLUID_VISCOSITY_SENSOR_TYPE = 1020;
+        public static readonly int FLUID_RATE_SENSOR_TYPE = 1021;
+        public static readonly int IMPELLER_RPM_SENSOR_TYPE = 1022;
 
         public static readonly string HUMIDIFIER_ACTUATOR_NAME = "HumidifierActuator";
         public static readonly string HVAC_ACTUATOR_NAME = "HvacActuator";

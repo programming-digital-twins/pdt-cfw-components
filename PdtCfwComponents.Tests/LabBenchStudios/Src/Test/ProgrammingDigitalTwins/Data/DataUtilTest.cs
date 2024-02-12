@@ -33,6 +33,9 @@ namespace LabBenchStudios.Pdt.Test.Data
     {
         private float val = 22.4f;
 
+        private string edaSensorDataJson =
+            "{\n    \"timeOffsetSeconds\": 0.0,\n    \"timeStamp\": \"2024-02-12T04:49:21.109944+00:00\",\n    \"hasError\": false,\n    \"name\": \"TempSensor\",\n    \"typeID\": 1013,\n    \"statusCode\": 0,\n    \"latitude\": 0.0,\n    \"longitude\": 0.0,\n    \"elevation\": 0.0,\n    \"locationID\": \"edgedevice001\",\n    \"typeCategoryID\": 0,\n    \"deviceID\": \"edgedevice001\",\n    \"value\": 25.077374439186343\n}";
+
         [SetUp]
         public void Setup()
         {
@@ -83,6 +86,15 @@ namespace LabBenchStudios.Pdt.Test.Data
             SensorData data = DataUtil.JsonToSensorData(jsonData);
 
             Console.WriteLine("Original:\n" + jsonData);
+            Console.WriteLine("New:\n" + data.ToString());
+        }
+
+        [Test]
+        public void ConvertEDASerializedJsonToSensorData()
+        {
+            SensorData data = DataUtil.JsonToSensorData(edaSensorDataJson);
+
+            Console.WriteLine("Original:\n" + edaSensorDataJson);
             Console.WriteLine("New:\n" + data.ToString());
         }
     }
