@@ -18,6 +18,8 @@ These components are all written in C#, and have been partially tested using .NE
 ## How to navigate the directory structure for this repository
 This repository is comprised of the following top level paths:
 - [PdtCfwComponents](https://github.com/programming-digital-twins/pdt-cfw-components/tree/alpha/PdtCfwComponents): Contains the following source trees:
+  - LabBenchStudios/Models
+    - [Dtdl](https://github.com/programming-digital-twins/pdt-cfw-components/tree/alpha/PdtCfwComponents/LabBenchStudios/Models/Dtdl): Contains sample DTDL models.
   - LabBenchStudios/Src/Main/ProgrammingDigitalTwins
     - [Common](https://github.com/programming-digital-twins/pdt-cfw-components/tree/master/PdtCfwComponents/LabBenchStudios/Src/Main/ProgrammingDigitalTwins/Common): Contains shared components.
     - [Connection](https://github.com/programming-digital-twins/pdt-cfw-components/tree/master/PdtCfwComponents/LabBenchStudios/Src/Main/ProgrammingDigitalTwins/Connection): Contains integration-related components (e.g., MQTT, persistence, etc.).
