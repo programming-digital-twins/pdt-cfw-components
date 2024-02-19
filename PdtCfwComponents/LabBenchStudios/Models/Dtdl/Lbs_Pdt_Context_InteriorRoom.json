@@ -1,12 +1,12 @@
 {
   "@context": "dtmi:dtdl:context;3",
-  "@id": "dtmi:com:labbenchstudios:pdt:indoor_room_state;1",
+  "@id": "dtmi:com:labbenchstudios:pdt:interior_room;1",
   "@type": "Interface",
-  "displayName": "Indoor Room State",
+  "displayName": "Interior Room",
   "contents": [
     {
       "@type": "Property",
-      "name": "indoorRoomState",
+      "name": "interiorRoom",
       "schema": {
         "@type": "Object",
         "fields": [
@@ -48,6 +48,11 @@
       "name": "setHumidity",
       "writable": true,
       "schema": "float"
+    },
+    {
+      "@type": "Component",
+      "name": "roomEnvironmentalSensors",
+      "schema": "dtmi:com:labbenchstudios:pdt:env_sensor_data_context;1"
     }
   ]
 }

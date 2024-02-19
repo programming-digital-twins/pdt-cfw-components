@@ -1,12 +1,12 @@
 {
   "@context": "dtmi:dtdl:context;3",
-  "@id": "dtmi:com:labbenchstudios:pdt:indoor_heating_system;1",
+  "@id": "dtmi:com:labbenchstudios:pdt:interior_heating_system;1",
   "@type": "Interface",
-  "displayName": "Indoor Heating System",
+  "displayName": "Interior Heating System",
   "contents": [
     {
       "@type": "Property",
-      "name": "indoorRoomState",
+      "name": "interiorRoomState",
       "schema": {
         "@type": "Object",
         "fields": [

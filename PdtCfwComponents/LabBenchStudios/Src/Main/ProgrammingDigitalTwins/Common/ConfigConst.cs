@@ -405,5 +405,25 @@ namespace LabBenchStudios.Pdt.Common
         public static readonly string STORE_INTERIM_FRAMES_KEY = "storeInterimFrames";
         public static readonly string INCLUDE_RAW_IMAGE_DATA_IN_MSG_KEY = "includeRawImageDataInMsg";
 
+        //////////
+        // 
+        // DTDL properties
+        //
+
+        // these model files represent context for specific structures and systems
+        public static readonly string CONTEXT_RESIDENTIAL_STRUCTURE_DTDL_MODEL = "Lbs_Pdt_Context_ResidentialStructure.json";
+        public static readonly string CONTEXT_INDOOR_HEATING_SYSTEM_DTDL_MODEL = "Lbs_Pdt_Context_InteriorHeatingSystem.json";
+        public static readonly string CONTEXT_INDOOR_ROOM_STATE_DTDL_MODEL = "Lbs_Pdt_Context_InteriorRoom.json";
+
+        // this is the base template model file for all Lbs_Pdt_Telemetry_* DTDL files
+        public static readonly string TEMPLATE_IOT_DATA_CONTEXT_DTDL_MODEL = "Lbs_Pdt_Template_IotDataContext.json";
+
+        // these model files represent the telemetry description for all data generation systems and components
+        // each of these depends on (extends) the TEMPLATE_IOT_DATA_CONTEXT_DTDL_MODELNAME
+        public static readonly string TELEMETRY_DEVICE_SYS_PERF_DTDL_MODEL = "Lbs_Pdt_Telemetry_DeviceSystemPerformance.json";
+        public static readonly string TELEMETRY_ENV_SENSORS_DTDL_MODEL = "Lbs_Pdt_Telemetry_EnvironmentalSensors.json";
+        public static readonly string TELEMETRY_FLUID_PUMP_DTDL_MODEL = "Lbs_Pdt_Telemetry_FluidPump.json";
+        public static readonly string TELEMETRY_POWER_WINDMILL_DTDL_MODEL = "Lbs_Pdt_Telemetry_PowerWindmill.json";
+
     }
 }
