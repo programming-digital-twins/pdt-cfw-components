@@ -62,6 +62,11 @@ namespace LabBenchStudios.Pdt.Test.Data
         [Test]
         public void CheckValidityOfIndoorRoomStateDtdl()
         {
+            // This test requires both TEMPLATE_IOT_DATA_CONTEXT_DTDL_MODEL and
+            // TELEMETRY_ENV_SENSORS_DTDL_MODEL during the parse process
+            //
+            // NOTE: The order of the list doesn't matter to the DTDL parser - all extended
+            // ID's simply need to be part of the IEnumerable passed to the parser
             var modelList = new List<string>
             {
                 ConfigConst.CONTEXT_INDOOR_ROOM_STATE_DTDL_MODEL,
@@ -87,7 +92,7 @@ namespace LabBenchStudios.Pdt.Test.Data
         [Test]
         public void CheckValidityOfDeviceSystemPerformanceTelemetryDtdl()
         {
-            // This file extends TEMPLATE_IOT_DATA_CONTEXT_DTDL_MODEL ID
+            // This test requires TEMPLATE_IOT_DATA_CONTEXT_DTDL_MODEL during the load process
             //
             // NOTE: The order of the list doesn't matter to the DTDL parser - all extended
             // ID's simply need to be part of the IEnumerable passed to the parser
