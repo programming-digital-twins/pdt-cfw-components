@@ -1,0 +1,66 @@
+{
+  "@context": "dtmi:dtdl:context;3",
+  "@id": "dtmi:com:labbenchstudios:pdt:residence;1",
+  "@type": "Interface",
+  "displayName": "Residential Structure",
+  "contents": [
+    {
+      "@type": "Property",
+      "name": "address",
+      "schema": {
+        "@type": "Object",
+        "fields": [
+          {
+            "name": "name",
+            "schema": "string"
+          },
+          {
+            "name": "street",
+            "schema": "string"
+          },
+          {
+            "name": "city",
+            "schema": "string"
+          },
+          {
+            "name": "state",
+            "schema": "string"
+          },
+          {
+            "name": "zip",
+            "schema": "string"
+          }
+        ]
+      }
+    },
+    {
+      "@type": "Relationship",
+      "@id": "dtmi:com:labbenchstudios:pdt:residence_structure;1",
+      "name": "structure",
+      "displayName": "Property Structure",
+      "target": "dtmi:com:labbenchstudios:pdt:residence_structure;1",
+      "properties": [
+        {
+          "@type": "Property",
+          "name": "floorCount",
+          "schema": "integer"
+        },
+        {
+          "@type": "Property",
+          "name": "hasBasement",
+          "schema": "boolean"
+        },
+        {
+          "@type": "Property",
+          "name": "hasHeatingSystem",
+          "schema": "boolean"
+        },
+        {
+          "@type": "Property",
+          "name": "hasWindmillPowerGenerator",
+          "schema": "boolean"
+        }
+      ]
+    }
+  ]
+}

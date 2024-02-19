@@ -23,6 +23,7 @@
  */
 
 using System;
+using System.IO;
 
 using DTDLParser;
 
@@ -46,6 +47,75 @@ namespace LabBenchStudios.Pdt.Data
                 ProcessDictionaryKeys = true
             }
         };
+
+        public static string LoadJsonFile(string fileName)
+        {
+            if (fileName != null && fileName.Length > 0)
+            {
+                try
+                {
+                    Console.WriteLine($"Attempting to load JSON file: {fileName}");
+
+                    using (StreamReader streamReader = new StreamReader(fileName))
+                    {
+                        string jsonData = streamReader.ReadToEnd();
+
+                        return jsonData;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"JSON file cannot be loaded: {fileName}. Exception: {ex}");
+                }
+            }
+            else
+            {
+                Console.WriteLine($"JSON file is invalid (null or empty). Ignoring");
+            }
+
+            return null;
+        }
+
+        public static bool IsValidDtdlJsonFile(string fileName)
+        {
+            string jsonData = LoadJsonFile(fileName);
+
+            if (jsonData != null && jsonData.Length > 0)
+            {
+                return IsValidDtdlJsonData(jsonData);
+            }
+            else
+            {
+                Console.WriteLine($"DTDL file returned empty JSON data: {fileName}");
+
+                return false;
+            }
+        }
+
+        public static bool IsValidDtdlJsonData(string jsonData)
+        {
+            if (jsonData != null && jsonData.Length > 0)
+            {
+                try
+                {
+                    ModelParser modelParser = new();
+
+                    var objectModel = modelParser.Parse(jsonData);
+
+                    return true;
+                }
+                catch (ResolutionException ex)
+                {
+                    Console.WriteLine($"DTDL model is referentially incomplete. Exception: {ex}");
+                }
+                catch (ParsingException ex)
+                {
+                    Console.WriteLine($"DTDL model cannot be parsed - invalid. Exception: {ex}");
+                }
+            }
+
+            return false;
+        }
 
         public static string ActuatorDataToJson(ActuatorData data)
         {

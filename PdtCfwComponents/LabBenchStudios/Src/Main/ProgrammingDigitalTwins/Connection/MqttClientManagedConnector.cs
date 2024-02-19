@@ -285,7 +285,7 @@ namespace LabBenchStudios.Pdt.Connection
 
                 if (resource == null)
                 {
-                    topicName = productName + "/#";
+                    topicName = productName + "/#"; // e.g., PDT/#
                 }
                 else
                 {

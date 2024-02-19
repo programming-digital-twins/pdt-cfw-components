@@ -1,0 +1,68 @@
+{
+  "@context": "dtmi:dtdl:context;3",
+  "@id": "dtmi:com:labbenchstudios:pdt:indoor_room_state;1",
+  "@type": "Interface",
+  "displayName": "Indoor Room State",
+  "contents": [
+    {
+      "@type": "Property",
+      "name": "indoorRoomState",
+      "schema": {
+        "@type": "Object",
+        "fields": [
+          {
+            "name": "lastOccupied",
+            "schema": "dateTime"
+          },
+          {
+            "name": "isOccupied",
+            "schema": "boolean"
+          },
+          {
+            "name": "isHeatingOn",
+            "schema": "boolean"
+          },
+          {
+            "name": "isHumidifierOn",
+            "schema": "boolean"
+          },
+          {
+            "name": "isAirConditioningOn",
+            "schema": "boolean"
+          },
+          {
+            "name": "zoneName",
+            "schema": "string"
+          }
+        ]
+      }
+    },
+    {
+      "@type": "Telemetry",
+      "name": "currentTemperature",
+      "schema": "float"
+    },
+    {
+      "@type": "Property",
+      "name": "setTemperature",
+      "writable": true,
+      "schema": "float"
+    },
+    {
+      "@type": "Telemetry",
+      "name": "currentHumidity",
+      "schema": "float"
+    },
+    {
+      "@type": "Property",
+      "name": "setHumidity",
+      "writable": true,
+      "schema": "float"
+    },
+    {
+      "@type": "Telemetry",
+      "name": "currentPressure",
+      "schema": "float"
+    }
+  ]
+}
