@@ -18,6 +18,8 @@ These components are all written in C#, and have been partially tested using .NE
 ## How to navigate the directory structure for this repository
 This repository is comprised of the following top level paths:
 - [PdtCfwComponents](https://github.com/programming-digital-twins/pdt-cfw-components/tree/alpha/PdtCfwComponents): Contains the following source trees:
+  - LabBenchStudios/Models
+    - [Dtdl](https://github.com/programming-digital-twins/pdt-cfw-components/tree/alpha/PdtCfwComponents/LabBenchStudios/Models/Dtdl): Contains sample DTDL models.
   - LabBenchStudios/Src/Main/ProgrammingDigitalTwins
     - [Common](https://github.com/programming-digital-twins/pdt-cfw-components/tree/master/PdtCfwComponents/LabBenchStudios/Src/Main/ProgrammingDigitalTwins/Common): Contains shared components.
     - [Connection](https://github.com/programming-digital-twins/pdt-cfw-components/tree/master/PdtCfwComponents/LabBenchStudios/Src/Main/ProgrammingDigitalTwins/Connection): Contains integration-related components (e.g., MQTT, persistence, etc.).
@@ -31,7 +33,8 @@ This repository is comprised of the following top level paths:
 Here are some other files at the top level that are important to review:
 - [PdtCfwComponents.sln](https://github.com/programming-digital-twins/pdt-cfw-components/blob/alpha/PdtCfwComponents.sln): The Visual Studio solution file.
 - [README.md](https://github.com/programming-digital-twins/pdt-cfw-components/blob/alpha/README.md): This README.
-- [LICENSE](https://github.com/programming-digital-twins/pdt-cfw-components/blob/alpha/LICENSE): The repository's LICENSE file.
+- [LICENSE](https://github.com/programming-digital-twins/pdt-cfw-components/blob/alpha/LICENSE): The repository's non-code artifact LICENSE file (e.g., documentation, model files, etc.)
+- [LICENSE-CODE](https://github.com/programming-digital-twins/pdt-cfw-components/blob/alpha/LICENSE-CODE): The repository's code artifact LICENSE file (e.g., source code [mostly C#])
 
 Lastly, here are some 'dot' ('.{filename}') files pertaining to dev environment setup that you may find useful (or not - if so, just delete them after cloning the repo):
 - [.gitignore](https://github.com/programming-digital-twins/pdt-cfw-components/blob/alpha/.gitignore): The obligatory .gitignore that you should probably keep in place, with any additions that are relevant for your own cloned instance.
@@ -73,4 +76,5 @@ This code base is under active development.
 If any code samples or other technology this work contains, describes, and / or is subject to open source licenses or the intellectual property rights of others, it is your responsibility to ensure that your use thereof complies with such licenses and/or rights.
 
 # LICENSE
-Please see [LICENSE](https://github.com/programming-digital-twins/pdt-edge-components/blob/default/LICENSE) if you plan to use this code.
+Please see [LICENSE](https://github.com/programming-digital-twins/pdt-cfw-components/blob/alpha/LICENSE) if you plan to use the non-code resources (model files, etc.)
+Please see [LICENSE-CODE](https://github.com/programming-digital-twins/pdt-cfw-components/blob/alpha/LICENSE-CODE) if you plan to use this code (e.g., C# code, etc.)
