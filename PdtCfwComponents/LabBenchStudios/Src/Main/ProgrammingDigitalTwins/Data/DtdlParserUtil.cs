@@ -23,8 +23,9 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
-
+using System.Linq;
 using DTDLParser;
 
 using Newtonsoft.Json;
@@ -101,6 +102,33 @@ namespace LabBenchStudios.Pdt.Data
                     ModelParser modelParser = new();
 
                     var objectModel = modelParser.Parse(jsonData);
+
+                    return true;
+                }
+                catch (ResolutionException ex)
+                {
+                    Console.WriteLine($"DTDL model is referentially incomplete. Exception: {ex}");
+                }
+                catch (ParsingException ex)
+                {
+                    Console.WriteLine($"DTDL model cannot be parsed - invalid. Exception: {ex}");
+                }
+            }
+
+            return false;
+        }
+
+        // NOTE: The order of the list doesn't matter to the DTDL parser - all extended
+        // ID's simply need to be part of the IEnumerable passed to the parser
+        public static bool IsValidDtdlJsonData(IEnumerable<string> jsonDataList)
+        {
+            if (jsonDataList != null && jsonDataList.Count() > 0)
+            {
+                try
+                {
+                    ModelParser modelParser = new();
+                    
+                    var objectModel = modelParser.Parse(jsonDataList);
 
                     return true;
                 }

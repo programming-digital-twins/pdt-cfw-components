@@ -38,30 +38,15 @@
       }
     },
     {
-      "@type": "Telemetry",
-      "name": "currentTemperature",
-      "schema": "float"
-    },
-    {
       "@type": "Property",
       "name": "setTemperature",
       "writable": true,
       "schema": "float"
     },
     {
-      "@type": "Telemetry",
-      "name": "currentHumidity",
-      "schema": "float"
-    },
-    {
       "@type": "Property",
       "name": "setHumidity",
       "writable": true,
-      "schema": "float"
-    },
-    {
-      "@type": "Telemetry",
-      "name": "currentPressure",
       "schema": "float"
     }
   ]
