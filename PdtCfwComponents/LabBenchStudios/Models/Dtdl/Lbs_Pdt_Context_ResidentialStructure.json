@@ -3,40 +3,12 @@
   "@id": "dtmi:com:labbenchstudios:pdt:residence;1",
   "@type": "Interface",
   "displayName": "Residential Structure",
+  "extends": "dtmi:com:labbenchstudios:pdt:iot_data_context;1",
   "contents": [
-    {
-      "@type": "Property",
-      "name": "address",
-      "schema": {
-        "@type": "Object",
-        "fields": [
-          {
-            "name": "name",
-            "schema": "string"
-          },
-          {
-            "name": "street",
-            "schema": "string"
-          },
-          {
-            "name": "city",
-            "schema": "string"
-          },
-          {
-            "name": "state",
-            "schema": "string"
-          },
-          {
-            "name": "zip",
-            "schema": "string"
-          }
-        ]
-      }
-    },
     {
       "@type": "Relationship",
       "@id": "dtmi:com:labbenchstudios:pdt:residence_structure;1",
-      "name": "structure",
+      "name": "structureContext",
       "displayName": "Property Structure",
       "target": "dtmi:com:labbenchstudios:pdt:residence_structure;1",
       "properties": [

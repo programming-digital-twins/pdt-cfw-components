@@ -1,0 +1,27 @@
+[
+  {
+    "@id": "dtmi:com:labbenchstudios:pdt:thermostat;1",
+    "@type": "Interface",
+    "@context": [
+      "dtmi:dtdl:context;3",
+      "dtmi:dtdl:extension:quantitativeTypes;1"
+    ],
+    "displayName": "Thermostat",
+    "extends": "dtmi:com:labbenchstudios:pdt:iot_data_context;1",
+    "contents": [
+      {
+        "@type": [ "Telemetry", "Temperature" ],
+        "name": "currentTemperature",
+        "schema": "float",
+        "unit": "degreeCelsius"
+      },
+      {
+        "@type": [ "Property", "Temperature" ],
+        "name": "targetTemperature",
+        "writable": true,
+        "schema": "float",
+        "unit": "degreeCelsius"
+      }
+    ]
+  }
+]

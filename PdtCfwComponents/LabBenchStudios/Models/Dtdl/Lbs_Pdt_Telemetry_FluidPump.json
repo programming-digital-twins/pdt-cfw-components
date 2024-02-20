@@ -18,7 +18,7 @@
       },
       {
         "@type": [ "Telemetry", "Density" ],
-        "name": "density",
+        "name": "fluidDensity",
         "displayName": "Fluid Density",
         "schema": "float",
         "unit": "milligramPerCubicMetre"

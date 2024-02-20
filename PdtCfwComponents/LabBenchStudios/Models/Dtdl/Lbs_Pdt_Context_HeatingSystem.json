@@ -1,0 +1,54 @@
+{
+  "@context": "dtmi:dtdl:context;3",
+  "@id": "dtmi:com:labbenchstudios:pdt:heating_system;1",
+  "@type": "Interface",
+  "displayName": "Heating System",
+  "extends": "dtmi:com:labbenchstudios:pdt:iot_data_context;1",
+  "contents": [
+    {
+      "@type": "Property",
+      "name": "heatingSystemContext",
+      "schema": {
+        "@type": "Object",
+        "fields": [
+          {
+            "name": "voltage",
+            "schema": "float"
+          },
+          {
+            "name": "powerDraw",
+            "schema": "float"
+          },
+          {
+            "name": "uptime",
+            "schema": "dateTime"
+          },
+          {
+            "name": "currentTemperature",
+            "schema": "float"
+          },
+          {
+            "name": "targetTemperature",
+            "schema": "float"
+          },
+          {
+            "name": "lastServiceDate",
+            "schema": "dateTime"
+          }
+        ]
+      }
+    },
+    {
+      "@type": "Relationship",
+      "name": "heatingZone",
+      "minMultiplicity": 0,
+      "maxMultiplicity": 10,
+      "target": "dtmi:com:labbenchstudios:pdt:heating_zone;1"
+    },
+    {
+      "@type": "Component",
+      "name": "thermostat",
+      "schema": "dtmi:com:labbenchstudios:pdt:thermostat;1"
+    }
+  ]
+}

@@ -6,7 +6,7 @@
   "contents": [
     {
       "@type": "Property",
-      "name": "context",
+      "name": "iotDataContext",
       "schema": {
         "@type": "Object",
         "fields": [
@@ -33,8 +33,26 @@
           {
             "name": "typeID",
             "schema": "integer"
+          },
+          {
+            "name": "isEnabled",
+            "schema": "boolean"
           }
         ]
+      }
+    },
+    {
+      "@type": "Command",
+      "name": "update",
+      "request": {
+        "name": "updateTime",
+        "displayName": "Update Time",
+        "description": "Requested time to update the device settings.",
+        "schema": "dateTime"
+      },
+      "response": {
+        "name": "scheduledUpdateTime",
+        "schema": "dateTime"
       }
     }
   ]

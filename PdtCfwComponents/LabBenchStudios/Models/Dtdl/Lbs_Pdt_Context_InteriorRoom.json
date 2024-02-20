@@ -6,10 +6,14 @@
   "contents": [
     {
       "@type": "Property",
-      "name": "interiorRoom",
+      "name": "interiorRoomContext",
       "schema": {
         "@type": "Object",
         "fields": [
+          {
+            "name": "friendlyName",
+            "schema": "string"
+          },
           {
             "name": "lastOccupied",
             "schema": "dateTime"
@@ -27,32 +31,25 @@
             "schema": "boolean"
           },
           {
-            "name": "isAirConditioningOn",
+            "name": "isAudioOn",
             "schema": "boolean"
           },
           {
-            "name": "zoneName",
-            "schema": "string"
+            "name": "isMonitorOn",
+            "schema": "boolean"
           }
         ]
       }
     },
     {
-      "@type": "Property",
-      "name": "setTemperature",
-      "writable": true,
-      "schema": "float"
-    },
-    {
-      "@type": "Property",
-      "name": "setHumidity",
-      "writable": true,
-      "schema": "float"
+      "@type": "Component",
+      "name": "humidifier",
+      "schema": "dtmi:com:labbenchstudios:pdt:humidifier;1"
     },
     {
       "@type": "Component",
-      "name": "roomEnvironmentalSensors",
-      "schema": "dtmi:com:labbenchstudios:pdt:env_sensor_data_context;1"
+      "name": "thermostat",
+      "schema": "dtmi:com:labbenchstudios:pdt:thermostat;1"
     }
   ]
 }
