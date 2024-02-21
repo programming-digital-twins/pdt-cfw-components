@@ -1,9 +1,9 @@
 {
   "@context": "dtmi:dtdl:context;3",
-  "@id": "dtmi:com:labbenchstudios:pdt:heating_zone;1",
+  "@id": "dtmi:LabBenchStudios:PDT:heatingZone;1",
   "@type": "Interface",
   "displayName": "Heating Zone",
-  "extends": "dtmi:com:labbenchstudios:pdt:iot_data_context;1",
+  "extends": "dtmi:LabBenchStudios:PDT:iotDataContext;1",
   "contents": [
     {
       "@type": "Property",
@@ -21,12 +21,12 @@
     {
       "@type": "Component",
       "name": "thermostat",
-      "schema": "dtmi:com:labbenchstudios:pdt:thermostat;1"
+      "schema": "dtmi:LabBenchStudios:PDT:thermostat;1"
     },
     {
       "@type": "Component",
       "name": "circulatorPump",
-      "schema": "dtmi:com:labbenchstudios:pdt:fluid_pump_data_context;1"
+      "schema": "dtmi:LabBenchStudios:PDT:fluidPumpData;1"
     }
   ]
 }

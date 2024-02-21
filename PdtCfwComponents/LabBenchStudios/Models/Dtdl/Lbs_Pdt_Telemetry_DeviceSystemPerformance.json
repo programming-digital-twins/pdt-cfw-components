@@ -1,13 +1,13 @@
 [
   {
-    "@id": "dtmi:com:labbenchstudios:pdt:sys_performance_data_context;1",
+    "@id": "dtmi:LabBenchStudios:PDT:systemPerformanceData;1",
     "@type": "Interface",
     "@context": [
       "dtmi:dtdl:context;3",
       "dtmi:dtdl:extension:quantitativeTypes;1"
     ],
     "displayName": "Edge Device System Performance",
-    "extends": "dtmi:com:labbenchstudios:pdt:iot_data_context;1",
+    "extends": "dtmi:LabBenchStudios:PDT:iotDataContext;1",
     "contents": [
       {
         "@type": [ "Telemetry", "Concentration" ],

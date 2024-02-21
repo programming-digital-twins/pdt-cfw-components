@@ -1,6 +1,6 @@
 {
   "@context": "dtmi:dtdl:context;3",
-  "@id": "dtmi:com:labbenchstudios:pdt:iot_data_context;1",
+  "@id": "dtmi:LabBenchStudios:PDT:iotDataContext;1",
   "@type": "Interface",
   "displayName": "IoT Data Context",
   "contents": [
@@ -37,6 +37,26 @@
           {
             "name": "isEnabled",
             "schema": "boolean"
+          }
+        ]
+      }
+    },
+    {
+      "@type": "Telemetry",
+      "name": "isSystemOnline",
+      "schema": {
+        "@type": "Enum",
+        "valueSchema": "integer",
+        "enumValues": [
+          {
+            "name": "offline",
+            "displayName": "Offline",
+            "enumValue": 1
+          },
+          {
+            "name": "online",
+            "displayName": "Online",
+            "enumValue": 2
           }
         ]
       }

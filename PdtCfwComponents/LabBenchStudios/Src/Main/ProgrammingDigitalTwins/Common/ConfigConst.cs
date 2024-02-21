@@ -35,40 +35,40 @@ namespace LabBenchStudios.Pdt.Common
         public static readonly string NOT_SET = "Not-Set";
         public static readonly string DEFAULT_HOST = "localhost";
 
-        public static readonly int DEFAULT_COAP_PORT = 5683;
-        public static readonly int DEFAULT_COAP_SECURE_PORT = 5684;
-        public static readonly int DEFAULT_MQTT_PORT = 1883;
-        public static readonly int DEFAULT_MQTT_SECURE_PORT = 8883;
-        public static readonly int DEFAULT_RTSP_STREAM_PORT = 8554;
-        public static readonly int DEFAULT_INFLUXDB_PORT = 8086;
-        public static readonly int DEFAULT_TSDB_PORT = DEFAULT_INFLUXDB_PORT;
-        public static readonly int DEFAULT_KEEP_ALIVE = 60;
-        public static readonly int DEFAULT_POLL_CYCLES = 60;
-        public static readonly int DEFAULT_COMMAND = 0;
-        public static readonly int DEFAULT_STATUS = 0;
-        public static readonly int DEFAULT_TIMEOUT = 5;
-        public static readonly int DEFAULT_TTL = 300;
-        public static readonly int DEFAULT_QOS = 0;
+        public const int DEFAULT_COAP_PORT = 5683;
+        public const int DEFAULT_COAP_SECURE_PORT = 5684;
+        public const int DEFAULT_MQTT_PORT = 1883;
+        public const int DEFAULT_MQTT_SECURE_PORT = 8883;
+        public const int DEFAULT_RTSP_STREAM_PORT = 8554;
+        public const int DEFAULT_INFLUXDB_PORT = 8086;
+        public const int DEFAULT_TSDB_PORT = DEFAULT_INFLUXDB_PORT;
+        public const int DEFAULT_KEEP_ALIVE = 60;
+        public const int DEFAULT_POLL_CYCLES = 60;
+        public const int DEFAULT_COMMAND = 0;
+        public const int DEFAULT_STATUS = 0;
+        public const int DEFAULT_TIMEOUT = 5;
+        public const int DEFAULT_TTL = 300;
+        public const int DEFAULT_QOS = 0;
 
-        public static readonly float DEFAULT_VAL = 0.0f;
-        public static readonly int DEFAULT_MAX_CACHED_ITEMS = 86400; // number of seconds in a day
-        public static readonly long DEFAULT_MAX_CACHE_SIZE_IN_MB = 2^29; // 0.5 GB
+        public const float DEFAULT_VAL = 0.0f;
+        public const int DEFAULT_MAX_CACHED_ITEMS = 86400; // number of seconds in a day
+        public const long DEFAULT_MAX_CACHE_SIZE_IN_MB = 2^29; // 0.5 GB
 
         // for purposes of this library, float precision is more then sufficient
-        public static readonly float DEFAULT_LAT = DEFAULT_VAL;
-        public static readonly float DEFAULT_LON = DEFAULT_VAL;
-        public static readonly float DEFAULT_ELEVATION = DEFAULT_VAL;
+        public const float DEFAULT_LAT = DEFAULT_VAL;
+        public const float DEFAULT_LON = DEFAULT_VAL;
+        public const float DEFAULT_ELEVATION = DEFAULT_VAL;
 
-        public static readonly int DEFAULT_ACTION_ID = 0;
-        public static readonly int INITIAL_SEQUENCE_NUMBER = 0;
+        public const int DEFAULT_ACTION_ID = 0;
+        public const int INITIAL_SEQUENCE_NUMBER = 0;
 
-        public static readonly int DEFAULT_STREAM_FPS = 30;
-        public static readonly int DEFAULT_MIN_STREAM_FPS = 8;
-        public static readonly int DEFAULT_MAX_STREAM_FPS = 60;
-        public static readonly int DEFAULT_STREAM_FRAME_WIDTH = 1440;
-        public static readonly int DEFAULT_STREAM_FRAME_HEIGHT = 1080;
-        public static readonly int DEFAULT_MIN_MOTION_PIXELS_DIFF = 12000;
-        public static readonly int DEFAULT_MAX_CACHED_FRAMES = 10;
+        public const int DEFAULT_STREAM_FPS = 30;
+        public const int DEFAULT_MIN_STREAM_FPS = 8;
+        public const int DEFAULT_MAX_STREAM_FPS = 60;
+        public const int DEFAULT_STREAM_FRAME_WIDTH = 1440;
+        public const int DEFAULT_STREAM_FRAME_HEIGHT = 1080;
+        public const int DEFAULT_MIN_MOTION_PIXELS_DIFF = 12000;
+        public const int DEFAULT_MAX_CACHED_FRAMES = 10;
         public static readonly string DEFAULT_STREAM_PROTOCOL = "rtsp";
 
         public static readonly string PRODUCT_NAME = "PDT";
@@ -102,6 +102,8 @@ namespace LabBenchStudios.Pdt.Common
         public static readonly string STATE_DATA_PROP = "stateData";
         public static readonly string VALUE_PROP = "value";
         public static readonly string IS_RESPONSE_PROP = "isResponse";
+
+        public static readonly string MODEL_ID_PROP = "modelID";
 
         public static readonly string CPU_UTIL_PROP = "cpuUtil";
         public static readonly string DISK_UTIL_PROP = "diskUtil";
@@ -156,31 +158,31 @@ namespace LabBenchStudios.Pdt.Common
         public static readonly string SYSTEM_PERF_NAME = "SystemPerfMsg";
         public static readonly string CAMERA_SENSOR_NAME = "CameraSensor";
 
-        public static readonly int COMMAND_OFF = DEFAULT_COMMAND;
-        public static readonly int COMMAND_ON = 1;
+        public const int COMMAND_OFF = DEFAULT_COMMAND;
+        public const int COMMAND_ON = 1;
         public static readonly string COMMAND_KEY = "Command";
 
         public static readonly string ON_KEY = "ON";
         public static readonly string OFF_KEY = "OFF";
         public static readonly string RUNNING_KEY = "Running";
 
-        public static readonly int DEFAULT_TYPE_ID = 0;
-        public static readonly int DEFAULT_TYPE_CATEGORY_ID = 0;
-        public static readonly int DEFAULT_ACTUATOR_TYPE = DEFAULT_TYPE_ID;
-        public static readonly int DEFAULT_SENSOR_TYPE = DEFAULT_TYPE_ID;
+        public const int DEFAULT_TYPE_ID = 0;
+        public const int DEFAULT_TYPE_CATEGORY_ID = 0;
+        public const int DEFAULT_ACTUATOR_TYPE = DEFAULT_TYPE_ID;
+        public const int DEFAULT_SENSOR_TYPE = DEFAULT_TYPE_ID;
 
-        public static readonly int ENV_TYPE_CATEGORY = 1000;
-        public static readonly int ENV_DEVICE_TYPE = 1000;
-        public static readonly int HVAC_ACTUATOR_TYPE = 1001;
-        public static readonly int HUMIDIFIER_ACTUATOR_TYPE = 1002;
-        public static readonly int IMPELLER_RPM_ACTUATOR_TYPE = 1110;
+        public const int ENV_TYPE_CATEGORY = 1000;
+        public const int ENV_DEVICE_TYPE = 1000;
+        public const int HVAC_ACTUATOR_TYPE = 1001;
+        public const int HUMIDIFIER_ACTUATOR_TYPE = 1002;
+        public const int IMPELLER_RPM_ACTUATOR_TYPE = 1110;
 
-        public static readonly int HUMIDITY_SENSOR_TYPE = 1010;
-        public static readonly int PRESSURE_SENSOR_TYPE = 1012;
-        public static readonly int TEMP_SENSOR_TYPE = 1013;
-        public static readonly int FLUID_VISCOSITY_SENSOR_TYPE = 1020;
-        public static readonly int FLUID_RATE_SENSOR_TYPE = 1021;
-        public static readonly int IMPELLER_RPM_SENSOR_TYPE = 1022;
+        public const int HUMIDITY_SENSOR_TYPE = 1010;
+        public const int PRESSURE_SENSOR_TYPE = 1012;
+        public const int TEMP_SENSOR_TYPE = 1013;
+        public const int FLUID_VISCOSITY_SENSOR_TYPE = 1020;
+        public const int FLUID_RATE_SENSOR_TYPE = 1021;
+        public const int IMPELLER_RPM_SENSOR_TYPE = 1022;
 
         public static readonly string HUMIDIFIER_ACTUATOR_NAME = "HumidifierActuator";
         public static readonly string HVAC_ACTUATOR_NAME = "HvacActuator";
@@ -195,76 +197,76 @@ namespace LabBenchStudios.Pdt.Common
         public static readonly string FLOW_RATE_NAME = "FlowRate";
         public static readonly string RPM_NAME = "RPM";
 
-        public static readonly int DISPLAY_CATEGORY_TYPE = 2000;
-        public static readonly int DISPLAY_DEVICE_TYPE = 2000;
-        public static readonly int LED_DISPLAY_ACTUATOR_TYPE = 2001;
+        public const int DISPLAY_CATEGORY_TYPE = 2000;
+        public const int DISPLAY_DEVICE_TYPE = 2000;
+        public const int LED_DISPLAY_ACTUATOR_TYPE = 2001;
 
         public static readonly string MEDIA_TYPE_NAME = "MediaType";
-        public static readonly int MEDIA_TYPE_CATEGORY = 3000;
-        public static readonly int DEFAULT_MEDIA_TYPE = 3000;
-        public static readonly int MEDIA_DEVICE_TYPE = 3000;
-        public static readonly int CAMERA_SENSOR_TYPE = 3101;
-        public static readonly int VIDEO_SYSTEM_TYPE = 3201;
-        public static readonly int AUDIO_SYSTEM_TYPE = 3301;
-        public static readonly int LIGHTING_SYSTEM_TYPE = 3401;
+        public const int MEDIA_TYPE_CATEGORY = 3000;
+        public const int DEFAULT_MEDIA_TYPE = 3000;
+        public const int MEDIA_DEVICE_TYPE = 3000;
+        public const int CAMERA_SENSOR_TYPE = 3101;
+        public const int VIDEO_SYSTEM_TYPE = 3201;
+        public const int AUDIO_SYSTEM_TYPE = 3301;
+        public const int LIGHTING_SYSTEM_TYPE = 3401;
 
         public static readonly string LUMENS_NAME = "Lumens";
         public static readonly string DECIBELS_NAME = "Decibels";
         public static readonly string COLOR_NAME = "Color";
         public static readonly string PLAYING_NAME = "Playing";
 
-        public static readonly int ENERGY_TYPE_CATEGORY = 4000;
-        public static readonly int STORAGE_LEVEL = 4001;
-        public static readonly int STORAGE_DRAW = 4002;
+        public const int ENERGY_TYPE_CATEGORY = 4000;
+        public const int STORAGE_LEVEL = 4001;
+        public const int STORAGE_DRAW = 4002;
 
         public static readonly string STORAGE_LEVEL_NAME = "StorageLevel";
         public static readonly string STORAGE_DRAW_NAME = "StorageDraw";
 
-        public static readonly int OIL_SYSTEM_TYPE = 4101;
-        public static readonly int NATGAS_SYSTEM_TYPE = 4102;
-        public static readonly int PROPANE_SYSTEM_TYPE = 4103;
-        public static readonly int WIND_SYSTEM_TYPE = 4201;
-        public static readonly int SOLAR_SYSTEM_TYPE = 4301;
-        public static readonly int HYDRO_SYSTEM_TYPE = 4401;
-        public static readonly int GEOTHERMAL_SYSTEM_TYPE = 4501;
-        public static readonly int HYDROGEN_SYSTEM_TYPE = 4601;
+        public const int OIL_SYSTEM_TYPE = 4101;
+        public const int NATGAS_SYSTEM_TYPE = 4102;
+        public const int PROPANE_SYSTEM_TYPE = 4103;
+        public const int WIND_SYSTEM_TYPE = 4201;
+        public const int SOLAR_SYSTEM_TYPE = 4301;
+        public const int HYDRO_SYSTEM_TYPE = 4401;
+        public const int GEOTHERMAL_SYSTEM_TYPE = 4501;
+        public const int HYDROGEN_SYSTEM_TYPE = 4601;
 
         public static readonly string WATTAGE_NAME = "Wattage";
         public static readonly string AMPERAGE_NAME = "Amperage";
         public static readonly string VOLTAGE_NAME = "Voltage";
 
-        public static readonly int SYSTEM_TYPE_CATEGORY = 8000;
-        public static readonly int SYSTEM_MGMT_TYPE = 8000;
-        public static readonly int RESOURCE_MGMT_TYPE = 8001;
-        public static readonly int SYSTEM_CONN_STATE_TYPE = 8002;
+        public const int SYSTEM_TYPE_CATEGORY = 8000;
+        public const int SYSTEM_MGMT_TYPE = 8000;
+        public const int RESOURCE_MGMT_TYPE = 8001;
+        public const int SYSTEM_CONN_STATE_TYPE = 8002;
 
         public static readonly string RESOURCE_MGMT_NAME = "ResourceMgmt";
 
-        public static readonly int SYSTEM_PERF_TYPE = 9000;
-        public static readonly int CPU_UTIL_TYPE = 9001;
-        public static readonly int MEM_UTIL_TYPE = 9002;
-        public static readonly int DISK_UTIL_TYPE = 9003;
+        public const int SYSTEM_PERF_TYPE = 9000;
+        public const int CPU_UTIL_TYPE = 9001;
+        public const int MEM_UTIL_TYPE = 9002;
+        public const int DISK_UTIL_TYPE = 9003;
 
         public static readonly string CPU_UTIL_NAME = "DeviceCpuUtil";
         public static readonly string DISK_UTIL_NAME = "DeviceDiskUtil";
         public static readonly string MEM_UTIL_NAME = "DeviceMemUtil";
 
-        public static readonly int MESSAGE_TYPE_CATEGORY = 10000;
-        public static readonly int MESSAGE_TYPE = 10001;
+        public const int MESSAGE_TYPE_CATEGORY = 10000;
+        public const int MESSAGE_TYPE = 10001;
 
         //////////
         // status codes
         //
         //
-        public static readonly int NOMINAL_STATUS_CODE = 0;
-        public static readonly int CONN_SUCCESS_STATUS_CODE = 200;
-        public static readonly int CONN_IN_PROC_STATUS_CODE = 201;
-        public static readonly int PUB_SUCCESS_STATUS_CODE = 210;
-        public static readonly int SUB_SUCCESS_STATUS_CODE = 220;
-        public static readonly int DISCONN_SUCCESS_STATUS_CODE = 300;
-        public static readonly int DISCONN_IN_PROC_STATUS_CODE = 301;
-        public static readonly int CONN_FAILURE_STATUS_CODE = 400;
-        public static readonly int MSG_SEND_FAILURE_STATUS_CODE = 401;
+        public const int NOMINAL_STATUS_CODE = 0;
+        public const int CONN_SUCCESS_STATUS_CODE = 200;
+        public const int CONN_IN_PROC_STATUS_CODE = 201;
+        public const int PUB_SUCCESS_STATUS_CODE = 210;
+        public const int SUB_SUCCESS_STATUS_CODE = 220;
+        public const int DISCONN_SUCCESS_STATUS_CODE = 300;
+        public const int DISCONN_IN_PROC_STATUS_CODE = 301;
+        public const int CONN_FAILURE_STATUS_CODE = 400;
+        public const int MSG_SEND_FAILURE_STATUS_CODE = 401;
 
         public static readonly string NO_STATUS_MSG = "No_Status";
 
@@ -405,35 +407,5 @@ namespace LabBenchStudios.Pdt.Common
         public static readonly string STORE_INTERIM_FRAMES_KEY = "storeInterimFrames";
         public static readonly string INCLUDE_RAW_IMAGE_DATA_IN_MSG_KEY = "includeRawImageDataInMsg";
 
-        //////////
-        // 
-        // DTDL properties
-        //
-
-        // this is the base template model file for all Lbs_Pdt_* DTDL files
-        public static readonly string TEMPLATE_IOT_DATA_CONTEXT_DTDL_MODEL = "Lbs_Pdt_Template_IotDataContext.json";
-
-        // these model files represent context for specific structures and systems
-        //
-        // each of these depends on (extends) the TEMPLATE_IOT_DATA_CONTEXT_DTDL_MODEL
-        public static readonly string CONTEXT_HEATING_SYSTEM_DTDL_MODEL = "Lbs_Pdt_Context_HeatingSystem.json";
-        public static readonly string CONTEXT_INTERIOR_ROOM_STATE_DTDL_MODEL = "Lbs_Pdt_Context_InteriorRoom.json";
-        public static readonly string CONTEXT_RESIDENTIAL_STRUCTURE_DTDL_MODEL = "Lbs_Pdt_Context_ResidentialStructure.json";
-
-        // these model files represent the controller description for all data generation
-        // and command receptive systems and components
-        //
-        // each of these depends on (extends) the TEMPLATE_IOT_DATA_CONTEXT_DTDL_MODEL
-        public static readonly string CONTROLLER_HEATING_ZONE_DTDL_MODEL = "Lbs_Pdt_Controller_HeatingZone.json";
-        public static readonly string CONTROLLER_HUMIDIFIER_DTDL_MODEL = "Lbs_Pdt_Controller_Humidifier.json";
-        public static readonly string CONTROLLER_THERMOSTAT_DTDL_MODEL = "Lbs_Pdt_Controller_Thermostat.json";
-
-        // these model files represent the telemetry description for all data generation systems and components
-        //
-        // each of these depends on (extends) the TEMPLATE_IOT_DATA_CONTEXT_DTDL_MODEL
-        public static readonly string TELEMETRY_DEVICE_SYS_PERF_DTDL_MODEL = "Lbs_Pdt_Telemetry_DeviceSystemPerformance.json";
-        public static readonly string TELEMETRY_ENV_SENSORS_DTDL_MODEL = "Lbs_Pdt_Telemetry_EnvironmentalSensors.json";
-        public static readonly string TELEMETRY_FLUID_PUMP_DTDL_MODEL = "Lbs_Pdt_Telemetry_FluidPump.json";
-        public static readonly string TELEMETRY_POWER_WINDMILL_DTDL_MODEL = "Lbs_Pdt_Telemetry_PowerWindmill.json";
     }
 }

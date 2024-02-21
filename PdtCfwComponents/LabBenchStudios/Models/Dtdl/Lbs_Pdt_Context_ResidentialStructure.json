@@ -1,38 +1,38 @@
 {
   "@context": "dtmi:dtdl:context;3",
-  "@id": "dtmi:com:labbenchstudios:pdt:residence;1",
+  "@id": "dtmi:LabBenchStudios:PDT:residentialStructure;1",
   "@type": "Interface",
   "displayName": "Residential Structure",
-  "extends": "dtmi:com:labbenchstudios:pdt:iot_data_context;1",
+  "extends": "dtmi:LabBenchStudios:PDT:iotDataContext;1",
   "contents": [
     {
-      "@type": "Relationship",
-      "@id": "dtmi:com:labbenchstudios:pdt:residence_structure;1",
-      "name": "structureContext",
-      "displayName": "Property Structure",
-      "target": "dtmi:com:labbenchstudios:pdt:residence_structure;1",
-      "properties": [
-        {
-          "@type": "Property",
-          "name": "floorCount",
-          "schema": "integer"
-        },
-        {
-          "@type": "Property",
-          "name": "hasBasement",
-          "schema": "boolean"
-        },
-        {
-          "@type": "Property",
-          "name": "hasHeatingSystem",
-          "schema": "boolean"
-        },
-        {
-          "@type": "Property",
-          "name": "hasWindmillPowerGenerator",
-          "schema": "boolean"
-        }
-      ]
+      "@type": "Property",
+      "name": "residentialStructure",
+      "schema": {
+        "@type": "Object",
+        "fields": [
+          {
+            "name": "floorCount",
+            "schema": "integer"
+          },
+          {
+            "name": "hasBasement",
+            "schema": "boolean"
+          },
+          {
+            "name": "hasHeatingSystem",
+            "schema": "boolean"
+          },
+          {
+            "name": "hasWindmillPowerGenerator",
+            "schema": "boolean"
+          },
+          {
+            "name": "hasRevolvingCube",
+            "schema": "boolean"
+          }
+        ]
+      }
     }
   ]
 }

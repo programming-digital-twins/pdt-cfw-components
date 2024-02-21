@@ -1,0 +1,9 @@
+{
+  "name": "barometricPressure",
+  "deviceID": "edgedevice001",
+  "typeID": 1,
+  "typeCategoryID": 1000,
+  "locationID": "testLocation001",
+  "timeStamp": "2024-02-20T20:00:00.000000+00:00",
+  "barometricPressure": 1005.2
+}
