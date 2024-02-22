@@ -21,6 +21,22 @@
         "writable": true,
         "schema": "float",
         "unit": "percent"
+      },
+      {
+        "@type": [ "Property", "RelativeHumidity" ],
+        "name": "minHumidity",
+        "displayName": "Min Humidity Setting in Percent",
+        "writable": true,
+        "schema": "float",
+        "unit": "percent"
+      },
+      {
+        "@type": [ "Property", "RelativeHumidity" ],
+        "name": "maxHumidity",
+        "displayName": "Max Humidity Setting in Percent",
+        "writable": true,
+        "schema": "float",
+        "unit": "percent"
       }
     ]
   }

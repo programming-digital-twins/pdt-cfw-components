@@ -24,14 +24,6 @@
             "schema": "dateTime"
           },
           {
-            "name": "currentTemperature",
-            "schema": "float"
-          },
-          {
-            "name": "targetTemperature",
-            "schema": "float"
-          },
-          {
             "name": "lastServiceDate",
             "schema": "dateTime"
           }

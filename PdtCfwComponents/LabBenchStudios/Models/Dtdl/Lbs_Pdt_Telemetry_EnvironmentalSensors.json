@@ -39,7 +39,7 @@
       {
         "@type": [ "Telemetry", "RelativeHumidity" ],
         "name": "relativeHumidity",
-        "displayName": "Relative Humidity in percent",
+        "displayName": "Relative Humidity in Percent",
         "schema": "float",
         "unit": "percent"
       }
@@ -58,7 +58,7 @@
       {
         "@type": [ "Telemetry", "Pressure" ],
         "name": "barometricPressure",
-        "displayName": "Barometric Pressure in millibar",
+        "displayName": "Barometric Pressure in Millibar",
         "schema": "float",
         "unit": "millibar"
       }

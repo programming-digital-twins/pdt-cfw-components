@@ -67,7 +67,7 @@
       "request": {
         "name": "updateTime",
         "displayName": "Update Time",
-        "description": "Requested time to update the device settings.",
+        "description": "Requested Time to Execute Update.",
         "schema": "dateTime"
       },
       "response": {

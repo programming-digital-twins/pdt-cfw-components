@@ -12,12 +12,30 @@
       {
         "@type": [ "Telemetry", "Temperature" ],
         "name": "currentTemperature",
+        "displayName": "Current Temperature in Celsuis",
         "schema": "float",
         "unit": "degreeCelsius"
       },
       {
         "@type": [ "Property", "Temperature" ],
         "name": "targetTemperature",
+        "displayName": "Target Temperature in Celsuis",
+        "writable": true,
+        "schema": "float",
+        "unit": "degreeCelsius"
+      },
+      {
+        "@type": [ "Property", "Temperature" ],
+        "name": "minTemperature",
+        "displayName": "Min Temperature Setting in Celsuis",
+        "writable": true,
+        "schema": "float",
+        "unit": "degreeCelsius"
+      },
+      {
+        "@type": [ "Property", "Temperature" ],
+        "name": "maxTemperature",
+        "displayName": "Max Temperature Setting in Celsuis",
         "writable": true,
         "schema": "float",
         "unit": "degreeCelsius"

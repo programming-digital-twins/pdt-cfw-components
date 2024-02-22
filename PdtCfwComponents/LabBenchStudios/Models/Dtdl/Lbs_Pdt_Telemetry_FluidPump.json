@@ -12,42 +12,42 @@
       {
         "@type": [ "Telemetry", "EnergyRate" ],
         "name": "powerDraw",
-        "displayName": "Power Draw",
+        "displayName": "Power Draw in Watts",
         "schema": "float",
         "unit": "watt"
       },
       {
         "@type": [ "Telemetry", "Density" ],
         "name": "fluidDensity",
-        "displayName": "Fluid Density",
+        "displayName": "Fluid Density in Milligrams per Cubic Metre",
         "schema": "float",
         "unit": "milligramPerCubicMetre"
       },
       {
         "@type": [ "Telemetry", "AngularVelocity" ],
         "name": "revolutionPerMinute",
-        "displayName": "Impeller Rotations Per Minute",
+        "displayName": "Impeller Revolutions Per Minute",
         "schema": "float",
         "unit": "revolutionPerMinute"
       },
       {
         "@type": [ "Telemetry", "VolumeFlowRate" ],
         "name": "flowRate",
-        "displayName": "Fluid Flow Rate Volume",
+        "displayName": "Fluid Flow Rate Volume in Litres / Minute",
         "schema": "float",
         "unit": "litrePerMinute"
       },
       {
         "@type": [ "Telemetry", "Temperature" ],
         "name": "sendTemp",
-        "displayName": "Fluid Send Temperature",
+        "displayName": "Fluid Send Temperature in Celsius",
         "schema": "float",
         "unit": "degreeCelsius"
       },
       {
         "@type": [ "Telemetry", "Temperature" ],
         "name": "returnTemp",
-        "displayName": "Fluid Return Temperature",
+        "displayName": "Fluid Return Temperature in Celsius",
         "schema": "float",
         "unit": "degreeCelsius"
       }
