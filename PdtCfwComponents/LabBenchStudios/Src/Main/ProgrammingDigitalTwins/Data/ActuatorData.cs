@@ -64,13 +64,13 @@ namespace LabBenchStudios.Pdt.Data
 
         public bool IsResponse() { return this.isResponse; }
 
-        public void SetValue(float val) { this.value = val; }
+        public void SetValue(float val) { this.value = val; base.UpdateTimeStamp(); }
 
-        public void SetResponse(bool isResponse) { this.isResponse = isResponse; }
+        public void SetResponse(bool isResponse) { this.isResponse = isResponse; base.UpdateTimeStamp(); }
 
-        public void SetCommand(int val) { if (val >= 0) this.command = val; }
+        public void SetCommand(int val) { if (val >= 0) this.command = val; base.UpdateTimeStamp(); }
 
-        public void SetStateData(string data) { if (! string.IsNullOrEmpty(data)) this.stateData = data; }
+        public void SetStateData(string data) { if (! string.IsNullOrEmpty(data)) this.stateData = data; base.UpdateTimeStamp(); }
 
         public override string ToString()
         {

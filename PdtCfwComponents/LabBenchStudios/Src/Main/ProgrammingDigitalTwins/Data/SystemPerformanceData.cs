@@ -59,11 +59,11 @@ namespace LabBenchStudios.Pdt.Data
 
         public float GetDiskUtilization() { return this.diskUtil; }
 
-        public void SetCpuUtilization(float val) { if (val >= 0 || val <= 100) this.cpuUtil = val; }
+        public void SetCpuUtilization(float val) { if (val >= 0 || val <= 100) this.cpuUtil = val; base.UpdateTimeStamp(); }
 
-        public void SetMemoryUtilization(float val) { if (val >= 0 || val <= 100) this.memUtil = val; }
+        public void SetMemoryUtilization(float val) { if (val >= 0 || val <= 100) this.memUtil = val; base.UpdateTimeStamp(); }
 
-        public void SetDiskUtilization(float val) { if (val >= 0 || val <= 100) this.diskUtil = val; }
+        public void SetDiskUtilization(float val) { if (val >= 0 || val <= 100) this.diskUtil = val; base.UpdateTimeStamp(); }
 
         public override string ToString()
         {

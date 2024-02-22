@@ -1,13 +1,13 @@
 [
   {
-    "@id": "dtmi:LabBenchStudios:PDT:fluidPumpData;1",
+    "@id": "dtmi:LabBenchStudios:PDT:fluidPump;1",
     "@type": "Interface",
     "@context": [
       "dtmi:dtdl:context;3",
       "dtmi:dtdl:extension:quantitativeTypes;1"
     ],
     "displayName": "Fluid Pump",
-    "extends": "dtmi:LabBenchStudios:PDT:iotDataContext;1",
+    "extends": "dtmi:LabBenchStudios:PDT:iotModelContext;1",
     "contents": [
       {
         "@type": [ "Telemetry", "EnergyRate" ],
@@ -38,18 +38,28 @@
         "unit": "litrePerMinute"
       },
       {
-        "@type": [ "Telemetry", "Temperature" ],
-        "name": "sendTemp",
-        "displayName": "Fluid Send Temperature in Celsius",
-        "schema": "float",
-        "unit": "degreeCelsius"
+        "@type": "Component",
+        "name": "sendTemperature",
+        "schema": "dtmi:LabBenchStudios:PDT:temperatureData;1"
       },
       {
-        "@type": [ "Telemetry", "Temperature" ],
-        "name": "returnTemp",
-        "displayName": "Fluid Return Temperature in Celsius",
-        "schema": "float",
-        "unit": "degreeCelsius"
+        "@type": "Component",
+        "name": "returnTemperature",
+        "schema": "dtmi:LabBenchStudios:PDT:temperatureData;1"
+      },
+      {
+        "@type": "Command",
+        "name": "enablePump",
+        "request": {
+          "name": "runPump",
+          "displayName": "Run Pump",
+          "description": "Starts the Pump.",
+          "schema": "boolean"
+        },
+        "response": {
+          "name": "pumpRunning",
+          "schema": "boolean"
+        }
       }
     ]
   }

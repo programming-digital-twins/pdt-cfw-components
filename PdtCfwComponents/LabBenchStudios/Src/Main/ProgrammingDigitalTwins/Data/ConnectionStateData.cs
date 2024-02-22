@@ -93,13 +93,13 @@ namespace LabBenchStudios.Pdt.Data
 
         public void IncreaseMessageOutCount(int val) { if (val >= 0) this.msgOutCount += val; }
 
-        public void SetIsClientConnectingFlag(bool enable) { this.isClientConnecting = enable; }
+        public void SetIsClientConnectingFlag(bool enable) { this.isClientConnecting = enable; base.UpdateTimeStamp(); }
 
-        public void SetIsClientConnectedFlag(bool enable) { this.isClientConnected = enable; }
+        public void SetIsClientConnectedFlag(bool enable) { this.isClientConnected = enable; base.UpdateTimeStamp(); }
 
-        public void SetIsClientDisconnectedFlag(bool enable) { this.isClientDisconnected = enable; }
+        public void SetIsClientDisconnectedFlag(bool enable) { this.isClientDisconnected = enable; base.UpdateTimeStamp(); }
 
-        public void SetMessage(string message) { if (!string.IsNullOrEmpty(message)) this.message = message; }
+        public void SetMessage(string message) { if (!string.IsNullOrEmpty(message)) this.message = message; base.UpdateTimeStamp(); }
 
         public override string ToString()
         {

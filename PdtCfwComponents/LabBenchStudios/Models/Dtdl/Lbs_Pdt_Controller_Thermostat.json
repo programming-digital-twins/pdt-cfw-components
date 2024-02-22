@@ -7,15 +7,8 @@
       "dtmi:dtdl:extension:quantitativeTypes;1"
     ],
     "displayName": "Thermostat",
-    "extends": "dtmi:LabBenchStudios:PDT:iotDataContext;1",
+    "extends": "dtmi:LabBenchStudios:PDT:iotModelContext;1",
     "contents": [
-      {
-        "@type": [ "Telemetry", "Temperature" ],
-        "name": "currentTemperature",
-        "displayName": "Current Temperature in Celsuis",
-        "schema": "float",
-        "unit": "degreeCelsius"
-      },
       {
         "@type": [ "Property", "Temperature" ],
         "name": "targetTemperature",
@@ -39,6 +32,25 @@
         "writable": true,
         "schema": "float",
         "unit": "degreeCelsius"
+      },
+      {
+        "@type": "Component",
+        "name": "currentTemperature",
+        "schema": "dtmi:LabBenchStudios:PDT:temperatureData;1"
+      },
+      {
+        "@type": "Command",
+        "name": "adjustTemperature",
+        "request": {
+          "name": "updateTemperature",
+          "displayName": "Update Temperature",
+          "description": "Changes the target temperature of the thermostat.",
+          "schema": "boolean"
+        },
+        "response": {
+          "name": "temperatureUpdated",
+          "schema": "boolean"
+        }
       }
     ]
   }

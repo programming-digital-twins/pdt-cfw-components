@@ -7,14 +7,8 @@
       "dtmi:dtdl:extension:quantitativeTypes;1"
     ],
     "displayName": "Humidifier",
-    "extends": "dtmi:LabBenchStudios:PDT:iotDataContext;1",
+    "extends": "dtmi:LabBenchStudios:PDT:iotModelContext;1",
     "contents": [
-      {
-        "@type": [ "Telemetry", "RelativeHumidity" ],
-        "name": "relativeHumidity",
-        "schema": "float",
-        "unit": "percent"
-      },
       {
         "@type": [ "Property", "RelativeHumidity" ],
         "name": "targetHumidity",
@@ -37,6 +31,25 @@
         "writable": true,
         "schema": "float",
         "unit": "percent"
+      },
+      {
+        "@type": "Component",
+        "name": "relativeHumidity",
+        "schema": "dtmi:LabBenchStudios:PDT:relativeHumidityData;1"
+      },
+      {
+        "@type": "Command",
+        "name": "enableHumidification",
+        "request": {
+          "name": "runHumidifier",
+          "displayName": "Run Humidification",
+          "description": "Runs the humidifier.",
+          "schema": "boolean"
+        },
+        "response": {
+          "name": "humidifierRunning",
+          "schema": "boolean"
+        }
       }
     ]
   }

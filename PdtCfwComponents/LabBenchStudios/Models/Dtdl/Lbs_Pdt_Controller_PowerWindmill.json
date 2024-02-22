@@ -1,13 +1,13 @@
 [
   {
-    "@id": "dtmi:LabBenchStudios:PDT:powerWindmillData;1",
+    "@id": "dtmi:LabBenchStudios:PDT:powerWindmill;1",
     "@type": "Interface",
     "@context": [
       "dtmi:dtdl:context;3",
       "dtmi:dtdl:extension:quantitativeTypes;1"
     ],
     "displayName": "Power Windmill",
-    "extends": "dtmi:LabBenchStudios:PDT:iotDataContext;1",
+    "extends": "dtmi:LabBenchStudios:PDT:iotModelContext;1",
     "contents": [
       {
         "@type": [ "Telemetry", "Length" ],
@@ -73,11 +73,24 @@
         "unit": "volt"
       },
       {
-        "@type": [ "Telemetry", "Temperature" ],
-        "name": "generatorTemp",
+        "@type": "Component",
+        "name": "generatorTemperature",
         "displayName": "Generator Operational Temperature in Celsius",
-        "schema": "float",
-        "unit": "degreeCelsius"
+        "schema": "dtmi:LabBenchStudios:PDT:temperatureData;1"
+      },
+      {
+        "@type": "Command",
+        "name": "enableWindmill",
+        "request": {
+          "name": "runWindmill",
+          "displayName": "Start Windmill",
+          "description": "Triggers the windmill to start under mains power.",
+          "schema": "boolean"
+        },
+        "response": {
+          "name": "windmillRunning",
+          "schema": "boolean"
+        }
       }
     ]
   }

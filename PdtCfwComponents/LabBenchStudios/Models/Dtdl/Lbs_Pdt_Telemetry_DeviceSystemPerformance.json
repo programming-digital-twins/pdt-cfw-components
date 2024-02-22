@@ -7,7 +7,7 @@
       "dtmi:dtdl:extension:quantitativeTypes;1"
     ],
     "displayName": "Edge Device System Performance",
-    "extends": "dtmi:LabBenchStudios:PDT:iotDataContext;1",
+    "extends": "dtmi:LabBenchStudios:PDT:iotModelContext;1",
     "contents": [
       {
         "@type": [ "Telemetry", "Concentration" ],

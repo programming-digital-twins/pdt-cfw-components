@@ -33,18 +33,24 @@ using System.Text;
 namespace LabBenchStudios.Pdt.Model
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class SampleDataModel : IotModelContext
+    public class ThermostatControllerModel : IotModelContext
     {
         [JsonProperty]
-        private float changeMe = 0.0f;
+        private float currentTemperature = 0.0f;
 
         [JsonProperty]
-        private float changeMe2 = 0.0f;
+        private float targetTemperature = 0.0f;
+
+        [JsonProperty]
+        private float minTemperature = 0.0f;
+
+        [JsonProperty]
+        private float maxTemperature = 0.0f;
 
         // necessary for JSON serialization / deserialization
-        public SampleDataModel() : base() { }
+        public ThermostatControllerModel() : base() { }
 
-        public SampleDataModel(string name, string deviceID) :
+        public ThermostatControllerModel(string name, string deviceID) :
             base(name, deviceID, ConfigConst.DEFAULT_TYPE_CATEGORY_ID, ConfigConst.DEFAULT_TYPE_ID)
         {
 
@@ -52,21 +58,31 @@ namespace LabBenchStudios.Pdt.Model
 
         // public methods
 
-        public float GetChangeMeValue() { return this.changeMe; }
+        public float GetCurrentTemperature() { return this.currentTemperature; }
 
-        public float GetChangeMe2Value() { return this.changeMe2; }
+        public float GetTargetTemperature() { return this.targetTemperature; }
 
-        public void SetChangeMeValue(float val) { if (val >= 0 || val <= 100) this.changeMe = val; base.UpdateTimeStamp(); }
+        public float GetMinTemperature() { return this.minTemperature; }
 
-        public void SetChangeMe2Value(float val) { if (val >= 0 || val <= 100) this.changeMe2 = val; base.UpdateTimeStamp(); }
+        public float GetMaxTemperature() { return this.maxTemperature; }
+
+        public void SetCurrentTemperature(float val) { if (val >= 0 || val <= 100) this.currentTemperature = val; base.UpdateTimeStamp(); }
+
+        public void SetTargetTemperature(float val) { if (val >= 0 || val <= 100) this.targetTemperature = val; base.UpdateTimeStamp(); }
+
+        public void SetMinTemperature(float val) { if (val >= 0 || val <= 100) this.minTemperature = val; base.UpdateTimeStamp(); }
+
+        public void SetMaxTemperature(float val) { if (val >= 0 || val <= 100) this.maxTemperature = val; base.UpdateTimeStamp(); }
 
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder(base.ToString());
 
             sb.Append(',');
-            sb.Append(ConfigConst.CPU_UTIL_PROP).Append('=').Append(this.changeMe).Append(',');
-            sb.Append(ConfigConst.MEM_UTIL_PROP).Append('=').Append(this.changeMe2).Append(',');
+            sb.Append(ModelConst.CURRENT_TEMPERATURE_PROP_NAME).Append('=').Append(this.currentTemperature).Append(',');
+            sb.Append(ModelConst.TARGET_TEMPERATURE_PROP_NAME).Append('=').Append(this.targetTemperature).Append(',');
+            sb.Append(ModelConst.MIN_TEMPERATURE_PROP_NAME).Append('=').Append(this.targetTemperature).Append(',');
+            sb.Append(ModelConst.MAX_TEMPERATURE_PROP_NAME).Append('=').Append(this.targetTemperature).Append(',');
 
             return sb.ToString();
         }

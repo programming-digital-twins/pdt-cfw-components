@@ -59,11 +59,11 @@ namespace LabBenchStudios.Pdt.Data
 
         public float GetRangeCeiling() {  return this.rangeCeiling; }
 
-        public void SetValue(float val) { this.value = val; }
+        public void SetValue(float val) { this.value = val; base.UpdateTimeStamp(); }
 
-        public void SetRangeFloor(float val) { this.rangeFloor = val; }
+        public void SetRangeFloor(float val) { this.rangeFloor = val; base.UpdateTimeStamp(); }
 
-        public void SetRangeCeiling(float val) { this.rangeCeiling = val; }
+        public void SetRangeCeiling(float val) { this.rangeCeiling = val; base.UpdateTimeStamp(); }
 
         public override string ToString()
         {

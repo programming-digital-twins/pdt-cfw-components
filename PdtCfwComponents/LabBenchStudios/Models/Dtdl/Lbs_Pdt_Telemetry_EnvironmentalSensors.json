@@ -7,7 +7,7 @@
       "dtmi:dtdl:extension:quantitativeTypes;1"
     ],
     "displayName": "Room Environmental Sensors",
-    "extends": "dtmi:LabBenchStudios:PDT:iotDataContext;1",
+    "extends": "dtmi:LabBenchStudios:PDT:iotModelContext;1",
     "contents": [
       {
         "@type": "Component",
@@ -34,7 +34,7 @@
       "dtmi:dtdl:extension:quantitativeTypes;1"
     ],
     "displayName": "Relative Humidity",
-    "extends": "dtmi:LabBenchStudios:PDT:iotDataContext;1",
+    "extends": "dtmi:LabBenchStudios:PDT:iotModelContext;1",
     "contents": [
       {
         "@type": [ "Telemetry", "RelativeHumidity" ],
@@ -53,7 +53,7 @@
       "dtmi:dtdl:extension:quantitativeTypes;1"
     ],
     "displayName": "Barometric Pressure",
-    "extends": "dtmi:LabBenchStudios:PDT:iotDataContext;1",
+    "extends": "dtmi:LabBenchStudios:PDT:iotModelContext;1",
     "contents": [
       {
         "@type": [ "Telemetry", "Pressure" ],
@@ -72,7 +72,7 @@
       "dtmi:dtdl:extension:quantitativeTypes;1"
     ],
     "displayName": "Temperature",
-    "extends": "dtmi:LabBenchStudios:PDT:iotDataContext;1",
+    "extends": "dtmi:LabBenchStudios:PDT:iotModelContext;1",
     "contents": [
       {
         "@type": [ "Telemetry", "Temperature" ],

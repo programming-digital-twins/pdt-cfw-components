@@ -40,9 +40,6 @@ namespace LabBenchStudios.Pdt.Data
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private string deviceID = ConfigConst.NOT_SET;
 
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        private string modelID = ModelConst.IOT_DATA_CONTEXT_MODEL_ID;
-
         [JsonProperty]
         private int typeID = ConfigConst.DEFAULT_TYPE_ID;
 
@@ -91,41 +88,9 @@ namespace LabBenchStudios.Pdt.Data
             if (! string.IsNullOrEmpty(deviceID)) { this.deviceID = deviceID; }
 
             if (typeCategoryID >= 0) { this.typeCategoryID = typeCategoryID; }
-            if (typeID >= 0) { this.typeID = typeID; }
 
-            // set the DTMI (modelID) - only for those that may be deserialized from the EDA
-            // all others will keep the default of ModelConst.IOT_DATA_CONTEXT_MODEL_ID
-            //
-            // for now, this will suffice as a simple 'mapping' table, and also mitigate
-            // any need to update the EDA with knowledge of DTMI naming conventions
-            switch (typeID)
-            {
-                case ConfigConst.HUMIDIFIER_ACTUATOR_TYPE:
-                    this.modelID = ModelConst.HUMIDIFIER_CONTROLLER_MODEL_ID; break;
-
-                case ConfigConst.HVAC_ACTUATOR_TYPE:
-                    this.modelID = ModelConst.THERMOSTAT_CONTROLLER_MODEL_ID; break;
-
-                case ConfigConst.SYSTEM_PERF_TYPE:
-                    this.modelID = ModelConst.DEVICE_SYS_PERF_TELEMETRY_MODEL_ID; break;
-
-                case ConfigConst.HUMIDITY_SENSOR_TYPE:
-                    this.modelID = ModelConst.ENV_SENSORS_TELEMETRY_MODEL_ID; break;
-
-                case ConfigConst.TEMP_SENSOR_TYPE:
-                    this.modelID = ModelConst.ENV_SENSORS_TELEMETRY_MODEL_ID; break;
-
-                case ConfigConst.PRESSURE_SENSOR_TYPE:
-                    this.modelID = ModelConst.ENV_SENSORS_TELEMETRY_MODEL_ID; break;
-
-                case ConfigConst.FLUID_RATE_SENSOR_TYPE:
-                    this.modelID = ModelConst.FLUID_PUMP_TELEMETRY_MODEL_ID; break;
-
-                case ConfigConst.WIND_SYSTEM_TYPE:
-                    this.modelID = ModelConst.POWER_WINDMILL_TELEMETRY_MODEL_ID; break;
-            }
-
-            this.UpdateTimeStamp();
+            // timestamp will be updated with this setter call
+            this.SetTypeID(typeID);
         }
 
         // public methods
@@ -133,8 +98,6 @@ namespace LabBenchStudios.Pdt.Data
         public string GetName() { return this.name; }
 
         public string GetDeviceID() { return this.deviceID; }
-
-        public string GetModelID() {  return this.modelID; }
 
         public int GetDeviceType() { return this.typeID; }
 
@@ -160,17 +123,17 @@ namespace LabBenchStudios.Pdt.Data
 
         public void OverrideTimeStamp(string timeStamp) { this.timeStamp = timeStamp; }
 
-        public void SetLatitude(float val) { this.latitude = val; }
+        public void SetLatitude(float val) { this.latitude = val; this.UpdateTimeStamp(); }
 
-        public void SetLongitude(float val) { this.longitude = val; }
+        public void SetLongitude(float val) { this.longitude = val; this.UpdateTimeStamp(); }
 
-        public void SetElevation(float val) { this.elevation = val; }
+        public void SetElevation(float val) { this.elevation = val; this.UpdateTimeStamp(); }
 
-        public void SetHeading(float val) { this.heading = val; }
+        public void SetHeading(float val) { this.heading = val; this.UpdateTimeStamp(); }
 
-        public void SetLocationID(string name) { if (! string.IsNullOrEmpty(name)) this.locationID = name; }
+        public void SetLocationID(string name) { if (! string.IsNullOrEmpty(name)) this.locationID = name; this.UpdateTimeStamp(); }
 
-        public void SetStatusCode(int val) {  this.statusCode = val; }
+        public void SetStatusCode(int val) { this.statusCode = val; this.UpdateTimeStamp(); }
 
         public override string ToString()
         {
@@ -178,7 +141,6 @@ namespace LabBenchStudios.Pdt.Data
 
             sb.Append(ConfigConst.NAME_PROP).Append('=').Append(this.name).Append(',');
             sb.Append(ConfigConst.DEVICE_ID_PROP).Append('=').Append(this.deviceID).Append(',');
-            sb.Append(ConfigConst.MODEL_ID_PROP).Append('=').Append(this.modelID).Append(',');
             sb.Append(ConfigConst.TYPE_ID_PROP).Append('=').Append(this.typeID).Append(',');
             sb.Append(ConfigConst.TYPE_CATEGORY_ID_PROP).Append('=').Append(this.typeCategoryID).Append(',');
             sb.Append(ConfigConst.TIMESTAMP_PROP).Append('=').Append(this.timeStamp).Append(',');
@@ -192,9 +154,11 @@ namespace LabBenchStudios.Pdt.Data
             return sb.ToString();
         }
 
-        // private methods
+        // protected methods
 
-        private void UpdateTimeStamp()
+        protected void SetTypeID(int val) { if (typeID >= 0) { this.typeID = val; }; this.UpdateTimeStamp(); }
+
+        protected void UpdateTimeStamp()
         {
             this.timeStamp = DateTime.Now.ToUniversalTime().ToString("o");
         }

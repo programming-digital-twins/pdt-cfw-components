@@ -3,11 +3,11 @@
   "@id": "dtmi:LabBenchStudios:PDT:heatingSystem;1",
   "@type": "Interface",
   "displayName": "Heating System",
-  "extends": "dtmi:LabBenchStudios:PDT:iotDataContext;1",
+  "extends": "dtmi:LabBenchStudios:PDT:iotModelContext;1",
   "contents": [
     {
       "@type": "Property",
-      "name": "heatingSystemContext",
+      "name": "heatingSystem",
       "schema": {
         "@type": "Object",
         "fields": [
@@ -36,11 +36,6 @@
       "minMultiplicity": 0,
       "maxMultiplicity": 10,
       "target": "dtmi:LabBenchStudios:PDT:heatingZone;1"
-    },
-    {
-      "@type": "Component",
-      "name": "thermostat",
-      "schema": "dtmi:LabBenchStudios:PDT:thermostat;1"
     }
   ]
 }

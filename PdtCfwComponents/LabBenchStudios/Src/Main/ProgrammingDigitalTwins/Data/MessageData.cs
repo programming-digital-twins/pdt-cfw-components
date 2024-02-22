@@ -49,7 +49,7 @@ namespace LabBenchStudios.Pdt.Data
 
         public string GetMessageData() { return this.msgData; }
 
-        public void SetMessageData(string msgData) { if (! string.IsNullOrEmpty(msgData)) this.msgData = msgData; }
+        public void SetMessageData(string msgData) { if (! string.IsNullOrEmpty(msgData)) this.msgData = msgData; base.UpdateTimeStamp(); }
 
         public override string ToString()
         {

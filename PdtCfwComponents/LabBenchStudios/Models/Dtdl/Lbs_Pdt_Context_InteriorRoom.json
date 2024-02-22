@@ -3,11 +3,11 @@
   "@id": "dtmi:LabBenchStudios:PDT:interiorRoom;1",
   "@type": "Interface",
   "displayName": "Interior Room",
-  "extends": "dtmi:LabBenchStudios:PDT:iotDataContext;1",
+  "extends": "dtmi:LabBenchStudios:PDT:iotModelContext;1",
   "contents": [
     {
       "@type": "Property",
-      "name": "interiorRoomContext",
+      "name": "interiorRoom",
       "schema": {
         "@type": "Object",
         "fields": [
@@ -43,14 +43,18 @@
       }
     },
     {
-      "@type": "Component",
+      "@type": "Relationship",
       "name": "humidifier",
-      "schema": "dtmi:LabBenchStudios:PDT:humidifier;1"
+      "minMultiplicity": 0,
+      "maxMultiplicity": 1,
+      "target": "dtmi:LabBenchStudios:PDT:humidifier;1"
     },
     {
-      "@type": "Component",
+      "@type": "Relationship",
       "name": "thermostat",
-      "schema": "dtmi:LabBenchStudios:PDT:thermostat;1"
+      "minMultiplicity": 0,
+      "maxMultiplicity": 1,
+      "target": "dtmi:LabBenchStudios:PDT:thermostat;1"
     }
   ]
 }

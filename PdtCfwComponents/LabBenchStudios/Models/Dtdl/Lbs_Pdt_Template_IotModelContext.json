@@ -1,12 +1,12 @@
 {
   "@context": "dtmi:dtdl:context;3",
-  "@id": "dtmi:LabBenchStudios:PDT:iotDataContext;1",
+  "@id": "dtmi:LabBenchStudios:PDT:iotModelContext;1",
   "@type": "Interface",
-  "displayName": "IoT Data Context",
+  "displayName": "IoT Model Context",
   "contents": [
     {
       "@type": "Property",
-      "name": "iotDataContext",
+      "name": "iotModelContext",
       "schema": {
         "@type": "Object",
         "fields": [
@@ -71,8 +71,8 @@
         "schema": "dateTime"
       },
       "response": {
-        "name": "scheduledUpdateTime",
-        "schema": "dateTime"
+        "name": "commandProcessed",
+        "schema": "boolean"
       }
     }
   ]
