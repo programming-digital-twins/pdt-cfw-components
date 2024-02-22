@@ -29,7 +29,7 @@ using LabBenchStudios.Pdt.Model;
 
 namespace LabBenchStudios.Pdt.Test.Data
 {
-    public class DtdlParserUtilTest
+    public class ModelParserUtilTest
     {
         private static readonly string DTDL_TEST_MODEL_FILEPATH =
             "../../../../PdtCfwComponents/LabBenchStudios/Models/Dtdl/";
@@ -276,11 +276,11 @@ namespace LabBenchStudios.Pdt.Test.Data
 
         private bool RunDtdlValidation(string modelPath, string modelName)
         {
-            string jsonData = DtdlParserUtil.LoadJsonFile(modelPath + modelName);
+            string jsonData = ModelParserUtil.LoadDtdlFile(modelPath + modelName);
 
             Console.WriteLine($"DTDL JSON for Model {modelName}:\n{jsonData}");
 
-            bool isValid = DtdlParserUtil.IsValidDtdlJsonData(jsonData);
+            bool isValid = ModelParserUtil.IsValidDtdlJsonData(jsonData);
 
             Console.WriteLine($"{modelName} Is Valid DTDL: " + isValid);
 
@@ -293,13 +293,13 @@ namespace LabBenchStudios.Pdt.Test.Data
 
             foreach (var modelName in modelList)
             {
-                string jsonData = DtdlParserUtil.LoadJsonFile(modelPath + modelName);
+                string jsonData = ModelParserUtil.LoadDtdlFile(modelPath + modelName);
                 modelJsonList.Add(jsonData);
 
                 Console.WriteLine($"DTDL JSON for Model {modelName}:\n{jsonData}");
             }
 
-            bool isValid = DtdlParserUtil.IsValidDtdlJsonData(modelJsonList);
+            bool isValid = ModelParserUtil.IsValidDtdlJsonData(modelJsonList);
 
             Console.WriteLine($"{modelJsonList} Collectively Contains Valid DTDL: " + isValid);
 

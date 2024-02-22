@@ -85,13 +85,13 @@ namespace LabBenchStudios.Pdt.Data
 
         public bool IsClientDisconnected() { return this.isClientDisconnected; }
 
-        public void IncreaseMessageInCount() { this.IncreaseMessageInCount(1); }
+        public void IncreaseMessageInCount() { this.IncreaseMessageInCount(1); base.UpdateTimeStamp(); }
 
-        public void IncreaseMessageInCount(int val) { if (val >= 0) this.msgInCount += val; }
+        public void IncreaseMessageInCount(int val) { if (val >= 0) this.msgInCount += val; base.UpdateTimeStamp(); }
 
-        public void IncreaseMessageOutCount() { this.IncreaseMessageOutCount(1); }
+        public void IncreaseMessageOutCount() { this.IncreaseMessageOutCount(1); base.UpdateTimeStamp(); }
 
-        public void IncreaseMessageOutCount(int val) { if (val >= 0) this.msgOutCount += val; }
+        public void IncreaseMessageOutCount(int val) { if (val >= 0) this.msgOutCount += val; base.UpdateTimeStamp(); }
 
         public void SetIsClientConnectingFlag(bool enable) { this.isClientConnecting = enable; base.UpdateTimeStamp(); }
 

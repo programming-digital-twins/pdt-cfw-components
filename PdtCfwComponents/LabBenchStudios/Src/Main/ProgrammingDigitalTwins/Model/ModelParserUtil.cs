@@ -28,18 +28,19 @@ using System.IO;
 using System.Linq;
 using DTDLParser;
 
-using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
 namespace LabBenchStudios.Pdt.Model
 {
 
     /**
-     * This class is based on DataUtil, and will - eventually - be updated to support
-     * serializing / deserializing the core data container objects to / from DTDL.
+     * This class is based on DataUtil, and is expected to add future parsing
+     * and serilization / deserialization capabilities.
+     * 
+     * For now, it serves as a basic DTDL parsing and validation class only.
      * 
      */
-    public static class DtdlParserUtil
+    public static class ModelParserUtil
     {
         static DefaultContractResolver camelCaseResolver = new DefaultContractResolver
         {
@@ -49,13 +50,13 @@ namespace LabBenchStudios.Pdt.Model
             }
         };
 
-        public static string LoadJsonFile(string fileName)
+        public static string LoadDtdlFile(string fileName)
         {
             if (fileName != null && fileName.Length > 0)
             {
                 try
                 {
-                    Console.WriteLine($"Attempting to load JSON file: {fileName}");
+                    Console.WriteLine($"Attempting to load DTDL file: {fileName}");
 
                     using (StreamReader streamReader = new StreamReader(fileName))
                     {
@@ -66,12 +67,12 @@ namespace LabBenchStudios.Pdt.Model
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"JSON file cannot be loaded: {fileName}. Exception: {ex}");
+                    Console.WriteLine($"DTDL file cannot be loaded: {fileName}. Exception: {ex}");
                 }
             }
             else
             {
-                Console.WriteLine($"JSON file is invalid (null or empty). Ignoring");
+                Console.WriteLine($"DTDL file is invalid (null or empty). Ignoring");
             }
 
             return null;
@@ -79,7 +80,7 @@ namespace LabBenchStudios.Pdt.Model
 
         public static bool IsValidDtdlJsonFile(string fileName)
         {
-            string jsonData = LoadJsonFile(fileName);
+            string jsonData = LoadDtdlFile(fileName);
 
             if (jsonData != null && jsonData.Length > 0)
             {

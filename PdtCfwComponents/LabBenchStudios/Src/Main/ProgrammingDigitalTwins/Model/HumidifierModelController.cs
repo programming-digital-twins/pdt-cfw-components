@@ -33,7 +33,7 @@ using System.Text;
 namespace LabBenchStudios.Pdt.Model
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class HumidifierControllerModel : IotModelContext
+    public class HumidifierModelController : DigitalTwinModelController
     {
         [JsonProperty]
         private float relativeHumidity = 0.0f;
@@ -48,9 +48,9 @@ namespace LabBenchStudios.Pdt.Model
         private float maxHumidity = 0.0f;
 
         // necessary for JSON serialization / deserialization
-        public HumidifierControllerModel() : base() { }
+        public HumidifierModelController() : base() { }
 
-        public HumidifierControllerModel(string name, string deviceID) :
+        public HumidifierModelController(string name, string deviceID) :
             base(name, deviceID, ConfigConst.ENV_TYPE_CATEGORY, ConfigConst.HUMIDIFIER_ACTUATOR_TYPE)
         {
 

@@ -33,7 +33,7 @@ using System.Text;
 namespace LabBenchStudios.Pdt.Data
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class IotModelContext : IotDataContext
+    public class DigitalTwinModelController : IotDataContext
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private string modelID = ModelConst.IOT_MODEL_CONTEXT_MODEL_ID;
@@ -44,13 +44,16 @@ namespace LabBenchStudios.Pdt.Data
         [JsonProperty]
         private bool hasError = false;
 
+        private IDataContextEventListener twinUpdateListener = null;
+        private IRemoteCommandProcessor remoteCommandProcessor = null;
+
         // necessary for JSON serialization / deserialization
-        public IotModelContext() : base()
+        public DigitalTwinModelController() : base()
         {
             this.UpdateTimeStamp();
         }
 
-        public IotModelContext(string name, string deviceID, int typeCategoryID, int typeID) :
+        public DigitalTwinModelController(string name, string deviceID, int typeCategoryID, int typeID) :
             base(name, deviceID, typeCategoryID, typeID)
         {
             // set the DTMI (modelID) - only for those that may be deserialized from the EDA
@@ -92,6 +95,38 @@ namespace LabBenchStudios.Pdt.Data
 
         public string GetModelID() {  return this.modelID; }
 
+        public void SetDataContextEventListener(IDataContextEventListener dataListener)
+        {
+            if (dataListener != null)
+            {
+                this.twinUpdateListener = dataListener;
+            }
+        }
+
+        public void SetRemoteCommandProcessor(IRemoteCommandProcessor cmdProcessor)
+        {
+            if (cmdProcessor != null)
+            {
+                this.remoteCommandProcessor = cmdProcessor;
+            }
+        }
+
+        public bool UpdateRemoteSystemState(IotDataContext dataContext)
+        {
+            bool success = false;
+
+            if (dataContext != null)
+            {
+                switch (dataContext.GetTypeID())
+                {
+
+                }
+
+                success = true;
+            }
+
+            return success;
+        }
 
         public override string ToString()
         {

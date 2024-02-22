@@ -36,7 +36,7 @@ using LabBenchStudios.Pdt.Data;
 
 namespace LabBenchStudios.Pdt.Connection
 {
-    public class MqttClientManagedConnector : IPubSubConnector
+    public class MqttClientManagedConnector : IPubSubConnector, IRemoteCommandProcessor
     {
         // static consts
 
@@ -141,6 +141,19 @@ namespace LabBenchStudios.Pdt.Connection
 
                 _ = this.HandlePublish(resource);
             }
+        }
+
+        public bool SendRemoteCommand(IotDataContext data)
+        {
+            // simplified interface for publishing a message
+            bool success = false;
+
+            if (data != null)
+            {
+                // TODO: implement this
+            }
+
+            return success;
         }
 
         public void SubscribeToAllTopics()

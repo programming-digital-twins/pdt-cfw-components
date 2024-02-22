@@ -33,7 +33,7 @@ using System.Text;
 namespace LabBenchStudios.Pdt.Model
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class ThermostatControllerModel : IotModelContext
+    public class ThermostatModelController : DigitalTwinModelController
     {
         [JsonProperty]
         private float currentTemperature = 0.0f;
@@ -48,9 +48,9 @@ namespace LabBenchStudios.Pdt.Model
         private float maxTemperature = 0.0f;
 
         // necessary for JSON serialization / deserialization
-        public ThermostatControllerModel() : base() { }
+        public ThermostatModelController() : base() { }
 
-        public ThermostatControllerModel(string name, string deviceID) :
+        public ThermostatModelController(string name, string deviceID) :
             base(name, deviceID, ConfigConst.DEFAULT_TYPE_CATEGORY_ID, ConfigConst.DEFAULT_TYPE_ID)
         {
 
