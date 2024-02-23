@@ -52,7 +52,7 @@ namespace LabBenchStudios.Pdt.Common
 
         public const float DEFAULT_VAL = 0.0f;
         public const int DEFAULT_MAX_CACHED_ITEMS = 86400; // number of seconds in a day
-        public const long DEFAULT_MAX_CACHE_SIZE_IN_MB = 2^29; // 0.5 GB
+        public const long DEFAULT_MAX_CACHE_SIZE_IN_MB = 2 ^ 29; // 0.5 GB
 
         // for purposes of this library, float precision is more then sufficient
         public const float DEFAULT_LAT = DEFAULT_VAL;
@@ -75,10 +75,12 @@ namespace LabBenchStudios.Pdt.Common
         public static readonly string CLOUD = "Cloud";
         public static readonly string GATEWAY = "Gateway";
         public static readonly string CONSTRAINED = "Constrained";
+        public static readonly string EDGE = "Edge";
         public static readonly string DEVICE = "Device";
         public static readonly string SERVICE = "Service";
 
         public static readonly string CONSTRAINED_DEVICE = CONSTRAINED + DEVICE;
+        public static readonly string EDGE_DEVICE = EDGE + DEVICE;
         public static readonly string GATEWAY_SERVICE = GATEWAY + SERVICE;
         public static readonly string CLOUD_SERVICE = CLOUD + SERVICE;
 

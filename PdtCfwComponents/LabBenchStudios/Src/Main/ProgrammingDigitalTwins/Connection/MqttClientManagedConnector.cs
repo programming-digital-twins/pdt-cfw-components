@@ -36,7 +36,7 @@ using LabBenchStudios.Pdt.Data;
 
 namespace LabBenchStudios.Pdt.Connection
 {
-    public class MqttClientManagedConnector : IPubSubConnector, IRemoteCommandProcessor
+    public class MqttClientManagedConnector : IPubSubConnector
     {
         // static consts
 
@@ -93,6 +93,9 @@ namespace LabBenchStudios.Pdt.Connection
 
             this.eventListener = eventListener;
             this.connStateData = new ConnectionStateData(this.productName, "UUID", this.serverHost, this.serverPort);
+
+            this.connStateData.SetMessage("Server host: " + this.serverHost + ", Product name: " + this.productName);
+            this.eventListener?.OnMessagingSystemStatusUpdate(GetConnectionStateCopy());
         }
 
         // public methods
@@ -143,14 +146,14 @@ namespace LabBenchStudios.Pdt.Connection
             }
         }
 
-        public bool SendRemoteCommand(IotDataContext data)
+        public bool SendRemoteCommand(ResourceNameContainer resource)
         {
             // simplified interface for publishing a message
             bool success = false;
 
-            if (data != null)
+            if (resource != null)
             {
-                // TODO: implement this
+                this.PublishMessage(resource);
             }
 
             return success;
@@ -298,10 +301,11 @@ namespace LabBenchStudios.Pdt.Connection
 
                 if (resource == null)
                 {
-                    topicName = productName + "/#"; // e.g., PDT/#
+                    topicName = this.productName + "/#"; // e.g., PDT/#
                 }
                 else
                 {
+                    resource.ProductPrefix = this.productName;
                     topicName = resource.GetFullResourceName();
                 }
 

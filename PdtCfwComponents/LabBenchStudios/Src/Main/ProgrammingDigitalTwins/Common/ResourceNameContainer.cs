@@ -29,7 +29,7 @@ namespace LabBenchStudios.Pdt.Common
 {
     public class ResourceNameContainer
     {
-        public string ProductPrefix { private set; get; } = ConfigConst.PRODUCT_NAME;
+        public string ProductPrefix { set; get; } = ConfigConst.PRODUCT_NAME;
         public string DeviceName { private set; get; } = "Not-Set";
         public string ResourceTypeName { private set; get; } = "Not-Set";
         public string FullTypeName { private set; get; } = "Not-Set";
