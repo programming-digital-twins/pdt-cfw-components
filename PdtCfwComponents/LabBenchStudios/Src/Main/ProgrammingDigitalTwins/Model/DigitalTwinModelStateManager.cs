@@ -41,7 +41,7 @@ namespace LabBenchStudios.Pdt.Data
 
         // public methods
 
-        public void RegisterModelController(DigitalTwinModelController dtController)
+        public void RegisterModelController(DigitalTwinModelContext dtController)
         {
 
         }

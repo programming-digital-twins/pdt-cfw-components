@@ -33,7 +33,7 @@ using System.Text;
 namespace LabBenchStudios.Pdt.Model
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class HumidifierModelController : DigitalTwinModelController
+    public class HumidifierModelController : DigitalTwinModelContext
     {
         [JsonProperty]
         private float relativeHumidity = 0.0f;

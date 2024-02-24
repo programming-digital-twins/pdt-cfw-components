@@ -146,19 +146,6 @@ namespace LabBenchStudios.Pdt.Connection
             }
         }
 
-        public bool SendRemoteCommand(ResourceNameContainer resource)
-        {
-            // simplified interface for publishing a message
-            bool success = false;
-
-            if (resource != null)
-            {
-                this.PublishMessage(resource);
-            }
-
-            return success;
-        }
-
         public void SubscribeToAllTopics()
         {
             this.SubscribeToTopic(null);

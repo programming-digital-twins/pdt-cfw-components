@@ -40,39 +40,29 @@ namespace LabBenchStudios.Pdt.Test.Data
         }
 
         [Test]
-        public void CheckValidityOfResidentialStructureDtdl()
+        public void CheckValidityOfIotModelContextDtdl()
         {
-            // This test requires TEMPLATE_IOT_MODEL_CONTEXT_DTDL_MODEL during the load process
-            //
-            // NOTE: The order of the list doesn't matter to the DTDL parser - all extended
-            // ID's simply need to be part of the IEnumerable passed to the parser
-            var modelList = new List<string>
-            {
-                ModelConst.TEMPLATE_IOT_MODEL_CONTEXT_DTDL_MODEL,
-                ModelConst.CONTEXT_RESIDENTIAL_STRUCTURE_DTDL_MODEL
-            };
-
             Assert.That(
                 this.RunDtdlValidation(
-                    DTDL_TEST_MODEL_FILEPATH, modelList),
+                    DTDL_TEST_MODEL_FILEPATH, ModelConst.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL),
                 Is.True);
         }
 
         [Test]
-        public void CheckValidityOfHeatingSystemDtdl()
+        public void CheckValidityOfHeatingSystemContextDtdl()
         {
-            // This test requires TEMPLATE_IOT_MODEL_CONTEXT_DTDL_MODEL during the load process
+            // This test requires BASE_IOT_MODEL_CONTEXT_DTDL_MODEL during the load process
             //
             // NOTE: The order of the list doesn't matter to the DTDL parser - all extended
             // ID's simply need to be part of the IEnumerable passed to the parser
             var modelList = new List<string>
             {
-                ModelConst.TEMPLATE_IOT_MODEL_CONTEXT_DTDL_MODEL,
-                ModelConst.TELEMETRY_ENV_SENSORS_DTDL_MODEL,
+                ModelConst.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL,
+                ModelConst.COMPONENT_ENV_SENSORS_DTDL_MODEL,
+                ModelConst.CONTROLLER_FLUID_PUMP_DTDL_MODEL,
                 ModelConst.CONTROLLER_HEATING_ZONE_DTDL_MODEL,
                 ModelConst.CONTROLLER_HUMIDIFIER_DTDL_MODEL,
                 ModelConst.CONTROLLER_THERMOSTAT_DTDL_MODEL,
-                ModelConst.CONTROLLER_FLUID_PUMP_DTDL_MODEL,
                 ModelConst.CONTEXT_HEATING_SYSTEM_DTDL_MODEL
             };
 
@@ -83,79 +73,17 @@ namespace LabBenchStudios.Pdt.Test.Data
         }
 
         [Test]
-        public void CheckValidityOfHeatingZoneDtdl()
+        public void CheckValidityOfInteriorRoomContextDtdl()
         {
-            // This test requires TEMPLATE_IOT_MODEL_CONTEXT_DTDL_MODEL during the load process
+            // This test requires both BASE_IOT_MODEL_CONTEXT_DTDL_MODEL and
+            // COMPONENT_ENV_SENSORS_DTDL_MODEL during the parse process
             //
             // NOTE: The order of the list doesn't matter to the DTDL parser - all extended
             // ID's simply need to be part of the IEnumerable passed to the parser
             var modelList = new List<string>
             {
-                ModelConst.TEMPLATE_IOT_MODEL_CONTEXT_DTDL_MODEL,
-                ModelConst.TELEMETRY_ENV_SENSORS_DTDL_MODEL,
-                ModelConst.CONTROLLER_HEATING_ZONE_DTDL_MODEL,
-                ModelConst.CONTROLLER_THERMOSTAT_DTDL_MODEL,
-                ModelConst.CONTROLLER_FLUID_PUMP_DTDL_MODEL
-            };
-
-            Assert.That(
-                this.RunDtdlValidation(
-                    DTDL_TEST_MODEL_FILEPATH, modelList),
-                Is.True);
-        }
-
-        [Test]
-        public void CheckValidityOfHumidifierDtdl()
-        {
-            // This test requires TEMPLATE_IOT_MODEL_CONTEXT_DTDL_MODEL during the load process
-            //
-            // NOTE: The order of the list doesn't matter to the DTDL parser - all extended
-            // ID's simply need to be part of the IEnumerable passed to the parser
-            var modelList = new List<string>
-            {
-                ModelConst.TEMPLATE_IOT_MODEL_CONTEXT_DTDL_MODEL,
-                ModelConst.TELEMETRY_ENV_SENSORS_DTDL_MODEL,
-                ModelConst.CONTROLLER_HUMIDIFIER_DTDL_MODEL
-            };
-
-            Assert.That(
-                this.RunDtdlValidation(
-                    DTDL_TEST_MODEL_FILEPATH, modelList),
-                Is.True);
-        }
-
-        [Test]
-        public void CheckValidityOfThermostatDtdl()
-        {
-            // This test requires TEMPLATE_IOT_MODEL_CONTEXT_DTDL_MODEL during the load process
-            //
-            // NOTE: The order of the list doesn't matter to the DTDL parser - all extended
-            // ID's simply need to be part of the IEnumerable passed to the parser
-            var modelList = new List<string>
-            {
-                ModelConst.TEMPLATE_IOT_MODEL_CONTEXT_DTDL_MODEL,
-                ModelConst.TELEMETRY_ENV_SENSORS_DTDL_MODEL,
-                ModelConst.CONTROLLER_THERMOSTAT_DTDL_MODEL
-            };
-
-            Assert.That(
-                this.RunDtdlValidation(
-                    DTDL_TEST_MODEL_FILEPATH, modelList),
-                Is.True);
-        }
-
-        [Test]
-        public void CheckValidityOfInteriorRoomStateDtdl()
-        {
-            // This test requires both TEMPLATE_IOT_MODEL_CONTEXT_DTDL_MODEL and
-            // TELEMETRY_ENV_SENSORS_DTDL_MODEL during the parse process
-            //
-            // NOTE: The order of the list doesn't matter to the DTDL parser - all extended
-            // ID's simply need to be part of the IEnumerable passed to the parser
-            var modelList = new List<string>
-            {
-                ModelConst.TEMPLATE_IOT_MODEL_CONTEXT_DTDL_MODEL,
-                ModelConst.TELEMETRY_ENV_SENSORS_DTDL_MODEL,
+                ModelConst.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL,
+                ModelConst.COMPONENT_ENV_SENSORS_DTDL_MODEL,
                 ModelConst.CONTROLLER_HUMIDIFIER_DTDL_MODEL,
                 ModelConst.CONTROLLER_THERMOSTAT_DTDL_MODEL,
                 ModelConst.CONTEXT_INTERIOR_ROOM_DTDL_MODEL
@@ -168,25 +96,16 @@ namespace LabBenchStudios.Pdt.Test.Data
         }
 
         [Test]
-        public void CheckValidityOfIotModelContextDtdl()
+        public void CheckValidityOfResidentialStructureContextDtdl()
         {
-            Assert.That(
-                this.RunDtdlValidation(
-                    DTDL_TEST_MODEL_FILEPATH, ModelConst.TEMPLATE_IOT_MODEL_CONTEXT_DTDL_MODEL),
-                Is.True);
-        }
-
-        [Test]
-        public void CheckValidityOfDeviceSystemPerformanceTelemetryDtdl()
-        {
-            // This test requires TEMPLATE_IOT_MODEL_CONTEXT_DTDL_MODEL during the load process
+            // This test requires BASE_IOT_MODEL_CONTEXT_DTDL_MODEL during the load process
             //
             // NOTE: The order of the list doesn't matter to the DTDL parser - all extended
             // ID's simply need to be part of the IEnumerable passed to the parser
             var modelList = new List<string>
             {
-                ModelConst.TEMPLATE_IOT_MODEL_CONTEXT_DTDL_MODEL,
-                ModelConst.TELEMETRY_DEVICE_SYS_PERF_DTDL_MODEL
+                ModelConst.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL,
+                ModelConst.CONTEXT_RESIDENTIAL_STRUCTURE_DTDL_MODEL
             };
 
             Assert.That(
@@ -196,16 +115,19 @@ namespace LabBenchStudios.Pdt.Test.Data
         }
 
         [Test]
-        public void CheckValidityOfEnvSensorTelemetryDtdl()
+        public void CheckValidityOfHeatingZoneControllerDtdl()
         {
-            // This file extends TEMPLATE_IOT_MODEL_CONTEXT_DTDL_MODEL ID
+            // This test requires BASE_IOT_MODEL_CONTEXT_DTDL_MODEL during the load process
             //
             // NOTE: The order of the list doesn't matter to the DTDL parser - all extended
             // ID's simply need to be part of the IEnumerable passed to the parser
             var modelList = new List<string>
             {
-                ModelConst.TEMPLATE_IOT_MODEL_CONTEXT_DTDL_MODEL,
-                ModelConst.TELEMETRY_ENV_SENSORS_DTDL_MODEL
+                ModelConst.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL,
+                ModelConst.COMPONENT_ENV_SENSORS_DTDL_MODEL,
+                ModelConst.CONTROLLER_FLUID_PUMP_DTDL_MODEL,
+                ModelConst.CONTROLLER_HEATING_ZONE_DTDL_MODEL,
+                ModelConst.CONTROLLER_THERMOSTAT_DTDL_MODEL
             };
 
             Assert.That(
@@ -215,16 +137,36 @@ namespace LabBenchStudios.Pdt.Test.Data
         }
 
         [Test]
-        public void CheckValidityOfFluidPumpTelemetryDtdl()
+        public void CheckValidityOfHumidifierControllerDtdl()
         {
-            // This file extends TEMPLATE_IOT_MODEL_CONTEXT_DTDL_MODEL ID
+            // This test requires BASE_IOT_MODEL_CONTEXT_DTDL_MODEL during the load process
             //
             // NOTE: The order of the list doesn't matter to the DTDL parser - all extended
             // ID's simply need to be part of the IEnumerable passed to the parser
             var modelList = new List<string>
             {
-                ModelConst.TEMPLATE_IOT_MODEL_CONTEXT_DTDL_MODEL,
-                ModelConst.TELEMETRY_ENV_SENSORS_DTDL_MODEL,
+                ModelConst.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL,
+                ModelConst.COMPONENT_ENV_SENSORS_DTDL_MODEL,
+                ModelConst.CONTROLLER_HUMIDIFIER_DTDL_MODEL
+            };
+
+            Assert.That(
+                this.RunDtdlValidation(
+                    DTDL_TEST_MODEL_FILEPATH, modelList),
+                Is.True);
+        }
+
+        [Test]
+        public void CheckValidityOfFluidPumpControllerDtdl()
+        {
+            // This file extends BASE_IOT_MODEL_CONTEXT_DTDL_MODEL ID
+            //
+            // NOTE: The order of the list doesn't matter to the DTDL parser - all extended
+            // ID's simply need to be part of the IEnumerable passed to the parser
+            var modelList = new List<string>
+            {
+                ModelConst.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL,
+                ModelConst.COMPONENT_ENV_SENSORS_DTDL_MODEL,
                 ModelConst.CONTROLLER_FLUID_PUMP_DTDL_MODEL
             };
 
@@ -235,16 +177,16 @@ namespace LabBenchStudios.Pdt.Test.Data
         }
 
         [Test]
-        public void CheckValidityOfPowerWindmillTelemetryDtdl()
+        public void CheckValidityOfPowerWindmillControllerDtdl()
         {
-            // This file extends TEMPLATE_IOT_MODEL_CONTEXT_DTDL_MODEL ID
+            // This file extends BASE_IOT_MODEL_CONTEXT_DTDL_MODEL ID
             //
             // NOTE: The order of the list doesn't matter to the DTDL parser - all extended
             // ID's simply need to be part of the IEnumerable passed to the parser
             var modelList = new List<string>
             {
-                ModelConst.TEMPLATE_IOT_MODEL_CONTEXT_DTDL_MODEL,
-                ModelConst.TELEMETRY_ENV_SENSORS_DTDL_MODEL,
+                ModelConst.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL,
+                ModelConst.COMPONENT_ENV_SENSORS_DTDL_MODEL,
                 ModelConst.CONTROLLER_POWER_WINDMILL_DTDL_MODEL
             };
 
@@ -257,15 +199,53 @@ namespace LabBenchStudios.Pdt.Test.Data
         [Test]
         public void CheckValidityOfThermostatControllerDtdl()
         {
-            // This file extends TEMPLATE_IOT_MODEL_CONTEXT_DTDL_MODEL ID
+            // This file extends BASE_IOT_MODEL_CONTEXT_DTDL_MODEL ID
             //
             // NOTE: The order of the list doesn't matter to the DTDL parser - all extended
             // ID's simply need to be part of the IEnumerable passed to the parser
             var modelList = new List<string>
             {
-                ModelConst.TEMPLATE_IOT_MODEL_CONTEXT_DTDL_MODEL,
-                ModelConst.TELEMETRY_ENV_SENSORS_DTDL_MODEL,
+                ModelConst.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL,
+                ModelConst.COMPONENT_ENV_SENSORS_DTDL_MODEL,
                 ModelConst.CONTROLLER_THERMOSTAT_DTDL_MODEL
+            };
+
+            Assert.That(
+                this.RunDtdlValidation(
+                    DTDL_TEST_MODEL_FILEPATH, modelList),
+                Is.True);
+        }
+
+        [Test]
+        public void CheckValidityOfDeviceSystemPerformanceComponentDtdl()
+        {
+            // This test requires BASE_IOT_MODEL_CONTEXT_DTDL_MODEL during the load process
+            //
+            // NOTE: The order of the list doesn't matter to the DTDL parser - all extended
+            // ID's simply need to be part of the IEnumerable passed to the parser
+            var modelList = new List<string>
+            {
+                ModelConst.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL,
+                ModelConst.COMPONENT_DEVICE_SYS_PERF_DTDL_MODEL
+            };
+
+            Assert.That(
+                this.RunDtdlValidation(
+                    DTDL_TEST_MODEL_FILEPATH, modelList),
+                Is.True);
+        }
+
+        [Test]
+        public void CheckValidityOfEnvironmentalSensorsComponentDtdl()
+        {
+            // This file extends BASE_IOT_MODEL_CONTEXT_DTDL_MODEL ID
+            //
+            // NOTE: The order of the list doesn't matter to the DTDL parser - all extended
+            // ID's simply need to be part of the IEnumerable passed to the parser
+            var modelList = new List<string>
+            {
+                ModelConst.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL,
+                ModelConst.COMPONENT_ENV_SENSORS_DTDL_MODEL
             };
 
             Assert.That(

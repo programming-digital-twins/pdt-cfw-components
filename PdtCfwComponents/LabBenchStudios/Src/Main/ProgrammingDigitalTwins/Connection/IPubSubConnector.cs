@@ -26,7 +26,7 @@ using LabBenchStudios.Pdt.Common;
 
 namespace LabBenchStudios.Pdt.Connection
 {
-    public interface IPubSubConnector : IMessageProcessor, IRemoteCommandProcessor
+    public interface IPubSubConnector : IMessageProcessor
     {
 
         // public methods

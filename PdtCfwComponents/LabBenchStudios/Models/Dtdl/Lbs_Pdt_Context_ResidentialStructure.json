@@ -20,14 +20,6 @@
             "schema": "boolean"
           },
           {
-            "name": "hasHeatingSystem",
-            "schema": "boolean"
-          },
-          {
-            "name": "hasWindmillPowerGenerator",
-            "schema": "boolean"
-          },
-          {
             "name": "hasRevolvingCube",
             "schema": "boolean"
           }
@@ -45,15 +37,22 @@
       "@type": "Relationship",
       "name": "heatingSystem",
       "minMultiplicity": 0,
-      "maxMultiplicity": 1,
+      "maxMultiplicity": 2,
       "target": "dtmi:LabBenchStudios:PDT:heatingSystem;1"
     },
     {
       "@type": "Relationship",
       "name": "interiorRoom",
       "minMultiplicity": 0,
-      "maxMultiplicity": 100,
+      "maxMultiplicity": 20,
       "target": "dtmi:LabBenchStudios:PDT:interiorRoom;1"
+    },
+    {
+      "@type": "Relationship",
+      "name": "powerWindmill",
+      "minMultiplicity": 0,
+      "maxMultiplicity": 2,
+      "target": "dtmi:LabBenchStudios:PDT:powerWindmill;1"
     }
   ]
 }

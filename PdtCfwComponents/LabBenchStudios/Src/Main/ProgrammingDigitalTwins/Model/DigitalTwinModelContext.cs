@@ -26,15 +26,16 @@ using LabBenchStudios.Pdt.Common;
 using LabBenchStudios.Pdt.Model;
 
 using Newtonsoft.Json;
-
 using System;
+using System.Collections;
 using System.Text;
 
 namespace LabBenchStudios.Pdt.Data
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class DigitalTwinModelController : IotDataContext
+    public class DigitalTwinModelContext : IotDataContext
     {
+        // this is the DTMI for the model (e.g., dtmi:LabBenchStudios.Pdt.{modelName};1)
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private string modelID = ModelConst.IOT_MODEL_CONTEXT_MODEL_ID;
 
@@ -44,16 +45,18 @@ namespace LabBenchStudios.Pdt.Data
         [JsonProperty]
         private bool hasError = false;
 
+        private Hashtable modelProperties = new Hashtable();
+
         private IDataContextEventListener twinUpdateListener = null;
         private IRemoteCommandProcessor remoteCommandProcessor = null;
 
         // necessary for JSON serialization / deserialization
-        public DigitalTwinModelController() : base()
+        public DigitalTwinModelContext() : base()
         {
             this.UpdateTimeStamp();
         }
 
-        public DigitalTwinModelController(string name, string deviceID, int typeCategoryID, int typeID) :
+        public DigitalTwinModelContext(string name, string deviceID, int typeCategoryID, int typeID) :
             base(name, deviceID, typeCategoryID, typeID)
         {
             // set the DTMI (modelID) - only for those that may be deserialized from the EDA
@@ -73,16 +76,16 @@ namespace LabBenchStudios.Pdt.Data
                     this.modelID = ModelConst.THERMOSTAT_CONTROLLER_MODEL_ID; break;
 
                 case ConfigConst.SYSTEM_PERF_TYPE:
-                    this.modelID = ModelConst.DEVICE_SYS_PERF_TELEMETRY_MODEL_ID; break;
+                    this.modelID = ModelConst.DEVICE_SYS_PERF_COMPONENT_MODEL_ID; break;
 
                 case ConfigConst.HUMIDITY_SENSOR_TYPE:
-                    this.modelID = ModelConst.ENV_SENSORS_TELEMETRY_MODEL_ID; break;
+                    this.modelID = ModelConst.ENV_SENSORS_COMPONENT_MODEL_ID; break;
 
                 case ConfigConst.TEMP_SENSOR_TYPE:
-                    this.modelID = ModelConst.ENV_SENSORS_TELEMETRY_MODEL_ID; break;
+                    this.modelID = ModelConst.ENV_SENSORS_COMPONENT_MODEL_ID; break;
 
                 case ConfigConst.PRESSURE_SENSOR_TYPE:
-                    this.modelID = ModelConst.ENV_SENSORS_TELEMETRY_MODEL_ID; break;
+                    this.modelID = ModelConst.ENV_SENSORS_COMPONENT_MODEL_ID; break;
 
                 case ConfigConst.WIND_SYSTEM_TYPE:
                     this.modelID = ModelConst.POWER_WINDMILL_CONTROLLER_MODEL_ID; break;
@@ -93,7 +96,61 @@ namespace LabBenchStudios.Pdt.Data
 
         // public methods
 
-        public string GetModelID() {  return this.modelID; }
+        public string GetModelID()
+        {
+            return this.modelID;
+        }
+
+        public bool GetModelBoolean(string key)
+        {
+            if (!string.IsNullOrEmpty(key))
+            {
+                if (this.modelProperties.ContainsKey(key))
+                {
+                    string valStr = (string)this.modelProperties[key];
+                    bool isValue = bool.TryParse(valStr, out bool isTrue);
+
+                    if (isValue)
+                    {
+                        return isTrue;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        public float GetModelValue(string key)
+        {
+            if(! string.IsNullOrEmpty(key))
+            {
+                if (this.modelProperties.ContainsKey(key))
+                {
+                    string valStr = (string)this.modelProperties[key];
+                    bool isValue = float.TryParse(valStr, out float val);
+
+                    if (isValue)
+                    {
+                        return val;
+                    }
+                }
+            }
+
+            return 0.0f;
+        }
+
+        public string GetModelProperty(string key)
+        {
+            if (! string.IsNullOrEmpty(key))
+            {
+                if (this.modelProperties.ContainsKey(key))
+                {
+                    return (string) this.modelProperties[key];
+                }
+            }
+
+            return null;
+        }
 
         public void SetDataContextEventListener(IDataContextEventListener dataListener)
         {

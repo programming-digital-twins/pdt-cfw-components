@@ -28,7 +28,7 @@ namespace LabBenchStudios.Pdt.Common
 {
     public interface IRemoteCommandProcessor
     {
-        bool SendRemoteCommand(ResourceNameContainer resource);
+        bool HandleRemoteCommandRequest(ResourceNameContainer resource);
 
     }
 }

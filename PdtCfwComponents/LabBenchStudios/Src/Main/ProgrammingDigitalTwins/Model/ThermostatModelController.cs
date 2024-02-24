@@ -33,7 +33,7 @@ using System.Text;
 namespace LabBenchStudios.Pdt.Model
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class ThermostatModelController : DigitalTwinModelController
+    public class ThermostatModelController : DigitalTwinModelContext
     {
         [JsonProperty]
         private float currentTemperature = 0.0f;
