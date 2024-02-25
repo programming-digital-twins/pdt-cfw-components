@@ -42,7 +42,7 @@ namespace LabBenchStudios.Pdt.Unity.Common
      * It is NOT designed to be used across scenes (yet).
      * 
      */
-    public class EventProcessor : ISystemStatusEventListener, IRemoteCommandProcessor
+    public class EventProcessor : ISystemStatusEventListener
     {
         private static string _GUID = null;
         private static bool _IS_TERMINATED = false;
@@ -83,7 +83,7 @@ namespace LabBenchStudios.Pdt.Unity.Common
 
         // private member vars
 
-        private IRemoteCommandProcessor remoteCommandProcessor = null;
+        private IRemoteStateProcessor remoteStateProcessor = null;
 
         private List<IDataContextEventListener> dataContextEventListenerList = null;
         private List<ISystemStatusEventListener> systemStatusEventListenerList = null;
@@ -143,13 +143,13 @@ namespace LabBenchStudios.Pdt.Unity.Common
             }
         }
 
-        public void SetRemoteCommandProcessor(IRemoteCommandProcessor cmdProcessor)
+        public void SetRemoteCommandProcessor(IRemoteStateProcessor cmdProcessor)
         {
             // can only be set once - it's expected the SystemManager will
             // invoke this once after retrieving the EventProcessor Singleton
-            if (this.remoteCommandProcessor == null)
+            if (this.remoteStateProcessor == null)
             {
-                this.remoteCommandProcessor = cmdProcessor;
+                this.remoteStateProcessor = cmdProcessor;
             }
         }
 
@@ -321,16 +321,16 @@ namespace LabBenchStudios.Pdt.Unity.Common
             }
         }
 
-        public bool ProcessRemoteCommandRequest(ResourceNameContainer resource)
+        public bool ProcessStateUpdateToPhysicalThing(ResourceNameContainer resource)
         {
-            if (this.remoteCommandProcessor != null)
+            if (this.remoteStateProcessor != null)
             {
-                return this.remoteCommandProcessor.ProcessRemoteCommandRequest(resource);
+                return this.remoteStateProcessor.SendStateUpdateToPhysicalThing(resource);
             }
             else
             {
                 Console.WriteLine(
-                    $"No composite IRemoteCommandProcessor registered. Ignoring request: {resource}");
+                    $"No composite remote command processor registered. Ignoring request: {resource}");
             }
 
             return false;

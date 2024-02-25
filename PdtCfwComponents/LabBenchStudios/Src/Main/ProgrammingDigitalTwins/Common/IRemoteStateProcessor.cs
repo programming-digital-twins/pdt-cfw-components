@@ -26,9 +26,15 @@ using LabBenchStudios.Pdt.Data;
 
 namespace LabBenchStudios.Pdt.Common
 {
-    public interface IRemoteCommandProcessor
+    public interface IRemoteStateProcessor
     {
-        bool ProcessRemoteCommandRequest(ResourceNameContainer resource);
+        bool EnableIncomingVirtualThingUpdates(bool enable);
+
+        bool EnableOutoingPhysicalThingUpdates(bool enable);
+
+        bool LoadVirtualThingSimulationData();
+
+        bool SendStateUpdateToPhysicalThing(ResourceNameContainer resource);
 
     }
 }

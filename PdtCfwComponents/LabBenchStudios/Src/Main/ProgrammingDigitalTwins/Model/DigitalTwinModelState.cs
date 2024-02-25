@@ -34,6 +34,13 @@ using Newtonsoft.Json;
 
 namespace LabBenchStudios.Pdt.Model
 {
+    /// <summary>
+    /// This class contains the properties and current known state of
+    /// a digital twin model, along with its references and components.
+    /// 
+    /// Shared properties are derived from IotDataContext, which is also
+    /// described in the base DTDML that all models extend.
+    /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
     public class DigitalTwinModelState : IotDataContext, IDigitalTwinStateProcessor
     {
@@ -42,8 +49,8 @@ namespace LabBenchStudios.Pdt.Model
 
         private Hashtable modelProperties = new Hashtable();
 
-        private Dictionary<string, DigitalTwinModelState> stateRelationshipMap =
-            new Dictionary<string, DigitalTwinModelState>();
+        private Dictionary<string, List<DigitalTwinModelState>> stateRelationshipMap =
+            new Dictionary<string, List<DigitalTwinModelState>>();
 
         private Dictionary<string, DigitalTwinModelState> stateComponentMap =
             new Dictionary<string, DigitalTwinModelState>();

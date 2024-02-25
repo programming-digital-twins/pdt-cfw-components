@@ -7,16 +7,8 @@
   "contents": [
     {
       "@type": "Property",
-      "name": "heatingZone",
-      "schema": {
-        "@type": "Object",
-        "fields": [
-          {
-            "name": "zoneName",
-            "schema": "string"
-          }
-        ]
-      }
+      "name": "zoneName",
+      "schema": "string"
     },
     {
       "@type": "Relationship",

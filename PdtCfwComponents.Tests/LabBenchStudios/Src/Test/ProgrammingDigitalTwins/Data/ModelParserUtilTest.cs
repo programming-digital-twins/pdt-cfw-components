@@ -241,6 +241,27 @@ namespace LabBenchStudios.Pdt.Test.Data
         }
 
         [Test]
+        public void CheckValidityOfEdgeComputeDeviceControllerDtdl()
+        {
+            // This file extends BASE_IOT_MODEL_CONTEXT_DTDL_MODEL ID
+            //
+            // NOTE: The order of the list doesn't matter to the DTDL parser - all extended
+            // ID's simply need to be part of the IEnumerable passed to the parser
+            var modelList = new List<string>
+            {
+                ModelConst.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL,
+                ModelConst.COMPONENT_DEVICE_SYS_PERF_DTDL_MODEL,
+                ModelConst.COMPONENT_ENV_SENSORS_DTDL_MODEL,
+                ModelConst.CONTROLLER_EDGE_COMPUTE_DEVICE_DTDL_MODEL
+            };
+
+            Assert.That(
+                this.RunDtdlValidation(
+                    DTDL_TEST_MODEL_FILEPATH, modelList),
+                Is.True);
+        }
+
+        [Test]
         public void CheckValidityOfDeviceSystemPerformanceComponentDtdl()
         {
             // This test requires BASE_IOT_MODEL_CONTEXT_DTDL_MODEL during the load process

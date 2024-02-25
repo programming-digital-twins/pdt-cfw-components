@@ -7,40 +7,29 @@
   "contents": [
     {
       "@type": "Property",
-      "name": "interiorRoom",
-      "schema": {
-        "@type": "Object",
-        "fields": [
-          {
-            "name": "friendlyName",
-            "schema": "string"
-          },
-          {
-            "name": "lastOccupied",
-            "schema": "dateTime"
-          },
-          {
-            "name": "isOccupied",
-            "schema": "boolean"
-          },
-          {
-            "name": "isHeatingOn",
-            "schema": "boolean"
-          },
-          {
-            "name": "isHumidifierOn",
-            "schema": "boolean"
-          },
-          {
-            "name": "isAudioOn",
-            "schema": "boolean"
-          },
-          {
-            "name": "isMonitorOn",
-            "schema": "boolean"
-          }
-        ]
-      }
+      "name": "roomName",
+      "writable": true,
+      "schema": "string"
+    },
+    {
+      "@type": "Property",
+      "name": "floorNumber",
+      "schema": "integer"
+    },
+    {
+      "@type": "Property",
+      "name": "hasAudio",
+      "schema": "boolean"
+    },
+    {
+      "@type": "Property",
+      "name": "hasMonitor",
+      "schema": "boolean"
+    },
+    {
+      "@type": "Property",
+      "name": "lastOccupiedDate",
+      "schema": "dateTime"
     },
     {
       "@type": "Relationship",

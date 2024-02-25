@@ -30,6 +30,7 @@ using System.Collections.Generic;
 using System.IO;
 
 using DTDLParser;
+using DTDLParser.Models;
 
 namespace LabBenchStudios.Pdt.Model
 {
@@ -38,7 +39,7 @@ namespace LabBenchStudios.Pdt.Model
         private string modelFilePath = ModelConst.DEFAULT_MODEL_FILE_PATH;
 
         // this contains all the DT model JSON instances
-        private IReadOnlyDictionary<Dtmi, DTDLParser.Models.DTEntityInfo> digitalTwinModelCache;
+        private IReadOnlyDictionary<Dtmi, DTEntityInfo> digitalTwinModelCache;
 
         // this contains all DT model state instances that are associated
         // with a given dtmi string (which is the lookup key)
@@ -62,6 +63,53 @@ namespace LabBenchStudios.Pdt.Model
         }
 
         // public methods
+
+        public DigitalTwinModelState CreateModelState(IDataContextEventListener stateUpdateListener)
+        {
+            return new DigitalTwinModelState();
+                
+        }
+        public List<string> GetAllDtmiValues()
+        {
+            if (digitalTwinModelCache != null && digitalTwinModelCache.Count > 0)
+            {
+                List<string> dtmiValues = new List<string>(digitalTwinModelCache.Count);
+
+                foreach (DTEntityInfo item in digitalTwinModelCache.Values)
+                {
+                    dtmiValues.Add(item.Id.AbsoluteUri);
+
+                    switch (item.EntityKind)
+                    {
+                        case DTEntityKind.Property:
+                            DTPropertyInfo pi = item as DTPropertyInfo;
+                            Console.WriteLine($"\tProperty: {pi.Name} -- schema {pi.Schema}");
+                            break;
+                        case DTEntityKind.Relationship:
+                            DTRelationshipInfo ri = item as DTRelationshipInfo;
+                            Console.WriteLine($"\tRelationship: {ri.Name} -- target {ri.Target}");
+                            break;
+                        case DTEntityKind.Telemetry:
+                            DTTelemetryInfo ti = item as DTTelemetryInfo;
+                            Console.WriteLine($"\tTelemetry: {ti.Name} -- schema {ti.Schema}");
+                            break;
+                        case DTEntityKind.Component:
+                            DTComponentInfo ci = item as DTComponentInfo;
+                            DTInterfaceInfo component = ci.Schema;
+                            Console.WriteLine($"\tComponent: {ci.Id} | {ci.Name} -- schema: {component.ToString()}");
+                            break;
+                    }
+                }
+
+                return dtmiValues;
+            }
+            else
+            {
+                Console.WriteLine($"No DTDL model cache loaded from file path {this.modelFilePath}");
+            }
+
+            return null;
+        }
 
         public bool HandleIncomingTelemetry(IotDataContext dataContext)
         {

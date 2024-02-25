@@ -7,24 +7,19 @@
   "contents": [
     {
       "@type": "Property",
-      "name": "residentialStructure",
-      "schema": {
-        "@type": "Object",
-        "fields": [
-          {
-            "name": "floorCount",
-            "schema": "integer"
-          },
-          {
-            "name": "hasBasement",
-            "schema": "boolean"
-          },
-          {
-            "name": "hasRevolvingCube",
-            "schema": "boolean"
-          }
-        ]
-      }
+      "name": "floorCount",
+      "schema": "integer"
+    },
+    {
+      "@type": "Property",
+      "name": "hasBasement",
+      "schema": "boolean"
+    },
+    {
+      "@type": "Property",
+      "name": "hasRevolvingCube",
+      "writable": true,
+      "schema": "boolean"
     },
     {
       "@type": "Relationship",

@@ -28,6 +28,7 @@ using System.IO;
 using System.Linq;
 
 using DTDLParser;
+using DTDLParser.Models;
 
 using Newtonsoft.Json.Serialization;
 
@@ -159,9 +160,9 @@ namespace LabBenchStudios.Pdt.Model
             return false;
         }
 
-        public static IReadOnlyDictionary<Dtmi, DTDLParser.Models.DTEntityInfo> LoadDtdlModels(string modelFilePath)
+        public static IReadOnlyDictionary<Dtmi, DTEntityInfo> LoadDtdlModels(string modelFilePath)
         {
-            IReadOnlyDictionary<Dtmi, DTDLParser.Models.DTEntityInfo> modelDictionary = null;
+            IReadOnlyDictionary<Dtmi, DTEntityInfo> modelDictionary = null;
 
             if (!string.IsNullOrEmpty(modelFilePath) && Directory.Exists(modelFilePath))
             {
@@ -178,16 +179,22 @@ namespace LabBenchStudios.Pdt.Model
                     Console.WriteLine($"Loaded DTDL JSON for model file: {modelFileName}");
                 }
 
-                bool isValid = ModelParserUtil.IsValidDtdlJsonData(modelJsonList);
+                ModelParser modelParser = new();
 
-                if (isValid)
+                modelDictionary = modelParser.Parse(modelJsonList);
+
+                if (modelDictionary != null)
                 {
-                    Console.WriteLine($"Validated DTDL JSON for all loaded model files from path: {modelFilePath}");
+                    Console.WriteLine($"Validated and loaded DTDL JSON from path: {modelFilePath}");
                 }
                 else
                 {
-                    Console.WriteLine($"Failed to validate DTDL JSON for all loaded model files from path: {modelFilePath}");
+                    Console.WriteLine($"Failed to load and validate DTDL JSON from path: {modelFilePath}");
                 }
+            }
+            else
+            {
+                Console.WriteLine($"Invalid file path {modelFilePath}. Dtdl models not loaded.");
             }
 
             return modelDictionary;

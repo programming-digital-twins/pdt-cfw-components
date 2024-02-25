@@ -69,11 +69,12 @@ namespace LabBenchStudios.Pdt.Model
         // and command receptive systems and components
         //
         // each of these depends on (extends) the BASE_IOT_MODEL_CONTEXT_DTDL_MODEL
-        public static readonly string CONTROLLER_FLUID_PUMP_DTDL_MODEL         = "Lbs_Pdt_Controller_FluidPump.json";
-        public static readonly string CONTROLLER_HEATING_ZONE_DTDL_MODEL       = "Lbs_Pdt_Controller_HeatingZone.json";
-        public static readonly string CONTROLLER_HUMIDIFIER_DTDL_MODEL         = "Lbs_Pdt_Controller_Humidifier.json";
-        public static readonly string CONTROLLER_POWER_WINDMILL_DTDL_MODEL     = "Lbs_Pdt_Controller_PowerWindmill.json";
-        public static readonly string CONTROLLER_THERMOSTAT_DTDL_MODEL         = "Lbs_Pdt_Controller_Thermostat.json";
+        public static readonly string CONTROLLER_EDGE_COMPUTE_DEVICE_DTDL_MODEL = "Lbs_Pdt_Controller_EdgeComputeDevice.json";
+        public static readonly string CONTROLLER_FLUID_PUMP_DTDL_MODEL          = "Lbs_Pdt_Controller_FluidPump.json";
+        public static readonly string CONTROLLER_HEATING_ZONE_DTDL_MODEL        = "Lbs_Pdt_Controller_HeatingZone.json";
+        public static readonly string CONTROLLER_HUMIDIFIER_DTDL_MODEL          = "Lbs_Pdt_Controller_Humidifier.json";
+        public static readonly string CONTROLLER_POWER_WINDMILL_DTDL_MODEL      = "Lbs_Pdt_Controller_PowerWindmill.json";
+        public static readonly string CONTROLLER_THERMOSTAT_DTDL_MODEL          = "Lbs_Pdt_Controller_Thermostat.json";
 
         // these model files represent the telemetry description for all data generation systems and components
         //
@@ -108,11 +109,13 @@ namespace LabBenchStudios.Pdt.Model
         public const string HEATING_SYSTEM_NAME = "heatingSystem";
         public const string INTERIOR_ROOM_NAME = "interiorRoom";
         public const string RESIDENTIAL_STRUCTURE_NAME = "residentialStructure";
+        public const string EDGE_COMPUTE_DEVICE_NAME = "edgeComputeDevice";
         public const string FLUID_PUMP_NAME = "fluidPump";
         public const string HEATING_ZONE_NAME = "heatingZone";
         public const string HUMIDIFIER_NAME = "humidifier";
         public const string POWER_WINDMILL_NAME = "powerWindmill";
         public const string THERMOSTAT_NAME = "thermostat";
+
         public const string SYSTEM_PERFORMANCE_DATA_NAME = "systemPerformanceData";
         public const string ENVIRONMENTAL_SENSOR_DATA_NAME = "environmentalSensorData";
         public const string RELATIVE_HUMIDITY_DATA_NAME = "relativeHumidityData";
