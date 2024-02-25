@@ -11,7 +11,6 @@
 		<AssemblyName>LBS.$(MSBuildProjectName)</AssemblyName>
 		<RootNamespace>LabBenchStudios.Pdt</RootNamespace>
 		<SignAssembly>False</SignAssembly>
-		<DelaySign>False</DelaySign>
 		<ErrorReport>none</ErrorReport>
 		<Title>Lab Bench Studios - Programming Digital Twins - Client Framework Components</Title>
 		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>

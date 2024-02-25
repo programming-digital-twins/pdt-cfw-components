@@ -33,7 +33,7 @@ using System.Text;
 namespace LabBenchStudios.Pdt.Model
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class ThermostatModelController : DigitalTwinModelContext
+    public class ThermostatModelController : DigitalTwinModelState
     {
         [JsonProperty]
         private float currentTemperature = 0.0f;
@@ -48,7 +48,10 @@ namespace LabBenchStudios.Pdt.Model
         private float maxTemperature = 0.0f;
 
         // necessary for JSON serialization / deserialization
-        public ThermostatModelController() : base() { }
+        public ThermostatModelController() : base()
+        {
+
+        }
 
         public ThermostatModelController(string name, string deviceID) :
             base(name, deviceID, ConfigConst.DEFAULT_TYPE_CATEGORY_ID, ConfigConst.DEFAULT_TYPE_ID)
@@ -66,13 +69,25 @@ namespace LabBenchStudios.Pdt.Model
 
         public float GetMaxTemperature() { return this.maxTemperature; }
 
-        public void SetCurrentTemperature(float val) { if (val >= 0 || val <= 100) this.currentTemperature = val; base.UpdateTimeStamp(); }
+        public void SetCurrentTemperature(float val)
+        {
+            if (val >= 0 || val <= 100) this.currentTemperature = val; base.UpdateTimeStamp();
+        }
 
-        public void SetTargetTemperature(float val) { if (val >= 0 || val <= 100) this.targetTemperature = val; base.UpdateTimeStamp(); }
+        public void SetTargetTemperature(float val)
+        {
+            if (val >= 0 || val <= 100) this.targetTemperature = val; base.UpdateTimeStamp();
+        }
 
-        public void SetMinTemperature(float val) { if (val >= 0 || val <= 100) this.minTemperature = val; base.UpdateTimeStamp(); }
+        public void SetMinTemperature(float val)
+        {
+            if (val >= 0 || val <= 100) this.minTemperature = val; base.UpdateTimeStamp();
+        }
 
-        public void SetMaxTemperature(float val) { if (val >= 0 || val <= 100) this.maxTemperature = val; base.UpdateTimeStamp(); }
+        public void SetMaxTemperature(float val)
+        {
+            if (val >= 0 || val <= 100) this.maxTemperature = val; base.UpdateTimeStamp();
+        }
 
         public override string ToString()
         {

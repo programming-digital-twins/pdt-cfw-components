@@ -50,7 +50,6 @@ namespace LabBenchStudios.Pdt.Model
         public const int HUMIDIFIER_DEVICE_TYPE = ConfigConst.HUMIDIFIER_ACTUATOR_TYPE;
         public const int THERMOSTAT_DEVICE_TYPE = ConfigConst.HVAC_ACTUATOR_TYPE;
 
-
         //////////
         // 
         // DTDL properties
@@ -90,6 +89,11 @@ namespace LabBenchStudios.Pdt.Model
         // static const entries
         public const string DTMI_NAME            = "dtmi";
         public const string DTMI_ORG_NAME        = "LabBenchStudios";
+
+        public const string MODEL_FILE_NAME_PREFIX  = "Lbs_Pdt_";
+        public const string MODEL_FILE_NAME_PATTERN = MODEL_FILE_NAME_PREFIX + "*.json";
+
+        public const string DEFAULT_MODEL_FILE_PATH = "../../../../Models/Dtdl/";
 
         // static readonly entries
         public static readonly int    DTMI_CURRENT_VERSION = 1;
@@ -142,22 +146,22 @@ namespace LabBenchStudios.Pdt.Model
         //  readonly string identifier: IOT_MODEL_CONTEXT_MODEL_ID
         //  string representation:      "dtmi:LabBenchStudios:PDT:iotModelContext:1"
         //
-        public static readonly string IOT_MODEL_CONTEXT_MODEL_ID                    = createModelID(DTMI_PREFIX, IOT_MODEL_CONTEXT_NAME, DTMI_CURRENT_VERSION);
-        public static readonly string HEATING_SYSTEM_CONTEXT_MODEL_ID               = createModelID(DTMI_PREFIX, HEATING_SYSTEM_NAME, DTMI_CURRENT_VERSION);
-        public static readonly string INTERIOR_ROOM_STATE_CONTEXT_MODEL_ID          = createModelID(DTMI_PREFIX, INTERIOR_ROOM_NAME, DTMI_CURRENT_VERSION);
-        public static readonly string RESIDENTIAL_STRUCTURE_CONTEXT_MODEL_ID        = createModelID(DTMI_PREFIX, RESIDENTIAL_STRUCTURE_NAME, DTMI_CURRENT_VERSION);
-        public static readonly string FLUID_PUMP_CONTROLLER_MODEL_ID                = createModelID(DTMI_PREFIX, FLUID_PUMP_NAME, DTMI_CURRENT_VERSION);
-        public static readonly string HEATING_ZONE_CONTROLLER_MODEL_ID              = createModelID(DTMI_PREFIX, HEATING_ZONE_NAME, DTMI_CURRENT_VERSION);
-        public static readonly string HUMIDIFIER_CONTROLLER_MODEL_ID                = createModelID(DTMI_PREFIX, HUMIDIFIER_NAME, DTMI_CURRENT_VERSION);
-        public static readonly string POWER_WINDMILL_CONTROLLER_MODEL_ID            = createModelID(DTMI_PREFIX, POWER_WINDMILL_NAME, DTMI_CURRENT_VERSION);
-        public static readonly string THERMOSTAT_CONTROLLER_MODEL_ID                = createModelID(DTMI_PREFIX, THERMOSTAT_NAME, DTMI_CURRENT_VERSION);
-        public static readonly string DEVICE_SYS_PERF_COMPONENT_MODEL_ID            = createModelID(DTMI_PREFIX, SYSTEM_PERFORMANCE_DATA_NAME, DTMI_CURRENT_VERSION);
-        public static readonly string ENV_SENSORS_COMPONENT_MODEL_ID                = createModelID(DTMI_PREFIX, ENVIRONMENTAL_SENSOR_DATA_NAME, DTMI_CURRENT_VERSION);
-        public static readonly string RELATIVE_HUMIDITY_SENSOR_COMPONENT_MODEL_ID   = createModelID(DTMI_PREFIX, RELATIVE_HUMIDITY_DATA_NAME, DTMI_CURRENT_VERSION);
-        public static readonly string BAROMETRIC_PRESSURE_SENSOR_COMPONENT_MODEL_ID = createModelID(DTMI_PREFIX, BAROMETRIC_PRESSURE_DATA_NAME, DTMI_CURRENT_VERSION);
-        public static readonly string TEMP_SENSOR_COMPONENT_MODEL_ID                = createModelID(DTMI_PREFIX, TEMPERATURE_DATA_NAME, DTMI_CURRENT_VERSION);
+        public static readonly string IOT_MODEL_CONTEXT_MODEL_ID                    = CreateModelID(DTMI_PREFIX, IOT_MODEL_CONTEXT_NAME, DTMI_CURRENT_VERSION);
+        public static readonly string HEATING_SYSTEM_CONTEXT_MODEL_ID               = CreateModelID(DTMI_PREFIX, HEATING_SYSTEM_NAME, DTMI_CURRENT_VERSION);
+        public static readonly string INTERIOR_ROOM_STATE_CONTEXT_MODEL_ID          = CreateModelID(DTMI_PREFIX, INTERIOR_ROOM_NAME, DTMI_CURRENT_VERSION);
+        public static readonly string RESIDENTIAL_STRUCTURE_CONTEXT_MODEL_ID        = CreateModelID(DTMI_PREFIX, RESIDENTIAL_STRUCTURE_NAME, DTMI_CURRENT_VERSION);
+        public static readonly string FLUID_PUMP_CONTROLLER_MODEL_ID                = CreateModelID(DTMI_PREFIX, FLUID_PUMP_NAME, DTMI_CURRENT_VERSION);
+        public static readonly string HEATING_ZONE_CONTROLLER_MODEL_ID              = CreateModelID(DTMI_PREFIX, HEATING_ZONE_NAME, DTMI_CURRENT_VERSION);
+        public static readonly string HUMIDIFIER_CONTROLLER_MODEL_ID                = CreateModelID(DTMI_PREFIX, HUMIDIFIER_NAME, DTMI_CURRENT_VERSION);
+        public static readonly string POWER_WINDMILL_CONTROLLER_MODEL_ID            = CreateModelID(DTMI_PREFIX, POWER_WINDMILL_NAME, DTMI_CURRENT_VERSION);
+        public static readonly string THERMOSTAT_CONTROLLER_MODEL_ID                = CreateModelID(DTMI_PREFIX, THERMOSTAT_NAME, DTMI_CURRENT_VERSION);
+        public static readonly string DEVICE_SYS_PERF_COMPONENT_MODEL_ID            = CreateModelID(DTMI_PREFIX, SYSTEM_PERFORMANCE_DATA_NAME, DTMI_CURRENT_VERSION);
+        public static readonly string ENV_SENSORS_COMPONENT_MODEL_ID                = CreateModelID(DTMI_PREFIX, ENVIRONMENTAL_SENSOR_DATA_NAME, DTMI_CURRENT_VERSION);
+        public static readonly string RELATIVE_HUMIDITY_SENSOR_COMPONENT_MODEL_ID   = CreateModelID(DTMI_PREFIX, RELATIVE_HUMIDITY_DATA_NAME, DTMI_CURRENT_VERSION);
+        public static readonly string BAROMETRIC_PRESSURE_SENSOR_COMPONENT_MODEL_ID = CreateModelID(DTMI_PREFIX, BAROMETRIC_PRESSURE_DATA_NAME, DTMI_CURRENT_VERSION);
+        public static readonly string TEMP_SENSOR_COMPONENT_MODEL_ID                = CreateModelID(DTMI_PREFIX, TEMPERATURE_DATA_NAME, DTMI_CURRENT_VERSION);
 
-        public static string createModelID(string dtmiPrefix, string modelName, int version)
+        public static string CreateModelID(string dtmiPrefix, string modelName, int version)
         {
             string idString =
                 dtmiPrefix + ':' + modelName + ':' + version;
@@ -165,5 +169,46 @@ namespace LabBenchStudios.Pdt.Model
             return idString;
         }
 
+        public static string GetModelID(int typeID)
+        {
+            string modelID = null;
+
+            // set the DTMI (modelID) - only for those that may be deserialized from the EDA
+            // all others will keep the default of ModelConst.IOT_MODEL_CONTEXT_MODEL_ID
+            //
+            // for now, this will suffice as a simple 'mapping' table, and also mitigate
+            // any need to update the EDA with knowledge of DTMI naming conventions
+            switch (typeID)
+            {
+                case ConfigConst.FLUID_RATE_SENSOR_TYPE:
+                    modelID = ModelConst.FLUID_PUMP_CONTROLLER_MODEL_ID; break;
+
+                case ConfigConst.HUMIDIFIER_ACTUATOR_TYPE:
+                    modelID = ModelConst.HUMIDIFIER_CONTROLLER_MODEL_ID; break;
+
+                case ConfigConst.HVAC_ACTUATOR_TYPE:
+                    modelID = ModelConst.THERMOSTAT_CONTROLLER_MODEL_ID; break;
+
+                case ConfigConst.SYSTEM_PERF_TYPE:
+                    modelID = ModelConst.DEVICE_SYS_PERF_COMPONENT_MODEL_ID; break;
+
+                case ConfigConst.HUMIDITY_SENSOR_TYPE:
+                    modelID = ModelConst.ENV_SENSORS_COMPONENT_MODEL_ID; break;
+
+                case ConfigConst.TEMP_SENSOR_TYPE:
+                    modelID = ModelConst.ENV_SENSORS_COMPONENT_MODEL_ID; break;
+
+                case ConfigConst.PRESSURE_SENSOR_TYPE:
+                    modelID = ModelConst.ENV_SENSORS_COMPONENT_MODEL_ID; break;
+
+                case ConfigConst.WIND_SYSTEM_TYPE:
+                    modelID = ModelConst.POWER_WINDMILL_CONTROLLER_MODEL_ID; break;
+
+                default:
+                    modelID = ModelConst.IOT_MODEL_CONTEXT_MODEL_ID; break;
+            }
+
+            return modelID;
+        }
     }
 }

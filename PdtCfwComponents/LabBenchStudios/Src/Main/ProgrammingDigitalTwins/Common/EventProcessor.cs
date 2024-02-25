@@ -27,6 +27,7 @@ using System.Collections.Generic;
 
 using LabBenchStudios.Pdt.Common;
 using LabBenchStudios.Pdt.Data;
+using LabBenchStudios.Pdt.Model;
 
 namespace LabBenchStudios.Pdt.Unity.Common
 {
@@ -41,7 +42,7 @@ namespace LabBenchStudios.Pdt.Unity.Common
      * It is NOT designed to be used across scenes (yet).
      * 
      */
-    public class EventProcessor : ISystemStatusEventListener
+    public class EventProcessor : ISystemStatusEventListener, IRemoteCommandProcessor
     {
         private static string _GUID = null;
         private static bool _IS_TERMINATED = false;
@@ -87,6 +88,7 @@ namespace LabBenchStudios.Pdt.Unity.Common
         private List<IDataContextEventListener> dataContextEventListenerList = null;
         private List<ISystemStatusEventListener> systemStatusEventListenerList = null;
 
+        private Dictionary<string, DigitalTwinModelState> digitalTwinStateTable = null;
 
         // constructors
 
@@ -94,6 +96,7 @@ namespace LabBenchStudios.Pdt.Unity.Common
         {
             this.dataContextEventListenerList = new List<IDataContextEventListener>();
             this.systemStatusEventListenerList = new List<ISystemStatusEventListener>();
+            this.digitalTwinStateTable = new Dictionary<string, DigitalTwinModelState>();
         }
 
 
@@ -114,6 +117,14 @@ namespace LabBenchStudios.Pdt.Unity.Common
         public string GetGuid()
         {
             return _GUID;
+        }
+
+        public void RegisterDigitalTwin(DigitalTwinModelState dtModelState)
+        {
+            if (dtModelState != null)
+            {
+                this.digitalTwinStateTable.Add(dtModelState.GetModelID(), dtModelState);
+            }
         }
 
         public void RegisterListener(IDataContextEventListener listener)
@@ -186,92 +197,104 @@ namespace LabBenchStudios.Pdt.Unity.Common
 
         public void OnMessagingSystemDataReceived(ActuatorData data)
         {
-            // TODO:
-            //
-            // update to pass the SensorData into the DigitalTwinModelManager,
-            // which will determine which registered component should receive
-            // the update
-            //
-            // the event listener list(s) will need to be adjusted to account
-            // for DTMI-based indexing so the event processor has limited
-            // work to do for each incoming message
-            //
-            // (e.g., those components attached to a particular model will
-            // receive their respective updates, and no others)
-            if (this.systemStatusEventListenerList.Count > 0)
+            // update the digital twin's telemetry from the incoming
+            // IotDataContext - this will use the typeID to lookup
+            // the appropriate DTMI and associated DigitalTwinModelState
+            // and invoke its HandleIncomingTelemetry method
+            if (data != null)
             {
-                foreach (var listener in this.dataContextEventListenerList)
+                string dtmi = ModelConst.GetModelID(data.GetTypeID());
+
+                if (this.digitalTwinStateTable.ContainsKey(dtmi))
                 {
-                    listener.HandleActuatorData(data);
+                    DigitalTwinModelState dtModelState = this.digitalTwinStateTable[dtmi];
+                    dtModelState.HandleIncomingTelemetry(data);
+                }
+
+                if (this.systemStatusEventListenerList.Count > 0)
+                {
+                    foreach (var listener in this.dataContextEventListenerList)
+                    {
+                        listener.HandleActuatorData(data);
+                    }
                 }
             }
         }
 
         public void OnMessagingSystemDataReceived(ConnectionStateData data)
         {
-            // TODO:
-            //
-            // update to pass the SensorData into the DigitalTwinModelManager,
-            // which will determine which registered component should receive
-            // the update
-            //
-            // the event listener list(s) will need to be adjusted to account
-            // for DTMI-based indexing so the event processor has limited
-            // work to do for each incoming message
-            //
-            // (e.g., those components attached to a particular model will
-            // receive their respective updates, and no others)
-            if (this.systemStatusEventListenerList.Count > 0)
+            // update the digital twin's telemetry from the incoming
+            // IotDataContext - this will use the typeID to lookup
+            // the appropriate DTMI and associated DigitalTwinModelState
+            // and invoke its HandleIncomingTelemetry method
+            if (data != null)
             {
-                foreach (var listener in this.systemStatusEventListenerList)
+                string dtmi = ModelConst.GetModelID(data.GetTypeID());
+
+                if (this.digitalTwinStateTable.ContainsKey(dtmi))
                 {
-                    listener.OnMessagingSystemDataReceived(data);
+                    DigitalTwinModelState dtModelState = this.digitalTwinStateTable[dtmi];
+                    dtModelState.HandleIncomingTelemetry(data);
+                }
+
+                if (this.systemStatusEventListenerList.Count > 0)
+                {
+                    foreach (var listener in this.systemStatusEventListenerList)
+                    {
+                        listener.OnMessagingSystemDataReceived(data);
+                    }
                 }
             }
         }
 
         public void OnMessagingSystemDataReceived(SensorData data)
         {
-            // TODO:
-            //
-            // update to pass the SensorData into the DigitalTwinModelManager,
-            // which will determine which registered component should receive
-            // the update
-            //
-            // the event listener list(s) will need to be adjusted to account
-            // for DTMI-based indexing so the event processor has limited
-            // work to do for each incoming message
-            //
-            // (e.g., those components attached to a particular model will
-            // receive their respective updates, and no others)
-            if (this.systemStatusEventListenerList.Count > 0)
+            // update the digital twin's telemetry from the incoming
+            // IotDataContext - this will use the typeID to lookup
+            // the appropriate DTMI and associated DigitalTwinModelState
+            // and invoke its HandleIncomingTelemetry method
+            if (data != null)
             {
-                foreach (var listener in this.dataContextEventListenerList)
+                string dtmi = ModelConst.GetModelID(data.GetTypeID());
+
+                if (this.digitalTwinStateTable.ContainsKey(dtmi))
                 {
-                    listener.HandleSensorData(data);
+                    DigitalTwinModelState dtModelState = this.digitalTwinStateTable[dtmi];
+                    dtModelState.HandleIncomingTelemetry(data);
+                }
+
+                if (this.systemStatusEventListenerList.Count > 0)
+                {
+                    foreach (var listener in this.dataContextEventListenerList)
+                    {
+                        listener.HandleSensorData(data);
+                    }
                 }
             }
         }
 
         public void OnMessagingSystemDataReceived(SystemPerformanceData data)
         {
-            // TODO:
-            //
-            // update to pass the SensorData into the DigitalTwinModelManager,
-            // which will determine which registered component should receive
-            // the update
-            //
-            // the event listener list(s) will need to be adjusted to account
-            // for DTMI-based indexing so the event processor has limited
-            // work to do for each incoming message
-            //
-            // (e.g., those components attached to a particular model will
-            // receive their respective updates, and no others)
-            if (this.systemStatusEventListenerList.Count > 0)
+            // update the digital twin's telemetry from the incoming
+            // IotDataContext - this will use the typeID to lookup
+            // the appropriate DTMI and associated DigitalTwinModelState
+            // and invoke its HandleIncomingTelemetry method
+            if (data != null)
             {
-                foreach (var listener in this.dataContextEventListenerList)
+                string dtmi = ModelConst.GetModelID(data.GetTypeID());
+
+                if (this.digitalTwinStateTable.ContainsKey(dtmi))
                 {
-                    listener.HandleSystemPerformanceData(data);
+                    DigitalTwinModelState dtModelState = this.digitalTwinStateTable[dtmi];
+                    dtModelState.HandleIncomingTelemetry(data);
+                }
+
+                if (this.systemStatusEventListenerList.Count > 0)
+                {
+                    foreach (var listener in this.dataContextEventListenerList)
+                    {
+                        listener.HandleSystemPerformanceData(data);
+                    }
                 }
             }
         }
@@ -298,12 +321,19 @@ namespace LabBenchStudios.Pdt.Unity.Common
             }
         }
 
-        public void SendRemoteCommandRequest(ResourceNameContainer resource)
+        public bool ProcessRemoteCommandRequest(ResourceNameContainer resource)
         {
             if (this.remoteCommandProcessor != null)
             {
-                this.remoteCommandProcessor.HandleRemoteCommandRequest(resource);
+                return this.remoteCommandProcessor.ProcessRemoteCommandRequest(resource);
             }
+            else
+            {
+                Console.WriteLine(
+                    $"No composite IRemoteCommandProcessor registered. Ignoring request: {resource}");
+            }
+
+            return false;
         }
 
 

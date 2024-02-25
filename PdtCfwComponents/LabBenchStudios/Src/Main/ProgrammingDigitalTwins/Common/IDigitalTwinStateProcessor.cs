@@ -26,9 +26,11 @@ using LabBenchStudios.Pdt.Data;
 
 namespace LabBenchStudios.Pdt.Common
 {
-    public interface IRemoteCommandProcessor
+    public interface IDigitalTwinStateProcessor
     {
-        bool ProcessRemoteCommandRequest(ResourceNameContainer resource);
+        bool HandleIncomingTelemetry(IotDataContext dataContext);
+
+        bool HandleOutgoingStateUpdate(IotDataContext dataContext);
 
     }
 }

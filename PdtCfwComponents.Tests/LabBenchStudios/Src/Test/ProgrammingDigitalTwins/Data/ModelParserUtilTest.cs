@@ -40,6 +40,30 @@ namespace LabBenchStudios.Pdt.Test.Data
         }
 
         [Test]
+        public void DisplayDtdlItemsFromModel()
+        {
+            var modelList = new List<string>
+            {
+                ModelConst.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL
+            };
+
+            foreach (var modelFile in modelList)
+            {
+                string model = ModelParserUtil.LoadDtdlFile(DTDL_TEST_MODEL_FILEPATH + modelFile);
+
+                ModelParserUtil.DisplayDtdlItems(model);
+            }
+        }
+
+        [Test]
+        public void LoadAllDtmlFromPath()
+        {
+            var modelList = ModelParserUtil.LoadDtdlModels(DTDL_TEST_MODEL_FILEPATH);
+
+            //Assert.That(modelList, Is.InstanceOf<IReadOnlyDictionary>());
+        }
+
+        [Test]
         public void CheckValidityOfIotModelContextDtdl()
         {
             Assert.That(

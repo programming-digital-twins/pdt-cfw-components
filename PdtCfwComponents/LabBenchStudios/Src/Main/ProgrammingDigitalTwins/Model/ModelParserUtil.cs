@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+
 using DTDLParser;
 
 using Newtonsoft.Json.Serialization;
@@ -52,7 +53,7 @@ namespace LabBenchStudios.Pdt.Model
 
         public static string LoadDtdlFile(string fileName)
         {
-            if (fileName != null && fileName.Length > 0)
+            if (!string.IsNullOrEmpty(fileName))
             {
                 try
                 {
@@ -78,6 +79,18 @@ namespace LabBenchStudios.Pdt.Model
             return null;
         }
 
+        public static void DisplayDtdlItems(string dtdlJson)
+        {
+            ModelParser modelParser = new();
+
+            var objectModel = modelParser.Parse(dtdlJson);
+
+            foreach (var i in objectModel.Values)
+            {
+                Console.WriteLine(i);
+            }
+        }
+
         public static bool IsValidDtdlJsonFile(string fileName)
         {
             string jsonData = LoadDtdlFile(fileName);
@@ -96,7 +109,7 @@ namespace LabBenchStudios.Pdt.Model
 
         public static bool IsValidDtdlJsonData(string jsonData)
         {
-            if (jsonData != null && jsonData.Length > 0)
+            if (!string.IsNullOrEmpty(jsonData))
             {
                 try
                 {
@@ -144,6 +157,40 @@ namespace LabBenchStudios.Pdt.Model
             }
 
             return false;
+        }
+
+        public static IReadOnlyDictionary<Dtmi, DTDLParser.Models.DTEntityInfo> LoadDtdlModels(string modelFilePath)
+        {
+            IReadOnlyDictionary<Dtmi, DTDLParser.Models.DTEntityInfo> modelDictionary = null;
+
+            if (!string.IsNullOrEmpty(modelFilePath) && Directory.Exists(modelFilePath))
+            {
+                var modelJsonList = new List<string>();
+
+                var modelFileList =
+                    Directory.GetFiles(modelFilePath, ModelConst.MODEL_FILE_NAME_PATTERN);
+
+                foreach (var modelFileName in modelFileList)
+                {
+                    string jsonData = ModelParserUtil.LoadDtdlFile(modelFileName);
+                    modelJsonList.Add(jsonData);
+
+                    Console.WriteLine($"Loaded DTDL JSON for model file: {modelFileName}");
+                }
+
+                bool isValid = ModelParserUtil.IsValidDtdlJsonData(modelJsonList);
+
+                if (isValid)
+                {
+                    Console.WriteLine($"Validated DTDL JSON for all loaded model files from path: {modelFilePath}");
+                }
+                else
+                {
+                    Console.WriteLine($"Failed to validate DTDL JSON for all loaded model files from path: {modelFilePath}");
+                }
+            }
+
+            return modelDictionary;
         }
 
     }

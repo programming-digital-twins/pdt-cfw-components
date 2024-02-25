@@ -157,7 +157,7 @@ namespace LabBenchStudios.Pdt.Common
         public static readonly string RESOURCE_REGISTRATION_REQUEST = "ResourceRegRequest";
 
         public static readonly string LED_ACTUATOR_NAME = "LedActuator";
-        public static readonly string SYSTEM_PERF_NAME = "SystemPerfMsg";
+        public static readonly string SYSTEM_PERF_NAME = "SystemPerformance";
         public static readonly string CAMERA_SENSOR_NAME = "CameraSensor";
 
         public const int COMMAND_OFF = DEFAULT_COMMAND;
@@ -186,15 +186,19 @@ namespace LabBenchStudios.Pdt.Common
         public const int FLUID_RATE_SENSOR_TYPE = 1021;
         public const int IMPELLER_RPM_SENSOR_TYPE = 1022;
 
+        public static readonly string HUMIDIFIER_NAME = "Humidifier";
+        public static readonly string THERMOSTAT_NAME = "Thermostat";
+        public static readonly string PRESSURE_NAME = "BarometricPressure";
+        public static readonly string FLUID_PUMP_NAME = "FluidPump";
+
         public static readonly string HUMIDIFIER_ACTUATOR_NAME = "HumidifierActuator";
         public static readonly string HVAC_ACTUATOR_NAME = "HvacActuator";
         public static readonly string CIRCULATOR_PUMP_ACTUATOR_NAME = "CirculatorPumpActuator";
 
-        public static readonly string HUMIDITY_SENSOR_NAME = "HumiditySensor";
+        public static readonly string HUMIDITY_SENSOR_NAME = "RelativeHumidity";
         public static readonly string PRESSURE_SENSOR_NAME = "PressureSensor";
-        public static readonly string TEMP_SENSOR_NAME = "TempSensor";
+        public static readonly string TEMP_SENSOR_NAME = "Temperature";
 
-        public static readonly string PRESSURE_NAME = "Pressure";
         public static readonly string VISCOSITY_NAME = "Viscosity";
         public static readonly string FLOW_RATE_NAME = "FlowRate";
         public static readonly string RPM_NAME = "RPM";
@@ -292,19 +296,19 @@ namespace LabBenchStudios.Pdt.Common
         // typical topic naming conventions
         //
         //
-        // for CDA to GDA communications
-        // e.g., PIOT/ConstrainedDevice/ActuatorCmd
-        // e.g., PIOT/ConstrainedDevice/SensorMsg
+        // for DTA to EDA topic mapping communications
+        // e.g., PDT/EdgeDevice/ActuatorCmd
+        // e.g., PDT/EdgeDevice/SensorMsg
 
-        public static readonly string CDA_UPDATE_NOTIFICATIONS_MSG_RESOURCE = PRODUCT_NAME + RESOURCE_SEPARATOR + CONSTRAINED_DEVICE + RESOURCE_SEPARATOR + UPDATE_NOTIFICATIONS_MSG;
-        public static readonly string CDA_ACTUATOR_CMD_MSG_RESOURCE = PRODUCT_NAME + RESOURCE_SEPARATOR + CONSTRAINED_DEVICE + RESOURCE_SEPARATOR + ACTUATOR_CMD;
-        public static readonly string CDA_ACTUATOR_RESPONSE_MSG_RESOURCE = PRODUCT_NAME + RESOURCE_SEPARATOR + CONSTRAINED_DEVICE + RESOURCE_SEPARATOR + ACTUATOR_RESPONSE;
-        public static readonly string CDA_MGMT_STATUS_MSG_RESOURCE = PRODUCT_NAME + RESOURCE_SEPARATOR + CONSTRAINED_DEVICE + RESOURCE_SEPARATOR + MGMT_STATUS_MSG;
-        public static readonly string CDA_MGMT_CMD_MSG_RESOURCE = PRODUCT_NAME + RESOURCE_SEPARATOR + CONSTRAINED_DEVICE + RESOURCE_SEPARATOR + MGMT_STATUS_CMD;
-        public static readonly string CDA_MEDIA_DATA_MSG_RESOURCE = PRODUCT_NAME + RESOURCE_SEPARATOR + CONSTRAINED_DEVICE + RESOURCE_SEPARATOR + MEDIA_MSG;
-        public static readonly string CDA_REGISTRATION_REQUEST_RESOURCE = PRODUCT_NAME + RESOURCE_SEPARATOR + CONSTRAINED_DEVICE + RESOURCE_SEPARATOR + RESOURCE_REGISTRATION_REQUEST;
-        public static readonly string CDA_SENSOR_DATA_MSG_RESOURCE = PRODUCT_NAME + RESOURCE_SEPARATOR + CONSTRAINED_DEVICE + RESOURCE_SEPARATOR + SENSOR_MSG;
-        public static readonly string CDA_SYSTEM_PERF_MSG_RESOURCE = PRODUCT_NAME + RESOURCE_SEPARATOR + CONSTRAINED_DEVICE + RESOURCE_SEPARATOR + SYSTEM_PERF_MSG;
+        public static readonly string EDA_UPDATE_NOTIFICATIONS_MSG_RESOURCE = PRODUCT_NAME + RESOURCE_SEPARATOR + CONSTRAINED_DEVICE + RESOURCE_SEPARATOR + UPDATE_NOTIFICATIONS_MSG;
+        public static readonly string EDA_ACTUATOR_CMD_MSG_RESOURCE = PRODUCT_NAME + RESOURCE_SEPARATOR + CONSTRAINED_DEVICE + RESOURCE_SEPARATOR + ACTUATOR_CMD;
+        public static readonly string EDA_ACTUATOR_RESPONSE_MSG_RESOURCE = PRODUCT_NAME + RESOURCE_SEPARATOR + CONSTRAINED_DEVICE + RESOURCE_SEPARATOR + ACTUATOR_RESPONSE;
+        public static readonly string EDA_MGMT_STATUS_MSG_RESOURCE = PRODUCT_NAME + RESOURCE_SEPARATOR + CONSTRAINED_DEVICE + RESOURCE_SEPARATOR + MGMT_STATUS_MSG;
+        public static readonly string EDA_MGMT_CMD_MSG_RESOURCE = PRODUCT_NAME + RESOURCE_SEPARATOR + CONSTRAINED_DEVICE + RESOURCE_SEPARATOR + MGMT_STATUS_CMD;
+        public static readonly string EDA_MEDIA_DATA_MSG_RESOURCE = PRODUCT_NAME + RESOURCE_SEPARATOR + CONSTRAINED_DEVICE + RESOURCE_SEPARATOR + MEDIA_MSG;
+        public static readonly string EDA_REGISTRATION_REQUEST_RESOURCE = PRODUCT_NAME + RESOURCE_SEPARATOR + CONSTRAINED_DEVICE + RESOURCE_SEPARATOR + RESOURCE_REGISTRATION_REQUEST;
+        public static readonly string EDA_SENSOR_DATA_MSG_RESOURCE = PRODUCT_NAME + RESOURCE_SEPARATOR + CONSTRAINED_DEVICE + RESOURCE_SEPARATOR + SENSOR_MSG;
+        public static readonly string EDA_SYSTEM_PERF_MSG_RESOURCE = PRODUCT_NAME + RESOURCE_SEPARATOR + CONSTRAINED_DEVICE + RESOURCE_SEPARATOR + SYSTEM_PERF_MSG;
 
         //////////
         // Configuration Sections, Keys and Defaults
