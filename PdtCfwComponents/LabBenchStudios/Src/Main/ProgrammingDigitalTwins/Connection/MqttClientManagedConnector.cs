@@ -229,12 +229,14 @@ namespace LabBenchStudios.Pdt.Connection
             {
                 this.eventListener?.LogDebugMessage("MQTT client disconnecting...");
 
-                await this.mqttClient.StopAsync();
-
-                this.isConnected = false;
+                this.connStateData.SetMessage("Disconnected");
                 this.connStateData.SetIsClientDisconnectedFlag(true);
                 this.connStateData.SetStatusCode(ConfigConst.DISCONN_SUCCESS_STATUS_CODE);
                 this.eventListener?.OnMessagingSystemStatusUpdate(GetConnectionStateCopy());
+
+                await this.mqttClient.StopAsync();
+
+                this.isConnected = false;
             }
             else
             {

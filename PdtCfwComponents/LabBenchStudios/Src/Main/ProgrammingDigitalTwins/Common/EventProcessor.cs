@@ -88,6 +88,8 @@ namespace LabBenchStudios.Pdt.Unity.Common
         private List<IDataContextEventListener> dataContextEventListenerList = null;
         private List<ISystemStatusEventListener> systemStatusEventListenerList = null;
 
+        private DigitalTwinModelManager dtModelManager = null;
+
         private Dictionary<string, DigitalTwinModelState> digitalTwinStateTable = null;
 
         // constructors
@@ -97,6 +99,8 @@ namespace LabBenchStudios.Pdt.Unity.Common
             this.dataContextEventListenerList = new List<IDataContextEventListener>();
             this.systemStatusEventListenerList = new List<ISystemStatusEventListener>();
             this.digitalTwinStateTable = new Dictionary<string, DigitalTwinModelState>();
+
+            //this.dtModelManager = new DigitalTwinModelManager();
         }
 
 
@@ -334,6 +338,37 @@ namespace LabBenchStudios.Pdt.Unity.Common
             }
 
             return false;
+        }
+
+        public void ProcessLiveDataFeedEngageRequest(bool enable)
+        {
+            if (this.remoteStateProcessor != null)
+            {
+                this.remoteStateProcessor.EnableLiveDataFeed(enable);
+            }
+            else
+            {
+                Console.WriteLine(
+                    $"No composite remote command processor registered. Ignoring live data feed engagement request.");
+            }
+        }
+
+        public void ProcessSimulatedDataFeedEngageRequest(bool enable)
+        {
+            if (this.remoteStateProcessor != null)
+            {
+                this.remoteStateProcessor.EnableSimulatedDataFeed(enable);
+            }
+            else
+            {
+                Console.WriteLine(
+                    $"No composite remote command processor registered. Ignoring simulated data feed engagement request.");
+            }
+        }
+
+        public void ProcessDigitalTwinModelLoadRequest(string filePath)
+        {
+            // TODO: implement this
         }
 
 

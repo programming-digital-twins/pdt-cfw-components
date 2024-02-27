@@ -22,9 +22,12 @@
  * SOFTWARE.
  */
 
+using CsvHelper.Configuration.Attributes;
 using LabBenchStudios.Pdt.Common;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows.Forms.VisualStyles;
 
 namespace LabBenchStudios.Pdt.Model
 {
@@ -112,6 +115,7 @@ namespace LabBenchStudios.Pdt.Model
         public const string EDGE_COMPUTE_DEVICE_NAME = "edgeComputeDevice";
         public const string FLUID_PUMP_NAME = "fluidPump";
         public const string HEATING_ZONE_NAME = "heatingZone";
+        public const string BAROMETER_NAME = "barometer";
         public const string HUMIDIFIER_NAME = "humidifier";
         public const string POWER_WINDMILL_NAME = "powerWindmill";
         public const string THERMOSTAT_NAME = "thermostat";
@@ -155,6 +159,7 @@ namespace LabBenchStudios.Pdt.Model
         public static readonly string RESIDENTIAL_STRUCTURE_CONTEXT_MODEL_ID        = CreateModelID(DTMI_PREFIX, RESIDENTIAL_STRUCTURE_NAME, DTMI_CURRENT_VERSION);
         public static readonly string FLUID_PUMP_CONTROLLER_MODEL_ID                = CreateModelID(DTMI_PREFIX, FLUID_PUMP_NAME, DTMI_CURRENT_VERSION);
         public static readonly string HEATING_ZONE_CONTROLLER_MODEL_ID              = CreateModelID(DTMI_PREFIX, HEATING_ZONE_NAME, DTMI_CURRENT_VERSION);
+        public static readonly string BAROMETER_CONTROLLER_MODEL_ID                 = CreateModelID(DTMI_PREFIX, BAROMETER_NAME, DTMI_CURRENT_VERSION);
         public static readonly string HUMIDIFIER_CONTROLLER_MODEL_ID                = CreateModelID(DTMI_PREFIX, HUMIDIFIER_NAME, DTMI_CURRENT_VERSION);
         public static readonly string POWER_WINDMILL_CONTROLLER_MODEL_ID            = CreateModelID(DTMI_PREFIX, POWER_WINDMILL_NAME, DTMI_CURRENT_VERSION);
         public static readonly string THERMOSTAT_CONTROLLER_MODEL_ID                = CreateModelID(DTMI_PREFIX, THERMOSTAT_NAME, DTMI_CURRENT_VERSION);
@@ -164,12 +169,93 @@ namespace LabBenchStudios.Pdt.Model
         public static readonly string BAROMETRIC_PRESSURE_SENSOR_COMPONENT_MODEL_ID = CreateModelID(DTMI_PREFIX, BAROMETRIC_PRESSURE_DATA_NAME, DTMI_CURRENT_VERSION);
         public static readonly string TEMP_SENSOR_COMPONENT_MODEL_ID                = CreateModelID(DTMI_PREFIX, TEMPERATURE_DATA_NAME, DTMI_CURRENT_VERSION);
 
+        public static readonly string ORG_NAME_PLACEHOLDER     = "ORG_NAME";
+        public static readonly string PRODUCT_NAME_PLACEHOLDER = "PRODUCT_NAME";
+        public static readonly string MODEL_NAME_PLACEHOLDER   = "MODEL_NAME";
+
+        public enum DtmiControllerEnum
+        {
+            Barometer,
+            EdgeComputingDevice,
+            FluidPump,
+            HeatingSystem,
+            Humidifier,
+            InteriorRoom,
+            PowerWindmill,
+            ResidentialStructure,
+            Custom
+        }
+
+        public static string CreateModelID(DtmiControllerEnum controllerID, int version)
+        {
+            string modelName = IOT_MODEL_CONTEXT_NAME;
+
+            switch(controllerID)
+            {
+                case DtmiControllerEnum.Barometer:
+                    modelName = BAROMETER_NAME; break;
+                    
+                case DtmiControllerEnum.EdgeComputingDevice:
+                    modelName = EDGE_COMPUTE_DEVICE_NAME; break;
+
+                case DtmiControllerEnum.FluidPump:
+                    modelName = FLUID_PUMP_NAME; break;
+
+                case DtmiControllerEnum.HeatingSystem:
+                    modelName = HEATING_SYSTEM_NAME; break;
+
+                case DtmiControllerEnum.Humidifier:
+                    modelName = HUMIDIFIER_NAME; break;
+
+                case DtmiControllerEnum.InteriorRoom:
+                    modelName = INTERIOR_ROOM_NAME; break;
+
+                case DtmiControllerEnum.PowerWindmill:
+                    modelName = POWER_WINDMILL_NAME; break;
+
+                case DtmiControllerEnum.ResidentialStructure:
+                    modelName = RESIDENTIAL_STRUCTURE_NAME; break;
+
+                case DtmiControllerEnum.Custom:
+                    return $"{DTMI_NAME}:{ORG_NAME_PLACEHOLDER}:{PRODUCT_NAME_PLACEHOLDER}:{MODEL_NAME_PLACEHOLDER};{version}";
+            }
+
+            return ModelConst.CreateModelID(ModelConst.DTMI_PREFIX, modelName, version);
+        }
+
+        public static string CreateModelID(string modelName, int version)
+        {
+            return ModelConst.CreateModelID(ModelConst.DTMI_PREFIX, modelName, version);
+        }
+
         public static string CreateModelID(string dtmiPrefix, string modelName, int version)
         {
-            string idString =
-                dtmiPrefix + ':' + modelName + ':' + version;
+            if (! string.IsNullOrEmpty(dtmiPrefix) &&
+                ! string.IsNullOrEmpty(modelName) &&
+                version > 0)
+            {
+                if (dtmiPrefix.StartsWith(ModelConst.DTMI_NAME))
+                {
+                    return $"{dtmiPrefix}:{modelName};{version}";
+                }
+            }
 
-            return idString;
+            return ModelConst.IOT_MODEL_CONTEXT_MODEL_ID;
+        }
+
+        public static string GetNameFromDtmiURI(string dtmiURI)
+        {
+            if (dtmiURI != null)
+            {
+                string[] parts = dtmiURI.Split(new char[] { ':' , ';'});
+
+                if (parts.Length > 0)
+                {
+                    return parts[parts.Length - 1];
+                }
+            }
+
+            return ModelConst.IOT_MODEL_CONTEXT_NAME;
         }
 
         public static string GetModelID(int typeID)

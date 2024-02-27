@@ -28,11 +28,13 @@ namespace LabBenchStudios.Pdt.Common
 {
     public interface IRemoteStateProcessor
     {
-        bool EnableIncomingVirtualThingUpdates(bool enable);
+        void EnableLiveDataFeed(bool enable);
 
-        bool EnableOutoingPhysicalThingUpdates(bool enable);
+        void EnableSimulatedDataFeed(bool enable);
 
-        bool LoadVirtualThingSimulationData();
+        void EnableIncomingVirtualThingUpdates(bool enable);
+
+        void EnableOutoingPhysicalThingUpdates(bool enable);
 
         bool SendStateUpdateToPhysicalThing(ResourceNameContainer resource);
 
