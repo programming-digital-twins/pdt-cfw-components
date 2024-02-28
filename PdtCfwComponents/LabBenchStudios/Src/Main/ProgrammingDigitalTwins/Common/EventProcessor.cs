@@ -88,7 +88,7 @@ namespace LabBenchStudios.Pdt.Unity.Common
         private List<IDataContextEventListener> dataContextEventListenerList = null;
         private List<ISystemStatusEventListener> systemStatusEventListenerList = null;
 
-        private DigitalTwinModelManager dtModelManager = null;
+        private DigitalTwinModelManager digitalTwinModelManager = null;
 
         private Dictionary<string, DigitalTwinModelState> digitalTwinStateTable = null;
 
@@ -99,8 +99,6 @@ namespace LabBenchStudios.Pdt.Unity.Common
             this.dataContextEventListenerList = new List<IDataContextEventListener>();
             this.systemStatusEventListenerList = new List<ISystemStatusEventListener>();
             this.digitalTwinStateTable = new Dictionary<string, DigitalTwinModelState>();
-
-            //this.dtModelManager = new DigitalTwinModelManager();
         }
 
 
@@ -123,12 +121,24 @@ namespace LabBenchStudios.Pdt.Unity.Common
             return _GUID;
         }
 
+        public DigitalTwinModelManager GetDigitalTwinModelManager()
+        {
+            return this.digitalTwinModelManager;
+        }
+
         public void RegisterDigitalTwin(DigitalTwinModelState dtModelState)
         {
             if (dtModelState != null)
             {
                 this.digitalTwinStateTable.Add(dtModelState.GetModelID(), dtModelState);
             }
+        }
+
+        public void RegisterDigitalTwinModelManager(DigitalTwinModelManager dtModelManager)
+        {
+            if (this.digitalTwinModelManager == null) this.digitalTwinModelManager = dtModelManager;
+
+            Console.WriteLine("Digital Twin model manager now registered.");
         }
 
         public void RegisterListener(IDataContextEventListener listener)

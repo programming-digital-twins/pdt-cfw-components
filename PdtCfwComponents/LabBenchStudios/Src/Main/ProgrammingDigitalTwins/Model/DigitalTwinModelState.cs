@@ -55,6 +55,10 @@ namespace LabBenchStudios.Pdt.Model
         private Dictionary<string, DigitalTwinModelState> stateComponentMap =
             new Dictionary<string, DigitalTwinModelState>();
 
+        private ModelConst.DtmiControllerEnum modelControllerID;
+
+        private string rawModelJson = null;
+
         private IDataContextEventListener virtualAssetListener = null;
 
         public DigitalTwinModelState() : base()
@@ -107,6 +111,16 @@ namespace LabBenchStudios.Pdt.Model
         public string GetModelID()
         {
             return this.modelID;
+        }
+
+        public ModelConst.DtmiControllerEnum GetModelControllerID()
+        {
+            return this.modelControllerID;
+        }
+
+        public string GetRawModelJson()
+        {
+            return this.rawModelJson;
         }
 
         public bool GetModelBoolean(string key)
@@ -219,6 +233,16 @@ namespace LabBenchStudios.Pdt.Model
             }
 
             return success;
+        }
+
+        public void SetModelControllerID(ModelConst.DtmiControllerEnum controllerID)
+        {
+            this.modelControllerID = controllerID;
+        }
+
+        public void SetRawModelJson(string json)
+        {
+            this.rawModelJson = json;
         }
 
         public void SetVirtualAssetListener(IDataContextEventListener listener)

@@ -44,13 +44,20 @@ namespace LabBenchStudios.Pdt.Model
      */
     public static class ModelParserUtil
     {
-        static DefaultContractResolver camelCaseResolver = new DefaultContractResolver
+        public static string LoadDtdlFile(string pathName, string fileName)
         {
-            NamingStrategy = new CamelCaseNamingStrategy
+            if (!string.IsNullOrEmpty(pathName) && !string.IsNullOrEmpty(fileName))
             {
-                ProcessDictionaryKeys = true
+                if (Directory.Exists(pathName))
+                {
+                    string absFileName = Path.Combine(pathName, fileName);
+
+                    return LoadDtdlFile(absFileName);
+                }
             }
-        };
+
+            return null;
+        }
 
         public static string LoadDtdlFile(string fileName)
         {
@@ -160,7 +167,7 @@ namespace LabBenchStudios.Pdt.Model
             return false;
         }
 
-        public static IReadOnlyDictionary<Dtmi, DTEntityInfo> LoadDtdlModels(string modelFilePath)
+        public static IReadOnlyDictionary<Dtmi, DTEntityInfo> LoadAllDtdlModels(string modelFilePath)
         {
             IReadOnlyDictionary<Dtmi, DTEntityInfo> modelDictionary = null;
 

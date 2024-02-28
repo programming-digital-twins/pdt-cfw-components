@@ -54,55 +54,56 @@ namespace LabBenchStudios.Pdt.Model
         public const int THERMOSTAT_DEVICE_TYPE = ConfigConst.HVAC_ACTUATOR_TYPE;
 
         //////////
-        // 
-        // DTDL properties
-        //
-
-        // this is the base template model file for all Lbs_Pdt_* DTDL files
-        public static readonly string BASE_IOT_MODEL_CONTEXT_DTDL_MODEL        = "Lbs_Pdt_Base_IotModelContext.json";
-
-        // these model files represent context for specific structures and systems
-        //
-        // each of these depends on (extends) the BASE_IOT_MODEL_CONTEXT_DTDL_MODEL
-        public static readonly string CONTEXT_HEATING_SYSTEM_DTDL_MODEL        = "Lbs_Pdt_Context_HeatingSystem.json";
-        public static readonly string CONTEXT_INTERIOR_ROOM_DTDL_MODEL         = "Lbs_Pdt_Context_InteriorRoom.json";
-        public static readonly string CONTEXT_RESIDENTIAL_STRUCTURE_DTDL_MODEL = "Lbs_Pdt_Context_ResidentialStructure.json";
-
-        // these model files represent the controller description for all data generation
-        // and command receptive systems and components
-        //
-        // each of these depends on (extends) the BASE_IOT_MODEL_CONTEXT_DTDL_MODEL
-        public static readonly string CONTROLLER_EDGE_COMPUTE_DEVICE_DTDL_MODEL = "Lbs_Pdt_Controller_EdgeComputeDevice.json";
-        public static readonly string CONTROLLER_FLUID_PUMP_DTDL_MODEL          = "Lbs_Pdt_Controller_FluidPump.json";
-        public static readonly string CONTROLLER_HEATING_ZONE_DTDL_MODEL        = "Lbs_Pdt_Controller_HeatingZone.json";
-        public static readonly string CONTROLLER_HUMIDIFIER_DTDL_MODEL          = "Lbs_Pdt_Controller_Humidifier.json";
-        public static readonly string CONTROLLER_POWER_WINDMILL_DTDL_MODEL      = "Lbs_Pdt_Controller_PowerWindmill.json";
-        public static readonly string CONTROLLER_THERMOSTAT_DTDL_MODEL          = "Lbs_Pdt_Controller_Thermostat.json";
-
-        // these model files represent the telemetry description for all data generation systems and components
-        //
-        // each of these depends on (extends) the BASE_IOT_MODEL_CONTEXT_DTDL_MODEL
-        public static readonly string COMPONENT_DEVICE_SYS_PERF_DTDL_MODEL     = "Lbs_Pdt_Component_DeviceSystemPerformance.json";
-        public static readonly string COMPONENT_ENV_SENSORS_DTDL_MODEL         = "Lbs_Pdt_Component_EnvironmentalSensors.json";
-
-        //////////
         //
         // DTDL property names and default versioning
         //
 
         // static const entries
-        public const string DTMI_NAME            = "dtmi";
-        public const string DTMI_ORG_NAME        = "LabBenchStudios";
+        public const string DTMI_NAME = "dtmi";
+        public const string DTMI_ORG_NAME = "LabBenchStudios";
 
-        public const string MODEL_FILE_NAME_PREFIX  = "Lbs_Pdt_";
+        public const string MODEL_FILE_NAME_PREFIX = "Lbs_Pdt_";
         public const string MODEL_FILE_NAME_PATTERN = MODEL_FILE_NAME_PREFIX + "*.json";
 
         public const string DEFAULT_MODEL_FILE_PATH = "../../../../Models/Dtdl/";
 
         // static readonly entries
-        public static readonly int    DTMI_CURRENT_VERSION = 1;
+        public static readonly int DTMI_CURRENT_VERSION = 1;
         public static readonly string DTMI_PRODUCT_NAME = "PDT";
         public static readonly string DTMI_PREFIX = DTMI_NAME + ":" + DTMI_ORG_NAME + ":" + DTMI_PRODUCT_NAME;
+
+        //////////
+        // 
+        // DTDL properties
+        //
+
+        // this is the base template model file for all Lbs_Pdt_* DTDL files
+        public static readonly string BASE_IOT_MODEL_CONTEXT_DTDL_MODEL        = MODEL_FILE_NAME_PREFIX + "Base_IotModelContext.json";
+
+        // these model files represent context for specific structures and systems
+        //
+        // each of these depends on (extends) the BASE_IOT_MODEL_CONTEXT_DTDL_MODEL
+        public static readonly string CONTEXT_HEATING_SYSTEM_DTDL_MODEL        = MODEL_FILE_NAME_PREFIX + "Context_HeatingSystem.json";
+        public static readonly string CONTEXT_INTERIOR_ROOM_DTDL_MODEL         = MODEL_FILE_NAME_PREFIX + "Context_InteriorRoom.json";
+        public static readonly string CONTEXT_RESIDENTIAL_STRUCTURE_DTDL_MODEL = MODEL_FILE_NAME_PREFIX + "Context_ResidentialStructure.json";
+
+        // these model files represent the controller description for all data generation
+        // and command receptive systems and components
+        //
+        // each of these depends on (extends) the BASE_IOT_MODEL_CONTEXT_DTDL_MODEL
+        public static readonly string CONTROLLER_BAROMETER_DTDL_MODEL           = MODEL_FILE_NAME_PREFIX + "Controller_Barometer.json";
+        public static readonly string CONTROLLER_EDGE_COMPUTE_DEVICE_DTDL_MODEL = MODEL_FILE_NAME_PREFIX + "Controller_EdgeComputeDevice.json";
+        public static readonly string CONTROLLER_FLUID_PUMP_DTDL_MODEL          = MODEL_FILE_NAME_PREFIX + "Controller_FluidPump.json";
+        public static readonly string CONTROLLER_HEATING_ZONE_DTDL_MODEL        = MODEL_FILE_NAME_PREFIX + "Controller_HeatingZone.json";
+        public static readonly string CONTROLLER_HUMIDIFIER_DTDL_MODEL          = MODEL_FILE_NAME_PREFIX + "Controller_Humidifier.json";
+        public static readonly string CONTROLLER_POWER_WINDMILL_DTDL_MODEL      = MODEL_FILE_NAME_PREFIX + "Controller_PowerWindmill.json";
+        public static readonly string CONTROLLER_THERMOSTAT_DTDL_MODEL          = MODEL_FILE_NAME_PREFIX + "Controller_Thermostat.json";
+
+        // these model files represent the telemetry description for all data generation systems and components
+        //
+        // each of these depends on (extends) the BASE_IOT_MODEL_CONTEXT_DTDL_MODEL
+        public static readonly string COMPONENT_DEVICE_SYS_PERF_DTDL_MODEL     = MODEL_FILE_NAME_PREFIX + "Component_DeviceSystemPerformance.json";
+        public static readonly string COMPONENT_ENV_SENSORS_DTDL_MODEL         = MODEL_FILE_NAME_PREFIX + "Component_EnvironmentalSensors.json";
 
         //////////
         //
@@ -180,10 +181,56 @@ namespace LabBenchStudios.Pdt.Model
             FluidPump,
             HeatingSystem,
             Humidifier,
+            Thermostat,
             InteriorRoom,
             PowerWindmill,
             ResidentialStructure,
             Custom
+        }
+
+        public static string GetModelFileName(DtmiControllerEnum controllerID)
+        {
+            string modelFileName = BASE_IOT_MODEL_CONTEXT_DTDL_MODEL;
+
+            switch (controllerID)
+            {
+                case DtmiControllerEnum.Barometer:
+                    modelFileName = BAROMETER_NAME; break;
+
+                case DtmiControllerEnum.EdgeComputingDevice:
+                    modelFileName = CONTROLLER_EDGE_COMPUTE_DEVICE_DTDL_MODEL; break;
+
+                case DtmiControllerEnum.FluidPump:
+                    modelFileName = CONTROLLER_FLUID_PUMP_DTDL_MODEL; break;
+
+                case DtmiControllerEnum.HeatingSystem:
+                    modelFileName = CONTROLLER_HEATING_ZONE_DTDL_MODEL; break;
+
+                case DtmiControllerEnum.Humidifier:
+                    modelFileName = CONTROLLER_HUMIDIFIER_DTDL_MODEL; break;
+
+                case DtmiControllerEnum.Thermostat:
+                    modelFileName = CONTROLLER_THERMOSTAT_DTDL_MODEL; break;
+
+                case DtmiControllerEnum.InteriorRoom:
+                    modelFileName = CONTEXT_INTERIOR_ROOM_DTDL_MODEL; break;
+
+                case DtmiControllerEnum.PowerWindmill:
+                    modelFileName = CONTROLLER_POWER_WINDMILL_DTDL_MODEL; break;
+
+                case DtmiControllerEnum.ResidentialStructure:
+                    modelFileName = CONTEXT_RESIDENTIAL_STRUCTURE_DTDL_MODEL; break;
+
+                default:
+                    break;
+            }
+
+            return modelFileName;
+        }
+
+        public static string CreateModelID(DtmiControllerEnum controllerID)
+        {
+            return CreateModelID(controllerID, ModelConst.DTMI_CURRENT_VERSION);
         }
 
         public static string CreateModelID(DtmiControllerEnum controllerID, int version)
@@ -207,6 +254,9 @@ namespace LabBenchStudios.Pdt.Model
                 case DtmiControllerEnum.Humidifier:
                     modelName = HUMIDIFIER_NAME; break;
 
+                case DtmiControllerEnum.Thermostat:
+                    modelName = THERMOSTAT_NAME; break;
+
                 case DtmiControllerEnum.InteriorRoom:
                     modelName = INTERIOR_ROOM_NAME; break;
 
@@ -218,6 +268,9 @@ namespace LabBenchStudios.Pdt.Model
 
                 case DtmiControllerEnum.Custom:
                     return $"{DTMI_NAME}:{ORG_NAME_PLACEHOLDER}:{PRODUCT_NAME_PLACEHOLDER}:{MODEL_NAME_PLACEHOLDER};{version}";
+
+                default:
+                    break;
             }
 
             return ModelConst.CreateModelID(ModelConst.DTMI_PREFIX, modelName, version);

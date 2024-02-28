@@ -58,7 +58,7 @@ namespace LabBenchStudios.Pdt.Test.Data
         [Test]
         public void LoadAllDtmlFromPath()
         {
-            var modelList = ModelParserUtil.LoadDtdlModels(DTDL_TEST_MODEL_FILEPATH);
+            var modelList = ModelParserUtil.LoadAllDtdlModels(DTDL_TEST_MODEL_FILEPATH);
 
             //Assert.That(modelList, Is.InstanceOf<IReadOnlyDictionary>());
         }

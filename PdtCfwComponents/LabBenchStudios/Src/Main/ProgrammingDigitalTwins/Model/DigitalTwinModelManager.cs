@@ -38,14 +38,21 @@ namespace LabBenchStudios.Pdt.Model
     {
         private string modelFilePath = ModelConst.DEFAULT_MODEL_FILE_PATH;
 
-        // this contains all the DT model JSON instances
-        private IReadOnlyDictionary<Dtmi, DTEntityInfo> digitalTwinModelCache;
+        // this contains all the DT model parsed instances
+        // this is indexed by the DTDLParser Dtmi object
+        private IReadOnlyDictionary<Dtmi, DTEntityInfo> digitalTwinParsedModelCache;
+
+        // this contains all the DT model raw JSON data
+        // this is indexed by the string DTMI (use ModelConst.DtmiControllerEnum)
+        private Dictionary<string, string> digitalTwinRawModelCache;
 
         // this contains all DT model state instances that are associated
         // with a given dtmi string (which is the lookup key)
         //
         // for the current implementation, this is sufficient granularity;
         // a future implementation may expand into a more complex structure
+        //
+        // this is indexed by the string DTMI (use ModelConst.DtmiControllerEnum)
         private Dictionary<string, List<DigitalTwinModelState>> digitalTwinStateCache;
 
         public DigitalTwinModelManager(string modelFilePath)
@@ -59,23 +66,32 @@ namespace LabBenchStudios.Pdt.Model
                 Console.WriteLine($"Failed to set model file path. Path non-existent: {modelFilePath}");
             }
 
-            this.LoadAndValidateDtmlModels();
+            this.LoadAndValidateDtdlModels();
         }
 
         // public methods
-
-        public DigitalTwinModelState CreateModelState(IDataContextEventListener stateUpdateListener)
+        
+        public DigitalTwinModelState CreateModelState(
+            ModelConst.DtmiControllerEnum controllerID,
+            IDataContextEventListener stateUpdateListener,
+            string rawModelJson)
         {
-            return new DigitalTwinModelState();
-                
+            var dtModelState = new DigitalTwinModelState();
+
+            dtModelState.SetModelControllerID(controllerID);
+            dtModelState.SetRawModelJson(rawModelJson);
+            dtModelState.SetVirtualAssetListener(stateUpdateListener);
+
+            return dtModelState;
         }
+
         public List<string> GetAllDtmiValues()
         {
-            if (digitalTwinModelCache != null && digitalTwinModelCache.Count > 0)
+            if (digitalTwinParsedModelCache != null && digitalTwinParsedModelCache.Count > 0)
             {
-                List<string> dtmiValues = new List<string>(digitalTwinModelCache.Count);
+                List<string> dtmiValues = new List<string>(digitalTwinParsedModelCache.Count);
 
-                foreach (DTEntityInfo item in digitalTwinModelCache.Values)
+                foreach (DTEntityInfo item in digitalTwinParsedModelCache.Values)
                 {
                     dtmiValues.Add(item.Id.AbsoluteUri);
 
@@ -111,6 +127,21 @@ namespace LabBenchStudios.Pdt.Model
             return null;
         }
 
+        public string GetRawModelJson(ModelConst.DtmiControllerEnum dtmiController)
+        {
+            string dtmiUri = ModelConst.CreateModelID(dtmiController);
+
+            if (this.digitalTwinRawModelCache.ContainsKey(dtmiUri))
+            {
+                return this.digitalTwinRawModelCache[dtmiUri];
+            }
+            else
+            {
+                Console.WriteLine($"No raw DTDL JSON available for DTMI URI {dtmiUri}");
+                return null;
+            }
+        }
+
         public bool HandleIncomingTelemetry(IotDataContext dataContext)
         {
             throw new NotImplementedException();
@@ -124,6 +155,25 @@ namespace LabBenchStudios.Pdt.Model
         public void RegisterModelController(DigitalTwinModelState dtController)
         {
 
+        }
+
+        public void ReloadDtdlModels()
+        {
+            this.ReloadDtdlModels(this.modelFilePath);
+        }
+
+        public void ReloadDtdlModels(string modelFilePath)
+        {
+            if (!string.IsNullOrEmpty(modelFilePath) && Directory.Exists(modelFilePath))
+            {
+                this.modelFilePath = modelFilePath;
+
+                this.LoadAndValidateDtdlModels();
+            }
+            else
+            {
+                Console.WriteLine($"Ignoring DTDL reload request. File path is invalid: {modelFilePath}");
+            }
         }
 
         public bool UpdateRemoteSystemState(IotDataContext dataContext)
@@ -145,9 +195,28 @@ namespace LabBenchStudios.Pdt.Model
 
         // private methods
 
-        private void LoadAndValidateDtmlModels()
+        /// <summary>
+        /// Unfortunately, this method results in each DTDL model being loaded twice
+        /// Future optimizations will probably remove this redundancy.
+        /// </summary>
+        private void LoadAndValidateDtdlModels()
         {
-            this.digitalTwinModelCache = ModelParserUtil.LoadDtdlModels(this.modelFilePath);
+            this.digitalTwinParsedModelCache = ModelParserUtil.LoadAllDtdlModels(this.modelFilePath);
+
+            this.digitalTwinRawModelCache    = new Dictionary<string, string>();
+
+            var dtmiControllerList =
+                (ModelConst.DtmiControllerEnum[]) Enum.GetValues(typeof(ModelConst.DtmiControllerEnum));
+
+            foreach (ModelConst.DtmiControllerEnum dtmiController in dtmiControllerList)
+            {
+                string dtmiUri  = ModelConst.CreateModelID(dtmiController);
+                string fileName = ModelConst.GetModelFileName(dtmiController);
+
+                string dtdlJson = ModelParserUtil.LoadDtdlFile(this.modelFilePath, fileName);
+
+                this.digitalTwinRawModelCache.Add(dtmiUri, dtdlJson);
+            }
         }
 
     }
