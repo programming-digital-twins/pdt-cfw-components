@@ -335,6 +335,17 @@ namespace LabBenchStudios.Pdt.Unity.Common
             }
         }
 
+        public void OnModelUpdateEvent()
+        {
+            if (this.systemStatusEventListenerList.Count > 0)
+            {
+                foreach (var listener in this.systemStatusEventListenerList)
+                {
+                    listener.OnModelUpdateEvent();
+                }
+            }
+        }
+
         public bool ProcessStateUpdateToPhysicalThing(ResourceNameContainer resource)
         {
             if (this.remoteStateProcessor != null)
@@ -374,11 +385,6 @@ namespace LabBenchStudios.Pdt.Unity.Common
                 Console.WriteLine(
                     $"No composite remote command processor registered. Ignoring simulated data feed engagement request.");
             }
-        }
-
-        public void ProcessDigitalTwinModelLoadRequest(string filePath)
-        {
-            // TODO: implement this
         }
 
 

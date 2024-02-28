@@ -36,6 +36,7 @@ namespace LabBenchStudios.Pdt.Common
         void OnMessagingSystemDataReceived(SystemPerformanceData data);
         void OnMessagingSystemDataSent(ConnectionStateData data);
         void OnMessagingSystemStatusUpdate(ConnectionStateData data);
+        void OnModelUpdateEvent();
         void LogDebugMessage(string message);
         void LogWarningMessage(string message);
         void LogErrorMessage(string message, Exception ex);

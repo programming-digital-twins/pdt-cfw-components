@@ -55,6 +55,8 @@ namespace LabBenchStudios.Pdt.Model
         // this is indexed by the string DTMI (use ModelConst.DtmiControllerEnum)
         private Dictionary<string, List<DigitalTwinModelState>> digitalTwinStateCache;
 
+        private bool hasSuccessfulDataLoad = false;
+
         public DigitalTwinModelManager(string modelFilePath)
         {
             if (!string.IsNullOrEmpty(modelFilePath) && Directory.Exists(modelFilePath))
@@ -152,27 +154,33 @@ namespace LabBenchStudios.Pdt.Model
             throw new NotImplementedException();
         }
 
+        public bool HasSuccessfulDataLoad()
+        {
+            return this.hasSuccessfulDataLoad;
+        }
+
         public void RegisterModelController(DigitalTwinModelState dtController)
         {
 
         }
 
-        public void ReloadDtdlModels()
+        public bool ReloadDtdlModels()
         {
-            this.ReloadDtdlModels(this.modelFilePath);
+            return this.ReloadDtdlModels(this.modelFilePath);
         }
 
-        public void ReloadDtdlModels(string modelFilePath)
+        public bool ReloadDtdlModels(string modelFilePath)
         {
             if (!string.IsNullOrEmpty(modelFilePath) && Directory.Exists(modelFilePath))
             {
                 this.modelFilePath = modelFilePath;
 
-                this.LoadAndValidateDtdlModels();
+                return this.LoadAndValidateDtdlModels();
             }
             else
             {
                 Console.WriteLine($"Ignoring DTDL reload request. File path is invalid: {modelFilePath}");
+                return false;
             }
         }
 
@@ -199,9 +207,20 @@ namespace LabBenchStudios.Pdt.Model
         /// Unfortunately, this method results in each DTDL model being loaded twice
         /// Future optimizations will probably remove this redundancy.
         /// </summary>
-        private void LoadAndValidateDtdlModels()
+        private bool LoadAndValidateDtdlModels()
         {
+            bool success = false;
+
             this.digitalTwinParsedModelCache = ModelParserUtil.LoadAllDtdlModels(this.modelFilePath);
+
+            if (this.digitalTwinParsedModelCache == null)
+            {
+                Console.WriteLine($"Failed to load DTDL models from path {this.modelFilePath}");
+            }
+            else
+            {
+                success = true;
+            }
 
             this.digitalTwinRawModelCache    = new Dictionary<string, string>();
 
@@ -215,8 +234,20 @@ namespace LabBenchStudios.Pdt.Model
 
                 string dtdlJson = ModelParserUtil.LoadDtdlFile(this.modelFilePath, fileName);
 
-                this.digitalTwinRawModelCache.Add(dtmiUri, dtdlJson);
+                if (!string.IsNullOrEmpty(dtdlJson))
+                {
+                    this.digitalTwinRawModelCache.Add(dtmiUri, dtdlJson);
+                    success = true;
+                }
+                else
+                {
+                    Console.WriteLine($"Failed to load DTDL models from file {fileName}");
+                }
             }
+
+            this.hasSuccessfulDataLoad = success;
+
+            return success;
         }
 
     }
