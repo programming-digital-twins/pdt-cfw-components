@@ -45,7 +45,7 @@ namespace LabBenchStudios.Pdt.Model
     public class DigitalTwinModelState : IotDataContext, IDigitalTwinStateProcessor
     {
         // this is the DTMI for the model (e.g., dtmi:LabBenchStudios.Pdt.{modelName};1)
-        private string modelID = ModelConst.IOT_MODEL_CONTEXT_MODEL_ID;
+        private string modelID = ModelNameUtil.IOT_MODEL_CONTEXT_MODEL_ID;
 
         private Hashtable modelProperties = new Hashtable();
 
@@ -55,7 +55,7 @@ namespace LabBenchStudios.Pdt.Model
         private Dictionary<string, DigitalTwinModelState> stateComponentMap =
             new Dictionary<string, DigitalTwinModelState>();
 
-        private ModelConst.DtmiControllerEnum modelControllerID;
+        private ModelNameUtil.DtmiControllerEnum modelControllerID;
 
         private string rawModelJson = null;
 
@@ -63,13 +63,13 @@ namespace LabBenchStudios.Pdt.Model
 
         public DigitalTwinModelState() : base()
         {
-            this.modelID = ModelConst.GetModelID(this.GetTypeID());
+            this.modelID = ModelNameUtil.GetModelID(this.GetTypeID());
         }
 
         public DigitalTwinModelState(
             string name, string deviceID, int typeCategoryID, int typeID)
         {
-            this.modelID = ModelConst.GetModelID(typeID);
+            this.modelID = ModelNameUtil.GetModelID(typeID);
         }
 
         // public methods
@@ -113,7 +113,7 @@ namespace LabBenchStudios.Pdt.Model
             return this.modelID;
         }
 
-        public ModelConst.DtmiControllerEnum GetModelControllerID()
+        public ModelNameUtil.DtmiControllerEnum GetModelControllerID()
         {
             return this.modelControllerID;
         }
@@ -235,7 +235,13 @@ namespace LabBenchStudios.Pdt.Model
             return success;
         }
 
-        public void SetModelControllerID(ModelConst.DtmiControllerEnum controllerID)
+        public void SetConnectedDeviceID(string deviceID)
+        {
+            // base class will handle validation of the name
+            base.SetDeviceID(deviceID);
+        }
+
+        public void SetModelControllerID(ModelNameUtil.DtmiControllerEnum controllerID)
         {
             this.modelControllerID = controllerID;
         }

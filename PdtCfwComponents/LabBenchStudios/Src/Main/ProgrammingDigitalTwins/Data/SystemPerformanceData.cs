@@ -77,5 +77,18 @@ namespace LabBenchStudios.Pdt.Data
             return sb.ToString();
         }
 
+        public void UpdateData(SystemPerformanceData data)
+        {
+            if (data != null)
+            {
+                base.UpdateData(data);
+
+                this.cpuUtil = data.GetCpuUtilization();
+                this.memUtil = data.GetMemoryUtilization();
+                this.diskUtil = data.GetDiskUtilization();
+
+                this.UpdateTimeStamp();
+            }
+        }
     }
 }

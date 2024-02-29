@@ -36,7 +36,7 @@ namespace LabBenchStudios.Pdt.Model
 {
     public class DigitalTwinModelManager : IDigitalTwinStateProcessor
     {
-        private string modelFilePath = ModelConst.DEFAULT_MODEL_FILE_PATH;
+        private string modelFilePath = ModelNameUtil.DEFAULT_MODEL_FILE_PATH;
 
         // this contains all the DT model parsed instances
         // this is indexed by the DTDLParser Dtmi object
@@ -74,7 +74,7 @@ namespace LabBenchStudios.Pdt.Model
         // public methods
         
         public DigitalTwinModelState CreateModelState(
-            ModelConst.DtmiControllerEnum controllerID,
+            ModelNameUtil.DtmiControllerEnum controllerID,
             IDataContextEventListener stateUpdateListener,
             string rawModelJson)
         {
@@ -129,9 +129,9 @@ namespace LabBenchStudios.Pdt.Model
             return null;
         }
 
-        public string GetRawModelJson(ModelConst.DtmiControllerEnum dtmiController)
+        public string GetRawModelJson(ModelNameUtil.DtmiControllerEnum dtmiController)
         {
-            string dtmiUri = ModelConst.CreateModelID(dtmiController);
+            string dtmiUri = ModelNameUtil.CreateModelID(dtmiController);
 
             if (this.digitalTwinRawModelCache.ContainsKey(dtmiUri))
             {
@@ -225,12 +225,12 @@ namespace LabBenchStudios.Pdt.Model
             this.digitalTwinRawModelCache    = new Dictionary<string, string>();
 
             var dtmiControllerList =
-                (ModelConst.DtmiControllerEnum[]) Enum.GetValues(typeof(ModelConst.DtmiControllerEnum));
+                (ModelNameUtil.DtmiControllerEnum[]) Enum.GetValues(typeof(ModelNameUtil.DtmiControllerEnum));
 
-            foreach (ModelConst.DtmiControllerEnum dtmiController in dtmiControllerList)
+            foreach (ModelNameUtil.DtmiControllerEnum dtmiController in dtmiControllerList)
             {
-                string dtmiUri  = ModelConst.CreateModelID(dtmiController);
-                string fileName = ModelConst.GetModelFileName(dtmiController);
+                string dtmiUri  = ModelNameUtil.CreateModelID(dtmiController);
+                string fileName = ModelNameUtil.GetModelFileName(dtmiController);
 
                 string dtdlJson = ModelParserUtil.LoadDtdlFile(this.modelFilePath, fileName);
 

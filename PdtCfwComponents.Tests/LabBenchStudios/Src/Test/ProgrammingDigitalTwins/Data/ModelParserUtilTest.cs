@@ -44,7 +44,7 @@ namespace LabBenchStudios.Pdt.Test.Data
         {
             var modelList = new List<string>
             {
-                ModelConst.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL
+                ModelNameUtil.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL
             };
 
             foreach (var modelFile in modelList)
@@ -68,7 +68,7 @@ namespace LabBenchStudios.Pdt.Test.Data
         {
             Assert.That(
                 this.RunDtdlValidation(
-                    DTDL_TEST_MODEL_FILEPATH, ModelConst.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL),
+                    DTDL_TEST_MODEL_FILEPATH, ModelNameUtil.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL),
                 Is.True);
         }
 
@@ -81,13 +81,13 @@ namespace LabBenchStudios.Pdt.Test.Data
             // ID's simply need to be part of the IEnumerable passed to the parser
             var modelList = new List<string>
             {
-                ModelConst.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL,
-                ModelConst.COMPONENT_ENV_SENSORS_DTDL_MODEL,
-                ModelConst.CONTROLLER_FLUID_PUMP_DTDL_MODEL,
-                ModelConst.CONTROLLER_HEATING_ZONE_DTDL_MODEL,
-                ModelConst.CONTROLLER_HUMIDIFIER_DTDL_MODEL,
-                ModelConst.CONTROLLER_THERMOSTAT_DTDL_MODEL,
-                ModelConst.CONTEXT_HEATING_SYSTEM_DTDL_MODEL
+                ModelNameUtil.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL,
+                ModelNameUtil.COMPONENT_ENV_SENSORS_DTDL_MODEL,
+                ModelNameUtil.CONTROLLER_FLUID_PUMP_DTDL_MODEL,
+                ModelNameUtil.CONTROLLER_HEATING_ZONE_DTDL_MODEL,
+                ModelNameUtil.CONTROLLER_HUMIDIFIER_DTDL_MODEL,
+                ModelNameUtil.CONTROLLER_THERMOSTAT_DTDL_MODEL,
+                ModelNameUtil.CONTEXT_HEATING_SYSTEM_DTDL_MODEL
             };
 
             Assert.That(
@@ -106,11 +106,11 @@ namespace LabBenchStudios.Pdt.Test.Data
             // ID's simply need to be part of the IEnumerable passed to the parser
             var modelList = new List<string>
             {
-                ModelConst.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL,
-                ModelConst.COMPONENT_ENV_SENSORS_DTDL_MODEL,
-                ModelConst.CONTROLLER_HUMIDIFIER_DTDL_MODEL,
-                ModelConst.CONTROLLER_THERMOSTAT_DTDL_MODEL,
-                ModelConst.CONTEXT_INTERIOR_ROOM_DTDL_MODEL
+                ModelNameUtil.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL,
+                ModelNameUtil.COMPONENT_ENV_SENSORS_DTDL_MODEL,
+                ModelNameUtil.CONTROLLER_HUMIDIFIER_DTDL_MODEL,
+                ModelNameUtil.CONTROLLER_THERMOSTAT_DTDL_MODEL,
+                ModelNameUtil.CONTEXT_INTERIOR_ROOM_DTDL_MODEL
             };
 
             Assert.That(
@@ -128,8 +128,8 @@ namespace LabBenchStudios.Pdt.Test.Data
             // ID's simply need to be part of the IEnumerable passed to the parser
             var modelList = new List<string>
             {
-                ModelConst.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL,
-                ModelConst.CONTEXT_RESIDENTIAL_STRUCTURE_DTDL_MODEL
+                ModelNameUtil.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL,
+                ModelNameUtil.CONTEXT_RESIDENTIAL_STRUCTURE_DTDL_MODEL
             };
 
             Assert.That(
@@ -147,11 +147,11 @@ namespace LabBenchStudios.Pdt.Test.Data
             // ID's simply need to be part of the IEnumerable passed to the parser
             var modelList = new List<string>
             {
-                ModelConst.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL,
-                ModelConst.COMPONENT_ENV_SENSORS_DTDL_MODEL,
-                ModelConst.CONTROLLER_FLUID_PUMP_DTDL_MODEL,
-                ModelConst.CONTROLLER_HEATING_ZONE_DTDL_MODEL,
-                ModelConst.CONTROLLER_THERMOSTAT_DTDL_MODEL
+                ModelNameUtil.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL,
+                ModelNameUtil.COMPONENT_ENV_SENSORS_DTDL_MODEL,
+                ModelNameUtil.CONTROLLER_FLUID_PUMP_DTDL_MODEL,
+                ModelNameUtil.CONTROLLER_HEATING_ZONE_DTDL_MODEL,
+                ModelNameUtil.CONTROLLER_THERMOSTAT_DTDL_MODEL
             };
 
             Assert.That(
@@ -169,9 +169,9 @@ namespace LabBenchStudios.Pdt.Test.Data
             // ID's simply need to be part of the IEnumerable passed to the parser
             var modelList = new List<string>
             {
-                ModelConst.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL,
-                ModelConst.COMPONENT_ENV_SENSORS_DTDL_MODEL,
-                ModelConst.CONTROLLER_HUMIDIFIER_DTDL_MODEL
+                ModelNameUtil.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL,
+                ModelNameUtil.COMPONENT_ENV_SENSORS_DTDL_MODEL,
+                ModelNameUtil.CONTROLLER_HUMIDIFIER_DTDL_MODEL
             };
 
             Assert.That(
@@ -189,9 +189,9 @@ namespace LabBenchStudios.Pdt.Test.Data
             // ID's simply need to be part of the IEnumerable passed to the parser
             var modelList = new List<string>
             {
-                ModelConst.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL,
-                ModelConst.COMPONENT_ENV_SENSORS_DTDL_MODEL,
-                ModelConst.CONTROLLER_FLUID_PUMP_DTDL_MODEL
+                ModelNameUtil.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL,
+                ModelNameUtil.COMPONENT_ENV_SENSORS_DTDL_MODEL,
+                ModelNameUtil.CONTROLLER_FLUID_PUMP_DTDL_MODEL
             };
 
             Assert.That(
@@ -209,9 +209,9 @@ namespace LabBenchStudios.Pdt.Test.Data
             // ID's simply need to be part of the IEnumerable passed to the parser
             var modelList = new List<string>
             {
-                ModelConst.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL,
-                ModelConst.COMPONENT_ENV_SENSORS_DTDL_MODEL,
-                ModelConst.CONTROLLER_POWER_WINDMILL_DTDL_MODEL
+                ModelNameUtil.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL,
+                ModelNameUtil.COMPONENT_ENV_SENSORS_DTDL_MODEL,
+                ModelNameUtil.CONTROLLER_POWER_WINDMILL_DTDL_MODEL
             };
 
             Assert.That(
@@ -229,9 +229,9 @@ namespace LabBenchStudios.Pdt.Test.Data
             // ID's simply need to be part of the IEnumerable passed to the parser
             var modelList = new List<string>
             {
-                ModelConst.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL,
-                ModelConst.COMPONENT_ENV_SENSORS_DTDL_MODEL,
-                ModelConst.CONTROLLER_THERMOSTAT_DTDL_MODEL
+                ModelNameUtil.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL,
+                ModelNameUtil.COMPONENT_ENV_SENSORS_DTDL_MODEL,
+                ModelNameUtil.CONTROLLER_THERMOSTAT_DTDL_MODEL
             };
 
             Assert.That(
@@ -249,10 +249,10 @@ namespace LabBenchStudios.Pdt.Test.Data
             // ID's simply need to be part of the IEnumerable passed to the parser
             var modelList = new List<string>
             {
-                ModelConst.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL,
-                ModelConst.COMPONENT_DEVICE_SYS_PERF_DTDL_MODEL,
-                ModelConst.COMPONENT_ENV_SENSORS_DTDL_MODEL,
-                ModelConst.CONTROLLER_EDGE_COMPUTE_DEVICE_DTDL_MODEL
+                ModelNameUtil.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL,
+                ModelNameUtil.COMPONENT_DEVICE_SYS_PERF_DTDL_MODEL,
+                ModelNameUtil.COMPONENT_ENV_SENSORS_DTDL_MODEL,
+                ModelNameUtil.CONTROLLER_EDGE_COMPUTE_DEVICE_DTDL_MODEL
             };
 
             Assert.That(
@@ -270,8 +270,8 @@ namespace LabBenchStudios.Pdt.Test.Data
             // ID's simply need to be part of the IEnumerable passed to the parser
             var modelList = new List<string>
             {
-                ModelConst.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL,
-                ModelConst.COMPONENT_DEVICE_SYS_PERF_DTDL_MODEL
+                ModelNameUtil.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL,
+                ModelNameUtil.COMPONENT_DEVICE_SYS_PERF_DTDL_MODEL
             };
 
             Assert.That(
@@ -289,8 +289,8 @@ namespace LabBenchStudios.Pdt.Test.Data
             // ID's simply need to be part of the IEnumerable passed to the parser
             var modelList = new List<string>
             {
-                ModelConst.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL,
-                ModelConst.COMPONENT_ENV_SENSORS_DTDL_MODEL
+                ModelNameUtil.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL,
+                ModelNameUtil.COMPONENT_ENV_SENSORS_DTDL_MODEL
             };
 
             Assert.That(

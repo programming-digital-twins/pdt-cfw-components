@@ -37,7 +37,7 @@ namespace LabBenchStudios.Pdt.Data
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private string name = ConfigConst.NOT_SET;
 
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty]
         private string deviceID = ConfigConst.NOT_SET;
 
         [JsonProperty]
@@ -154,9 +154,30 @@ namespace LabBenchStudios.Pdt.Data
             return sb.ToString();
         }
 
+        public void UpdateData(IotDataContext data)
+        {
+            if (data != null)
+            {
+                this.name = data.GetName();
+                this.deviceID = data.GetDeviceID();
+                this.typeID = data.GetTypeID();
+                this.typeCategoryID = data.GetTypeCategoryID();
+                this.statusCode = data.GetStatusCode();
+                this.hasError = data.hasError;
+                this.locationID = data.GetLocationID();
+                this.latitude = data.GetLatitude();
+                this.longitude = data.GetLongitude();
+                this.elevation = data.GetElevation();
+
+                this.UpdateTimeStamp();
+            }
+        }
+
         // protected methods
 
         protected void SetTypeID(int val) { if (typeID >= 0) { this.typeID = val; }; this.UpdateTimeStamp(); }
+
+        protected void SetDeviceID(string name) { if (! string.IsNullOrEmpty(name)) { this.deviceID = name; } }
 
         protected void UpdateTimeStamp()
         {

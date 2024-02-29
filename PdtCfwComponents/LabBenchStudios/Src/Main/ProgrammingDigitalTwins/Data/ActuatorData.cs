@@ -85,5 +85,19 @@ namespace LabBenchStudios.Pdt.Data
             return sb.ToString();
         }
 
+        public void UpdateData(ActuatorData data)
+        {
+            if (data != null)
+            {
+                base.UpdateData(data);
+
+                this.value = data.GetValue();
+                this.command = data.GetCommand();
+                this.stateData = data.GetStateData();
+                this.isResponse = data.IsResponse();
+
+                this.UpdateTimeStamp();
+            }
+        }
     }
 }

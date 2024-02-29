@@ -122,6 +122,8 @@ namespace LabBenchStudios.Pdt.Data
         {
             if (data != null)
             {
+                base.UpdateData(data);
+
                 this.hostName = data.GetHostName();
                 this.hostPort = data.GetHostPort();
                 this.message = data.GetMessage();

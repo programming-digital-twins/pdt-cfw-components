@@ -61,5 +61,16 @@ namespace LabBenchStudios.Pdt.Data
             return sb.ToString();
         }
 
+        public void UpdateData(MessageData data)
+        {
+            if (data != null)
+            {
+                base.UpdateData(data);
+
+                this.msgData = data.GetMessageData();
+
+                this.UpdateTimeStamp();
+            }
+        }
     }
 }

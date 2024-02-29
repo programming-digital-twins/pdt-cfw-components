@@ -31,7 +31,7 @@ using System.Windows.Forms.VisualStyles;
 
 namespace LabBenchStudios.Pdt.Model
 {
-    public static class ModelConst
+    public static class ModelNameUtil
     {
         //////////
         // 
@@ -230,7 +230,7 @@ namespace LabBenchStudios.Pdt.Model
 
         public static string CreateModelID(DtmiControllerEnum controllerID)
         {
-            return CreateModelID(controllerID, ModelConst.DTMI_CURRENT_VERSION);
+            return CreateModelID(controllerID, ModelNameUtil.DTMI_CURRENT_VERSION);
         }
 
         public static string CreateModelID(DtmiControllerEnum controllerID, int version)
@@ -273,12 +273,12 @@ namespace LabBenchStudios.Pdt.Model
                     break;
             }
 
-            return ModelConst.CreateModelID(ModelConst.DTMI_PREFIX, modelName, version);
+            return ModelNameUtil.CreateModelID(ModelNameUtil.DTMI_PREFIX, modelName, version);
         }
 
         public static string CreateModelID(string modelName, int version)
         {
-            return ModelConst.CreateModelID(ModelConst.DTMI_PREFIX, modelName, version);
+            return ModelNameUtil.CreateModelID(ModelNameUtil.DTMI_PREFIX, modelName, version);
         }
 
         public static string CreateModelID(string dtmiPrefix, string modelName, int version)
@@ -287,13 +287,13 @@ namespace LabBenchStudios.Pdt.Model
                 ! string.IsNullOrEmpty(modelName) &&
                 version > 0)
             {
-                if (dtmiPrefix.StartsWith(ModelConst.DTMI_NAME))
+                if (dtmiPrefix.StartsWith(ModelNameUtil.DTMI_NAME))
                 {
                     return $"{dtmiPrefix}:{modelName};{version}";
                 }
             }
 
-            return ModelConst.IOT_MODEL_CONTEXT_MODEL_ID;
+            return ModelNameUtil.IOT_MODEL_CONTEXT_MODEL_ID;
         }
 
         public static string GetNameFromDtmiURI(string dtmiURI)
@@ -302,13 +302,13 @@ namespace LabBenchStudios.Pdt.Model
             {
                 string[] parts = dtmiURI.Split(new char[] { ':' , ';'});
 
-                if (parts.Length > 0)
+                if (parts.Length > 1)
                 {
-                    return parts[parts.Length - 1];
+                    return parts[parts.Length - 2];
                 }
             }
 
-            return ModelConst.IOT_MODEL_CONTEXT_NAME;
+            return ModelNameUtil.IOT_MODEL_CONTEXT_NAME;
         }
 
         public static string GetModelID(int typeID)
@@ -323,31 +323,31 @@ namespace LabBenchStudios.Pdt.Model
             switch (typeID)
             {
                 case ConfigConst.FLUID_RATE_SENSOR_TYPE:
-                    modelID = ModelConst.FLUID_PUMP_CONTROLLER_MODEL_ID; break;
+                    modelID = ModelNameUtil.FLUID_PUMP_CONTROLLER_MODEL_ID; break;
 
                 case ConfigConst.HUMIDIFIER_ACTUATOR_TYPE:
-                    modelID = ModelConst.HUMIDIFIER_CONTROLLER_MODEL_ID; break;
+                    modelID = ModelNameUtil.HUMIDIFIER_CONTROLLER_MODEL_ID; break;
 
                 case ConfigConst.HVAC_ACTUATOR_TYPE:
-                    modelID = ModelConst.THERMOSTAT_CONTROLLER_MODEL_ID; break;
+                    modelID = ModelNameUtil.THERMOSTAT_CONTROLLER_MODEL_ID; break;
 
                 case ConfigConst.SYSTEM_PERF_TYPE:
-                    modelID = ModelConst.DEVICE_SYS_PERF_COMPONENT_MODEL_ID; break;
+                    modelID = ModelNameUtil.DEVICE_SYS_PERF_COMPONENT_MODEL_ID; break;
 
                 case ConfigConst.HUMIDITY_SENSOR_TYPE:
-                    modelID = ModelConst.ENV_SENSORS_COMPONENT_MODEL_ID; break;
+                    modelID = ModelNameUtil.ENV_SENSORS_COMPONENT_MODEL_ID; break;
 
                 case ConfigConst.TEMP_SENSOR_TYPE:
-                    modelID = ModelConst.ENV_SENSORS_COMPONENT_MODEL_ID; break;
+                    modelID = ModelNameUtil.ENV_SENSORS_COMPONENT_MODEL_ID; break;
 
                 case ConfigConst.PRESSURE_SENSOR_TYPE:
-                    modelID = ModelConst.ENV_SENSORS_COMPONENT_MODEL_ID; break;
+                    modelID = ModelNameUtil.ENV_SENSORS_COMPONENT_MODEL_ID; break;
 
                 case ConfigConst.WIND_SYSTEM_TYPE:
-                    modelID = ModelConst.POWER_WINDMILL_CONTROLLER_MODEL_ID; break;
+                    modelID = ModelNameUtil.POWER_WINDMILL_CONTROLLER_MODEL_ID; break;
 
                 default:
-                    modelID = ModelConst.IOT_MODEL_CONTEXT_MODEL_ID; break;
+                    modelID = ModelNameUtil.IOT_MODEL_CONTEXT_MODEL_ID; break;
             }
 
             return modelID;

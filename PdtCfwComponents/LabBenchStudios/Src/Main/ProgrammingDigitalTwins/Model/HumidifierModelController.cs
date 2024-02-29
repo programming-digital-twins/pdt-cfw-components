@@ -79,10 +79,10 @@ namespace LabBenchStudios.Pdt.Model
             StringBuilder sb = new StringBuilder(base.ToString());
 
             sb.Append(',');
-            sb.Append(ModelConst.RELATIVE_HUMIDITY_PROP_NAME).Append('=').Append(this.relativeHumidity).Append(',');
-            sb.Append(ModelConst.TARGET_HUMIDITY_PROP_NAME).Append('=').Append(this.targetHumidity).Append(',');
-            sb.Append(ModelConst.MIN_HUMIDITY_PROP_NAME).Append('=').Append(this.minHumidity).Append(',');
-            sb.Append(ModelConst.MAX_HUMIDITY_PROP_NAME).Append('=').Append(this.maxHumidity).Append(',');
+            sb.Append(ModelNameUtil.RELATIVE_HUMIDITY_PROP_NAME).Append('=').Append(this.relativeHumidity).Append(',');
+            sb.Append(ModelNameUtil.TARGET_HUMIDITY_PROP_NAME).Append('=').Append(this.targetHumidity).Append(',');
+            sb.Append(ModelNameUtil.MIN_HUMIDITY_PROP_NAME).Append('=').Append(this.minHumidity).Append(',');
+            sb.Append(ModelNameUtil.MAX_HUMIDITY_PROP_NAME).Append('=').Append(this.maxHumidity).Append(',');
 
             return sb.ToString();
         }

@@ -94,10 +94,10 @@ namespace LabBenchStudios.Pdt.Model
             StringBuilder sb = new StringBuilder(base.ToString());
 
             sb.Append(',');
-            sb.Append(ModelConst.CURRENT_TEMPERATURE_PROP_NAME).Append('=').Append(this.currentTemperature).Append(',');
-            sb.Append(ModelConst.TARGET_TEMPERATURE_PROP_NAME).Append('=').Append(this.targetTemperature).Append(',');
-            sb.Append(ModelConst.MIN_TEMPERATURE_PROP_NAME).Append('=').Append(this.targetTemperature).Append(',');
-            sb.Append(ModelConst.MAX_TEMPERATURE_PROP_NAME).Append('=').Append(this.targetTemperature).Append(',');
+            sb.Append(ModelNameUtil.CURRENT_TEMPERATURE_PROP_NAME).Append('=').Append(this.currentTemperature).Append(',');
+            sb.Append(ModelNameUtil.TARGET_TEMPERATURE_PROP_NAME).Append('=').Append(this.targetTemperature).Append(',');
+            sb.Append(ModelNameUtil.MIN_TEMPERATURE_PROP_NAME).Append('=').Append(this.targetTemperature).Append(',');
+            sb.Append(ModelNameUtil.MAX_TEMPERATURE_PROP_NAME).Append('=').Append(this.targetTemperature).Append(',');
 
             return sb.ToString();
         }

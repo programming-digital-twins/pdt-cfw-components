@@ -24,7 +24,8 @@
 
 using System;
 using System.Collections.Generic;
-
+using System.Linq;
+using System.Runtime.CompilerServices;
 using LabBenchStudios.Pdt.Common;
 using LabBenchStudios.Pdt.Data;
 using LabBenchStudios.Pdt.Model;
@@ -91,6 +92,9 @@ namespace LabBenchStudios.Pdt.Unity.Common
         private DigitalTwinModelManager digitalTwinModelManager = null;
 
         private Dictionary<string, DigitalTwinModelState> digitalTwinStateTable = null;
+        private Dictionary<string, ConnectionStateData> connectedStateTable = null;
+        private HashSet<string> knownDeviceIDSet = null;
+        private HashSet<string> testDeviceIDSet = null;
 
         // constructors
 
@@ -98,7 +102,16 @@ namespace LabBenchStudios.Pdt.Unity.Common
         {
             this.dataContextEventListenerList = new List<IDataContextEventListener>();
             this.systemStatusEventListenerList = new List<ISystemStatusEventListener>();
+
             this.digitalTwinStateTable = new Dictionary<string, DigitalTwinModelState>();
+            this.connectedStateTable = new Dictionary<string, ConnectionStateData>();
+
+            this.knownDeviceIDSet = new HashSet<string>();
+            this.knownDeviceIDSet.Add(ConfigConst.PRODUCT_NAME);
+
+            // ignore these
+            this.testDeviceIDSet = new HashSet<string>();
+            this.testDeviceIDSet.Add("UUID");
         }
 
 
@@ -121,9 +134,26 @@ namespace LabBenchStudios.Pdt.Unity.Common
             return _GUID;
         }
 
+        public ConnectionStateData GetConnectionState(string deviceID)
+        {
+            if (this.connectedStateTable.ContainsKey(deviceID))
+            {
+                return this.connectedStateTable[deviceID];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public DigitalTwinModelManager GetDigitalTwinModelManager()
         {
             return this.digitalTwinModelManager;
+        }
+
+        public List<string> GetAllKnownDeviceIDs()
+        {
+            return this.knownDeviceIDSet.ToList();
         }
 
         public void RegisterDigitalTwin(DigitalTwinModelState dtModelState)
@@ -217,7 +247,10 @@ namespace LabBenchStudios.Pdt.Unity.Common
             // and invoke its HandleIncomingTelemetry method
             if (data != null)
             {
-                string dtmi = ModelConst.GetModelID(data.GetTypeID());
+                this.UpdateDeviceIDSet(data);
+                this.UpdateConnectionStateCache(data);
+
+                string dtmi = ModelNameUtil.GetModelID(data.GetTypeID());
 
                 if (this.digitalTwinStateTable.ContainsKey(dtmi))
                 {
@@ -243,7 +276,10 @@ namespace LabBenchStudios.Pdt.Unity.Common
             // and invoke its HandleIncomingTelemetry method
             if (data != null)
             {
-                string dtmi = ModelConst.GetModelID(data.GetTypeID());
+                this.UpdateDeviceIDSet(data);
+                this.UpdateConnectionStateCache(data);
+
+                string dtmi = ModelNameUtil.GetModelID(data.GetTypeID());
 
                 if (this.digitalTwinStateTable.ContainsKey(dtmi))
                 {
@@ -269,7 +305,10 @@ namespace LabBenchStudios.Pdt.Unity.Common
             // and invoke its HandleIncomingTelemetry method
             if (data != null)
             {
-                string dtmi = ModelConst.GetModelID(data.GetTypeID());
+                this.UpdateDeviceIDSet(data);
+                this.UpdateConnectionStateCache(data);
+
+                string dtmi = ModelNameUtil.GetModelID(data.GetTypeID());
 
                 if (this.digitalTwinStateTable.ContainsKey(dtmi))
                 {
@@ -295,7 +334,10 @@ namespace LabBenchStudios.Pdt.Unity.Common
             // and invoke its HandleIncomingTelemetry method
             if (data != null)
             {
-                string dtmi = ModelConst.GetModelID(data.GetTypeID());
+                this.UpdateDeviceIDSet(data);
+                this.UpdateConnectionStateCache(data);
+
+                string dtmi = ModelNameUtil.GetModelID(data.GetTypeID());
 
                 if (this.digitalTwinStateTable.ContainsKey(dtmi))
                 {
@@ -315,22 +357,31 @@ namespace LabBenchStudios.Pdt.Unity.Common
 
         public void OnMessagingSystemDataSent(ConnectionStateData data)
         {
-            if (this.systemStatusEventListenerList.Count > 0)
+            if (data != null)
             {
-                foreach (var listener in this.systemStatusEventListenerList)
+                if (this.systemStatusEventListenerList.Count > 0)
                 {
-                    listener.OnMessagingSystemDataSent(data);
+                    foreach (var listener in this.systemStatusEventListenerList)
+                    {
+                        listener.OnMessagingSystemDataSent(data);
+                    }
                 }
             }
         }
 
         public void OnMessagingSystemStatusUpdate(ConnectionStateData data)
         {
-            if (this.systemStatusEventListenerList.Count > 0)
+            if (data != null)
             {
-                foreach (var listener in this.systemStatusEventListenerList)
+                this.UpdateDeviceIDSet(data);
+                this.UpdateConnectionStateCache(data);
+
+                if (this.systemStatusEventListenerList.Count > 0)
                 {
-                    listener.OnMessagingSystemStatusUpdate(data);
+                    foreach (var listener in this.systemStatusEventListenerList)
+                    {
+                        listener.OnMessagingSystemStatusUpdate(data);
+                    }
                 }
             }
         }
@@ -390,6 +441,70 @@ namespace LabBenchStudios.Pdt.Unity.Common
 
         // private methods
 
+        /// <summary>
+        /// This simply adds the contained Device ID within IotDataContext
+        /// to an internal set of known valid Device ID's.
+        /// </summary>
+        /// <param name="data"></param>
+        private void UpdateDeviceIDSet(IotDataContext data)
+        {
+            if (data != null)
+            {
+                string deviceID = data.GetDeviceID();
+
+                // check bogus list first - we only want to add legit ID's
+                if (!this.testDeviceIDSet.Contains(deviceID))
+                {
+                    // the Set structure will ensure only unique ID's
+                    this.knownDeviceIDSet.Add(deviceID);
+                }
+            }
+        }
+
+        /// <summary>
+        /// This works well for maintaining a cache of Device ID's that are
+        /// clearly sending messages into the EventProcessor; however, if these
+        /// devices STOP sending data (or disconnect), there's no way for the
+        /// EventProcessor to know about it, and it will sustain the table
+        /// representing 'is connected' Device ID's.
+        /// </summary>
+        /// <param name="data"></param>
+        private void UpdateConnectionStateCache(IotDataContext data)
+        {
+            if (data != null)
+            {
+                string deviceID = data.GetDeviceID();
+
+                if (this.testDeviceIDSet.Contains(deviceID))
+                {
+                    return;
+                }
+
+                ConnectionStateData connStateData = null;
+
+                if (!this.connectedStateTable.ContainsKey(deviceID))
+                {
+                    connStateData = new ConnectionStateData();
+
+                    this.connectedStateTable.Add(deviceID, connStateData);
+                }
+
+                connStateData = this.connectedStateTable[deviceID];
+
+                if (connStateData != null)
+                {
+                    if (data is ConnectionStateData)
+                    {
+                        connStateData.UpdateData((ConnectionStateData) data);
+                    }
+                    else
+                    {
+                        connStateData.UpdateData(data);
+                        connStateData.SetIsClientConnectedFlag(true);
+                    }
+                }
+            }
+        }
 
     }
 }

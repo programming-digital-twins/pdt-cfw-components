@@ -176,7 +176,7 @@ namespace LabBenchStudios.Pdt.Model
                 var modelJsonList = new List<string>();
 
                 var modelFileList =
-                    Directory.GetFiles(modelFilePath, ModelConst.MODEL_FILE_NAME_PATTERN);
+                    Directory.GetFiles(modelFilePath, ModelNameUtil.MODEL_FILE_NAME_PATTERN);
 
                 foreach (var modelFileName in modelFileList)
                 {

@@ -77,5 +77,18 @@ namespace LabBenchStudios.Pdt.Data
             return sb.ToString();
         }
 
+        public void UpdateData(SensorData data)
+        {
+            if (data != null)
+            {
+                base.UpdateData(data);
+
+                this.value = data.GetValue();
+                this.rangeFloor = data.GetRangeFloor();
+                this.rangeCeiling = data.GetRangeCeiling();
+
+                this.UpdateTimeStamp();
+            }
+        }
     }
 }
