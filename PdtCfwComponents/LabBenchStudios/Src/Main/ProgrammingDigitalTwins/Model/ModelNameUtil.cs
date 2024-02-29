@@ -204,7 +204,7 @@ namespace LabBenchStudios.Pdt.Model
                     modelFileName = CONTROLLER_FLUID_PUMP_DTDL_MODEL; break;
 
                 case DtmiControllerEnum.HeatingSystem:
-                    modelFileName = CONTROLLER_HEATING_ZONE_DTDL_MODEL; break;
+                    modelFileName = CONTEXT_HEATING_SYSTEM_DTDL_MODEL; break;
 
                 case DtmiControllerEnum.Humidifier:
                     modelFileName = CONTROLLER_HUMIDIFIER_DTDL_MODEL; break;
