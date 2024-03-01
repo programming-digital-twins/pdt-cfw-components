@@ -177,7 +177,7 @@ namespace LabBenchStudios.Pdt.Data
 
         protected void SetTypeID(int val) { if (typeID >= 0) { this.typeID = val; }; this.UpdateTimeStamp(); }
 
-        protected void SetDeviceID(string name) { if (! string.IsNullOrEmpty(name)) { this.deviceID = name; } }
+        protected void SetDeviceID(string name) { if (! string.IsNullOrEmpty(name)) { this.deviceID = name; }; this.UpdateTimeStamp(); }
 
         protected void UpdateTimeStamp()
         {

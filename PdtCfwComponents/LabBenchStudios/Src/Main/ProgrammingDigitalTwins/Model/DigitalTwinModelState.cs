@@ -29,7 +29,7 @@ using System.Text;
 
 using LabBenchStudios.Pdt.Common;
 using LabBenchStudios.Pdt.Data;
-
+using LabBenchStudios.Pdt.Unity.Common;
 using Newtonsoft.Json;
 
 namespace LabBenchStudios.Pdt.Model
@@ -46,6 +46,9 @@ namespace LabBenchStudios.Pdt.Model
     {
         // this is the DTMI for the model (e.g., dtmi:LabBenchStudios.Pdt.{modelName};1)
         private string modelID = ModelNameUtil.IOT_MODEL_CONTEXT_MODEL_ID;
+        private string modelGUID = System.Guid.NewGuid().ToString();
+
+        private string instanceKey = null;
 
         private Hashtable modelProperties = new Hashtable();
 
@@ -61,15 +64,30 @@ namespace LabBenchStudios.Pdt.Model
 
         private IDataContextEventListener virtualAssetListener = null;
 
-        public DigitalTwinModelState() : base()
+        public DigitalTwinModelState() :
+            base(
+                ConfigConst.NOT_SET, ConfigConst.NOT_SET,
+                ConfigConst.DEFAULT_TYPE_CATEGORY_ID, ConfigConst.DEFAULT_TYPE_ID)
         {
-            this.modelID = ModelNameUtil.GetModelID(this.GetTypeID());
+
         }
 
         public DigitalTwinModelState(
-            string name, string deviceID, int typeCategoryID, int typeID)
+            string name, string deviceID) :
+            base(
+                name, deviceID,
+                ConfigConst.DEFAULT_TYPE_CATEGORY_ID, ConfigConst.DEFAULT_TYPE_ID)
+        {
+
+        }
+
+        public DigitalTwinModelState(
+            string name, string deviceID, int typeCategoryID, int typeID) :
+            base(name, deviceID, typeCategoryID, typeID)
         {
             this.modelID = ModelNameUtil.GetModelID(typeID);
+
+            this.InitInstanceKey(false);
         }
 
         // public methods
@@ -107,12 +125,50 @@ namespace LabBenchStudios.Pdt.Model
 
             }
         }
+        
+        /// <summary>
+        /// Returns the unique instance key for this state object.
+        /// This is generated via a combination of properties
+        /// that are both generic and unique to this instance,
+        /// with the help of a utility method in ModelNameUtil.
+        /// </summary>
+        /// <returns></returns>
+        public string GetInstanceKey()
+        {
+            return this.instanceKey;
+        }
 
+        /// <summary>
+        /// The full DTMI model ID used by this component. Any other
+        /// instances of this state class that are configured with the
+        /// same controller ID will have the same DTMI Model ID.
+        /// 
+        /// To uniquely identify each model state, a GUID is generated
+        /// for each instance of this object, and can be retrieved
+        /// via the GetModelGUID() method.
+        /// </summary>
+        /// <returns></returns>
         public string GetModelID()
         {
             return this.modelID;
         }
 
+        /// <summary>
+        /// Returns the unique GUID for this model state instance.
+        /// </summary>
+        /// <returns></returns>
+        public string GetModelGUID()
+        {
+            return this.modelGUID;
+        }
+
+        /// <summary>
+        /// Returns the Enum controller ID associated with this model state.
+        /// This is a simple way to provide a coded mapping 'selector' that
+        /// can be easily used by other components to align a specific
+        /// DTMI and associated DTDL to a type.
+        /// </summary>
+        /// <returns></returns>
         public ModelNameUtil.DtmiControllerEnum GetModelControllerID()
         {
             return this.modelControllerID;
@@ -235,10 +291,60 @@ namespace LabBenchStudios.Pdt.Model
             return success;
         }
 
+        /// <summary>
+        /// Safe for external entities to call, as the internal generation
+        /// of an instance key will yield a consistent result.
+        /// 
+        /// This must be invoked for an instance key to be generated, however.
+        /// </summary>
+        public void InitInstanceKey()
+        {
+            this.InitInstanceKey(false);
+        }
+
+        /// <summary>
+        /// Safe for external entities to call, as the internal generation
+        /// of an instance key will yield a consistent result.
+        /// 
+        /// This must be invoked for an instance key to be generated, however.
+        /// </summary>
+        /// <param name="useGuid">If true, the GUID generated when this
+        /// class was instanced will be used in the isntancing key.</param>
+        public void InitInstanceKey(bool useGuid)
+        {
+            this.instanceKey =
+                useGuid ?
+                    ModelNameUtil.CreateModelDataSyncKey(this.GetDeviceID(), this.GetLocationID(), this.GetModelGUID()) :
+                    ModelNameUtil.CreateModelDataSyncKey(this.GetDeviceID(), this.GetLocationID());
+
+            Console.WriteLine($"DT model state instance key generated: {this.instanceKey}");
+        }
+
+        /// <summary>
+        /// This will simply re-parse the stored raw JSON data.
+        /// This is typically invoked internally after the JSON
+        /// is set via SetRawModelJson(); however, it can be
+        /// called to re-generate any internal structures,
+        /// which can be useful when the state instance itself
+        /// needs to reset.
+        /// </summary>
+        /// <returns></returns>
+        public bool ReloadModelData()
+        {
+            // TODO: implement this
+            return true;
+        }
+
         public void SetConnectedDeviceID(string deviceID)
         {
             // base class will handle validation of the name
             base.SetDeviceID(deviceID);
+        }
+
+        public void SetConnectedDeviceLocation(string locationID)
+        {
+            // base class will handle validation of the name
+            base.SetLocationID(locationID);
         }
 
         public void SetModelControllerID(ModelNameUtil.DtmiControllerEnum controllerID)
@@ -249,6 +355,8 @@ namespace LabBenchStudios.Pdt.Model
         public void SetRawModelJson(string json)
         {
             this.rawModelJson = json;
+
+            this.ReloadModelData();
         }
 
         public void SetVirtualAssetListener(IDataContextEventListener listener)
@@ -264,6 +372,7 @@ namespace LabBenchStudios.Pdt.Model
             StringBuilder sb = new StringBuilder(base.ToString());
 
             sb.Append(ConfigConst.MODEL_ID_PROP).Append('=').Append(this.modelID).Append(',');
+            sb.Append("InstanceKey").Append('=').Append(this.instanceKey);
 
             return sb.ToString();
         }

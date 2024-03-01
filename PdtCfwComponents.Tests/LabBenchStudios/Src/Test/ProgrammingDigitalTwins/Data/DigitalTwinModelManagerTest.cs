@@ -40,12 +40,13 @@ namespace LabBenchStudios.Pdt.Test.Data
         [SetUp]
         public void Setup()
         {
-            dtModelManager = new DigitalTwinModelManager(DTDL_TEST_MODEL_FILEPATH);
+            this.dtModelManager = new DigitalTwinModelManager(DTDL_TEST_MODEL_FILEPATH);
         }
 
         [Test]
         public void DisplayDtmiKeysFromLoadedDtdl()
         {
+            this.dtModelManager.ReloadModelData();
             string dtmiAggregateString = string.Join("\n", dtModelManager.GetAllDtmiValues());
             Console.WriteLine(dtmiAggregateString);
         }

@@ -113,7 +113,7 @@ namespace LabBenchStudios.Pdt.Data
             sb.Append(ConfigConst.MESSAGE_OUT_COUNT_PROP).Append('=').Append(this.msgOutCount).Append(',');
             sb.Append(ConfigConst.IS_CONNECTING_PROP).Append('=').Append(this.isClientConnecting).Append(',');
             sb.Append(ConfigConst.IS_CONNECTED_PROP).Append('=').Append(this.isClientConnected).Append(',');
-            sb.Append(ConfigConst.IS_DISCONNECTED_PROP).Append('=').Append(this.isClientDisconnected).Append(',');
+            sb.Append(ConfigConst.IS_DISCONNECTED_PROP).Append('=').Append(this.isClientDisconnected);
 
             return sb.ToString();
         }

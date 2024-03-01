@@ -80,7 +80,7 @@ namespace LabBenchStudios.Pdt.Data
             sb.Append(ConfigConst.VALUE_PROP).Append('=').Append(this.value).Append(',');
             sb.Append(ConfigConst.COMMAND_PROP).Append('=').Append(this.command).Append(',');
             sb.Append(ConfigConst.STATE_DATA_PROP).Append('=').Append(this.stateData).Append(',');
-            sb.Append(ConfigConst.IS_RESPONSE_PROP).Append('=').Append(this.isResponse).Append(',');
+            sb.Append(ConfigConst.IS_RESPONSE_PROP).Append('=').Append(this.isResponse);
 
             return sb.ToString();
         }

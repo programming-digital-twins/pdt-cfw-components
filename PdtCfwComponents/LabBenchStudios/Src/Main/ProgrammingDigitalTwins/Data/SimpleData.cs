@@ -85,7 +85,7 @@ namespace LabBenchStudios.Pdt.Data
             sb.Append(ConfigConst.NAME_PROP).Append('=').Append(this.Name).Append(',');
             sb.Append(ConfigConst.TYPE_ID_PROP).Append('=').Append(this.TypeID).Append(',');
             sb.Append(ConfigConst.TYPE_CATEGORY_ID_PROP).Append('=').Append(this.TypeCategoryID).Append(',');
-            sb.Append(ConfigConst.TIMESTAMP_PROP).Append('=').Append(this.TimeStamp).Append(',');
+            sb.Append(ConfigConst.TIMESTAMP_PROP).Append('=').Append(this.TimeStamp);
 
             return sb.ToString();
         }

@@ -27,6 +27,7 @@ using LabBenchStudios.Pdt.Common;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Text;
 using System.Windows.Forms.VisualStyles;
 
 namespace LabBenchStudios.Pdt.Model
@@ -195,7 +196,7 @@ namespace LabBenchStudios.Pdt.Model
             switch (controllerID)
             {
                 case DtmiControllerEnum.Barometer:
-                    modelFileName = BAROMETER_NAME; break;
+                    modelFileName = CONTROLLER_BAROMETER_DTDL_MODEL; break;
 
                 case DtmiControllerEnum.EdgeComputingDevice:
                     modelFileName = CONTROLLER_EDGE_COMPUTE_DEVICE_DTDL_MODEL; break;
@@ -226,6 +227,64 @@ namespace LabBenchStudios.Pdt.Model
             }
 
             return modelFileName;
+        }
+
+        public static string CreateModelDataSyncKey(string deviceID)
+        {
+            return CreateModelDataSyncKey(deviceID, deviceID, false);
+        }
+
+        public static string CreateModelDataSyncKey(string deviceID, string locationID)
+        {
+            return CreateModelDataSyncKey(deviceID, locationID, false);
+        }
+
+        public static string CreateModelDataSyncKey(string deviceID, string locationID, bool generateGuid)
+        {
+            string guid = null;
+
+            if (generateGuid)
+            {
+                guid = Guid.NewGuid().ToString();
+            }
+
+            return CreateModelDataSyncKey(deviceID, locationID, guid);
+        }
+
+        /// <summary>
+        /// Format is {deviceID}:{locationID}:{guid}.
+        /// If any parameter is passed in as null or empty, it will be replaced with
+        /// ConfigConst.PRODUCT_NAME.
+        /// Generally, the default invocation of this method will include a valid
+        /// deviceID and locationID, which always default to ConfigConst.NOT_SET
+        /// within IotDataContext.
+        /// </summary>
+        /// <param name="deviceID"></param>
+        /// <param name="locationID"></param>
+        /// <param name="guid"></param>
+        /// <returns></returns>
+        public static string CreateModelDataSyncKey(string deviceID, string locationID, string guid)
+        {
+            if (string.IsNullOrEmpty(deviceID))
+            {
+                deviceID = ConfigConst.PRODUCT_NAME;
+            }
+
+            if (string.IsNullOrEmpty(locationID))
+            {
+                locationID = deviceID;
+            }
+
+            if (string.IsNullOrEmpty(guid))
+            {
+                guid = ConfigConst.PRODUCT_NAME;
+            }
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append(deviceID).Append(':').Append(locationID).Append(':').Append(guid);
+
+            return sb.ToString();
         }
 
         public static string CreateModelID(DtmiControllerEnum controllerID)

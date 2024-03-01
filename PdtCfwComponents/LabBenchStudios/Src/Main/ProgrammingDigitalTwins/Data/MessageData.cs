@@ -56,7 +56,7 @@ namespace LabBenchStudios.Pdt.Data
             StringBuilder sb = new StringBuilder(base.ToString());
 
             sb.Append(',');
-            sb.Append(ConfigConst.MESSAGE_DATA_PROP).Append('=').Append(this.msgData).Append(',');
+            sb.Append(ConfigConst.MESSAGE_DATA_PROP).Append('=').Append(this.msgData);
 
             return sb.ToString();
         }

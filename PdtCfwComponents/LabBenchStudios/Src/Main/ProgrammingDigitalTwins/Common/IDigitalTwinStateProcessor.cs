@@ -32,5 +32,6 @@ namespace LabBenchStudios.Pdt.Common
 
         bool HandleOutgoingStateUpdate(IotDataContext dataContext);
 
+        bool ReloadModelData();
     }
 }

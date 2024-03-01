@@ -100,6 +100,8 @@ namespace LabBenchStudios.Pdt.Unity.Common
 
         private EventProcessor()
         {
+            this.digitalTwinModelManager = new DigitalTwinModelManager();
+
             this.dataContextEventListenerList = new List<IDataContextEventListener>();
             this.systemStatusEventListenerList = new List<ISystemStatusEventListener>();
 
@@ -114,14 +116,18 @@ namespace LabBenchStudios.Pdt.Unity.Common
             this.testDeviceIDSet.Add("UUID");
         }
 
+        // internal methods
 
-        // instance methods
-
-        public void OnDestroy()
+        /**
+        void OnDestroy()
         {
             _IS_TERMINATED = true;
             _INSTANCE = null;
         }
+        */
+        
+
+        // public methods
 
         public void ClearAllListeners()
         {
@@ -132,6 +138,11 @@ namespace LabBenchStudios.Pdt.Unity.Common
         public string GetGuid()
         {
             return _GUID;
+        }
+
+        public List<string> GetAllKnownDeviceIDs()
+        {
+            return this.knownDeviceIDSet.ToList();
         }
 
         public ConnectionStateData GetConnectionState(string deviceID)
@@ -151,24 +162,37 @@ namespace LabBenchStudios.Pdt.Unity.Common
             return this.digitalTwinModelManager;
         }
 
-        public List<string> GetAllKnownDeviceIDs()
+        public bool LoadDigitalTwinModels()
         {
-            return this.knownDeviceIDSet.ToList();
+            return this.LoadDigitalTwinModels(ModelNameUtil.DEFAULT_MODEL_FILE_PATH);
+        }
+
+        public bool LoadDigitalTwinModels(string modelFilePath)
+        {
+            if (this.digitalTwinModelManager != null)
+            {
+                if (this.digitalTwinModelManager.SetModelFilePath(modelFilePath))
+                {
+                    return this.digitalTwinModelManager.ReloadModelData();
+                }
+            }
+
+            Console.WriteLine($"Failed to (re)load Digital Twin models from path {modelFilePath}");
+
+            return false;
         }
 
         public void RegisterDigitalTwin(DigitalTwinModelState dtModelState)
         {
             if (dtModelState != null)
             {
-                this.digitalTwinStateTable.Add(dtModelState.GetModelID(), dtModelState);
+                string modelID = dtModelState.GetModelID();
+
+                if (!this.digitalTwinStateTable.ContainsKey(modelID))
+                {
+                    this.digitalTwinStateTable.Add(dtModelState.GetModelID(), dtModelState);
+                }
             }
-        }
-
-        public void RegisterDigitalTwinModelManager(DigitalTwinModelManager dtModelManager)
-        {
-            if (this.digitalTwinModelManager == null) this.digitalTwinModelManager = dtModelManager;
-
-            Console.WriteLine("Digital Twin model manager now registered.");
         }
 
         public void RegisterListener(IDataContextEventListener listener)

@@ -72,7 +72,7 @@ namespace LabBenchStudios.Pdt.Data
             sb.Append(',');
             sb.Append(ConfigConst.VALUE_PROP).Append('=').Append(this.value).Append(',');
             sb.Append(ConfigConst.RANGE_FLOOR_PROP).Append('=').Append(this.rangeFloor).Append(',');
-            sb.Append(ConfigConst.RANGE_CEILING_PROP).Append('=').Append(this.rangeCeiling).Append(',');
+            sb.Append(ConfigConst.RANGE_CEILING_PROP).Append('=').Append(this.rangeCeiling);
 
             return sb.ToString();
         }

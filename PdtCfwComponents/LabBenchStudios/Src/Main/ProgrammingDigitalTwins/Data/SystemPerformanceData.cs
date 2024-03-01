@@ -72,7 +72,7 @@ namespace LabBenchStudios.Pdt.Data
             sb.Append(',');
             sb.Append(ConfigConst.CPU_UTIL_PROP).Append('=').Append(this.cpuUtil).Append(',');
             sb.Append(ConfigConst.MEM_UTIL_PROP).Append('=').Append(this.memUtil).Append(',');
-            sb.Append(ConfigConst.DISK_UTIL_PROP).Append('=').Append(this.diskUtil).Append(',');
+            sb.Append(ConfigConst.DISK_UTIL_PROP).Append('=').Append(this.diskUtil);
 
             return sb.ToString();
         }
