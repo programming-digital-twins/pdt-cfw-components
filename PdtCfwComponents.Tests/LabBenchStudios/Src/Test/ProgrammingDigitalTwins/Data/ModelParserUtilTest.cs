@@ -64,6 +64,14 @@ namespace LabBenchStudios.Pdt.Test.Data
         }
 
         [Test]
+        public void LoadAllDtmlInterfacesFromPath()
+        {
+            var modelList = ModelParserUtil.LoadAllDtdlInterfaces(DTDL_TEST_MODEL_FILEPATH);
+
+            //Assert.That(modelList, Is.InstanceOf<IReadOnlyDictionary>());
+        }
+
+        [Test]
         public void CheckValidityOfIotModelContextDtdl()
         {
             Assert.That(

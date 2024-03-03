@@ -165,6 +165,58 @@ namespace LabBenchStudios.Pdt.Model
             return false;
         }
 
+        /// <summary>
+        /// Loads all DTDL models from the given path into a read only dictionary indexed
+        /// by DTMI string, containing DTInterfaceInfo instances. This is likely the most useful
+        /// static method in this utility class, as most functionality will be derived from
+        /// looking up, and operating on, a DTInterfaceInfo using the DTMI string (NOT the
+        /// Dtmi type).
+        /// 
+        /// Note that this does NOT distinguish between model files, as a single model file
+        /// can declare multiple DTEntityInfo's.
+        /// </summary>
+        /// <param name="modelFilePath"></param>
+        /// <returns>IReadOnlyDictionary<string, DTInterfaceInfo></returns>
+        public static IReadOnlyDictionary<string, DTInterfaceInfo> LoadAllDtdlInterfaces(string modelFilePath)
+        {
+            IReadOnlyDictionary<Dtmi, DTEntityInfo> modelEntities = LoadAllDtdlModels(modelFilePath);
+            Dictionary<string, DTInterfaceInfo> modelInterfaces = null;
+
+            if (modelEntities != null && modelEntities.Count > 0)
+            {
+                modelInterfaces = new Dictionary<string, DTInterfaceInfo>();
+
+                foreach (Dtmi dtmi in modelEntities.Keys)
+                {
+                    DTEntityInfo entityInfo = modelEntities[dtmi];
+
+                    switch (entityInfo.EntityKind)
+                    {
+                        case DTEntityKind.Interface:
+                            Console.WriteLine($" --> DTInterfaceInfo DTMI: {dtmi.AbsoluteUri}");
+                            modelInterfaces.Add(dtmi.AbsoluteUri, (DTInterfaceInfo) entityInfo);
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Error generating DTDL model interfaces from file path {modelFilePath}. None found.");
+            }
+
+            return modelInterfaces;
+        }
+
+        /// <summary>
+        /// Loads all DTDL models from the given path into a read only dictionary indexed
+        /// by Dtmi, containing DTEntityInfo instances. This is the highest level generic
+        /// model representation available.
+        /// 
+        /// Note that this does NOT distinguish between model files, as a single model file
+        /// can declare multiple DTEntityInfo's.
+        /// </summary>
+        /// <param name="modelFilePath"></param>
+        /// <returns>IReadOnlyDictionary<Dtmi, DTEntityInfo></returns>
         public static IReadOnlyDictionary<Dtmi, DTEntityInfo> LoadAllDtdlModels(string modelFilePath)
         {
             IReadOnlyDictionary<Dtmi, DTEntityInfo> modelDictionary = null;

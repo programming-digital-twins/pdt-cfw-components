@@ -41,6 +41,7 @@ namespace LabBenchStudios.Pdt.Model
         // this contains all the DT model parsed instances
         // this is indexed by the DTDLParser Dtmi object
         private IReadOnlyDictionary<Dtmi, DTEntityInfo> digitalTwinParsedModelCache;
+        private IReadOnlyDictionary<string, DTInterfaceInfo> digitalTwinInterfaceCache;
 
         // this contains all the DT model raw JSON data
         // this is indexed by the string DTMI (use ModelConst.DtmiControllerEnum)

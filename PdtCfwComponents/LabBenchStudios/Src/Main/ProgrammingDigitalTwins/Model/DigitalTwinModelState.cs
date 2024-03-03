@@ -314,7 +314,8 @@ namespace LabBenchStudios.Pdt.Model
         /// <returns></returns>
         public bool ReloadModelData()
         {
-            // TODO: implement this
+            // TODO: implement this - parse the DTDL and
+            // instance all properties / relationships
             return true;
         }
 
