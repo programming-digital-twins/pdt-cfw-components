@@ -103,6 +103,8 @@ namespace LabBenchStudios.Pdt.Common
         public static readonly string COMMAND_PROP = "command";
         public static readonly string STATE_DATA_PROP = "stateData";
         public static readonly string VALUE_PROP = "value";
+        public static readonly string TARGET_VALUE_PROP = "targetValue";
+        public static readonly string DATA_VALUES_PROP = "dataValues";
         public static readonly string IS_RESPONSE_PROP = "isResponse";
 
         public static readonly string MODEL_ID_PROP = "modelID";
@@ -120,8 +122,12 @@ namespace LabBenchStudios.Pdt.Common
         public static readonly string USE_SEQUENCE_NUMBER_PROP = "useSeqNo";
         public static readonly string SEQUENCE_NUMBER_TOTAL_PROP = "seqNoTotal";
 
-        public static readonly string RANGE_FLOOR_PROP = "rangeFloor";
-        public static readonly string RANGE_CEILING_PROP = "rangeCeiling";
+        public static readonly string RANGE_NOMINAL_FLOOR_PROP = "rangeNominalFloor";
+        public static readonly string RANGE_NOMINAL_CEILING_PROP = "rangeNominalCeiling";
+        public static readonly string RANGE_MAX_FLOOR_PROP = "rangeMaxFloor";
+        public static readonly string RANGE_MAX_CEILING_PROP = "rangeMaxCeiling";
+        public static readonly string NOMINAL_VALUE_DELTA_PROP = "nominalValueDelta";
+        public static readonly string MAX_VALUE_DELTA_PROP = "maxValueDelta";
 
         public static readonly string SEND_RESOURCE_NAME_PROP = "sendResourceName";
         public static readonly string RECEIVE_RESOURCE_NAME_PROP = "receiveResourceName";

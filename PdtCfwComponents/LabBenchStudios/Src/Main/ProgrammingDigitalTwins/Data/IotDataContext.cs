@@ -34,9 +34,6 @@ namespace LabBenchStudios.Pdt.Data
     [JsonObject(MemberSerialization.OptIn)]
     public class IotDataContext
     {
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        private string name = ConfigConst.NOT_SET;
-
         [JsonProperty]
         private string deviceID = ConfigConst.NOT_SET;
 
@@ -47,34 +44,36 @@ namespace LabBenchStudios.Pdt.Data
         private int typeCategoryID = ConfigConst.DEFAULT_TYPE_CATEGORY_ID;
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        private string name = ConfigConst.NOT_SET;
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private string deviceUUID = ConfigConst.NOT_SET;
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private string locationID = ConfigConst.NOT_SET;
 
-        [JsonProperty]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private float latitude = 0.0f;
 
-        [JsonProperty]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private float longitude = 0.0f;
 
-        [JsonProperty]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private float elevation = 0.0f;
 
-        [JsonProperty]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private float heading = 0.0f;
 
-        [JsonProperty]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private float timeOffsetSeconds = 0.0f;
 
-        [JsonProperty]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private int statusCode = 0;
-
-        [JsonProperty]
-        private bool hasError = false;
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private string timeStamp = ConfigConst.NOT_SET;
+
+        private bool hasError = false;
 
         // necessary for JSON serialization / deserialization
         public IotDataContext()
@@ -175,7 +174,9 @@ namespace LabBenchStudios.Pdt.Data
 
         // protected methods
 
-        protected void SetTypeID(int val) { if (typeID >= 0) { this.typeID = val; }; this.UpdateTimeStamp(); }
+        protected void SetTypeCategoryID(int val) { if (val >= 0) { this.typeCategoryID = val; }; this.UpdateTimeStamp(); }
+
+        protected void SetTypeID(int val) { if (val >= 0) { this.typeID = val; }; this.UpdateTimeStamp(); }
 
         protected void SetDeviceID(string name) { if (! string.IsNullOrEmpty(name)) { this.deviceID = name; }; this.UpdateTimeStamp(); }
 

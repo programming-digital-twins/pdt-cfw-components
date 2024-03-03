@@ -30,8 +30,6 @@ using System.Linq;
 using DTDLParser;
 using DTDLParser.Models;
 
-using Newtonsoft.Json.Serialization;
-
 namespace LabBenchStudios.Pdt.Model
 {
 

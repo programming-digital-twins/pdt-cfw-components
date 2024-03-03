@@ -96,30 +96,6 @@ namespace LabBenchStudios.Pdt.Data
             return null;
         }
 
-        public static SimpleData JsonToSimpleData(string jsonData)
-        {
-            if (!string.IsNullOrEmpty(jsonData))
-            {
-                SimpleData simpleData = JsonConvert.DeserializeObject<SimpleData>(jsonData);
-
-                return simpleData;
-            }
-
-            return null;
-        }
-
-        public static string SimpleDataToJson(SimpleData simpleData)
-        {
-            if (simpleData != null)
-            {
-                string jsonData = JsonConvert.SerializeObject(simpleData, Formatting.Indented);
-
-                return jsonData;
-            }
-
-            return null;
-        }
-
         public static SensorData JsonToSensorDataUpdated(string jsonData)
         {
             if (!string.IsNullOrEmpty(jsonData))
@@ -238,6 +214,10 @@ namespace LabBenchStudios.Pdt.Data
                 Formatting = Formatting.Indented
             });
 
+            // maintain backwards compatability - previous version of SensorData
+            // does not include the internal structure DataValuesContainer - this
+            // call ensures it is updated with the de-serialized value(s)
+            data.UpdateValues();
             return data;
         }
 

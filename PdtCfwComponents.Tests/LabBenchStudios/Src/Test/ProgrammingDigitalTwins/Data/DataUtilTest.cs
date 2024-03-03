@@ -26,6 +26,7 @@ using System;
 
 using LabBenchStudios.Pdt.Common;
 using LabBenchStudios.Pdt.Data;
+using Newtonsoft.Json;
 
 namespace LabBenchStudios.Pdt.Test.Data
 {
@@ -49,12 +50,12 @@ namespace LabBenchStudios.Pdt.Test.Data
         {
             SimpleData data = new SimpleData("Temperature", "Temp001", ConfigConst.ENV_TYPE_CATEGORY, ConfigConst.TEMP_SENSOR_TYPE);
 
-            string jsonData = DataUtil.SimpleDataToJson(data);
+            string jsonData = DataUtilTest.SimpleDataToJson(data);
 
             Console.WriteLine(data.ToString());
             Console.WriteLine(jsonData);
 
-            SimpleData data2 = DataUtil.JsonToSimpleData(jsonData);
+            SimpleData data2 = DataUtilTest.JsonToSimpleData(jsonData);
 
             Console.WriteLine(data2.ToString());
 
@@ -109,5 +110,32 @@ namespace LabBenchStudios.Pdt.Test.Data
             Console.WriteLine("Original:\n" + edaSensorDataWithDtmiJson);
             Console.WriteLine("New:\n" + data.ToString());
         }
+
+        // private methods
+
+        private static SimpleData JsonToSimpleData(string jsonData)
+        {
+            if (!string.IsNullOrEmpty(jsonData))
+            {
+                SimpleData simpleData = JsonConvert.DeserializeObject<SimpleData>(jsonData);
+
+                return simpleData;
+            }
+
+            return null;
+        }
+
+        private static string SimpleDataToJson(SimpleData simpleData)
+        {
+            if (simpleData != null)
+            {
+                string jsonData = JsonConvert.SerializeObject(simpleData, Formatting.Indented);
+
+                return jsonData;
+            }
+
+            return null;
+        }
+
     }
 }

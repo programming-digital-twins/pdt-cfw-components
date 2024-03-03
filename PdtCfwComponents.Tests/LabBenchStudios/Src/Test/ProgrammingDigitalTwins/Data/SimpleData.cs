@@ -29,7 +29,7 @@ using Newtonsoft.Json;
 using System;
 using System.Text;
 
-namespace LabBenchStudios.Pdt.Data
+namespace LabBenchStudios.Pdt.Test.Data
 {
     [JsonObject(MemberSerialization.OptIn)]
     public class SimpleData

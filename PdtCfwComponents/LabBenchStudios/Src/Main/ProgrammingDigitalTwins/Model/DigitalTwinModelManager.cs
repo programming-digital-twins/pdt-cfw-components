@@ -22,16 +22,15 @@
  * SOFTWARE.
  */
 
-using LabBenchStudios.Pdt.Common;
-using LabBenchStudios.Pdt.Data;
-
 using System;
 using System.Collections.Generic;
 using System.IO;
 
 using DTDLParser;
 using DTDLParser.Models;
-using System.Runtime.CompilerServices;
+
+using LabBenchStudios.Pdt.Common;
+using LabBenchStudios.Pdt.Data;
 
 namespace LabBenchStudios.Pdt.Model
 {

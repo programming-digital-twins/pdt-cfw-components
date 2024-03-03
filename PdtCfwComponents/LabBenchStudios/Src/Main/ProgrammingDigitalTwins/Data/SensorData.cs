@@ -25,7 +25,7 @@
 using LabBenchStudios.Pdt.Common;
 
 using Newtonsoft.Json;
-
+using System;
 using System.Text;
 
 namespace LabBenchStudios.Pdt.Data
@@ -36,43 +36,55 @@ namespace LabBenchStudios.Pdt.Data
         [JsonProperty]
         private float value = 0.0f;
 
-        [JsonProperty]
-        private float rangeFloor = float.MinValue;
-
-        [JsonProperty]
-        private float rangeCeiling = float.MaxValue;
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        private DataValueContainer dataValues = new DataValueContainer();
 
         // necessary for JSON serialization / deserialization
-        public SensorData() : base() { }
+        public SensorData() : base()
+        {
+        }
 
         public SensorData(string name, string deviceID, int typeCategoryID, int typeID) :
             base(name, deviceID, typeCategoryID, typeID)
         {
-
         }
 
         // public methods
 
-        public float GetValue() { return this.value; }
+        public float GetValue()
+        {
+            return this.dataValues.GetValue();
+        }
 
-        public float GetRangeFloor() { return this.rangeFloor; }
+        public DataValueContainer GetDataValues() { return this.dataValues; }
 
-        public float GetRangeCeiling() {  return this.rangeCeiling; }
+        public void SetValue(float val)
+        {
+            // ensure backwards compatibility
+            this.value = val;
 
-        public void SetValue(float val) { this.value = val; base.UpdateTimeStamp(); }
+            this.UpdateValues();
+            base.UpdateTimeStamp();
+        }
 
-        public void SetRangeFloor(float val) { this.rangeFloor = val; base.UpdateTimeStamp(); }
+        public void SetDataValues(DataValueContainer data)
+        {
+            if (data != null)
+            {
+                // ensure backwards compatibility
+                this.value = data.GetValue();
 
-        public void SetRangeCeiling(float val) { this.rangeCeiling = val; base.UpdateTimeStamp(); }
+                this.dataValues.UpdateData(data);
+                base.UpdateTimeStamp();
+            }
+        }
 
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder(base.ToString());
 
             sb.Append(',');
-            sb.Append(ConfigConst.VALUE_PROP).Append('=').Append(this.value).Append(',');
-            sb.Append(ConfigConst.RANGE_FLOOR_PROP).Append('=').Append(this.rangeFloor).Append(',');
-            sb.Append(ConfigConst.RANGE_CEILING_PROP).Append('=').Append(this.rangeCeiling);
+            sb.Append(this.dataValues.ToString());
 
             return sb.ToString();
         }
@@ -83,12 +95,14 @@ namespace LabBenchStudios.Pdt.Data
             {
                 base.UpdateData(data);
 
-                this.value = data.GetValue();
-                this.rangeFloor = data.GetRangeFloor();
-                this.rangeCeiling = data.GetRangeCeiling();
-
+                this.SetDataValues(data.GetDataValues());
                 this.UpdateTimeStamp();
             }
+        }
+
+        public void UpdateValues()
+        {
+            this.dataValues.SetValue(this.value);
         }
     }
 }

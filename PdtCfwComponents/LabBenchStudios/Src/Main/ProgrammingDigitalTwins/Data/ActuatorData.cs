@@ -42,6 +42,9 @@ namespace LabBenchStudios.Pdt.Data
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private string stateData = ConfigConst.NOT_SET;
 
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        private DataValueContainer dataValues = new DataValueContainer();
+
         [JsonProperty]
         private bool isResponse = false;
 
@@ -56,19 +59,43 @@ namespace LabBenchStudios.Pdt.Data
 
         // public methods
 
-        public float GetValue() { return this.value; }
-
         public int GetCommand() { return this.command; }
+
+        public DataValueContainer GetDataValues() { return this.dataValues; }
+
+        public float GetValue()
+        {
+            return this.dataValues.GetValue();
+        }
 
         public string GetStateData() { return this.stateData; }
 
         public bool IsResponse() { return this.isResponse; }
 
-        public void SetValue(float val) { this.value = val; base.UpdateTimeStamp(); }
+        public void SetCommand(int val) { if (val >= 0) this.command = val; base.UpdateTimeStamp(); }
+
+        public void SetDataValues(DataValueContainer data)
+        {
+            if (data != null)
+            {
+                // ensure backwards compatibility
+                this.value = data.GetValue();
+
+                this.dataValues.UpdateData(data);
+                base.UpdateTimeStamp();
+            }
+        }
+
+        public void SetValue(float val)
+        {
+            // ensure backwards compatibility
+            this.value = val;
+
+            this.UpdateValues();
+            base.UpdateTimeStamp();
+        }
 
         public void SetResponse(bool isResponse) { this.isResponse = isResponse; base.UpdateTimeStamp(); }
-
-        public void SetCommand(int val) { if (val >= 0) this.command = val; base.UpdateTimeStamp(); }
 
         public void SetStateData(string data) { if (! string.IsNullOrEmpty(data)) this.stateData = data; base.UpdateTimeStamp(); }
 
@@ -77,10 +104,10 @@ namespace LabBenchStudios.Pdt.Data
             StringBuilder sb = new StringBuilder(base.ToString());
 
             sb.Append(',');
-            sb.Append(ConfigConst.VALUE_PROP).Append('=').Append(this.value).Append(',');
             sb.Append(ConfigConst.COMMAND_PROP).Append('=').Append(this.command).Append(',');
             sb.Append(ConfigConst.STATE_DATA_PROP).Append('=').Append(this.stateData).Append(',');
-            sb.Append(ConfigConst.IS_RESPONSE_PROP).Append('=').Append(this.isResponse);
+            sb.Append(ConfigConst.IS_RESPONSE_PROP).Append('=').Append(this.isResponse).Append(',');
+            sb.Append(this.dataValues.ToString());
 
             return sb.ToString();
         }
@@ -91,13 +118,18 @@ namespace LabBenchStudios.Pdt.Data
             {
                 base.UpdateData(data);
 
-                this.value = data.GetValue();
                 this.command = data.GetCommand();
                 this.stateData = data.GetStateData();
                 this.isResponse = data.IsResponse();
 
+                this.SetDataValues(data.GetDataValues());
                 this.UpdateTimeStamp();
             }
+        }
+
+        public void UpdateValues()
+        {
+            this.dataValues.SetValue(this.value);
         }
     }
 }

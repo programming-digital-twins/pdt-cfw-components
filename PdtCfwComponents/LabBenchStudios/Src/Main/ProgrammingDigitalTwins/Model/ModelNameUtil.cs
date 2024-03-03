@@ -22,13 +22,10 @@
  * SOFTWARE.
  */
 
-using CsvHelper.Configuration.Attributes;
-using LabBenchStudios.Pdt.Common;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Text;
-using System.Windows.Forms.VisualStyles;
+
+using LabBenchStudios.Pdt.Common;
 
 namespace LabBenchStudios.Pdt.Model
 {

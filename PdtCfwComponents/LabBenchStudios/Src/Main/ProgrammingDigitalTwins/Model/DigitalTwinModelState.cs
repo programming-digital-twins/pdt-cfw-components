@@ -27,10 +27,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
+using Newtonsoft.Json;
+
 using LabBenchStudios.Pdt.Common;
 using LabBenchStudios.Pdt.Data;
-using LabBenchStudios.Pdt.Unity.Common;
-using Newtonsoft.Json;
+using System.Web.ModelBinding;
+using System.Linq;
 
 namespace LabBenchStudios.Pdt.Model
 {
@@ -50,17 +52,16 @@ namespace LabBenchStudios.Pdt.Model
 
         private string instanceKey = null;
 
-        private Hashtable modelProperties = new Hashtable();
-
-        private Dictionary<string, List<DigitalTwinModelState>> stateRelationshipMap =
-            new Dictionary<string, List<DigitalTwinModelState>>();
-
-        private Dictionary<string, DigitalTwinModelState> stateComponentMap =
-            new Dictionary<string, DigitalTwinModelState>();
+        private Dictionary<string, DigitalTwinProperty> modelProperties;
+        private Dictionary<string, DigitalTwinModelState> attachedComponents;
 
         private ModelNameUtil.DtmiControllerEnum modelControllerID;
 
         private string rawModelJson = null;
+
+        private DigitalTwinModelState parentState = null;
+
+        private bool hasParent = false;
 
         private IDataContextEventListener virtualAssetListener = null;
 
@@ -69,7 +70,7 @@ namespace LabBenchStudios.Pdt.Model
                 ConfigConst.NOT_SET, ConfigConst.NOT_SET,
                 ConfigConst.DEFAULT_TYPE_CATEGORY_ID, ConfigConst.DEFAULT_TYPE_ID)
         {
-
+            InitState();
         }
 
         public DigitalTwinModelState(
@@ -78,7 +79,7 @@ namespace LabBenchStudios.Pdt.Model
                 name, deviceID,
                 ConfigConst.DEFAULT_TYPE_CATEGORY_ID, ConfigConst.DEFAULT_TYPE_ID)
         {
-
+            InitState();
         }
 
         public DigitalTwinModelState(
@@ -87,26 +88,10 @@ namespace LabBenchStudios.Pdt.Model
         {
             this.modelID = ModelNameUtil.GetModelID(typeID);
 
-            this.InitInstanceKey(false);
+            InitState();
         }
 
         // public methods
-
-        /// <summary>
-        /// Adds a model relationship, indexed within the local map by
-        /// the DTMI.
-        ///
-        /// Since relationship references can be => 0 for a single DTMI,
-        /// each call will add a new relationship link.
-        /// </summary>
-        /// <param name="modelState"></param>
-        public void AddModelRelationship(DigitalTwinModelState modelState)
-        {
-            if (modelState != null)
-            {
-
-            }
-        }
 
         /// <summary>
         /// Adds a model component, indexed within the local map by
@@ -118,14 +103,49 @@ namespace LabBenchStudios.Pdt.Model
         /// Components are expected to be leaf nodes
         /// </summary>
         /// <param name="modelState"></param>
-        public void AddModelComponent(DigitalTwinModelState modelState)
+        public void AddConnectedModelState(DigitalTwinModelState modelState)
         {
             if (modelState != null)
             {
+                string key = modelState.GetInstanceKey();
 
+                if (! this.HasConnectedModelState(key))
+                {
+                    if (this.attachedComponents == null)
+                    {
+                        this.attachedComponents = new Dictionary<string, DigitalTwinModelState>();
+                    }
+
+                    this.attachedComponents.Add(key, modelState);
+                }
             }
         }
         
+        public DigitalTwinModelState GetConnectedModelState(string key)
+        {
+            if (this.HasConnectedModelState(key))
+            {
+                return this.attachedComponents[key];
+            }
+
+            return null;
+        }
+
+        public List<string> GetConnectedModelStateKeys()
+        {
+            if (this.attachedComponents != null && this.attachedComponents.Count > 0)
+            {
+                return new List<string>(this.attachedComponents.Keys);
+            }
+            
+            return null;
+        }
+
+        public bool HasConnectedModelState(string key)
+        {
+            return (this.attachedComponents != null && this.attachedComponents.ContainsKey(key));
+        }
+
         /// <summary>
         /// Returns the unique instance key for this state object.
         /// This is generated via a combination of properties
@@ -179,56 +199,19 @@ namespace LabBenchStudios.Pdt.Model
             return this.rawModelJson;
         }
 
-        public bool GetModelBoolean(string key)
+        public DigitalTwinProperty GetModelProperty(string key)
         {
             if (!string.IsNullOrEmpty(key))
             {
                 if (this.modelProperties.ContainsKey(key))
                 {
-                    string valStr = (string)this.modelProperties[key];
-                    bool isValue = bool.TryParse(valStr, out bool isTrue);
-
-                    if (isValue)
-                    {
-                        return isTrue;
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        public float GetModelValue(string key)
-        {
-            if(! string.IsNullOrEmpty(key))
-            {
-                if (this.modelProperties.ContainsKey(key))
-                {
-                    string valStr = (string)this.modelProperties[key];
-                    bool isValue = float.TryParse(valStr, out float val);
-
-                    if (isValue)
-                    {
-                        return val;
-                    }
-                }
-            }
-
-            return 0.0f;
-        }
-
-        public string GetModelProperty(string key)
-        {
-            if (! string.IsNullOrEmpty(key))
-            {
-                if (this.modelProperties.ContainsKey(key))
-                {
-                    return (string) this.modelProperties[key];
+                    return this.modelProperties[key];
                 }
             }
 
             return null;
         }
+
 
         /// <summary>
         /// This method is invoked when incoming telemetry is received
@@ -352,6 +335,15 @@ namespace LabBenchStudios.Pdt.Model
             this.modelControllerID = controllerID;
         }
 
+        public void SetParentStateRef(DigitalTwinModelState modelState)
+        {
+            if (modelState != null)
+            {
+                this.parentState = modelState;
+                this.hasParent = true;
+            }
+        }
+
         public void SetRawModelJson(string json)
         {
             this.rawModelJson = json;
@@ -375,6 +367,16 @@ namespace LabBenchStudios.Pdt.Model
             sb.Append("InstanceKey").Append('=').Append(this.instanceKey);
 
             return sb.ToString();
+        }
+
+        // private methods
+
+        private void InitState()
+        {
+            this.modelProperties = new Dictionary<string, DigitalTwinProperty>();
+            this.attachedComponents = new Dictionary<string, DigitalTwinModelState>();
+
+            this.InitInstanceKey(false);
         }
 
     }
