@@ -23,7 +23,6 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
@@ -31,8 +30,6 @@ using Newtonsoft.Json;
 
 using LabBenchStudios.Pdt.Common;
 using LabBenchStudios.Pdt.Data;
-using System.Web.ModelBinding;
-using System.Linq;
 
 namespace LabBenchStudios.Pdt.Model
 {
@@ -51,6 +48,7 @@ namespace LabBenchStudios.Pdt.Model
         private string modelGUID = System.Guid.NewGuid().ToString();
 
         private DigitalTwinInstanceKey dtInstanceKey = null;
+        private DigitalTwinTelemetryKey dtTelemetryKey = null;
 
         private string instanceKey = null;
 
@@ -67,6 +65,9 @@ namespace LabBenchStudios.Pdt.Model
 
         private IDataContextEventListener virtualAssetListener = null;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public DigitalTwinModelState() :
             base(
                 ConfigConst.NOT_SET, ConfigConst.NOT_SET,
@@ -75,6 +76,29 @@ namespace LabBenchStudios.Pdt.Model
             InitState();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public DigitalTwinModelState(DigitalTwinTelemetryKey telemetryKey) :
+            base(
+                ConfigConst.NOT_SET, ConfigConst.NOT_SET,
+                ConfigConst.DEFAULT_TYPE_CATEGORY_ID, ConfigConst.DEFAULT_TYPE_ID)
+        {
+            if (telemetryKey != null)
+            {
+                this.dtTelemetryKey = telemetryKey;
+                base.SetDeviceID(this.dtTelemetryKey.GetDeviceID());
+                base.SetLocationID(this.dtTelemetryKey.GetLocationID());
+            }
+
+            InitState();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="deviceID"></param>
         public DigitalTwinModelState(
             string name, string deviceID) :
             base(
@@ -84,6 +108,13 @@ namespace LabBenchStudios.Pdt.Model
             InitState();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="deviceID"></param>
+        /// <param name="typeCategoryID"></param>
+        /// <param name="typeID"></param>
         public DigitalTwinModelState(
             string name, string deviceID, int typeCategoryID, int typeID) :
             base(name, deviceID, typeCategoryID, typeID)
@@ -120,7 +151,12 @@ namespace LabBenchStudios.Pdt.Model
                 }
             }
         }
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public DigitalTwinModelState GetConnectedModelState(string key)
         {
             if (this.HasConnectedModelState(key))
@@ -131,6 +167,10 @@ namespace LabBenchStudios.Pdt.Model
             return null;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public List<string> GetConnectedModelStateKeys()
         {
             if (this.attachedComponents != null && this.attachedComponents.Count > 0)
@@ -141,6 +181,11 @@ namespace LabBenchStudios.Pdt.Model
             return null;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public bool HasConnectedModelState(string key)
         {
             return (this.attachedComponents != null && this.attachedComponents.ContainsKey(key));
@@ -194,11 +239,20 @@ namespace LabBenchStudios.Pdt.Model
             return this.modelControllerID;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public string GetRawModelJson()
         {
             return this.rawModelJson;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public DigitalTwinProperty GetModelProperty(string key)
         {
             if (!string.IsNullOrEmpty(key))
@@ -212,6 +266,14 @@ namespace LabBenchStudios.Pdt.Model
             return null;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public DigitalTwinTelemetryKey GetTelemetryKey()
+        {
+            return this.dtTelemetryKey;
+        }
 
         /// <summary>
         /// This method is invoked when incoming telemetry is received
@@ -319,23 +381,39 @@ namespace LabBenchStudios.Pdt.Model
             return true;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="deviceID"></param>
         public void SetConnectedDeviceID(string deviceID)
         {
             // base class will handle validation of the name
             base.SetDeviceID(deviceID);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="locationID"></param>
         public void SetConnectedDeviceLocation(string locationID)
         {
             // base class will handle validation of the name
             base.SetLocationID(locationID);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="controllerID"></param>
         public void SetModelControllerID(ModelNameUtil.DtmiControllerEnum controllerID)
         {
             this.modelControllerID = controllerID;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="modelState"></param>
         public void SetParentStateRef(DigitalTwinModelState modelState)
         {
             if (modelState != null)
@@ -345,6 +423,10 @@ namespace LabBenchStudios.Pdt.Model
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="json"></param>
         public void SetRawModelJson(string json)
         {
             this.rawModelJson = json;
@@ -352,6 +434,22 @@ namespace LabBenchStudios.Pdt.Model
             this.ReloadModelData();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        public void SetTelemetryKey(DigitalTwinTelemetryKey key)
+        {
+            if (key != null)
+            {
+                this.dtTelemetryKey = key;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="listener"></param>
         public void SetVirtualAssetListener(IDataContextEventListener listener)
         {
             if (listener != null)
@@ -360,6 +458,10 @@ namespace LabBenchStudios.Pdt.Model
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder(base.ToString());
@@ -372,6 +474,9 @@ namespace LabBenchStudios.Pdt.Model
 
         // private methods
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void InitState()
         {
             this.modelProperties = new Dictionary<string, DigitalTwinProperty>();

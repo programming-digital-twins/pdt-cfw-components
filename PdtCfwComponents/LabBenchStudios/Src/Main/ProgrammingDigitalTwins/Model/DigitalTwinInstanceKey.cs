@@ -22,11 +22,6 @@
  * SOFTWARE.
  */
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
-
 using Newtonsoft.Json;
 
 using LabBenchStudios.Pdt.Common;
@@ -76,21 +71,37 @@ namespace LabBenchStudios.Pdt.Model
 
         // public methods
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public string GetInstanceKey()
         {
             return this.instanceKey;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public string GetModelKey()
         {
             return modelKey;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public string GetModelGuid()
         {
             return this.modelGuid;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return this.GetInstanceKey();

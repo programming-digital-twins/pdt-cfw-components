@@ -174,11 +174,13 @@ namespace LabBenchStudios.Pdt.Data
 
         // protected methods
 
+        protected void SetDeviceID(string name) { if (! string.IsNullOrEmpty(name)) { this.deviceID = name; }; this.UpdateTimeStamp(); }
+
+        protected void SetName(string name) { if (! string.IsNullOrEmpty(name)) { this.name = name; }; this.UpdateTimeStamp(); }
+
         protected void SetTypeCategoryID(int val) { if (val >= 0) { this.typeCategoryID = val; }; this.UpdateTimeStamp(); }
 
         protected void SetTypeID(int val) { if (val >= 0) { this.typeID = val; }; this.UpdateTimeStamp(); }
-
-        protected void SetDeviceID(string name) { if (! string.IsNullOrEmpty(name)) { this.deviceID = name; }; this.UpdateTimeStamp(); }
 
         protected void UpdateTimeStamp()
         {

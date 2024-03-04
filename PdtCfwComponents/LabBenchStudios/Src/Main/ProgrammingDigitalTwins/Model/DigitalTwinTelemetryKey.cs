@@ -22,9 +22,6 @@
  * SOFTWARE.
  */
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Text;
 
 using Newtonsoft.Json;
@@ -44,6 +41,7 @@ namespace LabBenchStudios.Pdt.Model
     [JsonObject(MemberSerialization.OptIn)]
     public class DigitalTwinTelemetryKey
     {
+        private string name = ConfigConst.PRODUCT_NAME;
         private string deviceID  = ConfigConst.PRODUCT_NAME;
         private string locationID = ConfigConst.PRODUCT_NAME;
         private string guid = ConfigConst.PRODUCT_NAME;
@@ -52,18 +50,120 @@ namespace LabBenchStudios.Pdt.Model
         /// <summary>
         /// 
         /// </summary>
-        public DigitalTwinTelemetryKey() : this(null, null, true)
+        public DigitalTwinTelemetryKey()
         {
+            this.GenerateKey(null, null, null, true);
         }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="dataContext"></param>
+        /// <param name="useGuid"></param>
+        public DigitalTwinTelemetryKey(IotDataContext dataContext, bool useGuid)
+        {
+            if (dataContext != null)
+            {
+                this.GenerateKey(
+                    dataContext.GetName(),
+                    dataContext.GetDeviceID(),
+                    dataContext.GetLocationID(),
+                    useGuid);
+            }
+            else
+            {
+                this.GenerateKey(null, null, null, true);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
         /// <param name="deviceID"></param>
         /// <param name="locationID"></param>
         /// <param name="useGuid"></param>
-        public DigitalTwinTelemetryKey(string deviceID, string locationID, bool useGuid)
+        public DigitalTwinTelemetryKey(
+            string name, string deviceID, string locationID, bool useGuid)
         {
+            this.GenerateKey(name, deviceID, locationID, useGuid);
+        }
+
+
+        // public methods
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string GetTelemetryKey()
+        {
+            return this.telemetryKey;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string GetDeviceID()
+        {
+            return this.deviceID;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string GetLocationID()
+        {
+            return this.locationID;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string GetGuid()
+        {
+            return this.guid;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string GetName()
+        {
+            return this.name;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return this.GetTelemetryKey();
+        }
+
+
+        // private methods
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="deviceID"></param>
+        /// <param name="locationID"></param>
+        /// <param name="useGuid"></param>
+        private void GenerateKey(
+            string name, string deviceID, string locationID, bool useGuid)
+        {
+            if (! string.IsNullOrEmpty(name))
+            {
+                this.name = name;
+            }
+
             if (! string.IsNullOrEmpty(deviceID))
             {
                 this.deviceID = deviceID;
@@ -81,37 +181,12 @@ namespace LabBenchStudios.Pdt.Model
 
             StringBuilder sb = new StringBuilder();
 
-            sb.Append(this.deviceID).Append(':').Append(this.locationID).Append(':').Append(this.guid);
+            sb.Append(this.name).Append(':')
+                .Append(this.deviceID).Append(':')
+                .Append(this.locationID).Append(':')
+                .Append(this.guid);
 
             this.telemetryKey = sb.ToString();
-        }
-
-
-        // public methods
-
-        public string GetTelemetryKey()
-        {
-            return this.telemetryKey;
-        }
-
-        public string GetDeviceID()
-        {
-            return this.deviceID;
-        }
-
-        public string GetLocationID()
-        {
-            return this.locationID;
-        }
-
-        public string GetGuid()
-        {
-            return this.guid;
-        }
-
-        public override string ToString()
-        {
-            return this.GetTelemetryKey();
         }
 
     }

@@ -231,12 +231,14 @@ namespace LabBenchStudios.Pdt.Model
             return CreateModelDataSyncKey(deviceID, deviceID, false);
         }
 
-        public static string CreateModelDataSyncKey(string deviceID, string locationID)
+        public static string CreateModelDataSyncKey(
+            string deviceID, string locationID)
         {
             return CreateModelDataSyncKey(deviceID, locationID, false);
         }
 
-        public static string CreateModelDataSyncKey(string deviceID, string locationID, bool generateGuid)
+        public static string CreateModelDataSyncKey(
+            string deviceID, string locationID, bool generateGuid)
         {
             string guid = null;
 
@@ -260,8 +262,11 @@ namespace LabBenchStudios.Pdt.Model
         /// <param name="locationID"></param>
         /// <param name="guid"></param>
         /// <returns></returns>
-        public static string CreateModelDataSyncKey(string deviceID, string locationID, string guid)
+        public static string CreateModelDataSyncKey(
+            string deviceID, string locationID, string guid)
         {
+            string name = ConfigConst.PRODUCT_NAME;
+
             if (string.IsNullOrEmpty(deviceID))
             {
                 deviceID = ConfigConst.PRODUCT_NAME;
@@ -279,7 +284,10 @@ namespace LabBenchStudios.Pdt.Model
 
             StringBuilder sb = new StringBuilder();
 
-            sb.Append(deviceID).Append(':').Append(locationID).Append(':').Append(guid);
+            sb.Append(name).Append(':')
+                .Append(deviceID).Append(':')
+                .Append(locationID).Append(':')
+                .Append(guid);
 
             return sb.ToString();
         }

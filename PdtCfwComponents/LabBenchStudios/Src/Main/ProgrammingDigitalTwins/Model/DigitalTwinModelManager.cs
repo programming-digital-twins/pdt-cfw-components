@@ -40,7 +40,7 @@ namespace LabBenchStudios.Pdt.Model
     /// It will store both the raw JSON and the DTInterfaceInfo for each
     /// DTMI absolute URI, using the latter as the key for each separate cache.
     /// </summary>
-    public class DigitalTwinModelManager : IDigitalTwinStateProcessor
+    public class DigitalTwinModelManager : IDigitalTwinStateProcessor, IDataContextEventListener
     {
         private string modelFilePath = ModelNameUtil.DEFAULT_MODEL_FILE_PATH;
 
@@ -62,6 +62,8 @@ namespace LabBenchStudios.Pdt.Model
         // rules with help from ModelNameUtil.
         private Dictionary<string, DigitalTwinModelState> digitalTwinStateCache;
 
+        // this maps the incoming telemetry
+
         private bool hasSuccessfulDataLoad = false;
 
         /// <summary>
@@ -70,7 +72,7 @@ namespace LabBenchStudios.Pdt.Model
         /// </summary>
         public DigitalTwinModelManager() : this(ModelNameUtil.DEFAULT_MODEL_FILE_PATH)
         {
-
+            // nothing to do
         }
 
         /// <summary>
@@ -89,6 +91,83 @@ namespace LabBenchStudios.Pdt.Model
 
         // public methods
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="telemetryKey"></param>
+        /// <param name="instanceKey"></param>
+        public void AlignModelToTelemetry(
+            DigitalTwinTelemetryKey telemetryKey,
+            string instanceKey)
+        {
+            // TODO: implement this
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="telemetryKey"></param>
+        /// <param name="controllerID"></param>
+        /// <param name="stateUpdateListener"></param>
+        /// <returns></returns>
+        public DigitalTwinModelState CreateModelState(
+            DigitalTwinTelemetryKey telemetryKey,
+            ModelNameUtil.DtmiControllerEnum controllerID,
+            IDataContextEventListener stateUpdateListener)
+        {
+            return this.CreateModelState(
+                telemetryKey, false, controllerID, stateUpdateListener);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="telemetryKey"></param>
+        /// <param name="useGuid"></param>
+        /// <param name="controllerID"></param>
+        /// <param name="stateUpdateListener"></param>
+        /// <returns></returns>
+        public DigitalTwinModelState CreateModelState(
+            DigitalTwinTelemetryKey telemetryKey,
+            bool useGuid,
+            ModelNameUtil.DtmiControllerEnum controllerID,
+            IDataContextEventListener stateUpdateListener)
+        {
+            var dtModelState = new DigitalTwinModelState(telemetryKey);
+
+            dtModelState.SetModelControllerID(controllerID);
+            dtModelState.SetRawModelJson(this.GetRawModelJson(controllerID));
+            dtModelState.SetVirtualAssetListener(stateUpdateListener);
+            dtModelState.InitInstanceKey(useGuid);
+
+            string instanceKey = dtModelState.GetInstanceKey();
+
+            if (this.HasDigitalTwinModelState(instanceKey))
+            {
+                Console.WriteLine($"Created DigitalTwinModelState has duplicate key {instanceKey}. Discarding new and returning original.");
+
+                dtModelState = this.digitalTwinStateCache[instanceKey];
+            }
+            else
+            {
+                Console.WriteLine($"Created / cached DigitalTwinModelState with instance key {instanceKey}");
+
+                this.digitalTwinStateCache.Add(instanceKey, dtModelState);
+            }
+
+            AlignModelToTelemetry(telemetryKey, instanceKey);
+
+            return dtModelState;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="stateDeviceID"></param>
+        /// <param name="stateLocationID"></param>
+        /// <param name="controllerID"></param>
+        /// <param name="stateUpdateListener"></param>
+        /// <returns></returns>
         public DigitalTwinModelState CreateModelState(
             string stateDeviceID,
             string stateLocationID,
@@ -99,6 +178,15 @@ namespace LabBenchStudios.Pdt.Model
                 stateDeviceID, stateLocationID, false, controllerID, stateUpdateListener);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="stateDeviceID"></param>
+        /// <param name="stateLocationID"></param>
+        /// <param name="useGuid"></param>
+        /// <param name="controllerID"></param>
+        /// <param name="stateUpdateListener"></param>
+        /// <returns></returns>
         public DigitalTwinModelState CreateModelState(
             string stateDeviceID,
             string stateLocationID,
@@ -149,6 +237,11 @@ namespace LabBenchStudios.Pdt.Model
             return null;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="instanceKey"></param>
+        /// <returns></returns>
         public bool HasDigitalTwinModelState(string instanceKey)
         {
             if (!string.IsNullOrEmpty(instanceKey))
@@ -158,7 +251,6 @@ namespace LabBenchStudios.Pdt.Model
 
             return false;
         }
-
 
         /// <summary>
         /// Generates a new List<string> of DTMI absolute URI's when called.
@@ -200,21 +292,91 @@ namespace LabBenchStudios.Pdt.Model
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataContext"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public bool HandleIncomingTelemetry(IotDataContext dataContext)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataContext"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public bool HandleOutgoingStateUpdate(IotDataContext dataContext)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public void HandleActuatorData(ActuatorData data)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public void HandleConnectionStateData(ConnectionStateData data)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public void HandleMessageData(MessageData data)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public void HandleSensorData(SensorData data)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public void HandleSystemPerformanceData(SystemPerformanceData data)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public bool HasSuccessfulDataLoad()
         {
             return this.hasSuccessfulDataLoad;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dtController"></param>
         public void RegisterModelController(DigitalTwinModelState dtController)
         {
 
@@ -238,6 +400,11 @@ namespace LabBenchStudios.Pdt.Model
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="modelFilePath"></param>
+        /// <returns></returns>
         public bool SetModelFilePath(string modelFilePath)
         {
             if (!string.IsNullOrEmpty(modelFilePath) && Directory.Exists(modelFilePath))
@@ -251,6 +418,11 @@ namespace LabBenchStudios.Pdt.Model
             return false;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataContext"></param>
+        /// <returns></returns>
         public bool UpdateRemoteSystemState(IotDataContext dataContext)
         {
             bool success = false;
