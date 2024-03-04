@@ -34,18 +34,23 @@ using LabBenchStudios.Pdt.Data;
 
 namespace LabBenchStudios.Pdt.Model
 {
+    /// <summary>
+    /// This class serves as both factory and manager for created objects
+    /// related to the stored DTDL models within its internal cache.
+    /// It will store both the raw JSON and the DTInterfaceInfo for each
+    /// DTMI absolute URI, using the latter as the key for each separate cache.
+    /// </summary>
     public class DigitalTwinModelManager : IDigitalTwinStateProcessor
     {
         private string modelFilePath = ModelNameUtil.DEFAULT_MODEL_FILE_PATH;
 
         // this contains all the DT model parsed instances
-        // this is indexed by the DTDLParser Dtmi object
-        private IReadOnlyDictionary<Dtmi, DTEntityInfo> digitalTwinParsedModelCache;
+        // this is indexed by the DTDLParser DTMI absolute URI (string)
         private IReadOnlyDictionary<string, DTInterfaceInfo> digitalTwinInterfaceCache;
 
         // this contains all the DT model raw JSON data
         // this is indexed by the string DTMI (use ModelConst.DtmiControllerEnum)
-        private Dictionary<string, string> digitalTwinRawModelCache;
+        private Dictionary<string, string> digitalTwinDtdlJsonCache;
 
         // this contains all DT model state instances that are associated
         // with a given dtmi string (which is the lookup key)
@@ -78,7 +83,7 @@ namespace LabBenchStudios.Pdt.Model
         {
             this.SetModelFilePath(modelFilePath);
 
-            this.digitalTwinRawModelCache = new Dictionary<string, string>();
+            this.digitalTwinDtdlJsonCache = new Dictionary<string, string>();
             this.digitalTwinStateCache    = new Dictionary<string, DigitalTwinModelState>();
         }
 
@@ -128,6 +133,11 @@ namespace LabBenchStudios.Pdt.Model
             return dtModelState;
         }
 
+        /// <summary>
+        /// Returns the internally stored DT Model State instance using
+        /// </summary>
+        /// <param name="instanceKey"></param>
+        /// <returns></returns>
         public DigitalTwinModelState GetDigitalTwinModelState(string instanceKey)
         {
             if (this.HasDigitalTwinModelState(instanceKey))
@@ -150,37 +160,15 @@ namespace LabBenchStudios.Pdt.Model
         }
 
 
+        /// <summary>
+        /// Generates a new List<string> of DTMI absolute URI's when called.
+        /// </summary>
+        /// <returns></returns>
         public List<string> GetAllDtmiValues()
         {
-            if (digitalTwinParsedModelCache != null && digitalTwinParsedModelCache.Count > 0)
+            if (digitalTwinInterfaceCache != null && digitalTwinInterfaceCache.Count > 0)
             {
-                List<string> dtmiValues = new List<string>(digitalTwinParsedModelCache.Count);
-
-                foreach (DTEntityInfo item in digitalTwinParsedModelCache.Values)
-                {
-                    dtmiValues.Add(item.Id.AbsoluteUri);
-
-                    switch (item.EntityKind)
-                    {
-                        case DTEntityKind.Property:
-                            DTPropertyInfo pi = item as DTPropertyInfo;
-                            Console.WriteLine($"\tProperty: {pi.Name} -- schema {pi.Schema}");
-                            break;
-                        case DTEntityKind.Relationship:
-                            DTRelationshipInfo ri = item as DTRelationshipInfo;
-                            Console.WriteLine($"\tRelationship: {ri.Name} -- target {ri.Target}");
-                            break;
-                        case DTEntityKind.Telemetry:
-                            DTTelemetryInfo ti = item as DTTelemetryInfo;
-                            Console.WriteLine($"\tTelemetry: {ti.Name} -- schema {ti.Schema}");
-                            break;
-                        case DTEntityKind.Component:
-                            DTComponentInfo ci = item as DTComponentInfo;
-                            DTInterfaceInfo component = ci.Schema;
-                            Console.WriteLine($"\tComponent: {ci.Id} | {ci.Name} -- schema: {component.ToString()}");
-                            break;
-                    }
-                }
+                List<string> dtmiValues = new List<string>(digitalTwinInterfaceCache.Keys);
 
                 return dtmiValues;
             }
@@ -192,13 +180,18 @@ namespace LabBenchStudios.Pdt.Model
             return null;
         }
 
+        /// <summary>
+        /// Returns the DTDL JSON for the given controller
+        /// </summary>
+        /// <param name="dtmiController"></param>
+        /// <returns></returns>
         public string GetRawModelJson(ModelNameUtil.DtmiControllerEnum dtmiController)
         {
             string dtmiUri = ModelNameUtil.CreateModelID(dtmiController);
 
-            if (this.digitalTwinRawModelCache.ContainsKey(dtmiUri))
+            if (this.digitalTwinDtdlJsonCache.ContainsKey(dtmiUri))
             {
-                return this.digitalTwinRawModelCache[dtmiUri];
+                return this.digitalTwinDtdlJsonCache[dtmiUri];
             }
             else
             {
@@ -286,9 +279,9 @@ namespace LabBenchStudios.Pdt.Model
             bool success = false;
 
             // update DTDL object cache
-            this.digitalTwinParsedModelCache = ModelParserUtil.LoadAllDtdlModels(this.modelFilePath);
+            this.digitalTwinInterfaceCache = ModelParserUtil.LoadAllDtdlInterfaces(this.modelFilePath);
 
-            if (this.digitalTwinParsedModelCache == null)
+            if (this.digitalTwinInterfaceCache == null)
             {
                 Console.WriteLine($"Failed to load DTDL models from path {this.modelFilePath}");
             }
@@ -310,13 +303,13 @@ namespace LabBenchStudios.Pdt.Model
 
                 if (!string.IsNullOrEmpty(dtdlJson))
                 {
-                    if (! this.digitalTwinRawModelCache.ContainsKey(dtmiUri))
+                    if (! this.digitalTwinDtdlJsonCache.ContainsKey(dtmiUri))
                     {
-                        this.digitalTwinRawModelCache.Add(dtmiUri, dtdlJson);
+                        this.digitalTwinDtdlJsonCache.Add(dtmiUri, dtdlJson);
                     }
                     else
                     {
-                        this.digitalTwinRawModelCache[dtmiUri] = dtdlJson;
+                        this.digitalTwinDtdlJsonCache[dtmiUri] = dtdlJson;
                     }
 
                     success = true;

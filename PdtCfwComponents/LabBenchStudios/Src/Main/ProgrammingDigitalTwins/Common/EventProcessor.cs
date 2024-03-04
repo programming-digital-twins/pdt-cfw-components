@@ -93,6 +93,7 @@ namespace LabBenchStudios.Pdt.Unity.Common
 
         private Dictionary<string, DigitalTwinModelState> digitalTwinStateTable = null;
         private Dictionary<string, ConnectionStateData> connectedStateTable = null;
+
         private HashSet<string> knownDeviceIDSet = null;
         private HashSet<string> testDeviceIDSet = null;
 

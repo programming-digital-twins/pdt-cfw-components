@@ -50,6 +50,8 @@ namespace LabBenchStudios.Pdt.Model
         private string modelID = ModelNameUtil.IOT_MODEL_CONTEXT_MODEL_ID;
         private string modelGUID = System.Guid.NewGuid().ToString();
 
+        private DigitalTwinInstanceKey dtInstanceKey = null;
+
         private string instanceKey = null;
 
         private Dictionary<string, DigitalTwinProperty> modelProperties;
@@ -86,8 +88,6 @@ namespace LabBenchStudios.Pdt.Model
             string name, string deviceID, int typeCategoryID, int typeID) :
             base(name, deviceID, typeCategoryID, typeID)
         {
-            this.modelID = ModelNameUtil.GetModelID(typeID);
-
             InitState();
         }
 
@@ -376,6 +376,8 @@ namespace LabBenchStudios.Pdt.Model
         {
             this.modelProperties = new Dictionary<string, DigitalTwinProperty>();
             this.attachedComponents = new Dictionary<string, DigitalTwinModelState>();
+
+            this.modelID = ModelNameUtil.GetModelID(base.GetTypeID());
 
             this.InitInstanceKey(false);
         }
