@@ -39,23 +39,30 @@ namespace LabBenchStudios.Pdt.Model
     [JsonObject(MemberSerialization.OptIn)]
     public class DigitalTwinInstanceKey
     {
-        private string modelKey  = ConfigConst.NOT_SET;
+        private string name = ConfigConst.PRODUCT_NAME;
+        private string modelKey  = ConfigConst.PRODUCT_NAME;
         private string modelGuid = System.Guid.NewGuid().ToString();
-        private string instanceKey = ConfigConst.NOT_SET;
+        private string instanceKey = ConfigConst.PRODUCT_NAME;
 
         /// <summary>
         /// 
         /// </summary>
-        public DigitalTwinInstanceKey() : this(null)
+        public DigitalTwinInstanceKey() : this(null, null)
         {
         }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="name"></param>
         /// <param name="modelKey"></param>
-        public DigitalTwinInstanceKey(string modelKey)
+        public DigitalTwinInstanceKey(string name, string modelKey)
         {
+            if (! string.IsNullOrEmpty(name))
+            {
+                this.name = name;
+            }
+
             if (! string.IsNullOrEmpty(modelKey))
             {
                 this.modelKey = modelKey;
@@ -65,7 +72,7 @@ namespace LabBenchStudios.Pdt.Model
                 this.modelKey = ConfigConst.PRODUCT_NAME;
             }
 
-            this.instanceKey = this.modelKey + "_" + this.modelGuid;
+            this.instanceKey = this.name + "_" + this.modelKey + "_" + this.modelGuid;
         }
 
 
@@ -96,6 +103,33 @@ namespace LabBenchStudios.Pdt.Model
         public string GetModelGuid()
         {
             return this.modelGuid;
+        }
+
+        public string GetName()
+        {
+            return this.name;
+        }
+
+        public bool IsEqual(DigitalTwinInstanceKey key)
+        {
+            if (key != null)
+            {
+                return (key.ToString().Equals(this.ToString()));
+            }
+
+            return false;
+        }
+
+        public bool IsSourceEqual(DigitalTwinInstanceKey key)
+        {
+            if (key != null)
+            {
+                return (
+                    key.GetName().Equals(this.GetName()) &&
+                    key.GetModelKey().Equals(this.GetModelKey()));
+            }
+
+            return false;
         }
 
         /// <summary>

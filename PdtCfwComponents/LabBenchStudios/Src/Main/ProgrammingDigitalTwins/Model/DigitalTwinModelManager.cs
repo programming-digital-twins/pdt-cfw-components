@@ -63,6 +63,9 @@ namespace LabBenchStudios.Pdt.Model
         private Dictionary<string, DigitalTwinModelState> digitalTwinStateCache;
 
         // this maps the incoming telemetry
+        // this is indexed by the string instance key
+        private Dictionary<string, string> modelToTelemetryKeyMap;
+
 
         private bool hasSuccessfulDataLoad = false;
 
@@ -87,6 +90,7 @@ namespace LabBenchStudios.Pdt.Model
 
             this.digitalTwinDtdlJsonCache = new Dictionary<string, string>();
             this.digitalTwinStateCache    = new Dictionary<string, DigitalTwinModelState>();
+            this.modelToTelemetryKeyMap   = new Dictionary<string, string>();
         }
 
         // public methods
@@ -96,11 +100,36 @@ namespace LabBenchStudios.Pdt.Model
         /// </summary>
         /// <param name="telemetryKey"></param>
         /// <param name="instanceKey"></param>
-        public void AlignModelToTelemetry(
+        public void AssignTelemetryKeyToModel(
             DigitalTwinTelemetryKey telemetryKey,
             string instanceKey)
         {
-            // TODO: implement this
+            if (telemetryKey != null)
+            {
+                this.AssignTelemetryKeyToModel(telemetryKey.ToString(), instanceKey);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="telemetryKey"></param>
+        /// <param name="instanceKey"></param>
+        public void AssignTelemetryKeyToModel(
+            string telemetryKey,
+            string instanceKey)
+        {
+            if (! string.IsNullOrEmpty(telemetryKey) && ! string.IsNullOrEmpty(instanceKey))
+            {
+                if (this.modelToTelemetryKeyMap.ContainsKey(telemetryKey))
+                {
+                    this.modelToTelemetryKeyMap[telemetryKey] = instanceKey;
+                }
+                else
+                {
+                    this.modelToTelemetryKeyMap.Add(telemetryKey, instanceKey);
+                }
+            }
         }
 
         /// <summary>
@@ -155,7 +184,7 @@ namespace LabBenchStudios.Pdt.Model
                 this.digitalTwinStateCache.Add(instanceKey, dtModelState);
             }
 
-            AlignModelToTelemetry(telemetryKey, instanceKey);
+            this.AssignTelemetryKeyToModel(telemetryKey, instanceKey);
 
             return dtModelState;
         }
@@ -300,7 +329,15 @@ namespace LabBenchStudios.Pdt.Model
         /// <exception cref="NotImplementedException"></exception>
         public bool HandleIncomingTelemetry(IotDataContext dataContext)
         {
-            throw new NotImplementedException();
+            DigitalTwinModelState modelState = LookupDigitalTwinModelState(dataContext);
+
+            if (modelState != null)
+            {
+                return modelState.HandleIncomingTelemetry(dataContext);
+            }
+
+            // TODO: log msg?
+            return false;
         }
 
         /// <summary>
@@ -321,7 +358,15 @@ namespace LabBenchStudios.Pdt.Model
         /// <exception cref="NotImplementedException"></exception>
         public void HandleActuatorData(ActuatorData data)
         {
-            throw new NotImplementedException();
+            if (data != null && data.IsResponse())
+            {
+                DigitalTwinModelState modelState = LookupDigitalTwinModelState(data);
+
+                if (modelState != null)
+                {
+                    modelState.HandleIncomingTelemetry(data);
+                }
+            }
         }
 
         /// <summary>
@@ -331,7 +376,12 @@ namespace LabBenchStudios.Pdt.Model
         /// <exception cref="NotImplementedException"></exception>
         public void HandleConnectionStateData(ConnectionStateData data)
         {
-            throw new NotImplementedException();
+            DigitalTwinModelState modelState = LookupDigitalTwinModelState(data);
+
+            if (modelState != null)
+            {
+                modelState.HandleIncomingTelemetry(data);
+            }
         }
 
         /// <summary>
@@ -341,7 +391,12 @@ namespace LabBenchStudios.Pdt.Model
         /// <exception cref="NotImplementedException"></exception>
         public void HandleMessageData(MessageData data)
         {
-            throw new NotImplementedException();
+            DigitalTwinModelState modelState = LookupDigitalTwinModelState(data);
+
+            if (modelState != null)
+            {
+                modelState.HandleIncomingTelemetry(data);
+            }
         }
 
         /// <summary>
@@ -351,7 +406,12 @@ namespace LabBenchStudios.Pdt.Model
         /// <exception cref="NotImplementedException"></exception>
         public void HandleSensorData(SensorData data)
         {
-            throw new NotImplementedException();
+            DigitalTwinModelState modelState = LookupDigitalTwinModelState(data);
+
+            if (modelState != null)
+            {
+                modelState.HandleIncomingTelemetry(data);
+            }
         }
 
         /// <summary>
@@ -361,7 +421,12 @@ namespace LabBenchStudios.Pdt.Model
         /// <exception cref="NotImplementedException"></exception>
         public void HandleSystemPerformanceData(SystemPerformanceData data)
         {
-            throw new NotImplementedException();
+            DigitalTwinModelState modelState = LookupDigitalTwinModelState(data);
+
+            if (modelState != null)
+            {
+                modelState.HandleIncomingTelemetry(data);
+            }
         }
 
         /// <summary>
@@ -508,6 +573,36 @@ namespace LabBenchStudios.Pdt.Model
             this.hasSuccessfulDataLoad = success;
 
             return success;
+        }
+
+        private DigitalTwinModelState LookupDigitalTwinModelState(IotDataContext dataContext)
+        {
+            if (dataContext != null)
+            {
+                string telemetryKey = ModelNameUtil.GenerateTelemetrySyncKey(dataContext).ToString();
+
+                return this.LookupDigitalTwinModelState(telemetryKey);
+            }
+
+            return null;
+        }
+
+        private DigitalTwinModelState LookupDigitalTwinModelState(string telemetryKey)
+        {
+            if (! string.IsNullOrEmpty(telemetryKey))
+            {
+                if (this.modelToTelemetryKeyMap.ContainsKey(telemetryKey))
+                {
+                    string instanceKey = this.modelToTelemetryKeyMap[telemetryKey];
+
+                    if (this.digitalTwinStateCache.ContainsKey(instanceKey))
+                    {
+                        return this.digitalTwinStateCache[instanceKey];
+                    }
+                }
+            }
+
+            return null;
         }
 
     }

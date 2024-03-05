@@ -283,8 +283,6 @@ namespace LabBenchStudios.Pdt.Model
         /// <returns></returns>
         public bool HandleIncomingTelemetry(IotDataContext dataContext)
         {
-            bool success = false;
-
             if (dataContext != null)
             {
                 Console.WriteLine(
@@ -299,18 +297,49 @@ namespace LabBenchStudios.Pdt.Model
 
                     if (actuatorData != null)
                     {
+                        this.virtualAssetListener.HandleActuatorData(actuatorData);
+                        return true;
+                    }
 
+                    var sensorData = dataContext as SensorData;
+
+                    if (sensorData != null)
+                    {
+                        this.virtualAssetListener.HandleSensorData(sensorData);
+                        return true;
+                    }
+
+                    var sysPerfData = dataContext as SystemPerformanceData;
+
+                    if (sysPerfData != null)
+                    {
+                        this.virtualAssetListener.HandleSystemPerformanceData(sysPerfData);
+                        return true;
+                    }
+
+                    var connStateData = dataContext as ConnectionStateData;
+
+                    if (connStateData != null)
+                    {
+                        this.virtualAssetListener.HandleConnectionStateData(connStateData);
+                        return true;
+                    }
+
+                    var msgData = dataContext as MessageData;
+
+                    if (msgData != null)
+                    {
+                        this.virtualAssetListener.HandleMessageData(msgData);
+                        return true;
                     }
                 }
-
-                success = true;
             }
             else
             {
                 Console.WriteLine($"Received null IotDataContext. Ignoring.");
             }
 
-            return success;
+            return false;
         }
 
         /// <summary>

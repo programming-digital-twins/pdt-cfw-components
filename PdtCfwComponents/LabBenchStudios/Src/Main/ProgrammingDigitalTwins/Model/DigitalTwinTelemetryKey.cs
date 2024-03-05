@@ -140,6 +140,69 @@ namespace LabBenchStudios.Pdt.Model
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="keyName"></param>
+        /// <returns></returns>
+        public bool IsEqual(string keyName)
+        {
+            if (! string.IsNullOrEmpty(keyName))
+            {
+                return (keyName.Equals(this.ToString()));
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataContext"></param>
+        /// <returns></returns>
+        public bool IsEqual(IotDataContext dataContext)
+        {
+            if (dataContext != null)
+            {
+                return (this.IsEqual(ModelNameUtil.GenerateTelemetrySyncKey(dataContext)));
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public bool IsEqual(DigitalTwinTelemetryKey key)
+        {
+            if (key != null)
+            {
+                return (key.ToString().Equals(this.ToString()));
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public bool IsSourceEqual(DigitalTwinTelemetryKey key)
+        {
+            if (key != null)
+            {
+                return (
+                    key.GetName().Equals(this.GetName()) &&
+                    key.GetDeviceID().Equals(this.GetDeviceID()) &&
+                    key.GetLocationID().Equals(this.GetLocationID()));
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <returns></returns>
         public override string ToString()
         {

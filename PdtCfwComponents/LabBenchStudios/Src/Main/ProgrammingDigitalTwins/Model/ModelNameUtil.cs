@@ -26,6 +26,7 @@ using System;
 using System.Text;
 
 using LabBenchStudios.Pdt.Common;
+using LabBenchStudios.Pdt.Data;
 
 namespace LabBenchStudios.Pdt.Model
 {
@@ -290,6 +291,51 @@ namespace LabBenchStudios.Pdt.Model
                 .Append(guid);
 
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataContext"></param>
+        public static DigitalTwinTelemetryKey GenerateTelemetrySyncKey(IotDataContext dataContext)
+        {
+            return new DigitalTwinTelemetryKey(dataContext, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataContext"></param>
+        /// <param name="useGuid"></param>
+        public static DigitalTwinTelemetryKey GenerateTelemetrySyncKey(
+            IotDataContext dataContext, bool useGuid)
+        {
+            return new DigitalTwinTelemetryKey(dataContext, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="deviceID"></param>
+        /// <param name="locationID"></param>
+        public static DigitalTwinTelemetryKey GenerateTelemetrySyncKey(
+            string name, string deviceID, string locationID)
+        {
+            return new DigitalTwinTelemetryKey(name, deviceID, locationID, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="deviceID"></param>
+        /// <param name="locationID"></param>
+        /// <param name="useGuid"></param>
+        public static DigitalTwinTelemetryKey GenerateTelemetrySyncKey(
+            string name, string deviceID, string locationID, bool useGuid)
+        {
+            return new DigitalTwinTelemetryKey(name, deviceID, locationID, useGuid);
         }
 
         public static string CreateModelID(DtmiControllerEnum controllerID)
