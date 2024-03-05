@@ -98,15 +98,15 @@ namespace LabBenchStudios.Pdt.Model
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="telemetryKey"></param>
+        /// <param name="dataSyncKey"></param>
         /// <param name="instanceKey"></param>
         public void AssignTelemetryKeyToModel(
-            DigitalTwinTelemetryKey telemetryKey,
+            DigitalTwinDataSyncKey dataSyncKey,
             string instanceKey)
         {
-            if (telemetryKey != null)
+            if (dataSyncKey != null)
             {
-                this.AssignTelemetryKeyToModel(telemetryKey.ToString(), instanceKey);
+                this.AssignTelemetryKeyToModel(dataSyncKey.ToString(), instanceKey);
             }
         }
 
@@ -135,41 +135,41 @@ namespace LabBenchStudios.Pdt.Model
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="telemetryKey"></param>
+        /// <param name="dataSyncKey"></param>
         /// <param name="controllerID"></param>
         /// <param name="stateUpdateListener"></param>
         /// <returns></returns>
         public DigitalTwinModelState CreateModelState(
-            DigitalTwinTelemetryKey telemetryKey,
+            DigitalTwinDataSyncKey dataSyncKey,
             ModelNameUtil.DtmiControllerEnum controllerID,
             IDataContextEventListener stateUpdateListener)
         {
             return this.CreateModelState(
-                telemetryKey, false, controllerID, stateUpdateListener);
+                dataSyncKey, false, controllerID, stateUpdateListener);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="telemetryKey"></param>
+        /// <param name="dataSyncKey"></param>
         /// <param name="useGuid"></param>
         /// <param name="controllerID"></param>
         /// <param name="stateUpdateListener"></param>
         /// <returns></returns>
         public DigitalTwinModelState CreateModelState(
-            DigitalTwinTelemetryKey telemetryKey,
+            DigitalTwinDataSyncKey dataSyncKey,
             bool useGuid,
             ModelNameUtil.DtmiControllerEnum controllerID,
             IDataContextEventListener stateUpdateListener)
         {
-            var dtModelState = new DigitalTwinModelState(telemetryKey);
+            var dtModelState = new DigitalTwinModelState(dataSyncKey);
 
             dtModelState.SetModelControllerID(controllerID);
             dtModelState.SetRawModelJson(this.GetRawModelJson(controllerID));
             dtModelState.SetVirtualAssetListener(stateUpdateListener);
-            dtModelState.InitInstanceKey(useGuid);
+            dtModelState.InitInstanceKey();
 
-            string instanceKey = dtModelState.GetInstanceKey();
+            string instanceKey = dtModelState.GetInstanceSyncKey();
 
             if (this.HasDigitalTwinModelState(instanceKey))
             {
@@ -184,7 +184,7 @@ namespace LabBenchStudios.Pdt.Model
                 this.digitalTwinStateCache.Add(instanceKey, dtModelState);
             }
 
-            this.AssignTelemetryKeyToModel(telemetryKey, instanceKey);
+            this.AssignTelemetryKeyToModel(dataSyncKey, instanceKey);
 
             return dtModelState;
         }
@@ -192,52 +192,55 @@ namespace LabBenchStudios.Pdt.Model
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="stateDeviceID"></param>
-        /// <param name="stateLocationID"></param>
+        /// <param name="deviceID"></param>
+        /// <param name="locationID"></param>
         /// <param name="controllerID"></param>
         /// <param name="stateUpdateListener"></param>
         /// <returns></returns>
         public DigitalTwinModelState CreateModelState(
-            string stateDeviceID,
-            string stateLocationID,
+            string deviceID,
+            string locationID,
             ModelNameUtil.DtmiControllerEnum controllerID,
             IDataContextEventListener stateUpdateListener)
         {
             return this.CreateModelState(
-                stateDeviceID, stateLocationID, false, controllerID, stateUpdateListener);
+                deviceID, locationID, false, controllerID, stateUpdateListener);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="stateDeviceID"></param>
-        /// <param name="stateLocationID"></param>
+        /// <param name="deviceID"></param>
+        /// <param name="locationID"></param>
         /// <param name="useGuid"></param>
         /// <param name="controllerID"></param>
         /// <param name="stateUpdateListener"></param>
         /// <returns></returns>
         public DigitalTwinModelState CreateModelState(
-            string stateDeviceID,
-            string stateLocationID,
+            string deviceID,
+            string locationID,
             bool useGuid,
             ModelNameUtil.DtmiControllerEnum controllerID,
             IDataContextEventListener stateUpdateListener)
         {
-            var dtModelState = new DigitalTwinModelState(stateDeviceID, stateLocationID);
+            var dtModelState = new DigitalTwinModelState(deviceID, locationID);
 
-            dtModelState.SetConnectedDeviceID(stateDeviceID);
-            dtModelState.SetConnectedDeviceLocation(stateLocationID);
+            dtModelState.SetConnectedDeviceID(deviceID);
+            dtModelState.SetConnectedDeviceLocation(locationID);
             dtModelState.SetModelControllerID(controllerID);
             dtModelState.SetRawModelJson(this.GetRawModelJson(controllerID));
             dtModelState.SetVirtualAssetListener(stateUpdateListener);
-            dtModelState.InitInstanceKey(useGuid);
+            dtModelState.InitInstanceKey();
 
-            string instanceKey = dtModelState.GetInstanceKey();
+            this.UpdateModelStateProperties(dtModelState);
+
+            string instanceKey = dtModelState.GetInstanceSyncKey();
 
             if (this.HasDigitalTwinModelState(instanceKey))
             {
                 Console.WriteLine($"Created DigitalTwinModelState has duplicate key {instanceKey}. Discarding new and returning original.");
 
+                // TODO: replace the original or retrieve and return the original?
                 dtModelState = this.digitalTwinStateCache[instanceKey];
             }
             else
@@ -579,9 +582,9 @@ namespace LabBenchStudios.Pdt.Model
         {
             if (dataContext != null)
             {
-                string telemetryKey = ModelNameUtil.GenerateTelemetrySyncKey(dataContext).ToString();
+                string dataSyncKey = ModelNameUtil.GenerateDataSyncKey(dataContext).ToString();
 
-                return this.LookupDigitalTwinModelState(telemetryKey);
+                return this.LookupDigitalTwinModelState(dataSyncKey);
             }
 
             return null;
@@ -603,6 +606,54 @@ namespace LabBenchStudios.Pdt.Model
             }
 
             return null;
+        }
+
+        private void UpdateModelStateProperties(DigitalTwinModelState modelState)
+        {
+            if (modelState != null)
+            {
+                DTInterfaceInfo interfaceInfo = this.digitalTwinInterfaceCache[modelState.GetModelID()];
+
+                if (interfaceInfo != null)
+                {
+                    Console.WriteLine($"Found interface for model ID {modelState.GetModelID()}: {interfaceInfo.DisplayName}");
+
+                    // TODO: update the properties list with Property and Telemetry DTDL data!!
+
+                    IReadOnlyDictionary<string, DTPropertyInfo> propEntries = interfaceInfo.Properties;
+
+                    foreach (var propEntry in propEntries)
+                    {
+                        DigitalTwinProperty prop = new DigitalTwinProperty(propEntry.Key);
+                        DTPropertyInfo dtdlProp = propEntry.Value;
+
+                        prop.SetDisplayName(dtdlProp.Name);
+                        prop.SetDescription(dtdlProp.Schema.Comment);
+                        prop.SetDetail(dtdlProp.ToString());
+                        prop.SetAsEnabled(true);
+                        prop.SetAsTelemetry(false);
+                        prop.SetAsWriteable(dtdlProp.Writable);
+                    }
+
+                    IReadOnlyDictionary<string, DTTelemetryInfo> telemetryEntries = interfaceInfo.Telemetries;
+
+                    foreach (var telemetryEntry in telemetryEntries)
+                    {
+                        DigitalTwinProperty telemetry = new DigitalTwinProperty(telemetryEntry.Key);
+                        DTTelemetryInfo dtdlTelemetry = telemetryEntry.Value;
+
+                        telemetry.SetDisplayName(dtdlTelemetry.Name);
+                        telemetry.SetDescription(dtdlTelemetry.Schema.Comment);
+                        telemetry.SetDetail(dtdlTelemetry.ToString());
+                        telemetry.SetAsEnabled(true);
+                        telemetry.SetAsTelemetry(true);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"No interface for model ID {modelState.GetModelID()}");
+                }
+            }
         }
 
     }

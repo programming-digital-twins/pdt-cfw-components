@@ -102,6 +102,7 @@ namespace LabBenchStudios.Pdt.Common
 
         public static readonly string COMMAND_PROP = "command";
         public static readonly string STATE_DATA_PROP = "stateData";
+        public static readonly string UNIT_PROP = "unit";
         public static readonly string VALUE_PROP = "value";
         public static readonly string TARGET_VALUE_PROP = "targetValue";
         public static readonly string DATA_VALUES_PROP = "dataValues";

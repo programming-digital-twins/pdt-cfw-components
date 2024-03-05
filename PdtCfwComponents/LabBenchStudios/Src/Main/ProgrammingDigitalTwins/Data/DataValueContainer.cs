@@ -34,6 +34,9 @@ namespace LabBenchStudios.Pdt.Data
     public class DataValueContainer
     {
         [JsonProperty]
+        private string unit = ConfigConst.NOT_SET;
+
+        [JsonProperty]
         private float value = 0.0f;
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
@@ -63,6 +66,8 @@ namespace LabBenchStudios.Pdt.Data
 
         // public methods
 
+        public string GetUnit() {  return unit; }
+
         public float GetValue() { return this.value; }
 
         public float GetTargetValue() { return this.targetValue; }
@@ -78,6 +83,8 @@ namespace LabBenchStudios.Pdt.Data
         public float GetRangeNominalFloor() { return this.rangeNominalFloor; }
 
         public float GetRangeNominalCeiling() { return this.rangeNominalCeiling; }
+
+        public void SetUnit(string unit) { this.unit = unit; }
 
         public void SetValue(float val) { this.value = val; }
 
@@ -100,6 +107,7 @@ namespace LabBenchStudios.Pdt.Data
             StringBuilder sb = new StringBuilder();
 
             sb.Append(',');
+            sb.Append(ConfigConst.UNIT_PROP).Append('=').Append(this.GetUnit()).Append(',');
             sb.Append(ConfigConst.VALUE_PROP).Append('=').Append(this.value).Append(',');
             sb.Append(ConfigConst.TARGET_VALUE_PROP).Append('=').Append(this.targetValue).Append(',');
             sb.Append(ConfigConst.NOMINAL_VALUE_DELTA_PROP).Append('=').Append(this.nominalValueDelta).Append(',');
@@ -116,6 +124,7 @@ namespace LabBenchStudios.Pdt.Data
         {
             if (data != null)
             {
+                this.unit = data.GetUnit();
                 this.value = data.GetValue();
                 this.targetValue = data.GetTargetValue();
                 this.nominalValueDelta = data.GetNominalDeltaValue();

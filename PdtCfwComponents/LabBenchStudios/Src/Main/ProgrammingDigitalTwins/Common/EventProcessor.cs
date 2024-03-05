@@ -105,7 +105,7 @@ namespace LabBenchStudios.Pdt.Unity.Common
 
         private HashSet<string> knownDeviceIDSet = null;
         private HashSet<string> testDeviceIDSet = null;
-        private HashSet<string> telemetryKeySet = null;
+        private HashSet<string> dataSyncKeySet = null;
 
         // constructors
 
@@ -123,7 +123,7 @@ namespace LabBenchStudios.Pdt.Unity.Common
             this.connectedStateTable = new Dictionary<string, ConnectionStateData>();
 
             // telemetry keys
-            this.telemetryKeySet = new HashSet<string>();
+            this.dataSyncKeySet = new HashSet<string>();
 
             // use these
             this.knownDeviceIDSet = new HashSet<string>();
@@ -576,7 +576,7 @@ namespace LabBenchStudios.Pdt.Unity.Common
             // update internal caches
             this.UpdateDeviceIDSet(data);
             this.UpdateConnectionStateCache(data);
-            this.UpdateTelemetryKeyCache(data);
+            this.UpdateDataSyncKeyCache(data);
 
             // notify DT model manager of the data update
             this.digitalTwinModelManager.HandleIncomingTelemetry(data);
@@ -652,17 +652,15 @@ namespace LabBenchStudios.Pdt.Unity.Common
         /// message's telemetry key if it doesn't already exist in the cache.
         /// </summary>
         /// <param name="data"></param>
-        private void UpdateTelemetryKeyCache(IotDataContext data)
+        private void UpdateDataSyncKeyCache(IotDataContext data)
         {
             if (data != null)
             {
-                DigitalTwinTelemetryKey key = ModelNameUtil.GenerateTelemetrySyncKey(data);
+                string key = ModelNameUtil.GenerateDataSyncKey(data);
 
-                string keyName = key.ToString();
-
-                if (!this.telemetryKeySet.Contains(keyName))
+                if (! this.dataSyncKeySet.Contains(key))
                 {
-                    this.telemetryKeySet.Add(keyName);
+                    this.dataSyncKeySet.Add(key);
                 }
             }
         }

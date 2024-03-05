@@ -47,8 +47,8 @@ namespace LabBenchStudios.Pdt.Model
         private string modelID = ModelNameUtil.IOT_MODEL_CONTEXT_MODEL_ID;
         private string modelGUID = System.Guid.NewGuid().ToString();
 
-        private DigitalTwinInstanceKey dtInstanceKey = null;
-        private DigitalTwinTelemetryKey dtTelemetryKey = null;
+        private DigitalTwinModelSyncKey modelSyncKey = null;
+        private DigitalTwinDataSyncKey dataSyncKey = null;
 
         private string instanceKey = null;
 
@@ -79,16 +79,16 @@ namespace LabBenchStudios.Pdt.Model
         /// <summary>
         /// 
         /// </summary>
-        public DigitalTwinModelState(DigitalTwinTelemetryKey telemetryKey) :
+        public DigitalTwinModelState(DigitalTwinDataSyncKey dataSyncKey) :
             base(
                 ConfigConst.NOT_SET, ConfigConst.NOT_SET,
                 ConfigConst.DEFAULT_TYPE_CATEGORY_ID, ConfigConst.DEFAULT_TYPE_ID)
         {
-            if (telemetryKey != null)
+            if (dataSyncKey != null)
             {
-                this.dtTelemetryKey = telemetryKey;
-                base.SetDeviceID(this.dtTelemetryKey.GetDeviceID());
-                base.SetLocationID(this.dtTelemetryKey.GetLocationID());
+                this.dataSyncKey = dataSyncKey;
+                base.SetDeviceID(this.dataSyncKey.GetDeviceID());
+                base.SetLocationID(this.dataSyncKey.GetLocationID());
             }
 
             InitState();
@@ -138,7 +138,7 @@ namespace LabBenchStudios.Pdt.Model
         {
             if (modelState != null)
             {
-                string key = modelState.GetInstanceKey();
+                string key = modelState.GetInstanceSyncKey();
 
                 if (! this.HasConnectedModelState(key))
                 {
@@ -150,6 +150,22 @@ namespace LabBenchStudios.Pdt.Model
                     this.attachedComponents.Add(key, modelState);
                 }
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="prop"></param>
+        public string AddModelProperty(DigitalTwinProperty prop)
+        {
+            if (prop != null)
+            {
+                this.modelProperties.Add(prop.GetPropertyName(), prop);
+
+                return prop.GetPropertyName();
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -192,15 +208,29 @@ namespace LabBenchStudios.Pdt.Model
         }
 
         /// <summary>
-        /// Returns the unique instance key for this state object.
-        /// This is generated via a combination of properties
-        /// that are both generic and unique to this instance,
-        /// with the help of a utility method in ModelNameUtil.
+        /// This string is used to uniquely represent this model state instance.
+        /// It's used to map incoming telemetry (from a unique source) to this
+        /// digital twin state container (as a unique instance).
         /// </summary>
         /// <returns></returns>
-        public string GetInstanceKey()
+        public string GetInstanceSyncKey()
         {
             return this.instanceKey;
+        }
+
+        /// <summary>
+        /// This string is used to uniquely represent this model's assigned
+        /// unique incoming telemetry state.
+        /// 
+        /// The instance sync key and telemetry sync key are used to ensure
+        /// the source system data (which knows nothing of the digital twin)
+        /// can be processed by the appropriate digital twin instance - this
+        /// state object (which itself knows nothing of the source system).
+        /// </summary>
+        /// <returns></returns>
+        public DigitalTwinDataSyncKey GetDataSyncKey()
+        {
+            return this.dataSyncKey;
         }
 
         /// <summary>
@@ -251,6 +281,49 @@ namespace LabBenchStudios.Pdt.Model
         /// <summary>
         /// 
         /// </summary>
+        /// <returns></returns>
+        public List<string> GetAllModelKeys()
+        {
+            List<string> keys = new List<string>(this.modelProperties.Keys);
+
+            return keys;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetModelPropertyKeys()
+        {
+            List<string> keys = new List<string>();
+
+            foreach (var item in this.modelProperties)
+            {
+                if (!item.Value.IsPropertyTelemetry()) keys.Add(item.Key);
+            }
+
+            return keys;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetModelPropertyTelemetryKeys()
+        {
+            List<string> keys = new List<string>();
+
+            foreach (var item in this.modelProperties)
+            {
+                if (item.Value.IsPropertyTelemetry()) keys.Add(item.Key);
+            }
+
+            return keys;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
         public DigitalTwinProperty GetModelProperty(string key)
@@ -264,15 +337,6 @@ namespace LabBenchStudios.Pdt.Model
             }
 
             return null;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public DigitalTwinTelemetryKey GetTelemetryKey()
-        {
-            return this.dtTelemetryKey;
         }
 
         /// <summary>
@@ -373,23 +437,15 @@ namespace LabBenchStudios.Pdt.Model
         /// </summary>
         public void InitInstanceKey()
         {
-            this.InitInstanceKey(false);
-        }
+            this.modelSyncKey = new DigitalTwinModelSyncKey(this.GetName(), this.modelID);
+            this.instanceKey = this.modelSyncKey.ToString();
 
-        /// <summary>
-        /// Safe for external entities to call, as the internal generation
-        /// of an instance key will yield a consistent result.
-        /// 
-        /// This must be invoked for an instance key to be generated, however.
-        /// </summary>
-        /// <param name="useGuid">If true, the GUID generated when this
-        /// class was instanced will be used in the isntancing key.</param>
-        public void InitInstanceKey(bool useGuid)
-        {
+            /*
             this.instanceKey =
                 useGuid ?
                     ModelNameUtil.CreateModelDataSyncKey(this.GetDeviceID(), this.GetLocationID(), this.GetModelGUID()) :
                     ModelNameUtil.CreateModelDataSyncKey(this.GetDeviceID(), this.GetLocationID());
+            */
 
             Console.WriteLine($"DT model state instance key generated: {this.instanceKey}");
         }
@@ -467,11 +523,11 @@ namespace LabBenchStudios.Pdt.Model
         /// 
         /// </summary>
         /// <param name="key"></param>
-        public void SetTelemetryKey(DigitalTwinTelemetryKey key)
+        public void SetDataSyncKey(DigitalTwinDataSyncKey key)
         {
             if (key != null)
             {
-                this.dtTelemetryKey = key;
+                this.dataSyncKey = key;
             }
         }
 
@@ -510,10 +566,12 @@ namespace LabBenchStudios.Pdt.Model
         {
             this.modelProperties = new Dictionary<string, DigitalTwinProperty>();
             this.attachedComponents = new Dictionary<string, DigitalTwinModelState>();
+            
+            // both calls should generate the same Model ID (DTMI URI)
+            this.modelID = ModelNameUtil.CreateModelID(this.modelControllerID);
+            //this.modelID = ModelNameUtil.GetModelID(base.GetTypeID());
 
-            this.modelID = ModelNameUtil.GetModelID(base.GetTypeID());
-
-            this.InitInstanceKey(false);
+            this.InitInstanceKey();
         }
 
     }

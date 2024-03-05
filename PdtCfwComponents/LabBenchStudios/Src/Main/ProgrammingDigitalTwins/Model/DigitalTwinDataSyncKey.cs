@@ -22,8 +22,6 @@
  * SOFTWARE.
  */
 
-using System.Text;
-
 using Newtonsoft.Json;
 
 using LabBenchStudios.Pdt.Common;
@@ -39,41 +37,43 @@ namespace LabBenchStudios.Pdt.Model
     /// described in the base DTDML that all models extend.
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
-    public class DigitalTwinTelemetryKey
+    public class DigitalTwinDataSyncKey
     {
         private string name = ConfigConst.PRODUCT_NAME;
+        private string groupID = ConfigConst.PRODUCT_NAME;
         private string deviceID  = ConfigConst.PRODUCT_NAME;
         private string locationID = ConfigConst.PRODUCT_NAME;
 
-        private string guid = ConfigConst.PRODUCT_NAME;
-        private string telemetryKey = ConfigConst.NOT_SET;
+        private string modelID = ModelNameUtil.IOT_MODEL_CONTEXT_MODEL_ID;
+
+        private string dataSyncKey = ConfigConst.PRODUCT_NAME;
+        private string dataSyncGuidKey = ConfigConst.PRODUCT_NAME;
 
         /// <summary>
         /// 
         /// </summary>
-        public DigitalTwinTelemetryKey()
+        public DigitalTwinDataSyncKey()
         {
-            this.GenerateKey(null, null, null, true);
+            this.GenerateKey(null, null, null, null);
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="dataContext"></param>
-        /// <param name="useGuid"></param>
-        public DigitalTwinTelemetryKey(IotDataContext dataContext, bool useGuid)
+        public DigitalTwinDataSyncKey(IotDataContext dataContext)
         {
             if (dataContext != null)
             {
                 this.GenerateKey(
                     dataContext.GetName(),
+                    null,
                     dataContext.GetDeviceID(),
-                    dataContext.GetLocationID(),
-                    useGuid);
+                    dataContext.GetLocationID());
             }
             else
             {
-                this.GenerateKey(null, null, null, true);
+                this.GenerateKey(null, null, null, null);
             }
         }
 
@@ -81,13 +81,13 @@ namespace LabBenchStudios.Pdt.Model
         /// 
         /// </summary>
         /// <param name="name"></param>
+        /// <param name="groupID"></param>
         /// <param name="deviceID"></param>
         /// <param name="locationID"></param>
-        /// <param name="useGuid"></param>
-        public DigitalTwinTelemetryKey(
-            string name, string deviceID, string locationID, bool useGuid)
+        public DigitalTwinDataSyncKey(
+            string name, string groupID, string deviceID, string locationID)
         {
-            this.GenerateKey(name, deviceID, locationID, useGuid);
+            this.GenerateKey(name, groupID, deviceID, locationID);
         }
 
 
@@ -97,18 +97,18 @@ namespace LabBenchStudios.Pdt.Model
         /// 
         /// </summary>
         /// <returns></returns>
-        public string GetTelemetryKey()
+        public string GetDeviceID()
         {
-            return this.telemetryKey;
+            return this.deviceID;
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public string GetDeviceID()
+        public string GetGroupID()
         {
-            return this.deviceID;
+            return this.groupID;
         }
 
         /// <summary>
@@ -124,15 +124,6 @@ namespace LabBenchStudios.Pdt.Model
         /// 
         /// </summary>
         /// <returns></returns>
-        public string GetGuid()
-        {
-            return this.guid;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         public string GetName()
         {
             return this.name;
@@ -141,39 +132,76 @@ namespace LabBenchStudios.Pdt.Model
         /// <summary>
         /// 
         /// </summary>
+        /// <returns></returns>
+        public string GetModelID()
+        {
+            return this.modelID;
+        }
+
+        /// <summary>
+        /// Checks if the key name passed in is the same as the
+        /// internally stored data sync key string.
+        /// If so, returns true.
+        /// </summary>
         /// <param name="keyName"></param>
         /// <returns></returns>
         public bool IsEqual(string keyName)
         {
+            return IsEqual(keyName, false);
+        }
+
+        /// <summary>
+        /// Checks if the key name passed in is the same as the
+        /// internally stored data sync key string.
+        /// If useGuid is true, the GUID version of the data sync
+        /// key is used internally for the compare, otherwise,
+        /// the non-GUID version of the data sync is used.
+        /// If so, returns true.
+        /// </summary>
+        /// <param name="keyName"></param>
+        /// <param name="useGuid"></param>
+        /// <returns></returns>
+        public bool IsEqual(string keyName, bool useGuid)
+        {
             if (! string.IsNullOrEmpty(keyName))
             {
-                return (keyName.Equals(this.ToString()));
+                if (useGuid)
+                {
+                    return (keyName.Equals(this.dataSyncGuidKey));
+                }
+                else
+                {
+                    return (keyName.Equals(this.dataSyncKey));
+                }
             }
 
             return false;
         }
 
         /// <summary>
-        /// 
+        /// Checks if the data sync key generated from the passed in IotDataContext
+        /// is the same as that stored internally WITHOUT use of a GUID.
+        /// If so, returns true.
         /// </summary>
-        /// <param name="dataContext"></param>
+        /// <param name="data"></param>
         /// <returns></returns>
-        public bool IsEqual(IotDataContext dataContext)
+        public bool IsEqual(IotDataContext data)
         {
-            if (dataContext != null)
+            if (data != null)
             {
-                return (this.IsEqual(ModelNameUtil.GenerateDataSyncKey(dataContext)));
+                return (this.dataSyncKey.Equals(ModelNameUtil.GenerateDataSyncKey(data)));
             }
 
             return false;
         }
 
         /// <summary>
-        /// 
+        /// Checks if the string representations of this and 'key' are the same.
+        /// If so, returns true.
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public bool IsEqual(DigitalTwinTelemetryKey key)
+        public bool IsEqual(DigitalTwinDataSyncKey key)
         {
             if (key != null)
             {
@@ -184,16 +212,16 @@ namespace LabBenchStudios.Pdt.Model
         }
 
         /// <summary>
-        /// 
+        /// Checks if the device ID and location ID are the same.
+        /// If so, returns true.
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public bool IsSourceEqual(DigitalTwinTelemetryKey key)
+        public bool IsDataSourceEqual(DigitalTwinDataSyncKey key)
         {
             if (key != null)
             {
                 return (
-                    key.GetName().Equals(this.GetName()) &&
                     key.GetDeviceID().Equals(this.GetDeviceID()) &&
                     key.GetLocationID().Equals(this.GetLocationID()));
             }
@@ -204,10 +232,23 @@ namespace LabBenchStudios.Pdt.Model
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="modelID"></param>
+        public void SetModelID(string modelID)
+        {
+            if (! string.IsNullOrEmpty(modelID))
+            {
+                this.modelID = modelID;
+            }
+        }
+
+        /// <summary>
+        /// Returns the non-GUID representation of the data sync key
+        /// stored internally.
+        /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
-            return this.GetTelemetryKey();
+            return this.dataSyncKey;
         }
 
 
@@ -217,40 +258,14 @@ namespace LabBenchStudios.Pdt.Model
         /// 
         /// </summary>
         /// <param name="name"></param>
+        /// <param name="groupID"></param>
         /// <param name="deviceID"></param>
         /// <param name="locationID"></param>
-        /// <param name="useGuid"></param>
         private void GenerateKey(
-            string name, string deviceID, string locationID, bool useGuid)
+            string name, string groupID, string deviceID, string locationID)
         {
-            if (! string.IsNullOrEmpty(name))
-            {
-                this.name = name;
-            }
-
-            if (! string.IsNullOrEmpty(deviceID))
-            {
-                this.deviceID = deviceID;
-            }
-
-            if (! string.IsNullOrEmpty(locationID))
-            {
-                this.locationID = locationID;
-            }
-
-            if (useGuid)
-            {
-                this.guid = System.Guid.NewGuid().ToString();
-            }
-
-            StringBuilder sb = new StringBuilder();
-
-            sb.Append(this.name).Append(':')
-                .Append(this.deviceID).Append(':')
-                .Append(this.locationID).Append(':')
-                .Append(this.guid);
-
-            this.telemetryKey = sb.ToString();
+            this.dataSyncKey = ModelNameUtil.GenerateDataSyncKey(name, groupID, deviceID, locationID, false);
+            this.dataSyncGuidKey = ModelNameUtil.GenerateDataSyncKey(name, groupID, deviceID, locationID, true);
         }
 
     }

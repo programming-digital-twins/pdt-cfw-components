@@ -25,7 +25,7 @@
 using Newtonsoft.Json;
 
 using LabBenchStudios.Pdt.Common;
-using LabBenchStudios.Pdt.Data;
+using System.Text;
 
 namespace LabBenchStudios.Pdt.Model
 {
@@ -37,17 +37,19 @@ namespace LabBenchStudios.Pdt.Model
     /// described in the base DTDML that all models extend.
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
-    public class DigitalTwinInstanceKey
+    public class DigitalTwinModelSyncKey
     {
         private string name = ConfigConst.PRODUCT_NAME;
-        private string modelKey  = ConfigConst.PRODUCT_NAME;
-        private string modelGuid = System.Guid.NewGuid().ToString();
-        private string instanceKey = ConfigConst.PRODUCT_NAME;
+        private string modelID = ModelNameUtil.IOT_MODEL_CONTEXT_MODEL_ID;
+
+        private string modelSyncKey = ConfigConst.PRODUCT_NAME;
+        private string modelSyncGuidKey = ConfigConst.PRODUCT_NAME;
 
         /// <summary>
         /// 
         /// </summary>
-        public DigitalTwinInstanceKey() : this(null, null)
+        public DigitalTwinModelSyncKey() :
+            this(null, null)
         {
         }
 
@@ -55,24 +57,10 @@ namespace LabBenchStudios.Pdt.Model
         /// 
         /// </summary>
         /// <param name="name"></param>
-        /// <param name="modelKey"></param>
-        public DigitalTwinInstanceKey(string name, string modelKey)
+        /// <param name="modelID"></param>
+        public DigitalTwinModelSyncKey(string name, string modelID)
         {
-            if (! string.IsNullOrEmpty(name))
-            {
-                this.name = name;
-            }
-
-            if (! string.IsNullOrEmpty(modelKey))
-            {
-                this.modelKey = modelKey;
-            }
-            else
-            {
-                this.modelKey = ConfigConst.PRODUCT_NAME;
-            }
-
-            this.instanceKey = this.name + "_" + this.modelKey + "_" + this.modelGuid;
+            this.GenerateKey(name, modelID);
         }
 
 
@@ -82,35 +70,21 @@ namespace LabBenchStudios.Pdt.Model
         /// 
         /// </summary>
         /// <returns></returns>
-        public string GetInstanceKey()
+        public string GetModelID()
         {
-            return this.instanceKey;
+            return modelID;
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public string GetModelKey()
-        {
-            return modelKey;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public string GetModelGuid()
-        {
-            return this.modelGuid;
-        }
-
         public string GetName()
         {
             return this.name;
         }
 
-        public bool IsEqual(DigitalTwinInstanceKey key)
+        public bool IsEqual(DigitalTwinModelSyncKey key)
         {
             if (key != null)
             {
@@ -120,13 +94,13 @@ namespace LabBenchStudios.Pdt.Model
             return false;
         }
 
-        public bool IsSourceEqual(DigitalTwinInstanceKey key)
+        public bool IsSourceEqual(DigitalTwinModelSyncKey key)
         {
             if (key != null)
             {
                 return (
                     key.GetName().Equals(this.GetName()) &&
-                    key.GetModelKey().Equals(this.GetModelKey()));
+                    key.GetModelID().Equals(this.GetModelID()));
             }
 
             return false;
@@ -138,8 +112,20 @@ namespace LabBenchStudios.Pdt.Model
         /// <returns></returns>
         public override string ToString()
         {
-            return this.GetInstanceKey();
+            return this.modelSyncKey;
         }
 
+        // private methods
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="modelID"></param>
+        private void GenerateKey(string name, string modelID)
+        {
+            this.modelSyncKey = ModelNameUtil.GenerateModelSyncKey(name, modelID, false);
+            this.modelSyncGuidKey = ModelNameUtil.GenerateModelSyncKey(name, modelID, true);
+        }
     }
 }

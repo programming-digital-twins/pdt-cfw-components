@@ -44,10 +44,10 @@ namespace LabBenchStudios.Pdt.Model
     [JsonObject(MemberSerialization.OptIn)]
     public class DigitalTwinProperty
     {
-        private string propertyName = ConfigConst.NOT_SET;
+        private string name = ConfigConst.NOT_SET;
         private string displayName = ConfigConst.NOT_SET;
         private string description = ConfigConst.NOT_SET;
-        private string unitLabel = ConfigConst.NOT_SET;
+        private string detail = ConfigConst.NOT_SET;
 
         private HashSet<int> commandOptions = null;
 
@@ -57,17 +57,19 @@ namespace LabBenchStudios.Pdt.Model
 
         private DateTime lastTelemetryUpdate = DateTime.MinValue;
         private DateTime lastTwinUpdate = DateTime.MinValue;
-        
-        private DataValueContainer propertyValues = new DataValueContainer();
+
+        private DataValueContainer propertyValues = null;
 
         public DigitalTwinProperty()
         {
-            this.commandOptions = new HashSet<int>();
+            this.InitProperty();
         }
 
         public DigitalTwinProperty(string name) : this()
         {
             this.SetPropertyName(name);
+
+            this.InitProperty();
         }
 
 
@@ -107,7 +109,7 @@ namespace LabBenchStudios.Pdt.Model
             if (this.commandOptions.Contains(commandVal))
             {
                 ActuatorData data =
-                    new ActuatorData(this.propertyName, deviceID, typeCategoryID, typeID);
+                    new ActuatorData(this.name, deviceID, typeCategoryID, typeID);
 
                 data.SetValue(commandVal);
                 data.SetLocationID(locationID);
@@ -125,9 +127,24 @@ namespace LabBenchStudios.Pdt.Model
             return commandOptions;
         }
 
+        public string GetDescription()
+        {
+            return this.description;
+        }
+
+        public string GetDetail()
+        {
+            return this.detail;
+        }
+
+        public string GetDisplayName()
+        {
+            return this.displayName;
+        }
+
         public string GetPropertyName()
         {
-            return propertyName;
+            return name;
         }
 
         public DataValueContainer GetPropertyValues()
@@ -165,11 +182,26 @@ namespace LabBenchStudios.Pdt.Model
             this.isTelemetry = isTelemetry;
         }
 
+        public void SetDetail(string detail)
+        {
+            this.detail = detail;
+        }
+
+        public void SetDescription(string description)
+        {
+            this.description = description;
+        }
+
+        public void SetDisplayName(string displayName)
+        {
+            this.displayName = displayName;
+        }
+
         public void SetPropertyName(string name)
         {
             if (! string.IsNullOrEmpty(name))
             {
-                propertyName = name;
+                this.name = name;
             }
         }
 
@@ -184,6 +216,14 @@ namespace LabBenchStudios.Pdt.Model
         public void UpdatePropertyValues(DataValueContainer values)
         {
             this.propertyValues.UpdateData(values);
+        }
+
+        // private methods
+
+        private void InitProperty()
+        {
+            this.commandOptions = new HashSet<int>();
+            this.propertyValues = new DataValueContainer();
         }
     }
 }

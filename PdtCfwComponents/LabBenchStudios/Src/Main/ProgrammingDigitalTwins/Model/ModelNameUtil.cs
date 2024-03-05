@@ -77,32 +77,32 @@ namespace LabBenchStudios.Pdt.Model
         //
 
         // this is the base template model file for all Lbs_Pdt_* DTDL files
-        public static readonly string BASE_IOT_MODEL_CONTEXT_DTDL_MODEL        = MODEL_FILE_NAME_PREFIX + "Base_IotModelContext.json";
+        public static readonly string BASE_IOT_MODEL_CONTEXT_DTDL_MODEL = MODEL_FILE_NAME_PREFIX + "Base_IotModelContext.json";
 
         // these model files represent context for specific structures and systems
         //
         // each of these depends on (extends) the BASE_IOT_MODEL_CONTEXT_DTDL_MODEL
-        public static readonly string CONTEXT_HEATING_SYSTEM_DTDL_MODEL        = MODEL_FILE_NAME_PREFIX + "Context_HeatingSystem.json";
-        public static readonly string CONTEXT_INTERIOR_ROOM_DTDL_MODEL         = MODEL_FILE_NAME_PREFIX + "Context_InteriorRoom.json";
+        public static readonly string CONTEXT_HEATING_SYSTEM_DTDL_MODEL = MODEL_FILE_NAME_PREFIX + "Context_HeatingSystem.json";
+        public static readonly string CONTEXT_INTERIOR_ROOM_DTDL_MODEL = MODEL_FILE_NAME_PREFIX + "Context_InteriorRoom.json";
         public static readonly string CONTEXT_RESIDENTIAL_STRUCTURE_DTDL_MODEL = MODEL_FILE_NAME_PREFIX + "Context_ResidentialStructure.json";
 
         // these model files represent the controller description for all data generation
         // and command receptive systems and components
         //
         // each of these depends on (extends) the BASE_IOT_MODEL_CONTEXT_DTDL_MODEL
-        public static readonly string CONTROLLER_BAROMETER_DTDL_MODEL           = MODEL_FILE_NAME_PREFIX + "Controller_Barometer.json";
+        public static readonly string CONTROLLER_BAROMETER_DTDL_MODEL = MODEL_FILE_NAME_PREFIX + "Controller_Barometer.json";
         public static readonly string CONTROLLER_EDGE_COMPUTE_DEVICE_DTDL_MODEL = MODEL_FILE_NAME_PREFIX + "Controller_EdgeComputeDevice.json";
-        public static readonly string CONTROLLER_FLUID_PUMP_DTDL_MODEL          = MODEL_FILE_NAME_PREFIX + "Controller_FluidPump.json";
-        public static readonly string CONTROLLER_HEATING_ZONE_DTDL_MODEL        = MODEL_FILE_NAME_PREFIX + "Controller_HeatingZone.json";
-        public static readonly string CONTROLLER_HUMIDIFIER_DTDL_MODEL          = MODEL_FILE_NAME_PREFIX + "Controller_Humidifier.json";
-        public static readonly string CONTROLLER_POWER_WINDMILL_DTDL_MODEL      = MODEL_FILE_NAME_PREFIX + "Controller_PowerWindmill.json";
-        public static readonly string CONTROLLER_THERMOSTAT_DTDL_MODEL          = MODEL_FILE_NAME_PREFIX + "Controller_Thermostat.json";
+        public static readonly string CONTROLLER_FLUID_PUMP_DTDL_MODEL = MODEL_FILE_NAME_PREFIX + "Controller_FluidPump.json";
+        public static readonly string CONTROLLER_HEATING_ZONE_DTDL_MODEL = MODEL_FILE_NAME_PREFIX + "Controller_HeatingZone.json";
+        public static readonly string CONTROLLER_HUMIDIFIER_DTDL_MODEL = MODEL_FILE_NAME_PREFIX + "Controller_Humidifier.json";
+        public static readonly string CONTROLLER_POWER_WINDMILL_DTDL_MODEL = MODEL_FILE_NAME_PREFIX + "Controller_PowerWindmill.json";
+        public static readonly string CONTROLLER_THERMOSTAT_DTDL_MODEL = MODEL_FILE_NAME_PREFIX + "Controller_Thermostat.json";
 
         // these model files represent the telemetry description for all data generation systems and components
         //
         // each of these depends on (extends) the BASE_IOT_MODEL_CONTEXT_DTDL_MODEL
-        public static readonly string COMPONENT_DEVICE_SYS_PERF_DTDL_MODEL     = MODEL_FILE_NAME_PREFIX + "Component_DeviceSystemPerformance.json";
-        public static readonly string COMPONENT_ENV_SENSORS_DTDL_MODEL         = MODEL_FILE_NAME_PREFIX + "Component_EnvironmentalSensors.json";
+        public static readonly string COMPONENT_DEVICE_SYS_PERF_DTDL_MODEL = MODEL_FILE_NAME_PREFIX + "Component_DeviceSystemPerformance.json";
+        public static readonly string COMPONENT_ENV_SENSORS_DTDL_MODEL = MODEL_FILE_NAME_PREFIX + "Component_EnvironmentalSensors.json";
 
         //////////
         //
@@ -153,25 +153,25 @@ namespace LabBenchStudios.Pdt.Model
         //  readonly string identifier: IOT_MODEL_CONTEXT_MODEL_ID
         //  string representation:      "dtmi:LabBenchStudios:PDT:iotModelContext:1"
         //
-        public static readonly string IOT_MODEL_CONTEXT_MODEL_ID                    = CreateModelID(DTMI_PREFIX, IOT_MODEL_CONTEXT_NAME, DTMI_CURRENT_VERSION);
-        public static readonly string HEATING_SYSTEM_CONTEXT_MODEL_ID               = CreateModelID(DTMI_PREFIX, HEATING_SYSTEM_NAME, DTMI_CURRENT_VERSION);
-        public static readonly string INTERIOR_ROOM_STATE_CONTEXT_MODEL_ID          = CreateModelID(DTMI_PREFIX, INTERIOR_ROOM_NAME, DTMI_CURRENT_VERSION);
-        public static readonly string RESIDENTIAL_STRUCTURE_CONTEXT_MODEL_ID        = CreateModelID(DTMI_PREFIX, RESIDENTIAL_STRUCTURE_NAME, DTMI_CURRENT_VERSION);
-        public static readonly string FLUID_PUMP_CONTROLLER_MODEL_ID                = CreateModelID(DTMI_PREFIX, FLUID_PUMP_NAME, DTMI_CURRENT_VERSION);
-        public static readonly string HEATING_ZONE_CONTROLLER_MODEL_ID              = CreateModelID(DTMI_PREFIX, HEATING_ZONE_NAME, DTMI_CURRENT_VERSION);
-        public static readonly string BAROMETER_CONTROLLER_MODEL_ID                 = CreateModelID(DTMI_PREFIX, BAROMETER_NAME, DTMI_CURRENT_VERSION);
-        public static readonly string HUMIDIFIER_CONTROLLER_MODEL_ID                = CreateModelID(DTMI_PREFIX, HUMIDIFIER_NAME, DTMI_CURRENT_VERSION);
-        public static readonly string POWER_WINDMILL_CONTROLLER_MODEL_ID            = CreateModelID(DTMI_PREFIX, POWER_WINDMILL_NAME, DTMI_CURRENT_VERSION);
-        public static readonly string THERMOSTAT_CONTROLLER_MODEL_ID                = CreateModelID(DTMI_PREFIX, THERMOSTAT_NAME, DTMI_CURRENT_VERSION);
-        public static readonly string DEVICE_SYS_PERF_COMPONENT_MODEL_ID            = CreateModelID(DTMI_PREFIX, SYSTEM_PERFORMANCE_DATA_NAME, DTMI_CURRENT_VERSION);
-        public static readonly string ENV_SENSORS_COMPONENT_MODEL_ID                = CreateModelID(DTMI_PREFIX, ENVIRONMENTAL_SENSOR_DATA_NAME, DTMI_CURRENT_VERSION);
-        public static readonly string RELATIVE_HUMIDITY_SENSOR_COMPONENT_MODEL_ID   = CreateModelID(DTMI_PREFIX, RELATIVE_HUMIDITY_DATA_NAME, DTMI_CURRENT_VERSION);
+        public static readonly string IOT_MODEL_CONTEXT_MODEL_ID = CreateModelID(DTMI_PREFIX, IOT_MODEL_CONTEXT_NAME, DTMI_CURRENT_VERSION);
+        public static readonly string HEATING_SYSTEM_CONTEXT_MODEL_ID = CreateModelID(DTMI_PREFIX, HEATING_SYSTEM_NAME, DTMI_CURRENT_VERSION);
+        public static readonly string INTERIOR_ROOM_STATE_CONTEXT_MODEL_ID = CreateModelID(DTMI_PREFIX, INTERIOR_ROOM_NAME, DTMI_CURRENT_VERSION);
+        public static readonly string RESIDENTIAL_STRUCTURE_CONTEXT_MODEL_ID = CreateModelID(DTMI_PREFIX, RESIDENTIAL_STRUCTURE_NAME, DTMI_CURRENT_VERSION);
+        public static readonly string FLUID_PUMP_CONTROLLER_MODEL_ID = CreateModelID(DTMI_PREFIX, FLUID_PUMP_NAME, DTMI_CURRENT_VERSION);
+        public static readonly string HEATING_ZONE_CONTROLLER_MODEL_ID = CreateModelID(DTMI_PREFIX, HEATING_ZONE_NAME, DTMI_CURRENT_VERSION);
+        public static readonly string BAROMETER_CONTROLLER_MODEL_ID = CreateModelID(DTMI_PREFIX, BAROMETER_NAME, DTMI_CURRENT_VERSION);
+        public static readonly string HUMIDIFIER_CONTROLLER_MODEL_ID = CreateModelID(DTMI_PREFIX, HUMIDIFIER_NAME, DTMI_CURRENT_VERSION);
+        public static readonly string POWER_WINDMILL_CONTROLLER_MODEL_ID = CreateModelID(DTMI_PREFIX, POWER_WINDMILL_NAME, DTMI_CURRENT_VERSION);
+        public static readonly string THERMOSTAT_CONTROLLER_MODEL_ID = CreateModelID(DTMI_PREFIX, THERMOSTAT_NAME, DTMI_CURRENT_VERSION);
+        public static readonly string DEVICE_SYS_PERF_COMPONENT_MODEL_ID = CreateModelID(DTMI_PREFIX, SYSTEM_PERFORMANCE_DATA_NAME, DTMI_CURRENT_VERSION);
+        public static readonly string ENV_SENSORS_COMPONENT_MODEL_ID = CreateModelID(DTMI_PREFIX, ENVIRONMENTAL_SENSOR_DATA_NAME, DTMI_CURRENT_VERSION);
+        public static readonly string RELATIVE_HUMIDITY_SENSOR_COMPONENT_MODEL_ID = CreateModelID(DTMI_PREFIX, RELATIVE_HUMIDITY_DATA_NAME, DTMI_CURRENT_VERSION);
         public static readonly string BAROMETRIC_PRESSURE_SENSOR_COMPONENT_MODEL_ID = CreateModelID(DTMI_PREFIX, BAROMETRIC_PRESSURE_DATA_NAME, DTMI_CURRENT_VERSION);
-        public static readonly string TEMP_SENSOR_COMPONENT_MODEL_ID                = CreateModelID(DTMI_PREFIX, TEMPERATURE_DATA_NAME, DTMI_CURRENT_VERSION);
+        public static readonly string TEMP_SENSOR_COMPONENT_MODEL_ID = CreateModelID(DTMI_PREFIX, TEMPERATURE_DATA_NAME, DTMI_CURRENT_VERSION);
 
-        public static readonly string ORG_NAME_PLACEHOLDER     = "ORG_NAME";
+        public static readonly string ORG_NAME_PLACEHOLDER = "ORG_NAME";
         public static readonly string PRODUCT_NAME_PLACEHOLDER = "PRODUCT_NAME";
-        public static readonly string MODEL_NAME_PLACEHOLDER   = "MODEL_NAME";
+        public static readonly string MODEL_NAME_PLACEHOLDER = "MODEL_NAME";
 
         public enum DtmiControllerEnum
         {
@@ -227,46 +227,66 @@ namespace LabBenchStudios.Pdt.Model
             return modelFileName;
         }
 
-        public static string CreateModelDataSyncKey(string deviceID)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        public static string GenerateDataSyncKey(IotDataContext data)
         {
-            return CreateModelDataSyncKey(deviceID, deviceID, false);
-        }
-
-        public static string CreateModelDataSyncKey(
-            string deviceID, string locationID)
-        {
-            return CreateModelDataSyncKey(deviceID, locationID, false);
-        }
-
-        public static string CreateModelDataSyncKey(
-            string deviceID, string locationID, bool generateGuid)
-        {
-            string guid = null;
-
-            if (generateGuid)
-            {
-                guid = Guid.NewGuid().ToString();
-            }
-
-            return CreateModelDataSyncKey(deviceID, locationID, guid);
+            return GenerateDataSyncKey(data, false);
         }
 
         /// <summary>
-        /// Format is {deviceID}:{locationID}:{guid}.
-        /// If any parameter is passed in as null or empty, it will be replaced with
-        /// ConfigConst.PRODUCT_NAME.
-        /// Generally, the default invocation of this method will include a valid
-        /// deviceID and locationID, which always default to ConfigConst.NOT_SET
-        /// within IotDataContext.
+        /// 
         /// </summary>
+        /// <param name="data"></param>
+        /// <param name="useGuid"></param>
+        public static string GenerateDataSyncKey(IotDataContext data, bool useGuid)
+        {
+            if (data != null)
+            {
+                return GenerateDataSyncKey(
+                    data.GetName(), null, data.GetDeviceID(), data.GetLocationID(), useGuid);
+            }
+            else
+            {
+                return GenerateDataSyncKey(null, null, null, null, useGuid);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="groupID"></param>
         /// <param name="deviceID"></param>
         /// <param name="locationID"></param>
-        /// <param name="guid"></param>
-        /// <returns></returns>
-        public static string CreateModelDataSyncKey(
-            string deviceID, string locationID, string guid)
+        public static string GenerateDataSyncKey(
+            string name, string groupID, string deviceID, string locationID)
         {
-            string name = ConfigConst.PRODUCT_NAME;
+            return GenerateDataSyncKey(name, groupID, deviceID, locationID, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="groupID"></param>
+        /// <param name="deviceID"></param>
+        /// <param name="locationID"></param>
+        /// <param name="useGuid"></param>
+        public static string GenerateDataSyncKey(
+            string name, string groupID, string deviceID, string locationID, bool useGuid)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                name = ConfigConst.PRODUCT_NAME;
+            }
+
+            if (string.IsNullOrEmpty(groupID))
+            {
+                groupID = ConfigConst.PRODUCT_NAME;
+            }
 
             if (string.IsNullOrEmpty(deviceID))
             {
@@ -275,20 +295,24 @@ namespace LabBenchStudios.Pdt.Model
 
             if (string.IsNullOrEmpty(locationID))
             {
-                locationID = deviceID;
-            }
-
-            if (string.IsNullOrEmpty(guid))
-            {
-                guid = ConfigConst.PRODUCT_NAME;
+                locationID = ConfigConst.PRODUCT_NAME;
             }
 
             StringBuilder sb = new StringBuilder();
 
-            sb.Append(name).Append(':')
-                .Append(deviceID).Append(':')
-                .Append(locationID).Append(':')
-                .Append(guid);
+            sb.Append(name.Trim()).Append(':')
+                .Append(groupID.Trim()).Append(':')
+                .Append(deviceID.Trim()).Append(':')
+                .Append(locationID.Trim());
+
+            if (useGuid)
+            {
+                sb.Append(':').Append(System.Guid.NewGuid().ToString());
+            }
+            else
+            {
+                sb.Append(':').Append(ConfigConst.PRODUCT_NAME);
+            }
 
             return sb.ToString();
         }
@@ -296,46 +320,49 @@ namespace LabBenchStudios.Pdt.Model
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="dataContext"></param>
-        public static DigitalTwinTelemetryKey GenerateTelemetrySyncKey(IotDataContext dataContext)
+        /// <param name="name"></param>
+        /// <param name="modelID"></param>
+        public static string GenerateModelSyncKey(
+            string name, string modelID)
         {
-            return new DigitalTwinTelemetryKey(dataContext, false);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="dataContext"></param>
-        /// <param name="useGuid"></param>
-        public static DigitalTwinTelemetryKey GenerateTelemetrySyncKey(
-            IotDataContext dataContext, bool useGuid)
-        {
-            return new DigitalTwinTelemetryKey(dataContext, false);
+            return GenerateModelSyncKey(name, modelID, false);
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="name"></param>
-        /// <param name="deviceID"></param>
-        /// <param name="locationID"></param>
-        public static DigitalTwinTelemetryKey GenerateTelemetrySyncKey(
-            string name, string deviceID, string locationID)
-        {
-            return new DigitalTwinTelemetryKey(name, deviceID, locationID, false);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="deviceID"></param>
-        /// <param name="locationID"></param>
+        /// <param name="modelID"></param>
         /// <param name="useGuid"></param>
-        public static DigitalTwinTelemetryKey GenerateTelemetrySyncKey(
-            string name, string deviceID, string locationID, bool useGuid)
+        public static string GenerateModelSyncKey(
+            string name, string modelID, bool useGuid)
         {
-            return new DigitalTwinTelemetryKey(name, deviceID, locationID, useGuid);
+            if (string.IsNullOrEmpty(name))
+            {
+                name = ConfigConst.PRODUCT_NAME;
+            }
+
+            if (string.IsNullOrEmpty(modelID))
+            {
+                modelID = ConfigConst.PRODUCT_NAME;
+            }
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append(name.Trim())
+                .Append(':')
+                .Append(modelID.Trim());
+
+            if (useGuid)
+            {
+                sb.Append(':').Append(System.Guid.NewGuid().ToString());
+            }
+            else
+            {
+                sb.Append(':').Append(ConfigConst.PRODUCT_NAME);
+            }
+
+            return sb.ToString();
         }
 
         public static string CreateModelID(DtmiControllerEnum controllerID)

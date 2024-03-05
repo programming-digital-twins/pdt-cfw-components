@@ -42,49 +42,10 @@ namespace LabBenchStudios.Pdt.Model
      */
     public static class ModelParserUtil
     {
-        public static string LoadDtdlFile(string pathName, string fileName)
-        {
-            if (!string.IsNullOrEmpty(pathName) && !string.IsNullOrEmpty(fileName))
-            {
-                if (Directory.Exists(pathName))
-                {
-                    string absFileName = Path.Combine(pathName, fileName);
-
-                    return LoadDtdlFile(absFileName);
-                }
-            }
-
-            return null;
-        }
-
-        public static string LoadDtdlFile(string fileName)
-        {
-            if (!string.IsNullOrEmpty(fileName))
-            {
-                try
-                {
-                    Console.WriteLine($"Attempting to load DTDL file: {fileName}");
-
-                    using (StreamReader streamReader = new StreamReader(fileName))
-                    {
-                        string jsonData = streamReader.ReadToEnd();
-
-                        return jsonData;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"DTDL file cannot be loaded: {fileName}. Exception: {ex}");
-                }
-            }
-            else
-            {
-                Console.WriteLine($"DTDL file is invalid (null or empty). Ignoring");
-            }
-
-            return null;
-        }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dtdlJson"></param>
         public static void DisplayDtdlItems(string dtdlJson)
         {
             ModelParser modelParser = new();
@@ -97,6 +58,11 @@ namespace LabBenchStudios.Pdt.Model
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
         public static bool IsValidDtdlJsonFile(string fileName)
         {
             string jsonData = LoadDtdlFile(fileName);
@@ -113,6 +79,11 @@ namespace LabBenchStudios.Pdt.Model
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="jsonData"></param>
+        /// <returns></returns>
         public static bool IsValidDtdlJsonData(string jsonData)
         {
             if (!string.IsNullOrEmpty(jsonData))
@@ -138,8 +109,13 @@ namespace LabBenchStudios.Pdt.Model
             return false;
         }
 
-        // NOTE: The order of the list doesn't matter to the DTDL parser - all extended
-        // ID's simply need to be part of the IEnumerable passed to the parser
+        /// <summary>
+        /// NOTE: The order of the list doesn't matter to the DTDL parser - all extended
+        /// ID's simply need to be part of the IEnumerable passed to the parser
+        /// 
+        /// </summary>
+        /// <param name="jsonDataList"></param>
+        /// <returns></returns>
         public static bool IsValidDtdlJsonData(IEnumerable<string> jsonDataList)
         {
             if (jsonDataList != null && jsonDataList.Count() > 0)
@@ -205,6 +181,60 @@ namespace LabBenchStudios.Pdt.Model
             }
 
             return modelInterfaces;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pathName"></param>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public static string LoadDtdlFile(string pathName, string fileName)
+        {
+            if (!string.IsNullOrEmpty(pathName) && !string.IsNullOrEmpty(fileName))
+            {
+                if (Directory.Exists(pathName))
+                {
+                    string absFileName = Path.Combine(pathName, fileName);
+
+                    return LoadDtdlFile(absFileName);
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public static string LoadDtdlFile(string fileName)
+        {
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                try
+                {
+                    Console.WriteLine($"Attempting to load DTDL file: {fileName}");
+
+                    using (StreamReader streamReader = new StreamReader(fileName))
+                    {
+                        string jsonData = streamReader.ReadToEnd();
+
+                        return jsonData;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"DTDL file cannot be loaded: {fileName}. Exception: {ex}");
+                }
+            }
+            else
+            {
+                Console.WriteLine($"DTDL file is invalid (null or empty). Ignoring");
+            }
+
+            return null;
         }
 
         /// <summary>
