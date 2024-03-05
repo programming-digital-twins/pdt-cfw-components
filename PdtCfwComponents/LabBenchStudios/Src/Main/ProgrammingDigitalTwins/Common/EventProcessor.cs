@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using DTDLParser;
 using LabBenchStudios.Pdt.Common;
 using LabBenchStudios.Pdt.Data;
 using LabBenchStudios.Pdt.Model;
@@ -52,6 +53,10 @@ namespace LabBenchStudios.Pdt.Unity.Common
 
         private static EventProcessor _INSTANCE = CreateInstance();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         private static EventProcessor CreateInstance()
         {
             lock (_LOCK_OBJ)
@@ -76,6 +81,10 @@ namespace LabBenchStudios.Pdt.Unity.Common
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public static EventProcessor GetInstance()
         {
             return _INSTANCE;
@@ -91,14 +100,18 @@ namespace LabBenchStudios.Pdt.Unity.Common
 
         private DigitalTwinModelManager digitalTwinModelManager = null;
 
-        private Dictionary<string, DigitalTwinModelState> digitalTwinStateTable = null;
+        //private Dictionary<string, DigitalTwinModelState> digitalTwinStateTable = null;
         private Dictionary<string, ConnectionStateData> connectedStateTable = null;
 
         private HashSet<string> knownDeviceIDSet = null;
         private HashSet<string> testDeviceIDSet = null;
+        private HashSet<string> telemetryKeySet = null;
 
         // constructors
 
+        /// <summary>
+        /// 
+        /// </summary>
         private EventProcessor()
         {
             this.digitalTwinModelManager = new DigitalTwinModelManager();
@@ -106,9 +119,13 @@ namespace LabBenchStudios.Pdt.Unity.Common
             this.dataContextEventListenerList = new List<IDataContextEventListener>();
             this.systemStatusEventListenerList = new List<ISystemStatusEventListener>();
 
-            this.digitalTwinStateTable = new Dictionary<string, DigitalTwinModelState>();
+            //this.digitalTwinStateTable = new Dictionary<string, DigitalTwinModelState>();
             this.connectedStateTable = new Dictionary<string, ConnectionStateData>();
 
+            // telemetry keys
+            this.telemetryKeySet = new HashSet<string>();
+
+            // use these
             this.knownDeviceIDSet = new HashSet<string>();
             this.knownDeviceIDSet.Add(ConfigConst.PRODUCT_NAME);
 
@@ -117,35 +134,42 @@ namespace LabBenchStudios.Pdt.Unity.Common
             this.testDeviceIDSet.Add("UUID");
         }
 
-        // internal methods
-
-        /**
-        void OnDestroy()
-        {
-            _IS_TERMINATED = true;
-            _INSTANCE = null;
-        }
-        */
-        
 
         // public methods
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public void ClearAllListeners()
         {
             this.dataContextEventListenerList.Clear();
             this.systemStatusEventListenerList.Clear();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public string GetGuid()
         {
             return _GUID;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public List<string> GetAllKnownDeviceIDs()
         {
             return this.knownDeviceIDSet.ToList();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="deviceID"></param>
+        /// <returns></returns>
         public ConnectionStateData GetConnectionState(string deviceID)
         {
             if (this.connectedStateTable.ContainsKey(deviceID))
@@ -158,16 +182,29 @@ namespace LabBenchStudios.Pdt.Unity.Common
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public DigitalTwinModelManager GetDigitalTwinModelManager()
         {
             return this.digitalTwinModelManager;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public bool LoadDigitalTwinModels()
         {
             return this.LoadDigitalTwinModels(ModelNameUtil.DEFAULT_MODEL_FILE_PATH);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="modelFilePath"></param>
+        /// <returns></returns>
         public bool LoadDigitalTwinModels(string modelFilePath)
         {
             if (this.digitalTwinModelManager != null)
@@ -183,19 +220,27 @@ namespace LabBenchStudios.Pdt.Unity.Common
             return false;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dtModelState"></param>
         public void RegisterDigitalTwin(DigitalTwinModelState dtModelState)
         {
             if (dtModelState != null)
             {
                 string modelID = dtModelState.GetModelID();
 
-                if (!this.digitalTwinStateTable.ContainsKey(modelID))
-                {
-                    this.digitalTwinStateTable.Add(dtModelState.GetModelID(), dtModelState);
-                }
+                //if (!this.digitalTwinStateTable.ContainsKey(modelID))
+                //{
+                //    this.digitalTwinStateTable.Add(dtModelState.GetModelID(), dtModelState);
+                //}
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="listener"></param>
         public void RegisterListener(IDataContextEventListener listener)
         {
             if (listener != null)
@@ -204,6 +249,10 @@ namespace LabBenchStudios.Pdt.Unity.Common
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="listener"></param>
         public void RegisterListener(ISystemStatusEventListener listener)
         {
             if (listener != null)
@@ -212,6 +261,10 @@ namespace LabBenchStudios.Pdt.Unity.Common
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cmdProcessor"></param>
         public void SetRemoteCommandProcessor(IRemoteStateProcessor cmdProcessor)
         {
             // can only be set once - it's expected the SystemManager will
@@ -222,6 +275,10 @@ namespace LabBenchStudios.Pdt.Unity.Common
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
         public void LogDebugMessage(string message)
         {
             if (! string.IsNullOrEmpty(message))
@@ -236,6 +293,10 @@ namespace LabBenchStudios.Pdt.Unity.Common
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
         public void LogWarningMessage(string message)
         {
             if (!string.IsNullOrEmpty(message))
@@ -250,6 +311,11 @@ namespace LabBenchStudios.Pdt.Unity.Common
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="ex"></param>
         public void LogErrorMessage(string message, Exception ex)
         {
             if (!string.IsNullOrEmpty(message))
@@ -264,26 +330,28 @@ namespace LabBenchStudios.Pdt.Unity.Common
             }
         }
 
+        /// <summary>
+        /// Update the digital twin's telemetry from the incoming
+        /// IotDataContext - this will use the typeID to lookup
+        /// the appropriate DTMI and associated DigitalTwinModelState
+        /// and invoke its HandleIncomingTelemetry method
+        /// </summary>
+        /// <param name="data"></param>
         public void OnMessagingSystemDataReceived(ActuatorData data)
         {
-            // update the digital twin's telemetry from the incoming
-            // IotDataContext - this will use the typeID to lookup
-            // the appropriate DTMI and associated DigitalTwinModelState
-            // and invoke its HandleIncomingTelemetry method
             if (data != null)
             {
-                this.UpdateDeviceIDSet(data);
-                this.UpdateConnectionStateCache(data);
+                this.UpdateInternalState(data);
 
-                string dtmi = ModelNameUtil.GetModelID(data.GetTypeID());
+                //string dtmi = ModelNameUtil.GetModelID(data.GetTypeID());
 
-                if (this.digitalTwinStateTable.ContainsKey(dtmi))
-                {
-                    DigitalTwinModelState dtModelState = this.digitalTwinStateTable[dtmi];
-                    dtModelState.HandleIncomingTelemetry(data);
-                }
+                //if (this.digitalTwinStateTable.ContainsKey(dtmi))
+                //{
+                //    DigitalTwinModelState dtModelState = this.digitalTwinStateTable[dtmi];
+                //    dtModelState.HandleIncomingTelemetry(data);
+                //}
 
-                if (this.systemStatusEventListenerList.Count > 0)
+                if (this.dataContextEventListenerList.Count > 0)
                 {
                     foreach (var listener in this.dataContextEventListenerList)
                     {
@@ -293,24 +361,26 @@ namespace LabBenchStudios.Pdt.Unity.Common
             }
         }
 
+        /// <summary>
+        /// Update the digital twin's telemetry from the incoming
+        /// IotDataContext - this will use the typeID to lookup
+        /// the appropriate DTMI and associated DigitalTwinModelState
+        /// and invoke its HandleIncomingTelemetry method
+        /// </summary>
+        /// <param name="data"></param>
         public void OnMessagingSystemDataReceived(ConnectionStateData data)
         {
-            // update the digital twin's telemetry from the incoming
-            // IotDataContext - this will use the typeID to lookup
-            // the appropriate DTMI and associated DigitalTwinModelState
-            // and invoke its HandleIncomingTelemetry method
             if (data != null)
             {
-                this.UpdateDeviceIDSet(data);
-                this.UpdateConnectionStateCache(data);
+                this.UpdateInternalState(data);
 
-                string dtmi = ModelNameUtil.GetModelID(data.GetTypeID());
+                //string dtmi = ModelNameUtil.GetModelID(data.GetTypeID());
 
-                if (this.digitalTwinStateTable.ContainsKey(dtmi))
-                {
-                    DigitalTwinModelState dtModelState = this.digitalTwinStateTable[dtmi];
-                    dtModelState.HandleIncomingTelemetry(data);
-                }
+                //if (this.digitalTwinStateTable.ContainsKey(dtmi))
+                //{
+                //    DigitalTwinModelState dtModelState = this.digitalTwinStateTable[dtmi];
+                //    dtModelState.HandleIncomingTelemetry(data);
+                //}
 
                 if (this.systemStatusEventListenerList.Count > 0)
                 {
@@ -322,26 +392,28 @@ namespace LabBenchStudios.Pdt.Unity.Common
             }
         }
 
+        /// <summary>
+        /// Update the digital twin's telemetry from the incoming
+        /// IotDataContext - this will use the typeID to lookup
+        /// the appropriate DTMI and associated DigitalTwinModelState
+        /// and invoke its HandleIncomingTelemetry method
+        /// </summary>
+        /// <param name="data"></param>
         public void OnMessagingSystemDataReceived(SensorData data)
         {
-            // update the digital twin's telemetry from the incoming
-            // IotDataContext - this will use the typeID to lookup
-            // the appropriate DTMI and associated DigitalTwinModelState
-            // and invoke its HandleIncomingTelemetry method
             if (data != null)
             {
-                this.UpdateDeviceIDSet(data);
-                this.UpdateConnectionStateCache(data);
+                this.UpdateInternalState(data);
 
-                string dtmi = ModelNameUtil.GetModelID(data.GetTypeID());
+                //string dtmi = ModelNameUtil.GetModelID(data.GetTypeID());
 
-                if (this.digitalTwinStateTable.ContainsKey(dtmi))
-                {
-                    DigitalTwinModelState dtModelState = this.digitalTwinStateTable[dtmi];
-                    dtModelState.HandleIncomingTelemetry(data);
-                }
+                //if (this.digitalTwinStateTable.ContainsKey(dtmi))
+                //{
+                //    DigitalTwinModelState dtModelState = this.digitalTwinStateTable[dtmi];
+                //    dtModelState.HandleIncomingTelemetry(data);
+                //}
 
-                if (this.systemStatusEventListenerList.Count > 0)
+                if (this.dataContextEventListenerList.Count > 0)
                 {
                     foreach (var listener in this.dataContextEventListenerList)
                     {
@@ -351,26 +423,28 @@ namespace LabBenchStudios.Pdt.Unity.Common
             }
         }
 
+        /// <summary>
+        /// Update the digital twin's telemetry from the incoming
+        /// IotDataContext - this will use the typeID to lookup
+        /// the appropriate DTMI and associated DigitalTwinModelState
+        /// and invoke its HandleIncomingTelemetry method
+        /// </summary>
+        /// <param name="data"></param>
         public void OnMessagingSystemDataReceived(SystemPerformanceData data)
         {
-            // update the digital twin's telemetry from the incoming
-            // IotDataContext - this will use the typeID to lookup
-            // the appropriate DTMI and associated DigitalTwinModelState
-            // and invoke its HandleIncomingTelemetry method
             if (data != null)
             {
-                this.UpdateDeviceIDSet(data);
-                this.UpdateConnectionStateCache(data);
+                this.UpdateInternalState(data);
 
-                string dtmi = ModelNameUtil.GetModelID(data.GetTypeID());
+                //string dtmi = ModelNameUtil.GetModelID(data.GetTypeID());
 
-                if (this.digitalTwinStateTable.ContainsKey(dtmi))
-                {
-                    DigitalTwinModelState dtModelState = this.digitalTwinStateTable[dtmi];
-                    dtModelState.HandleIncomingTelemetry(data);
-                }
+                //if (this.digitalTwinStateTable.ContainsKey(dtmi))
+                //{
+                //    DigitalTwinModelState dtModelState = this.digitalTwinStateTable[dtmi];
+                //    dtModelState.HandleIncomingTelemetry(data);
+                //}
 
-                if (this.systemStatusEventListenerList.Count > 0)
+                if (this.dataContextEventListenerList.Count > 0)
                 {
                     foreach (var listener in this.dataContextEventListenerList)
                     {
@@ -380,6 +454,10 @@ namespace LabBenchStudios.Pdt.Unity.Common
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
         public void OnMessagingSystemDataSent(ConnectionStateData data)
         {
             if (data != null)
@@ -394,12 +472,15 @@ namespace LabBenchStudios.Pdt.Unity.Common
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
         public void OnMessagingSystemStatusUpdate(ConnectionStateData data)
         {
             if (data != null)
             {
-                this.UpdateDeviceIDSet(data);
-                this.UpdateConnectionStateCache(data);
+                this.UpdateInternalState(data);
 
                 if (this.systemStatusEventListenerList.Count > 0)
                 {
@@ -411,6 +492,9 @@ namespace LabBenchStudios.Pdt.Unity.Common
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void OnModelUpdateEvent()
         {
             if (this.systemStatusEventListenerList.Count > 0)
@@ -422,6 +506,11 @@ namespace LabBenchStudios.Pdt.Unity.Common
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <returns></returns>
         public bool ProcessStateUpdateToPhysicalThing(ResourceNameContainer resource)
         {
             if (this.remoteStateProcessor != null)
@@ -437,6 +526,10 @@ namespace LabBenchStudios.Pdt.Unity.Common
             return false;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="enable"></param>
         public void ProcessLiveDataFeedEngageRequest(bool enable)
         {
             if (this.remoteStateProcessor != null)
@@ -450,6 +543,10 @@ namespace LabBenchStudios.Pdt.Unity.Common
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="enable"></param>
         public void ProcessSimulatedDataFeedEngageRequest(bool enable)
         {
             if (this.remoteStateProcessor != null)
@@ -465,6 +562,25 @@ namespace LabBenchStudios.Pdt.Unity.Common
 
 
         // private methods
+
+        /// <summary>
+        /// Updates the internal caches that contain information such
+        /// as the current list of device ID's (connected devices),
+        /// the connection status for each, and the telemetry keys
+        /// (generated) for mapping incoming data unique ID's to any
+        /// registered Digital Twins.
+        /// </summary>
+        /// <param name="data"></param>
+        private void UpdateInternalState(IotDataContext data)
+        {
+            // update internal caches
+            this.UpdateDeviceIDSet(data);
+            this.UpdateConnectionStateCache(data);
+            this.UpdateTelemetryKeyCache(data);
+
+            // notify DT model manager of the data update
+            this.digitalTwinModelManager.HandleIncomingTelemetry(data);
+        }
 
         /// <summary>
         /// This simply adds the contained Device ID within IotDataContext
@@ -531,6 +647,26 @@ namespace LabBenchStudios.Pdt.Unity.Common
             }
         }
 
-    }
-}
+        /// <summary>
+        /// Updates the internal telemetry key name set with this incoming
+        /// message's telemetry key if it doesn't already exist in the cache.
+        /// </summary>
+        /// <param name="data"></param>
+        private void UpdateTelemetryKeyCache(IotDataContext data)
+        {
+            if (data != null)
+            {
+                DigitalTwinTelemetryKey key = ModelNameUtil.GenerateTelemetrySyncKey(data);
 
+                string keyName = key.ToString();
+
+                if (!this.telemetryKeySet.Contains(keyName))
+                {
+                    this.telemetryKeySet.Add(keyName);
+                }
+            }
+        }
+
+    }
+
+}

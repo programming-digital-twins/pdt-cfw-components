@@ -23,7 +23,7 @@
 		<PackageReference Include="MQTTnet" Version="4.3.3.952" />
 		<PackageReference Include="MQTTnet.Extensions.ManagedClient" Version="4.3.3.952" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="NUnit" Version="4.0.1" />
+		<PackageReference Include="NUnit" Version="4.1.0" />
 		<PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
 		<PackageReference Include="NUnit.Analyzers" Version="4.0.1">
 		  <PrivateAssets>all</PrivateAssets>
