@@ -350,16 +350,16 @@ namespace LabBenchStudios.Pdt.Model
             StringBuilder sb = new StringBuilder();
 
             sb.Append(name.Trim())
-                .Append(':')
+                .Append('_')
                 .Append(modelID.Trim());
 
             if (useGuid)
             {
-                sb.Append(':').Append(System.Guid.NewGuid().ToString());
+                sb.Append('_').Append(System.Guid.NewGuid().ToString());
             }
             else
             {
-                sb.Append(':').Append(ConfigConst.PRODUCT_NAME);
+                sb.Append('_').Append(ConfigConst.PRODUCT_NAME);
             }
 
             return sb.ToString();
@@ -377,31 +377,40 @@ namespace LabBenchStudios.Pdt.Model
             switch(controllerID)
             {
                 case DtmiControllerEnum.Barometer:
-                    modelName = BAROMETER_NAME; break;
+                    modelName = BAROMETER_NAME;
+                    break;
                     
                 case DtmiControllerEnum.EdgeComputingDevice:
-                    modelName = EDGE_COMPUTE_DEVICE_NAME; break;
+                    modelName = EDGE_COMPUTE_DEVICE_NAME;
+                    break;
 
                 case DtmiControllerEnum.FluidPump:
-                    modelName = FLUID_PUMP_NAME; break;
+                    modelName = FLUID_PUMP_NAME;
+                    break;
 
                 case DtmiControllerEnum.HeatingSystem:
-                    modelName = HEATING_SYSTEM_NAME; break;
+                    modelName = HEATING_SYSTEM_NAME;
+                    break;
 
                 case DtmiControllerEnum.Humidifier:
-                    modelName = HUMIDIFIER_NAME; break;
+                    modelName = HUMIDIFIER_NAME;
+                    break;
 
                 case DtmiControllerEnum.Thermostat:
-                    modelName = THERMOSTAT_NAME; break;
+                    modelName = THERMOSTAT_NAME;
+                    break;
 
                 case DtmiControllerEnum.InteriorRoom:
-                    modelName = INTERIOR_ROOM_NAME; break;
+                    modelName = INTERIOR_ROOM_NAME;
+                    break;
 
                 case DtmiControllerEnum.PowerWindmill:
-                    modelName = POWER_WINDMILL_NAME; break;
+                    modelName = POWER_WINDMILL_NAME;
+                    break;
 
                 case DtmiControllerEnum.ResidentialStructure:
-                    modelName = RESIDENTIAL_STRUCTURE_NAME; break;
+                    modelName = RESIDENTIAL_STRUCTURE_NAME;
+                    break;
 
                 case DtmiControllerEnum.Custom:
                     return $"{DTMI_NAME}:{ORG_NAME_PLACEHOLDER}:{PRODUCT_NAME_PLACEHOLDER}:{MODEL_NAME_PLACEHOLDER};{version}";
@@ -460,31 +469,44 @@ namespace LabBenchStudios.Pdt.Model
             switch (typeID)
             {
                 case ConfigConst.FLUID_RATE_SENSOR_TYPE:
-                    modelID = ModelNameUtil.FLUID_PUMP_CONTROLLER_MODEL_ID; break;
+                    modelID = ModelNameUtil.FLUID_PUMP_CONTROLLER_MODEL_ID;
+                    break;
 
                 case ConfigConst.HUMIDIFIER_ACTUATOR_TYPE:
-                    modelID = ModelNameUtil.HUMIDIFIER_CONTROLLER_MODEL_ID; break;
+                    modelID = ModelNameUtil.HUMIDIFIER_CONTROLLER_MODEL_ID;
+                    break;
 
                 case ConfigConst.HVAC_ACTUATOR_TYPE:
-                    modelID = ModelNameUtil.THERMOSTAT_CONTROLLER_MODEL_ID; break;
+                    modelID = ModelNameUtil.THERMOSTAT_CONTROLLER_MODEL_ID;
+                    break;
 
                 case ConfigConst.SYSTEM_PERF_TYPE:
-                    modelID = ModelNameUtil.DEVICE_SYS_PERF_COMPONENT_MODEL_ID; break;
+                    modelID = ModelNameUtil.DEVICE_SYS_PERF_COMPONENT_MODEL_ID;
+                    break;
 
                 case ConfigConst.HUMIDITY_SENSOR_TYPE:
-                    modelID = ModelNameUtil.ENV_SENSORS_COMPONENT_MODEL_ID; break;
+                    modelID = ModelNameUtil.ENV_SENSORS_COMPONENT_MODEL_ID;
+                    break;
 
                 case ConfigConst.TEMP_SENSOR_TYPE:
-                    modelID = ModelNameUtil.ENV_SENSORS_COMPONENT_MODEL_ID; break;
+                    modelID = ModelNameUtil.ENV_SENSORS_COMPONENT_MODEL_ID;
+                    break;
 
                 case ConfigConst.PRESSURE_SENSOR_TYPE:
-                    modelID = ModelNameUtil.ENV_SENSORS_COMPONENT_MODEL_ID; break;
+                    modelID = ModelNameUtil.ENV_SENSORS_COMPONENT_MODEL_ID;
+                    break;
+
+                case ConfigConst.HEATING_SYSTEM_TYPE:
+                    modelID = ModelNameUtil.HEATING_SYSTEM_CONTEXT_MODEL_ID;
+                    break;
 
                 case ConfigConst.WIND_SYSTEM_TYPE:
-                    modelID = ModelNameUtil.POWER_WINDMILL_CONTROLLER_MODEL_ID; break;
+                    modelID = ModelNameUtil.POWER_WINDMILL_CONTROLLER_MODEL_ID;
+                    break;
 
                 default:
-                    modelID = ModelNameUtil.IOT_MODEL_CONTEXT_MODEL_ID; break;
+                    modelID = ModelNameUtil.IOT_MODEL_CONTEXT_MODEL_ID;
+                    break;
             }
 
             return modelID;

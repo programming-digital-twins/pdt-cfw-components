@@ -113,21 +113,21 @@ namespace LabBenchStudios.Pdt.Model
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="telemetryKey"></param>
-        /// <param name="instanceKey"></param>
+        /// <param name="dataSyncKey"></param>
+        /// <param name="modelSyncKey"></param>
         public void AssignTelemetryKeyToModel(
-            string telemetryKey,
-            string instanceKey)
+            string dataSyncKey,
+            string modelSyncKey)
         {
-            if (! string.IsNullOrEmpty(telemetryKey) && ! string.IsNullOrEmpty(instanceKey))
+            if (! string.IsNullOrEmpty(dataSyncKey) && ! string.IsNullOrEmpty(modelSyncKey))
             {
-                if (this.modelToTelemetryKeyMap.ContainsKey(telemetryKey))
+                if (this.modelToTelemetryKeyMap.ContainsKey(dataSyncKey))
                 {
-                    this.modelToTelemetryKeyMap[telemetryKey] = instanceKey;
+                    this.modelToTelemetryKeyMap[dataSyncKey] = modelSyncKey;
                 }
                 else
                 {
-                    this.modelToTelemetryKeyMap.Add(telemetryKey, instanceKey);
+                    this.modelToTelemetryKeyMap.Add(dataSyncKey, modelSyncKey);
                 }
             }
         }
@@ -164,10 +164,15 @@ namespace LabBenchStudios.Pdt.Model
         {
             var dtModelState = new DigitalTwinModelState(dataSyncKey);
 
-            dtModelState.SetModelControllerID(controllerID);
-            dtModelState.SetRawModelJson(this.GetRawModelJson(controllerID));
-            dtModelState.SetVirtualAssetListener(stateUpdateListener);
-            dtModelState.InitInstanceKey();
+            dtModelState
+                .SetModelControllerID(controllerID)
+                .SetRawModelJson(this.GetRawModelJson(controllerID))
+                .SetVirtualAssetListener(stateUpdateListener);
+
+            dtModelState.BuildModelData();
+            dtModelState.BuildInstanceKey();
+
+            this.UpdateModelStateProperties(dtModelState);
 
             string instanceKey = dtModelState.GetInstanceSyncKey();
 
@@ -225,12 +230,15 @@ namespace LabBenchStudios.Pdt.Model
         {
             var dtModelState = new DigitalTwinModelState(deviceID, locationID);
 
-            dtModelState.SetConnectedDeviceID(deviceID);
-            dtModelState.SetConnectedDeviceLocation(locationID);
-            dtModelState.SetModelControllerID(controllerID);
-            dtModelState.SetRawModelJson(this.GetRawModelJson(controllerID));
-            dtModelState.SetVirtualAssetListener(stateUpdateListener);
-            dtModelState.InitInstanceKey();
+            dtModelState
+                .SetConnectedDeviceID(deviceID)
+                .SetConnectedDeviceLocation(locationID)
+                .SetModelControllerID(controllerID)
+                .SetRawModelJson(this.GetRawModelJson(controllerID))
+                .SetVirtualAssetListener(stateUpdateListener);
+            
+            dtModelState.BuildModelData();
+            dtModelState.BuildInstanceKey();
 
             this.UpdateModelStateProperties(dtModelState);
 
@@ -245,7 +253,10 @@ namespace LabBenchStudios.Pdt.Model
             }
             else
             {
-                Console.WriteLine($"Created / cached DigitalTwinModelState with instance key {instanceKey}");
+                Console.WriteLine(
+                    "Created / cached DigitalTwinModelState." +
+                    $"\n\tModel Sync Key: {instanceKey}" +
+                    $"\n\tModel ID: {dtModelState.GetModelID()}");
 
                 this.digitalTwinStateCache.Add(instanceKey, dtModelState);
             }
@@ -455,7 +466,7 @@ namespace LabBenchStudios.Pdt.Model
         /// (or reload) this state objects respective model.
         /// </summary>
         /// <returns></returns>
-        public bool ReloadModelData()
+        public bool BuildModelData()
         {
             if (!string.IsNullOrEmpty(this.modelFilePath) && Directory.Exists(modelFilePath))
             {
@@ -524,10 +535,8 @@ namespace LabBenchStudios.Pdt.Model
             if (this.digitalTwinInterfaceCache == null)
             {
                 Console.WriteLine($"Failed to load DTDL models from path {this.modelFilePath}");
-            }
-            else
-            {
-                success = true;
+
+                return false;
             }
 
             // update DTDL JSON cache
@@ -540,6 +549,8 @@ namespace LabBenchStudios.Pdt.Model
                 string fileName = ModelNameUtil.GetModelFileName(dtmiController);
 
                 string dtdlJson = ModelParserUtil.LoadDtdlFile(this.modelFilePath, fileName);
+
+                Console.WriteLine($"  -> DTMI URI: {dtmiUri}. Loaded file: {fileName}");
 
                 if (!string.IsNullOrEmpty(dtdlJson))
                 {
@@ -567,6 +578,8 @@ namespace LabBenchStudios.Pdt.Model
 
                 if (dtState != null)
                 {
+                    Console.WriteLine($"Retrieved DT Model State {key} with ID {dtState.GetModelID()}");
+
                     string rawJson = this.GetRawModelJson(dtState.GetModelControllerID());
 
                     dtState.SetRawModelJson(rawJson);
@@ -633,6 +646,9 @@ namespace LabBenchStudios.Pdt.Model
                         prop.SetAsEnabled(true);
                         prop.SetAsTelemetry(false);
                         prop.SetAsWriteable(dtdlProp.Writable);
+
+                        Console.WriteLine($"Adding property to state {prop}");
+                        modelState.AddModelProperty(prop);
                     }
 
                     IReadOnlyDictionary<string, DTTelemetryInfo> telemetryEntries = interfaceInfo.Telemetries;
@@ -647,7 +663,18 @@ namespace LabBenchStudios.Pdt.Model
                         telemetry.SetDetail(dtdlTelemetry.ToString());
                         telemetry.SetAsEnabled(true);
                         telemetry.SetAsTelemetry(true);
+
+                        Console.WriteLine($"Adding telemetry to state {telemetry}");
+                        modelState.AddModelProperty(telemetry);
                     }
+
+                    Console.WriteLine($"\n\n=====\n{modelState.GetRawModelJson()}\n\n=====\n");
+                    Console.WriteLine(
+                        $"\nLoaded interface for model:" +
+                        $"\n -> Model ID: {modelState.GetModelID()}" +
+                        $"\n -> Data Sync Key: {modelState.GetDataSyncKey()}" +
+                        $"\n -> Model Sync Key: {modelState.GetInstanceSyncKey()}");
+
                 }
                 else
                 {

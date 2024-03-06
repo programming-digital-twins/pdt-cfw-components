@@ -193,6 +193,10 @@ namespace LabBenchStudios.Pdt.Common
         public const int FLUID_RATE_SENSOR_TYPE = 1021;
         public const int IMPELLER_RPM_SENSOR_TYPE = 1022;
 
+        public const int UTILITY_SYSTEM_TYPE_CATEGORY = 2000;
+        public const int HEATING_SYSTEM_TYPE = 2001;
+        public const int POWER_WINDMILL_SYSTEM_TYPE = 2002;
+
         public static readonly string HUMIDIFIER_NAME = "Humidifier";
         public static readonly string THERMOSTAT_NAME = "Thermostat";
         public static readonly string PRESSURE_NAME = "BarometricPressure";

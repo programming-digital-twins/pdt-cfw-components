@@ -169,8 +169,8 @@ namespace LabBenchStudios.Pdt.Model
                     switch (entityInfo.EntityKind)
                     {
                         case DTEntityKind.Interface:
-                            Console.WriteLine($" --> DTInterfaceInfo DTMI: {dtmi.AbsoluteUri}");
                             modelInterfaces.Add(dtmi.AbsoluteUri, (DTInterfaceInfo) entityInfo);
+                            Console.WriteLine($" --> DTInterfaceInfo DTMI: {dtmi.AbsoluteUri}. Count: {modelInterfaces.Count}");
                             break;
                     }
                 }
@@ -215,7 +215,7 @@ namespace LabBenchStudios.Pdt.Model
             {
                 try
                 {
-                    Console.WriteLine($"Attempting to load DTDL file: {fileName}");
+                    Console.WriteLine($"Loading DTDL file: {fileName}");
 
                     using (StreamReader streamReader = new StreamReader(fileName))
                     {

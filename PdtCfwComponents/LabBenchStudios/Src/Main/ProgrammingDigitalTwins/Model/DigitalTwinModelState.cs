@@ -87,6 +87,7 @@ namespace LabBenchStudios.Pdt.Model
             if (dataSyncKey != null)
             {
                 this.dataSyncKey = dataSyncKey;
+                base.SetName(dataSyncKey.GetName());
                 base.SetDeviceID(this.dataSyncKey.GetDeviceID());
                 base.SetLocationID(this.dataSyncKey.GetLocationID());
             }
@@ -166,6 +167,38 @@ namespace LabBenchStudios.Pdt.Model
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Safe for external entities to call, as the internal generation
+        /// of an instance key will yield a consistent result.
+        /// 
+        /// This must be invoked for an instance key to be generated, however.
+        /// </summary>
+        public void BuildInstanceKey()
+        {
+            // both calls should generate the same Model ID (DTMI URI)
+            this.modelID = ModelNameUtil.CreateModelID(this.modelControllerID);
+            //this.modelID = ModelNameUtil.GetModelID(base.GetTypeID());
+
+            this.modelSyncKey = new DigitalTwinModelSyncKey(this.GetName(), this.modelID);
+            this.instanceKey = this.modelSyncKey.ToString();
+        }
+
+        /// <summary>
+        /// This will simply re-parse the stored raw JSON data.
+        /// This is typically invoked internally after the JSON
+        /// is set via SetRawModelJson(); however, it can be
+        /// called to re-generate any internal structures,
+        /// which can be useful when the state instance itself
+        /// needs to reset.
+        /// </summary>
+        /// <returns></returns>
+        public bool BuildModelData()
+        {
+            // TODO: implement this - parse the DTDL and
+            // instance all properties / relationships
+            return true;
         }
 
         /// <summary>
@@ -430,117 +463,92 @@ namespace LabBenchStudios.Pdt.Model
         }
 
         /// <summary>
-        /// Safe for external entities to call, as the internal generation
-        /// of an instance key will yield a consistent result.
-        /// 
-        /// This must be invoked for an instance key to be generated, however.
-        /// </summary>
-        public void InitInstanceKey()
-        {
-            this.modelSyncKey = new DigitalTwinModelSyncKey(this.GetName(), this.modelID);
-            this.instanceKey = this.modelSyncKey.ToString();
-
-            /*
-            this.instanceKey =
-                useGuid ?
-                    ModelNameUtil.CreateModelDataSyncKey(this.GetDeviceID(), this.GetLocationID(), this.GetModelGUID()) :
-                    ModelNameUtil.CreateModelDataSyncKey(this.GetDeviceID(), this.GetLocationID());
-            */
-
-            Console.WriteLine($"DT model state instance key generated: {this.instanceKey}");
-        }
-
-        /// <summary>
-        /// This will simply re-parse the stored raw JSON data.
-        /// This is typically invoked internally after the JSON
-        /// is set via SetRawModelJson(); however, it can be
-        /// called to re-generate any internal structures,
-        /// which can be useful when the state instance itself
-        /// needs to reset.
-        /// </summary>
-        /// <returns></returns>
-        public bool ReloadModelData()
-        {
-            // TODO: implement this - parse the DTDL and
-            // instance all properties / relationships
-            return true;
-        }
-
-        /// <summary>
         /// 
         /// </summary>
         /// <param name="deviceID"></param>
-        public void SetConnectedDeviceID(string deviceID)
+        public DigitalTwinModelState SetConnectedDeviceID(string deviceID)
         {
             // base class will handle validation of the name
             base.SetDeviceID(deviceID);
+
+            return this;
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="locationID"></param>
-        public void SetConnectedDeviceLocation(string locationID)
+        public DigitalTwinModelState SetConnectedDeviceLocation(string locationID)
         {
             // base class will handle validation of the name
             base.SetLocationID(locationID);
+
+            return this;
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="controllerID"></param>
-        public void SetModelControllerID(ModelNameUtil.DtmiControllerEnum controllerID)
+        public DigitalTwinModelState SetModelControllerID(ModelNameUtil.DtmiControllerEnum controllerID)
         {
             this.modelControllerID = controllerID;
+
+            return this;
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="modelState"></param>
-        public void SetParentStateRef(DigitalTwinModelState modelState)
+        public DigitalTwinModelState SetParentStateRef(DigitalTwinModelState modelState)
         {
             if (modelState != null)
             {
                 this.parentState = modelState;
                 this.hasParent = true;
             }
+
+            return this;
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="json"></param>
-        public void SetRawModelJson(string json)
+        public DigitalTwinModelState SetRawModelJson(string json)
         {
             this.rawModelJson = json;
 
-            this.ReloadModelData();
+            return this;
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="key"></param>
-        public void SetDataSyncKey(DigitalTwinDataSyncKey key)
+        public DigitalTwinModelState SetDataSyncKey(DigitalTwinDataSyncKey key)
         {
             if (key != null)
             {
                 this.dataSyncKey = key;
             }
+
+            return this;
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="listener"></param>
-        public void SetVirtualAssetListener(IDataContextEventListener listener)
+        public DigitalTwinModelState SetVirtualAssetListener(IDataContextEventListener listener)
         {
             if (listener != null)
             {
                 this.virtualAssetListener = listener;
             }
+
+            return this;
         }
 
         /// <summary>
@@ -567,11 +575,7 @@ namespace LabBenchStudios.Pdt.Model
             this.modelProperties = new Dictionary<string, DigitalTwinProperty>();
             this.attachedComponents = new Dictionary<string, DigitalTwinModelState>();
             
-            // both calls should generate the same Model ID (DTMI URI)
-            this.modelID = ModelNameUtil.CreateModelID(this.modelControllerID);
-            //this.modelID = ModelNameUtil.GetModelID(base.GetTypeID());
-
-            this.InitInstanceKey();
+            this.BuildInstanceKey();
         }
 
     }

@@ -25,7 +25,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-
+using LabBenchStudios.Pdt.Common;
+using LabBenchStudios.Pdt.Data;
 using LabBenchStudios.Pdt.Model;
 
 namespace LabBenchStudios.Pdt.Test.Data
@@ -41,14 +42,38 @@ namespace LabBenchStudios.Pdt.Test.Data
         public void Setup()
         {
             this.dtModelManager = new DigitalTwinModelManager(DTDL_TEST_MODEL_FILEPATH);
+            this.dtModelManager.BuildModelData();
         }
 
         [Test]
         public void DisplayDtmiKeysFromLoadedDtdl()
         {
-            this.dtModelManager.ReloadModelData();
             string dtmiAggregateString = string.Join("\n", dtModelManager.GetAllDtmiValues());
             Console.WriteLine(dtmiAggregateString);
+        }
+
+        [Test]
+        public void CreateDigitalTwinHeatingSystemState()
+        {
+            SensorData iotData =
+                new SensorData(
+                    "test", "testDevice001",
+                    ConfigConst.UTILITY_SYSTEM_TYPE_CATEGORY, ConfigConst.HEATING_SYSTEM_TYPE);
+
+            iotData.SetLocationID("testDevice001_LocationA");
+
+            Console.WriteLine($"IoT Data Context: {iotData.ToString()}");
+
+            DigitalTwinDataSyncKey dataSyncKey = new DigitalTwinDataSyncKey(iotData);
+
+            Console.WriteLine($"DT Data Sync Key: {dataSyncKey.ToString()}");
+
+            DigitalTwinModelState dtState =
+                this.dtModelManager.CreateModelState(
+                    dataSyncKey,
+                    ModelNameUtil.DtmiControllerEnum.HeatingSystem, null);
+
+            Console.WriteLine($"DT Model State: {dtState.ToString()}");
         }
 
     }

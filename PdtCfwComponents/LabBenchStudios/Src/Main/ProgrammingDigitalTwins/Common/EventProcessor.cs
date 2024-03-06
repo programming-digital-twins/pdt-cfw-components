@@ -211,7 +211,7 @@ namespace LabBenchStudios.Pdt.Unity.Common
             {
                 if (this.digitalTwinModelManager.SetModelFilePath(modelFilePath))
                 {
-                    return this.digitalTwinModelManager.ReloadModelData();
+                    return this.digitalTwinModelManager.BuildModelData();
                 }
             }
 

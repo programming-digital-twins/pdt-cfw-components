@@ -44,6 +44,8 @@ namespace LabBenchStudios.Pdt.Model
     [JsonObject(MemberSerialization.OptIn)]
     public class DigitalTwinProperty
     {
+        private bool usePrettyPrint = true;
+
         private string name = ConfigConst.NOT_SET;
         private string displayName = ConfigConst.NOT_SET;
         private string description = ConfigConst.NOT_SET;
@@ -209,6 +211,27 @@ namespace LabBenchStudios.Pdt.Model
         {
             StringBuilder sb = new StringBuilder(base.ToString());
 
+            String lfString = "\n";
+
+            if (! this.usePrettyPrint)
+            {
+                lfString = "";
+            }
+
+            if (this.usePrettyPrint)
+            {
+                sb.Append(lfString).Append("----------");
+            }
+
+            sb
+              .Append(lfString).Append("name").Append('=').Append(this.name).Append(';')
+              .Append(lfString).Append("displayName").Append('=').Append(this.displayName).Append(';')
+              .Append(lfString).Append("description").Append('=').Append(this.description).Append(';')
+              .Append(lfString).Append("detail").Append('=').Append(this.detail).Append(';')
+              .Append(lfString).Append("values").Append('=').Append(this.propertyValues).Append(';')
+              .Append(lfString).Append("isEnabled").Append('=').Append(this.isEnabled).Append(';')
+              .Append(lfString).Append("isWriteable").Append('=').Append(this.isWriteable).Append(';')
+              .Append(lfString).Append("isTelemetry").Append('=').Append(this.isTelemetry);
 
             return sb.ToString();
         }
