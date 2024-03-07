@@ -50,12 +50,12 @@ namespace LabBenchStudios.Pdt.Model
         private DigitalTwinModelSyncKey modelSyncKey = null;
         private DigitalTwinDataSyncKey dataSyncKey = null;
 
-        private string instanceKey = null;
+        private string modelSyncKeyStr = null;
 
         private Dictionary<string, DigitalTwinProperty> modelProperties;
         private Dictionary<string, DigitalTwinModelState> attachedComponents;
 
-        private ModelNameUtil.DtmiControllerEnum modelControllerID;
+        private ModelNameUtil.DtmiControllerEnum controllerID;
 
         private string rawModelJson = null;
 
@@ -139,7 +139,7 @@ namespace LabBenchStudios.Pdt.Model
         {
             if (modelState != null)
             {
-                string key = modelState.GetInstanceSyncKey();
+                string key = modelState.GetModelSyncKeyString();
 
                 if (! this.HasConnectedModelState(key))
                 {
@@ -175,14 +175,14 @@ namespace LabBenchStudios.Pdt.Model
         /// 
         /// This must be invoked for an instance key to be generated, however.
         /// </summary>
-        public void BuildInstanceKey()
+        public void BuildModelSyncKey()
         {
             // both calls should generate the same Model ID (DTMI URI)
-            this.modelID = ModelNameUtil.CreateModelID(this.modelControllerID);
+            this.modelID = ModelNameUtil.CreateModelID(this.controllerID);
             //this.modelID = ModelNameUtil.GetModelID(base.GetTypeID());
 
             this.modelSyncKey = new DigitalTwinModelSyncKey(this.GetName(), this.modelID);
-            this.instanceKey = this.modelSyncKey.ToString();
+            this.modelSyncKeyStr = this.modelSyncKey.ToString();
         }
 
         /// <summary>
@@ -246,9 +246,20 @@ namespace LabBenchStudios.Pdt.Model
         /// digital twin state container (as a unique instance).
         /// </summary>
         /// <returns></returns>
-        public string GetInstanceSyncKey()
+        public string GetModelSyncKeyString()
         {
-            return this.instanceKey;
+            return this.modelSyncKeyStr;
+        }
+
+        /// <summary>
+        /// This object is used to uniquely represent this model state instance.
+        /// It's used to map incoming telemetry (from a unique source) to this
+        /// digital twin state container (as a unique instance).
+        /// </summary>
+        /// <returns></returns>
+        public DigitalTwinModelSyncKey GetModelSyncKey()
+        {
+            return this.modelSyncKey;
         }
 
         /// <summary>
@@ -299,7 +310,7 @@ namespace LabBenchStudios.Pdt.Model
         /// <returns></returns>
         public ModelNameUtil.DtmiControllerEnum GetModelControllerID()
         {
-            return this.modelControllerID;
+            return this.controllerID;
         }
 
         /// <summary>
@@ -492,7 +503,7 @@ namespace LabBenchStudios.Pdt.Model
         /// <param name="controllerID"></param>
         public DigitalTwinModelState SetModelControllerID(ModelNameUtil.DtmiControllerEnum controllerID)
         {
-            this.modelControllerID = controllerID;
+            this.controllerID = controllerID;
 
             return this;
         }
@@ -560,7 +571,7 @@ namespace LabBenchStudios.Pdt.Model
             StringBuilder sb = new StringBuilder(base.ToString());
 
             sb.Append(ConfigConst.MODEL_ID_PROP).Append('=').Append(this.modelID).Append(',');
-            sb.Append("InstanceKey").Append('=').Append(this.instanceKey);
+            sb.Append("InstanceKey").Append('=').Append(this.modelSyncKeyStr);
 
             return sb.ToString();
         }
@@ -575,7 +586,7 @@ namespace LabBenchStudios.Pdt.Model
             this.modelProperties = new Dictionary<string, DigitalTwinProperty>();
             this.attachedComponents = new Dictionary<string, DigitalTwinModelState>();
             
-            this.BuildInstanceKey();
+            this.BuildModelSyncKey();
         }
 
     }

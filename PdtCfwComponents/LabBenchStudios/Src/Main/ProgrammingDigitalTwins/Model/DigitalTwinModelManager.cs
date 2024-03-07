@@ -170,26 +170,26 @@ namespace LabBenchStudios.Pdt.Model
                 .SetVirtualAssetListener(stateUpdateListener);
 
             dtModelState.BuildModelData();
-            dtModelState.BuildInstanceKey();
+            dtModelState.BuildModelSyncKey();
 
             this.UpdateModelStateProperties(dtModelState);
 
-            string instanceKey = dtModelState.GetInstanceSyncKey();
+            string modelSyncKey = dtModelState.GetModelSyncKeyString();
 
-            if (this.HasDigitalTwinModelState(instanceKey))
+            if (this.HasDigitalTwinModelState(modelSyncKey))
             {
-                Console.WriteLine($"Created DigitalTwinModelState has duplicate key {instanceKey}. Discarding new and returning original.");
+                Console.WriteLine($"Created DigitalTwinModelState has duplicate key {modelSyncKey}. Discarding new and returning original.");
 
-                dtModelState = this.digitalTwinStateCache[instanceKey];
+                dtModelState = this.digitalTwinStateCache[modelSyncKey];
             }
             else
             {
-                Console.WriteLine($"Created / cached DigitalTwinModelState with instance key {instanceKey}");
+                Console.WriteLine($"Created / cached DigitalTwinModelState with instance key {modelSyncKey}");
 
-                this.digitalTwinStateCache.Add(instanceKey, dtModelState);
+                this.digitalTwinStateCache.Add(modelSyncKey, dtModelState);
             }
 
-            this.AssignTelemetryKeyToModel(dataSyncKey, instanceKey);
+            this.AssignTelemetryKeyToModel(dataSyncKey, modelSyncKey);
 
             return dtModelState;
         }
@@ -238,28 +238,35 @@ namespace LabBenchStudios.Pdt.Model
                 .SetVirtualAssetListener(stateUpdateListener);
             
             dtModelState.BuildModelData();
-            dtModelState.BuildInstanceKey();
+            dtModelState.BuildModelSyncKey();
 
             this.UpdateModelStateProperties(dtModelState);
 
-            string instanceKey = dtModelState.GetInstanceSyncKey();
+            DigitalTwinDataSyncKey dataSyncKey =
+                new DigitalTwinDataSyncKey(controllerID.ToString(), deviceID, locationID);
 
-            if (this.HasDigitalTwinModelState(instanceKey))
+            dtModelState.SetDataSyncKey(dataSyncKey);
+
+            string modelSyncKey = dtModelState.GetModelSyncKeyString();
+
+            if (this.HasDigitalTwinModelState(modelSyncKey))
             {
-                Console.WriteLine($"Created DigitalTwinModelState has duplicate key {instanceKey}. Discarding new and returning original.");
+                Console.WriteLine($"Created DigitalTwinModelState has duplicate key {modelSyncKey}. Discarding new and returning original.");
 
                 // TODO: replace the original or retrieve and return the original?
-                dtModelState = this.digitalTwinStateCache[instanceKey];
+                dtModelState = this.digitalTwinStateCache[modelSyncKey];
             }
             else
             {
                 Console.WriteLine(
                     "Created / cached DigitalTwinModelState." +
-                    $"\n\tModel Sync Key: {instanceKey}" +
+                    $"\n\tModel Sync Key: {modelSyncKey}" +
                     $"\n\tModel ID: {dtModelState.GetModelID()}");
 
-                this.digitalTwinStateCache.Add(instanceKey, dtModelState);
+                this.digitalTwinStateCache.Add(modelSyncKey, dtModelState);
             }
+
+            this.AssignTelemetryKeyToModel(dataSyncKey, modelSyncKey);
 
             return dtModelState;
         }
@@ -673,7 +680,7 @@ namespace LabBenchStudios.Pdt.Model
                         $"\nLoaded interface for model:" +
                         $"\n -> Model ID: {modelState.GetModelID()}" +
                         $"\n -> Data Sync Key: {modelState.GetDataSyncKey()}" +
-                        $"\n -> Model Sync Key: {modelState.GetInstanceSyncKey()}");
+                        $"\n -> Model Sync Key: {modelState.GetModelSyncKeyString()}");
 
                 }
                 else

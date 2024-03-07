@@ -81,6 +81,18 @@ namespace LabBenchStudios.Pdt.Model
         /// 
         /// </summary>
         /// <param name="name"></param>
+        /// <param name="deviceID"></param>
+        /// <param name="locationID"></param>
+        public DigitalTwinDataSyncKey(
+            string name, string deviceID, string locationID)
+        {
+            this.GenerateKey(name, null, deviceID, locationID);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
         /// <param name="groupID"></param>
         /// <param name="deviceID"></param>
         /// <param name="locationID"></param>

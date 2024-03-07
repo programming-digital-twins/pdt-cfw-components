@@ -258,6 +258,18 @@ namespace LabBenchStudios.Pdt.Model
         /// 
         /// </summary>
         /// <param name="name"></param>
+        /// <param name="deviceID"></param>
+        /// <param name="locationID"></param>
+        public static string GenerateDataSyncKey(
+            string name, string deviceID, string locationID)
+        {
+            return GenerateDataSyncKey(name, null, deviceID, locationID, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
         /// <param name="groupID"></param>
         /// <param name="deviceID"></param>
         /// <param name="locationID"></param>
