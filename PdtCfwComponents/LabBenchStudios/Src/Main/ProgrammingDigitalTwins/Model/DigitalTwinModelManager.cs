@@ -61,6 +61,8 @@ namespace LabBenchStudios.Pdt.Model
         // rules with help from ModelNameUtil.
         private Dictionary<string, DigitalTwinModelState> digitalTwinStateCache;
 
+        private Dictionary<string, List<DigitalTwinModelState>> digitalTwinStateLookupMap;
+
         // this maps the incoming telemetry
         // this is indexed by the string model sync key
         private Dictionary<string, HashSet<string>> modelToDataSyncKeyMap;
@@ -87,9 +89,10 @@ namespace LabBenchStudios.Pdt.Model
         {
             this.SetModelFilePath(modelFilePath);
 
-            this.digitalTwinDtdlJsonCache = new Dictionary<string, string>();
-            this.digitalTwinStateCache    = new Dictionary<string, DigitalTwinModelState>();
-            this.modelToDataSyncKeyMap    = new Dictionary<string, HashSet<string>>();
+            this.digitalTwinDtdlJsonCache  = new Dictionary<string, string>();
+            this.digitalTwinStateCache     = new Dictionary<string, DigitalTwinModelState>();
+            this.digitalTwinStateLookupMap = new Dictionary<string, List<DigitalTwinModelState>>();
+            this.modelToDataSyncKeyMap     = new Dictionary<string, HashSet<string>>();
         }
 
         // public methods
@@ -262,18 +265,6 @@ namespace LabBenchStudios.Pdt.Model
                     if (this.HasDigitalTwinModelState(prevModelSyncKey))
                     {
                         this.digitalTwinStateCache.Remove(prevModelSyncKey);
-
-                        /*
-                        if (this.modelToDataSyncKeyMap2.ContainsKey(dataSyncKey))
-                        {
-                            HashSet<string> modelSyncKeySet = this.modelToDataSyncKeyMap2[dataSyncKey];
-
-                            if (modelSyncKeySet.Contains(prevModelSyncKey))
-                            {
-                                modelSyncKeySet.Remove(prevModelSyncKey);
-                            }
-                        }
-                        */
                     }
 
                     this.StoreModelState(dtModelState);
@@ -658,8 +649,19 @@ namespace LabBenchStudios.Pdt.Model
         {
             if (! string.IsNullOrEmpty(dataSyncKey))
             {
+                if (this.digitalTwinStateLookupMap.ContainsKey(dataSyncKey))
+                {
+                    return this.digitalTwinStateLookupMap[dataSyncKey];
+                }
+                /*
                 if (this.modelToDataSyncKeyMap.ContainsKey(dataSyncKey))
                 {
+                    // TODO: this is super inefficient - it gets called every time a new
+                    // message arrives, which means this loop and array creation gets
+                    // executed with every new message
+                    //
+                    // find the appropriate trade-off between caching model states
+                    // and dynamic lookups / retrievals
                     HashSet<string> modelSyncKeySet = this.modelToDataSyncKeyMap[dataSyncKey];
 
                     List<DigitalTwinModelState> modelStateList =
@@ -675,6 +677,7 @@ namespace LabBenchStudios.Pdt.Model
 
                     return modelStateList;
                 }
+                */
             }
 
             return null;
@@ -694,7 +697,7 @@ namespace LabBenchStudios.Pdt.Model
             string modelSyncKey = dtModelState.GetModelSyncKeyString();
 
             // remove any existing ref's using the model state's GUID first
-            this.FindAndRemovePreviousState(dtModelState);
+            this.FindAndRemoveState(dtModelState);
 
             // if this model's sync key isn't yet stored, create a new model map
             // this allows multiple twin instances to receive updates from the
@@ -703,16 +706,6 @@ namespace LabBenchStudios.Pdt.Model
             {
                 Console.WriteLine(
                     $"Added DigitalTwinModelState to cache with key {modelSyncKey}.");
-
-                /*
-                DigitalTwinModelStateMap modelStateMap =
-                    new DigitalTwinModelStateMap(
-                        dtModelState.GetModelSyncKeyString(),
-                        dtModelState.GetDataSyncKeyString());
-
-                modelStateMap.SetModelControllerID(dtModelState.GetModelControllerID());
-                modelStateMap.SetModelID(dtModelState.GetModelID());
-                */
 
                 this.digitalTwinStateCache.Add(modelSyncKey, dtModelState);
             }
@@ -727,6 +720,7 @@ namespace LabBenchStudios.Pdt.Model
             DigitalTwinDataSyncKey dataSyncKey = dtModelState.GetDataSyncKey();
 
             this.AssignTelemetryKeyToModel(dataSyncKey, modelSyncKey);
+            this.AddModelStateToDataSyncKey(dataSyncKey, dtModelState);
 
             return dtModelState;
         }
@@ -734,33 +728,46 @@ namespace LabBenchStudios.Pdt.Model
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="dtModelState"></param>
-        private void FindAndRemovePreviousState(DigitalTwinModelState dtModelState)
+        /// <param name="dataSyncKey"></param>
+        /// <param name="modelState"></param>
+        private void AddModelStateToDataSyncKey(
+            DigitalTwinDataSyncKey dataSyncKey, DigitalTwinModelState modelState)
         {
-            /*
-            foreach (var entry in this.digitalTwinStateCache)
-            {
-                if (entry.Value.HasStoredModelState(dtModelState.GetModelGUID()))
-                {
-                    Console.WriteLine($"Found duplicate model state. Removing: {dtModelState.GetModelGUID()}");
+            string key = dataSyncKey.ToString();
 
-                    entry.Value.RemoveModelStateFromCache(dtModelState);
+            List<DigitalTwinModelState> modelStateList = null;
+
+            if (! this.digitalTwinStateLookupMap.ContainsKey(key))
+            {
+                modelStateList = new List<DigitalTwinModelState>();
+                modelStateList.Add(modelState);
+
+                this.digitalTwinStateLookupMap.Add(key, modelStateList);
+            }
+            else
+            {
+                modelStateList = this.digitalTwinStateLookupMap[key];
+
+                if (! modelStateList.Contains(modelState))
+                {
+                    modelStateList.Add(modelState);
                 }
             }
-            */
+        }
 
-            /*
-            // TODO: is this really necessary?
-            string prevDataSyncKey = dtModelState.GetPreviousDataSyncKeyString();
-
-            if (! string.IsNullOrEmpty(prevDataSyncKey))
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dtModelState"></param>
+        private void FindAndRemoveState(DigitalTwinModelState dtModelState)
+        {
+            foreach (var entry in this.digitalTwinStateLookupMap)
             {
-                if (this.modelToDataSyncKeyMap.ContainsKey(prevDataSyncKey))
+                if (entry.Value.Contains(dtModelState))
                 {
-                    this.modelToDataSyncKeyMap.Remove(prevDataSyncKey);
+                    entry.Value.Remove(dtModelState);
                 }
             }
-            */
         }
 
         /// <summary>

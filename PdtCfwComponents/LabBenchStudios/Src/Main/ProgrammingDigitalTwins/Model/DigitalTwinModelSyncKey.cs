@@ -49,8 +49,18 @@ namespace LabBenchStudios.Pdt.Model
         /// 
         /// </summary>
         public DigitalTwinModelSyncKey() :
-            this(null, null)
+            this(ConfigConst.PRODUCT_NAME, ModelNameUtil.IOT_MODEL_CONTEXT_MODEL_ID)
         {
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="modelID"></param>
+        public DigitalTwinModelSyncKey(string modelID)
+        {
+            this.GenerateKey(ConfigConst.PRODUCT_NAME, modelID);
         }
 
         /// <summary>
@@ -112,7 +122,6 @@ namespace LabBenchStudios.Pdt.Model
         /// <returns></returns>
         public override string ToString()
         {
-            //return this.modelSyncKey;
             return this.modelSyncGuidKey;
         }
 

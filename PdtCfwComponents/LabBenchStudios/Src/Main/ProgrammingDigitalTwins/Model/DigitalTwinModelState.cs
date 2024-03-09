@@ -215,7 +215,7 @@ namespace LabBenchStudios.Pdt.Model
             // both calls should generate the same Model ID (DTMI URI)
             this.modelID = ModelNameUtil.CreateModelID(this.controllerID);
 
-            this.modelSyncKey = new DigitalTwinModelSyncKey(this.GetName(), this.modelID);
+            this.modelSyncKey = new DigitalTwinModelSyncKey(this.modelID);
             this.modelSyncKeyStr = this.modelSyncKey.ToString();
 
             if (! string.IsNullOrEmpty(this.prevModelSyncKeyStr))
