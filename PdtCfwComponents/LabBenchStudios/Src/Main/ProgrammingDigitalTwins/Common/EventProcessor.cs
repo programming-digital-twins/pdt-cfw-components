@@ -25,13 +25,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using DTDLParser;
-using LabBenchStudios.Pdt.Common;
+
 using LabBenchStudios.Pdt.Data;
 using LabBenchStudios.Pdt.Model;
 
-namespace LabBenchStudios.Pdt.Unity.Common
+namespace LabBenchStudios.Pdt.Common
 {
     /**
      * This class handles the registration of various event listeners and
@@ -100,7 +98,6 @@ namespace LabBenchStudios.Pdt.Unity.Common
 
         private DigitalTwinModelManager digitalTwinModelManager = null;
 
-        //private Dictionary<string, DigitalTwinModelState> digitalTwinStateTable = null;
         private Dictionary<string, ConnectionStateData> connectedStateTable = null;
 
         private HashSet<string> knownDeviceIDSet = null;
@@ -119,7 +116,6 @@ namespace LabBenchStudios.Pdt.Unity.Common
             this.dataContextEventListenerList = new List<IDataContextEventListener>();
             this.systemStatusEventListenerList = new List<ISystemStatusEventListener>();
 
-            //this.digitalTwinStateTable = new Dictionary<string, DigitalTwinModelState>();
             this.connectedStateTable = new Dictionary<string, ConnectionStateData>();
 
             // telemetry keys
@@ -218,23 +214,6 @@ namespace LabBenchStudios.Pdt.Unity.Common
             Console.WriteLine($"Failed to (re)load Digital Twin models from path {modelFilePath}");
 
             return false;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="dtModelState"></param>
-        public void RegisterDigitalTwin(DigitalTwinModelState dtModelState)
-        {
-            if (dtModelState != null)
-            {
-                string modelID = dtModelState.GetModelID();
-
-                //if (!this.digitalTwinStateTable.ContainsKey(modelID))
-                //{
-                //    this.digitalTwinStateTable.Add(dtModelState.GetModelID(), dtModelState);
-                //}
-            }
         }
 
         /// <summary>
@@ -343,14 +322,6 @@ namespace LabBenchStudios.Pdt.Unity.Common
             {
                 this.UpdateInternalState(data);
 
-                //string dtmi = ModelNameUtil.GetModelID(data.GetTypeID());
-
-                //if (this.digitalTwinStateTable.ContainsKey(dtmi))
-                //{
-                //    DigitalTwinModelState dtModelState = this.digitalTwinStateTable[dtmi];
-                //    dtModelState.HandleIncomingTelemetry(data);
-                //}
-
                 if (this.dataContextEventListenerList.Count > 0)
                 {
                     foreach (var listener in this.dataContextEventListenerList)
@@ -373,14 +344,6 @@ namespace LabBenchStudios.Pdt.Unity.Common
             if (data != null)
             {
                 this.UpdateInternalState(data);
-
-                //string dtmi = ModelNameUtil.GetModelID(data.GetTypeID());
-
-                //if (this.digitalTwinStateTable.ContainsKey(dtmi))
-                //{
-                //    DigitalTwinModelState dtModelState = this.digitalTwinStateTable[dtmi];
-                //    dtModelState.HandleIncomingTelemetry(data);
-                //}
 
                 if (this.systemStatusEventListenerList.Count > 0)
                 {
@@ -405,14 +368,6 @@ namespace LabBenchStudios.Pdt.Unity.Common
             {
                 this.UpdateInternalState(data);
 
-                //string dtmi = ModelNameUtil.GetModelID(data.GetTypeID());
-
-                //if (this.digitalTwinStateTable.ContainsKey(dtmi))
-                //{
-                //    DigitalTwinModelState dtModelState = this.digitalTwinStateTable[dtmi];
-                //    dtModelState.HandleIncomingTelemetry(data);
-                //}
-
                 if (this.dataContextEventListenerList.Count > 0)
                 {
                     foreach (var listener in this.dataContextEventListenerList)
@@ -435,14 +390,6 @@ namespace LabBenchStudios.Pdt.Unity.Common
             if (data != null)
             {
                 this.UpdateInternalState(data);
-
-                //string dtmi = ModelNameUtil.GetModelID(data.GetTypeID());
-
-                //if (this.digitalTwinStateTable.ContainsKey(dtmi))
-                //{
-                //    DigitalTwinModelState dtModelState = this.digitalTwinStateTable[dtmi];
-                //    dtModelState.HandleIncomingTelemetry(data);
-                //}
 
                 if (this.dataContextEventListenerList.Count > 0)
                 {
