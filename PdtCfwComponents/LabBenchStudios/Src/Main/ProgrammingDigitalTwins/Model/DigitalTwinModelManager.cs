@@ -60,7 +60,7 @@ namespace LabBenchStudios.Pdt.Model
         //
         // this is indexed by a key unique to the twin state's instancing
         // rules with help from ModelNameUtil.
-        private Dictionary<string, DigitalTwinModelState> digitalTwinStateCache;
+        private Dictionary<string, DigitalTwinModelStateMap> digitalTwinStateCache;
 
         // this maps the incoming telemetry
         // this is indexed by the string instance key
@@ -89,7 +89,7 @@ namespace LabBenchStudios.Pdt.Model
             this.SetModelFilePath(modelFilePath);
 
             this.digitalTwinDtdlJsonCache = new Dictionary<string, string>();
-            this.digitalTwinStateCache    = new Dictionary<string, DigitalTwinModelState>();
+            this.digitalTwinStateCache    = new Dictionary<string, DigitalTwinModelStateMap>();
             this.modelToTelemetryKeyMap   = new Dictionary<string, string>();
         }
 
@@ -174,24 +174,7 @@ namespace LabBenchStudios.Pdt.Model
 
             this.UpdateModelStateProperties(dtModelState);
 
-            string modelSyncKey = dtModelState.GetModelSyncKeyString();
-
-            if (this.HasDigitalTwinModelState(modelSyncKey))
-            {
-                Console.WriteLine($"Created DigitalTwinModelState has duplicate key {modelSyncKey}. Discarding new and returning original.");
-
-                dtModelState = this.digitalTwinStateCache[modelSyncKey];
-            }
-            else
-            {
-                Console.WriteLine($"Created / cached DigitalTwinModelState with instance key {modelSyncKey}");
-
-                this.digitalTwinStateCache.Add(modelSyncKey, dtModelState);
-            }
-
-            this.AssignTelemetryKeyToModel(dataSyncKey, modelSyncKey);
-
-            return dtModelState;
+            return this.StoreModelState(dtModelState);
         }
 
         /// <summary>
@@ -247,24 +230,67 @@ namespace LabBenchStudios.Pdt.Model
 
             dtModelState.SetDataSyncKey(dataSyncKey);
 
+            return this.StoreModelState(dtModelState);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dtModelState"></param>
+        /// <returns></returns>
+        private DigitalTwinModelState StoreModelState(DigitalTwinModelState dtModelState)
+        {
             string modelSyncKey = dtModelState.GetModelSyncKeyString();
 
-            if (this.HasDigitalTwinModelState(modelSyncKey))
+            if (! this.HasDigitalTwinModelState(modelSyncKey))
             {
-                Console.WriteLine($"Created DigitalTwinModelState has duplicate key {modelSyncKey}. Discarding new and returning original.");
+                //Console.WriteLine($"Created DigitalTwinModelState has duplicate key {modelSyncKey}. Discarding new and returning original.");
+                //dtModelState = this.digitalTwinStateCache[modelSyncKey];
 
-                // TODO: replace the original or retrieve and return the original?
-                dtModelState = this.digitalTwinStateCache[modelSyncKey];
-            }
-            else
-            {
+                // NET NEW for TESTING
+                // vvvvvvvvvv
                 Console.WriteLine(
-                    "Created / cached DigitalTwinModelState." +
-                    $"\n\tModel Sync Key: {modelSyncKey}" +
-                    $"\n\tModel ID: {dtModelState.GetModelID()}");
+                    $"Added duplicate DigitalTwinModelState to cache with key {modelSyncKey}. Updates will be sent to all in the cache.");
 
-                this.digitalTwinStateCache.Add(modelSyncKey, dtModelState);
+                DigitalTwinModelStateMap modelStateMap =
+                    new DigitalTwinModelStateMap(
+                        dtModelState.GetModelSyncKeyString(),
+                        dtModelState.GetDataSyncKeyString());
+
+                modelStateMap.SetModelControllerID(dtModelState.GetModelControllerID());
+                modelStateMap.SetModelID(dtModelState.GetModelID());
+
+                this.digitalTwinStateCache.Add(modelSyncKey, modelStateMap);
+                /*
+                DigitalTwinModelStateMap modelStateMap = this.digitalTwinStateCache[modelSyncKey];
+
+                var modelCache = storedModelState as DigitalTwinModelStateMap;
+
+                if (modelCache == null)
+                {
+                    modelCache =
+                        new DigitalTwinModelStateMap(
+                            dtModelState.GetModelSyncKeyString(),
+                            dtModelState.GetDataSyncKeyString());
+
+                    modelCache.AddModelStateToCache(storedModelState);
+
+                    this.digitalTwinStateCache[modelSyncKey] = modelCache;
+                }
+
+                modelCache.AddModelStateToCache(dtModelState);
+                */
+
+                // ^^^^^^^^^^
+                // NET NEW for TESTING
             }
+
+            if (! this.digitalTwinStateCache[modelSyncKey].AddModelStateToCache(dtModelState))
+            {
+                Console.WriteLine($"Model state already exists in cache: {dtModelState.GetModelGUID()}");
+            }
+
+            DigitalTwinDataSyncKey dataSyncKey = dtModelState.GetDataSyncKey();
 
             this.AssignTelemetryKeyToModel(dataSyncKey, modelSyncKey);
 
@@ -272,31 +298,76 @@ namespace LabBenchStudios.Pdt.Model
         }
 
         /// <summary>
-        /// Returns the internally stored DT Model State instance using
+        /// 
         /// </summary>
-        /// <param name="instanceKey"></param>
+        /// <param name="dtModelState"></param>
         /// <returns></returns>
-        public DigitalTwinModelState GetDigitalTwinModelState(string instanceKey)
+        public bool UpdateModelState(string prevModelSyncKey, DigitalTwinModelState dtModelState)
         {
-            if (this.HasDigitalTwinModelState(instanceKey))
+            if (dtModelState != null)
             {
-                return this.digitalTwinStateCache[instanceKey];
+                if (!string.IsNullOrEmpty(prevModelSyncKey) && this.HasDigitalTwinModelState(prevModelSyncKey))
+                {
+                    if (prevModelSyncKey.Equals(dtModelState.GetModelSyncKeyString()))
+                    {
+                        Console.WriteLine(
+                            $"Nothing to do. DigitalTwinModelState mapping doesn't need update: {prevModelSyncKey}.");
+
+                        return false;
+                    }
+
+                    // check if we need to transfer the model state - we can verify this by checking its GUID
+                    DigitalTwinModelStateMap modelStateMap = this.GetDigitalTwinModelState(prevModelSyncKey);
+
+                    if (modelStateMap.HasStoredModelState(dtModelState.GetModelGUID()))
+                    {
+                        modelStateMap.RemoveModelStateFromCache(dtModelState);
+
+                        // check if this cache of model states is now defunct - if so, delete it
+                        if (! modelStateMap.HasStoredModelStates())
+                        {
+                            string dataSyncKey = dtModelState.GetDataSyncKey().ToString();
+                            this.modelToTelemetryKeyMap.Remove(dataSyncKey);
+                        }
+                    }
+
+                    this.StoreModelState(dtModelState);
+
+                    return true;
+                }
             }
 
-            Console.WriteLine($"No DT model state available for key {instanceKey}");
+            return false;
+        }
+
+        /// <summary>
+        /// Returns the internally stored DT Model State instance using
+        /// its model state key.
+        /// </summary>
+        /// <param name="modelStateKey"></param>
+        /// <returns></returns>
+        public DigitalTwinModelStateMap GetDigitalTwinModelState(string modelStateKey)
+        {
+            if (this.HasDigitalTwinModelState(modelStateKey))
+            {
+                return this.digitalTwinStateCache[modelStateKey];
+            }
+
+            Console.WriteLine($"No DT model state available for key {modelStateKey}");
             return null;
         }
 
         /// <summary>
-        /// 
+        /// Checks if we have an internally stored DT Model State instance using
+        /// its model state key.
         /// </summary>
-        /// <param name="instanceKey"></param>
+        /// <param name="modelStateKey"></param>
         /// <returns></returns>
-        public bool HasDigitalTwinModelState(string instanceKey)
+        public bool HasDigitalTwinModelState(string modelStateKey)
         {
-            if (!string.IsNullOrEmpty(instanceKey))
+            if (!string.IsNullOrEmpty(modelStateKey))
             {
-                return this.digitalTwinStateCache.ContainsKey(instanceKey);
+                return this.digitalTwinStateCache.ContainsKey(modelStateKey);
             }
 
             return false;
@@ -350,11 +421,11 @@ namespace LabBenchStudios.Pdt.Model
         /// <exception cref="NotImplementedException"></exception>
         public bool HandleIncomingTelemetry(IotDataContext dataContext)
         {
-            DigitalTwinModelState modelState = LookupDigitalTwinModelState(dataContext);
+            DigitalTwinModelStateMap modelStateMap = LookupDigitalTwinModelState(dataContext);
 
-            if (modelState != null)
+            if (modelStateMap != null)
             {
-                return modelState.HandleIncomingTelemetry(dataContext);
+                return modelStateMap.HandleIncomingTelemetry(dataContext);
             }
 
             // TODO: log msg?
@@ -381,11 +452,11 @@ namespace LabBenchStudios.Pdt.Model
         {
             if (data != null && data.IsResponse())
             {
-                DigitalTwinModelState modelState = LookupDigitalTwinModelState(data);
+                DigitalTwinModelStateMap modelStateMap = LookupDigitalTwinModelState(data);
 
-                if (modelState != null)
+                if (modelStateMap != null)
                 {
-                    modelState.HandleIncomingTelemetry(data);
+                    modelStateMap.HandleIncomingTelemetry(data);
                 }
             }
         }
@@ -397,11 +468,11 @@ namespace LabBenchStudios.Pdt.Model
         /// <exception cref="NotImplementedException"></exception>
         public void HandleConnectionStateData(ConnectionStateData data)
         {
-            DigitalTwinModelState modelState = LookupDigitalTwinModelState(data);
+            DigitalTwinModelStateMap modelStateMap = LookupDigitalTwinModelState(data);
 
-            if (modelState != null)
+            if (modelStateMap != null)
             {
-                modelState.HandleIncomingTelemetry(data);
+                modelStateMap.HandleIncomingTelemetry(data);
             }
         }
 
@@ -412,11 +483,11 @@ namespace LabBenchStudios.Pdt.Model
         /// <exception cref="NotImplementedException"></exception>
         public void HandleMessageData(MessageData data)
         {
-            DigitalTwinModelState modelState = LookupDigitalTwinModelState(data);
+            DigitalTwinModelStateMap modelStateMap = LookupDigitalTwinModelState(data);
 
-            if (modelState != null)
+            if (modelStateMap != null)
             {
-                modelState.HandleIncomingTelemetry(data);
+                modelStateMap.HandleIncomingTelemetry(data);
             }
         }
 
@@ -427,11 +498,11 @@ namespace LabBenchStudios.Pdt.Model
         /// <exception cref="NotImplementedException"></exception>
         public void HandleSensorData(SensorData data)
         {
-            DigitalTwinModelState modelState = LookupDigitalTwinModelState(data);
+            DigitalTwinModelStateMap modelStateMap = LookupDigitalTwinModelState(data);
 
-            if (modelState != null)
+            if (modelStateMap != null)
             {
-                modelState.HandleIncomingTelemetry(data);
+                modelStateMap.HandleIncomingTelemetry(data);
             }
         }
 
@@ -442,11 +513,11 @@ namespace LabBenchStudios.Pdt.Model
         /// <exception cref="NotImplementedException"></exception>
         public void HandleSystemPerformanceData(SystemPerformanceData data)
         {
-            DigitalTwinModelState modelState = LookupDigitalTwinModelState(data);
+            DigitalTwinModelStateMap modelStateMap = LookupDigitalTwinModelState(data);
 
-            if (modelState != null)
+            if (modelStateMap != null)
             {
-                modelState.HandleIncomingTelemetry(data);
+                modelStateMap.HandleIncomingTelemetry(data);
             }
         }
 
@@ -581,15 +652,15 @@ namespace LabBenchStudios.Pdt.Model
             // update model state cache
             foreach (string key in this.digitalTwinStateCache.Keys)
             {
-                DigitalTwinModelState dtState = this.digitalTwinStateCache[key];
+                DigitalTwinModelStateMap dtStateMap = this.digitalTwinStateCache[key];
 
-                if (dtState != null)
+                if (dtStateMap != null)
                 {
-                    Console.WriteLine($"Retrieved DT Model State {key} with ID {dtState.GetModelID()}");
+                    Console.WriteLine($"Retrieved DT Model State {key} with ID {dtStateMap.GetModelID()}");
 
-                    string rawJson = this.GetRawModelJson(dtState.GetModelControllerID());
+                    string rawJson = this.GetRawModelJson(dtStateMap.GetModelControllerID());
 
-                    dtState.SetRawModelJson(rawJson);
+                    dtStateMap.SetRawModelJson(rawJson);
                 }
             }
 
@@ -598,7 +669,7 @@ namespace LabBenchStudios.Pdt.Model
             return success;
         }
 
-        private DigitalTwinModelState LookupDigitalTwinModelState(IotDataContext dataContext)
+        private DigitalTwinModelStateMap LookupDigitalTwinModelState(IotDataContext dataContext)
         {
             if (dataContext != null)
             {
@@ -610,7 +681,7 @@ namespace LabBenchStudios.Pdt.Model
             return null;
         }
 
-        private DigitalTwinModelState LookupDigitalTwinModelState(string telemetryKey)
+        private DigitalTwinModelStateMap LookupDigitalTwinModelState(string telemetryKey)
         {
             if (! string.IsNullOrEmpty(telemetryKey))
             {

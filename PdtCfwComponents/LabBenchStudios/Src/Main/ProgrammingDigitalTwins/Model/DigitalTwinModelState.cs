@@ -30,6 +30,7 @@ using Newtonsoft.Json;
 
 using LabBenchStudios.Pdt.Common;
 using LabBenchStudios.Pdt.Data;
+using System.Runtime.Remoting.Messaging;
 
 namespace LabBenchStudios.Pdt.Model
 {
@@ -179,7 +180,6 @@ namespace LabBenchStudios.Pdt.Model
         {
             // both calls should generate the same Model ID (DTMI URI)
             this.modelID = ModelNameUtil.CreateModelID(this.controllerID);
-            //this.modelID = ModelNameUtil.GetModelID(base.GetTypeID());
 
             this.modelSyncKey = new DigitalTwinModelSyncKey(this.GetName(), this.modelID);
             this.modelSyncKeyStr = this.modelSyncKey.ToString();
@@ -260,6 +260,16 @@ namespace LabBenchStudios.Pdt.Model
         public DigitalTwinModelSyncKey GetModelSyncKey()
         {
             return this.modelSyncKey;
+        }
+
+        /// <summary>
+        /// This string is used to uniquely represent this model's assigned
+        /// unique incoming telemetry state.
+        /// </summary>
+        /// <returns></returns>
+        public string GetDataSyncKeyString()
+        {
+            return this.GetDataSyncKey().ToString();
         }
 
         /// <summary>
