@@ -57,6 +57,8 @@ namespace LabBenchStudios.Pdt.Model
         {
             if (!string.IsNullOrEmpty(modelSyncKey)) { this.modelSyncKey = modelSyncKey; }
             if (!string.IsNullOrEmpty(dataSyncKey)) { this.dataSyncKey = dataSyncKey; }
+
+            this.modelStateMap = new Dictionary<string, DigitalTwinModelState>();
         }
 
         // public methods
@@ -71,11 +73,6 @@ namespace LabBenchStudios.Pdt.Model
         {
             if (modelState != null)
             {
-                if (this.modelStateMap == null)
-                {
-                    this.modelStateMap = new Dictionary<string, DigitalTwinModelState>();
-                }
-
                 if (!this.modelStateMap.ContainsKey(modelState.GetModelGUID()))
                 {
                     Console.WriteLine($"Adding model state to map: {modelState.GetModelGUID()}");
@@ -155,7 +152,7 @@ namespace LabBenchStudios.Pdt.Model
         {
             if (!string.IsNullOrEmpty(modelGuid))
             {
-                return (this.modelStateMap != null && this.modelStateMap.ContainsKey(modelGuid));
+                return (this.modelStateMap.ContainsKey(modelGuid));
             }
 
             return false;
@@ -167,7 +164,7 @@ namespace LabBenchStudios.Pdt.Model
         /// <returns></returns>
         public bool HasStoredModelStates()
         {
-            return (this.modelStateMap != null && this.modelStateMap.Count > 0);
+            return (this.modelStateMap.Count > 0);
         }
 
         /// <summary>
@@ -180,17 +177,14 @@ namespace LabBenchStudios.Pdt.Model
         {
             if (modelState != null)
             {
-                if (this.modelStateMap != null)
+                if (this.modelStateMap.ContainsKey(modelState.GetModelGUID()))
                 {
-                    if (this.modelStateMap.ContainsKey(modelState.GetModelGUID()))
-                    {
-                        Console.WriteLine($"Removing model state from map: {modelState.GetModelGUID()}");
-                        this.modelStateMap.Remove(modelState.GetModelGUID());
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Model state not contained within map. Ignoring: {modelState.GetModelGUID()}");
-                    }
+                    Console.WriteLine($"Removing model state from map: {modelState.GetModelGUID()}");
+                    this.modelStateMap.Remove(modelState.GetModelGUID());
+                }
+                else
+                {
+                    Console.WriteLine($"Model state not contained within map. Ignoring: {modelState.GetModelGUID()}");
                 }
             }
         }
@@ -207,12 +201,9 @@ namespace LabBenchStudios.Pdt.Model
 
             if (dataContext != null)
             {
-                if (this.modelStateMap != null)
+                foreach (var kvp in this.modelStateMap)
                 {
-                    foreach (var kvp in this.modelStateMap)
-                    {
-                        success = kvp.Value.HandleIncomingTelemetry(dataContext);
-                    }
+                    success = kvp.Value.HandleIncomingTelemetry(dataContext);
                 }
             }
 
@@ -231,12 +222,9 @@ namespace LabBenchStudios.Pdt.Model
 
             if (dataContext != null)
             {
-                if (this.modelStateMap != null)
+                foreach (var kvp in this.modelStateMap)
                 {
-                    foreach (var kvp in this.modelStateMap)
-                    {
-                        success = kvp.Value.HandleOutgoingStateUpdate(dataContext);
-                    }
+                    success = kvp.Value.HandleOutgoingStateUpdate(dataContext);
                 }
             }
 
@@ -254,12 +242,9 @@ namespace LabBenchStudios.Pdt.Model
         {
             if (! string.IsNullOrEmpty(deviceID))
             {
-                if (this.modelStateMap != null)
+                foreach (var kvp in this.modelStateMap)
                 {
-                    foreach (var kvp in this.modelStateMap)
-                    {
-                        kvp.Value.SetConnectedDeviceID(deviceID);
-                    }
+                    kvp.Value.SetConnectedDeviceID(deviceID);
                 }
             }
         }
@@ -272,12 +257,9 @@ namespace LabBenchStudios.Pdt.Model
         {
             if (!string.IsNullOrEmpty(locationID))
             {
-                if (this.modelStateMap != null)
+                foreach (var kvp in this.modelStateMap)
                 {
-                    foreach (var kvp in this.modelStateMap)
-                    {
-                        kvp.Value.SetConnectedDeviceLocation(locationID);
-                    }
+                    kvp.Value.SetConnectedDeviceLocation(locationID);
                 }
             }
         }
@@ -311,12 +293,9 @@ namespace LabBenchStudios.Pdt.Model
         {
             if (!string.IsNullOrEmpty(json))
             {
-                if (this.modelStateMap != null)
+                foreach (var kvp in this.modelStateMap)
                 {
-                    foreach (var kvp in this.modelStateMap)
-                    {
-                        kvp.Value.SetRawModelJson(json);
-                    }
+                    kvp.Value.SetRawModelJson(json);
                 }
             }
         }
@@ -329,12 +308,9 @@ namespace LabBenchStudios.Pdt.Model
         {
             if (key != null)
             {
-                if (this.modelStateMap != null)
+                foreach (var kvp in this.modelStateMap)
                 {
-                    foreach (var kvp in this.modelStateMap)
-                    {
-                        kvp.Value.SetDataSyncKey(key);
-                    }
+                    kvp.Value.SetDataSyncKey(key);
                 }
             }
         }

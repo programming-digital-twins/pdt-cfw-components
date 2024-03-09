@@ -112,7 +112,8 @@ namespace LabBenchStudios.Pdt.Model
         /// <returns></returns>
         public override string ToString()
         {
-            return this.modelSyncKey;
+            //return this.modelSyncKey;
+            return this.modelSyncGuidKey;
         }
 
         // private methods

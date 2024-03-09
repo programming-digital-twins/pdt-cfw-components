@@ -30,7 +30,6 @@ using Newtonsoft.Json;
 
 using LabBenchStudios.Pdt.Common;
 using LabBenchStudios.Pdt.Data;
-using System.Runtime.Remoting.Messaging;
 
 namespace LabBenchStudios.Pdt.Model
 {
@@ -51,7 +50,11 @@ namespace LabBenchStudios.Pdt.Model
         private DigitalTwinModelSyncKey modelSyncKey = null;
         private DigitalTwinDataSyncKey dataSyncKey = null;
 
+        private string dataSyncKeyStr = null;
+        private string prevDataSyncKeyStr = null;
+
         private string modelSyncKeyStr = null;
+        private string prevModelSyncKeyStr = null;
 
         private Dictionary<string, DigitalTwinProperty> modelProperties;
         private Dictionary<string, DigitalTwinModelState> attachedComponents;
@@ -85,12 +88,20 @@ namespace LabBenchStudios.Pdt.Model
                 ConfigConst.NOT_SET, ConfigConst.NOT_SET,
                 ConfigConst.DEFAULT_TYPE_CATEGORY_ID, ConfigConst.DEFAULT_TYPE_ID)
         {
+            /*
             if (dataSyncKey != null)
             {
-                this.dataSyncKey = dataSyncKey;
                 base.SetName(dataSyncKey.GetName());
                 base.SetDeviceID(this.dataSyncKey.GetDeviceID());
                 base.SetLocationID(this.dataSyncKey.GetLocationID());
+            }
+            */
+
+            if (dataSyncKey != null)
+            {
+                base.SetName(dataSyncKey.GetName());
+                base.SetDeviceID(dataSyncKey.GetDeviceID());
+                base.SetLocationID(dataSyncKey.GetLocationID());
             }
 
             InitState();
@@ -170,6 +181,27 @@ namespace LabBenchStudios.Pdt.Model
             return null;
         }
 
+        public void BuildDataSyncKey()
+        {
+            this.prevDataSyncKeyStr = this.dataSyncKeyStr;
+
+            this.dataSyncKey =
+                new DigitalTwinDataSyncKey(
+                    this.GetModelControllerID().ToString(),
+                    base.GetDeviceID(),
+                    base.GetLocationID());
+
+            this.dataSyncKeyStr = this.dataSyncKey.ToString();
+
+            if (! string.IsNullOrEmpty(this.prevDataSyncKeyStr))
+            {
+                if (this.prevDataSyncKeyStr.Equals(this.dataSyncKeyStr))
+                {
+                    this.prevDataSyncKeyStr = null;
+                }
+            }
+        }
+
         /// <summary>
         /// Safe for external entities to call, as the internal generation
         /// of an instance key will yield a consistent result.
@@ -178,11 +210,21 @@ namespace LabBenchStudios.Pdt.Model
         /// </summary>
         public void BuildModelSyncKey()
         {
+            this.prevModelSyncKeyStr = this.modelSyncKeyStr;
+
             // both calls should generate the same Model ID (DTMI URI)
             this.modelID = ModelNameUtil.CreateModelID(this.controllerID);
 
             this.modelSyncKey = new DigitalTwinModelSyncKey(this.GetName(), this.modelID);
             this.modelSyncKeyStr = this.modelSyncKey.ToString();
+
+            if (! string.IsNullOrEmpty(this.prevModelSyncKeyStr))
+            {
+                if (this.prevModelSyncKeyStr.Equals(this.modelSyncKeyStr))
+                {
+                    this.prevModelSyncKeyStr = null;
+                }
+            }
         }
 
         /// <summary>
@@ -241,6 +283,34 @@ namespace LabBenchStudios.Pdt.Model
         }
 
         /// <summary>
+        /// This string is used to uniquely represent this model's assigned
+        /// unique telemetry data. It represents the previous sync key used,
+        /// in the case where the connection state is updated.
+        /// 
+        /// It will remain null until the connection state properties on this
+        /// model state are updated (via UpdateConnectionState()).
+        /// </summary>
+        /// <returns></returns>
+        public string GetPreviousDataSyncKeyString()
+        {
+            return this.prevDataSyncKeyStr;
+        }
+
+        /// <summary>
+        /// This string is used to uniquely represent this model state instance.
+        /// It represents the previous sync key used, in the case where the
+        /// connection state is updated.
+        /// 
+        /// It will remain null until the connection state properties on this
+        /// model state are updated (via UpdateConnectionState()).
+        /// </summary>
+        /// <returns></returns>
+        public string GetPreviousModelSyncKeyString()
+        {
+            return this.prevModelSyncKeyStr;
+        }
+
+        /// <summary>
         /// This string is used to uniquely represent this model state instance.
         /// It's used to map incoming telemetry (from a unique source) to this
         /// digital twin state container (as a unique instance).
@@ -269,7 +339,7 @@ namespace LabBenchStudios.Pdt.Model
         /// <returns></returns>
         public string GetDataSyncKeyString()
         {
-            return this.GetDataSyncKey().ToString();
+            return this.dataSyncKeyStr;
         }
 
         /// <summary>
@@ -572,6 +642,22 @@ namespace LabBenchStudios.Pdt.Model
             return this;
         }
 
+        public void UpdateConnectionState(string deviceID, string locationID)
+        {
+            if (! string.IsNullOrEmpty(deviceID))
+            {
+                base.SetDeviceID(deviceID);
+            }
+
+            if (! string.IsNullOrEmpty(locationID))
+            {
+                base.SetLocationID(locationID);
+            }
+
+            this.BuildDataSyncKey();
+            this.BuildModelSyncKey();
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -595,7 +681,8 @@ namespace LabBenchStudios.Pdt.Model
         {
             this.modelProperties = new Dictionary<string, DigitalTwinProperty>();
             this.attachedComponents = new Dictionary<string, DigitalTwinModelState>();
-            
+
+            this.BuildDataSyncKey();
             this.BuildModelSyncKey();
         }
 
