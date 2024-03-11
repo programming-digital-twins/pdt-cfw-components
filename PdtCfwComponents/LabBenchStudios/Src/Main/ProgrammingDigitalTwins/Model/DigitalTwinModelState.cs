@@ -180,6 +180,10 @@ namespace LabBenchStudios.Pdt.Model
             return null;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public DigitalTwinModelState BuildDataSyncKey()
         {
             this.prevDataSyncKeyStr = this.dataSyncKeyStr;
@@ -531,21 +535,20 @@ namespace LabBenchStudios.Pdt.Model
         /// </summary>
         /// <param name="dataContext"></param>
         /// <returns></returns>
-        public bool HandleOutgoingStateUpdate(IotDataContext dataContext)
+        public ResourceNameContainer GenerateOutgoingStateUpdate(IotDataContext dataContext)
         {
-            bool success = false;
-
             if (dataContext != null)
             {
-                switch (dataContext.GetTypeID())
-                {
+                ResourceNameContainer resource =
+                    new ResourceNameContainer(
+                        this.GetDeviceID(),
+                        dataContext.GetName(),
+                        dataContext);
 
-                }
-
-                success = true;
+                return resource;
             }
 
-            return success;
+            return null;
         }
 
         /// <summary>

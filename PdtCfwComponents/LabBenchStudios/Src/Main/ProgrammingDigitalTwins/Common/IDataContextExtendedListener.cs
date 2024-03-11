@@ -22,16 +22,11 @@
  * SOFTWARE.
  */
 
-using LabBenchStudios.Pdt.Data;
-
 namespace LabBenchStudios.Pdt.Common
 {
-    public interface IDigitalTwinStateProcessor
+    public interface IDataContextExtendedListener : IDataContextEventListener
     {
-        bool HandleIncomingTelemetry(IotDataContext dataContext);
+        void SetDigitalTwinStateProcessor(IDigitalTwinStateProcessor dtStateProcessor);
 
-        ResourceNameContainer GenerateOutgoingStateUpdate(IotDataContext dataContext);
-
-        bool BuildModelData();
     }
 }

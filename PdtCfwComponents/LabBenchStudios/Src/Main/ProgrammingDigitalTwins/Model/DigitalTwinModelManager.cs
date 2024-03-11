@@ -50,7 +50,7 @@ namespace LabBenchStudios.Pdt.Model
         // this contains all the DT model parsed instances
         // this is indexed by the DTDLParser DTMI absolute URI (string)
         private IReadOnlyDictionary<string, DTInterfaceInfo> digitalTwinInterfaceCache;
-        
+
         // useful for passing event messages and debugging
         private ISystemStatusEventListener eventListener = null;
 
@@ -73,7 +73,7 @@ namespace LabBenchStudios.Pdt.Model
         {
             this.SetModelFilePath(modelFilePath);
 
-            this.digitalTwinModelMgrCache  = new DigitalTwinModelManagerCache();
+            this.digitalTwinModelMgrCache = new DigitalTwinModelManagerCache();
         }
 
         // public methods
@@ -85,10 +85,10 @@ namespace LabBenchStudios.Pdt.Model
         /// <returns></returns>
         public bool BuildModelData()
         {
-            if (! string.IsNullOrEmpty(this.modelFilePath) && Directory.Exists(modelFilePath))
+            if (!string.IsNullOrEmpty(this.modelFilePath) && Directory.Exists(modelFilePath))
             {
                 bool areInterfacesLoaded = this.LoadAndValidateDtdlModelInterfaceData();
-                bool areJsonFilesLoaded  = this.LoadAndValidateDtdlModelJsonData();
+                bool areJsonFilesLoaded = this.LoadAndValidateDtdlModelJsonData();
 
                 // both should either succeed or fail
                 return (areInterfacesLoaded && areJsonFilesLoaded);
@@ -238,7 +238,6 @@ namespace LabBenchStudios.Pdt.Model
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
         public bool HandleIncomingTelemetry(IotDataContext data)
         {
             List<DigitalTwinModelState> modelStateList =
@@ -262,16 +261,16 @@ namespace LabBenchStudios.Pdt.Model
         /// <param name="dataContext"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public bool HandleOutgoingStateUpdate(IotDataContext dataContext)
+        public ResourceNameContainer GenerateOutgoingStateUpdate(IotDataContext dataContext)
         {
-            throw new NotImplementedException();
+            // not implemented
+            return null;
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="data"></param>
-        /// <exception cref="NotImplementedException"></exception>
         public void HandleActuatorData(ActuatorData data)
         {
             if (data != null && data.IsResponse())
@@ -293,7 +292,6 @@ namespace LabBenchStudios.Pdt.Model
         /// 
         /// </summary>
         /// <param name="data"></param>
-        /// <exception cref="NotImplementedException"></exception>
         public void HandleConnectionStateData(ConnectionStateData data)
         {
             List<DigitalTwinModelState> modelStateList =
@@ -312,7 +310,6 @@ namespace LabBenchStudios.Pdt.Model
         /// 
         /// </summary>
         /// <param name="data"></param>
-        /// <exception cref="NotImplementedException"></exception>
         public void HandleMessageData(MessageData data)
         {
             List<DigitalTwinModelState> modelStateList =
@@ -331,7 +328,6 @@ namespace LabBenchStudios.Pdt.Model
         /// 
         /// </summary>
         /// <param name="data"></param>
-        /// <exception cref="NotImplementedException"></exception>
         public void HandleSensorData(SensorData data)
         {
             List<DigitalTwinModelState> modelStateList =
@@ -350,7 +346,6 @@ namespace LabBenchStudios.Pdt.Model
         /// 
         /// </summary>
         /// <param name="data"></param>
-        /// <exception cref="NotImplementedException"></exception>
         public void HandleSystemPerformanceData(SystemPerformanceData data)
         {
             List<DigitalTwinModelState> modelStateList =
