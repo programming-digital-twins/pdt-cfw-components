@@ -403,39 +403,71 @@ namespace LabBenchStudios.Pdt.Connection
         {
             string jsonData = connStateData.GetMessage();
 
-            this.eventListener?.LogDebugMessage("Raw JSON:\n" + jsonData);
+            this.eventListener?.LogDebugMessage("Raw Incoming JSON:\n" + jsonData);
 
+
+            // one conversion to retrieve meta data for incoming message
             IotDataContext dataContext = DataUtil.JsonToIotDataContext(jsonData);
 
-            this.eventListener?.LogWarningMessage("IotDataContext: " + dataContext.ToString());
+            this.eventListener?.LogDebugMessage("IotDataContext: " + dataContext.ToString());
 
             try
             {
                 int categoryID = dataContext.GetDeviceCategory();
 
-                if (categoryID == ConfigConst.ENV_TYPE_CATEGORY)
+                // TODO 1: optimize this for current versions of C#
+                // TODO 2: probably best to move this out of here and into EventProcessor
+                switch (categoryID)
                 {
-                    SensorData data = DataUtil.JsonToSensorData(jsonData);
+                    case ConfigConst.ENV_TYPE_CATEGORY:
+                        // it's SensorData - convert once more to get SensorData from payload
+                        SensorData envData = DataUtil.JsonToSensorData(jsonData);
 
-                    this.eventListener?.OnMessagingSystemDataReceived(data);
-                }
-                else if (categoryID == ConfigConst.SYSTEM_TYPE_CATEGORY)
-                {
-                    SystemPerformanceData data = DataUtil.JsonToSystemPerformanceData(jsonData);
+                        // notify event manager, which will distribute to all listeners
+                        this.eventListener?.LogDebugMessage("NORMAL: Processing ENV SensorData: " + categoryID);
+                        this.eventListener?.OnMessagingSystemDataReceived(envData);
+                        break;
 
-                    this.eventListener?.OnMessagingSystemDataReceived(data);
+                    case ConfigConst.UTILITY_SYSTEM_TYPE_CATEGORY:
+                        // it's SensorData - convert once more to get SensorData from payload
+                        SensorData utilData = DataUtil.JsonToSensorData(jsonData);
+
+                        // notify event manager, which will distribute to all listeners
+                        this.eventListener?.LogDebugMessage("NORMAL: Processing UTILITY SensorData: " + categoryID);
+                        this.eventListener?.OnMessagingSystemDataReceived(utilData);
+                        break;
+
+                    case ConfigConst.SYSTEM_TYPE_CATEGORY:
+                        // it's SensorData - convert once more to get SensorData from payload
+                        SensorData sysData = DataUtil.JsonToSensorData(jsonData);
+
+                        // notify event manager, which will distribute to all listeners
+                        this.eventListener?.LogDebugMessage("NORMAL: Processing SYSTEM SensorData: " + categoryID);
+                        this.eventListener?.OnMessagingSystemDataReceived(sysData);
+                        break;
+
+                    case ConfigConst.SYSTEM_PERF_TYPE_CATEGORY:
+                        // it's SensorData - convert once more to get SensorData from payload
+                        SystemPerformanceData sysPerfData = DataUtil.JsonToSystemPerformanceData(jsonData);
+
+                        // notify event manager, which will distribute to all listeners
+                        this.eventListener?.LogDebugMessage("NORMAL: Processing SystemPerformanceData: " + categoryID);
+                        this.eventListener?.OnMessagingSystemDataReceived(sysPerfData);
+                        break;
+
+                    default:
+                        this.eventListener?.LogErrorMessage("Can't identify IotDataContext category: " + categoryID, null);
+                        break;
                 }
-                else
-                {
-                    this.eventListener?.LogDebugMessage("Can't identify IotDataContext: " + categoryID);
-                }
+                
+                // always handle every incoming message as a ConnectionStateData instance
+                // this allows connection state tracking on a per-message basis
+                this.eventListener?.OnMessagingSystemDataReceived(connStateData);
             }
             catch (Exception ex)
             {
                 this.eventListener?.LogErrorMessage("Failed to convert payload to IotDataContext: ", ex);
             }
-
-            this.eventListener?.OnMessagingSystemDataReceived(connStateData);
         }
 
         private ConnectionStateData GetConnectionStateCopy()

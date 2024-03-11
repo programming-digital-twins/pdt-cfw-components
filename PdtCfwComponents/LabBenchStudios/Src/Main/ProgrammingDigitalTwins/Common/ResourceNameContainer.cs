@@ -30,10 +30,13 @@ namespace LabBenchStudios.Pdt.Common
     public class ResourceNameContainer
     {
         public string ProductPrefix { set; get; } = ConfigConst.PRODUCT_NAME;
-        public string DeviceName { private set; get; } = "Not-Set";
-        public string ResourceTypeName { private set; get; } = "Not-Set";
-        public string FullTypeName { private set; get; } = "Not-Set";
-        public string ResourceSubTypeName { private set; get; } = "Not-Set";
+        public string DeviceName { set; get; } = ConfigConst.NOT_SET;
+        public string ResourceTypeName { set; get; } = ConfigConst.NOT_SET;
+        public string PersistenceName { set; get; } = ConfigConst.NOT_SET;
+
+
+        public string FullTypeName { private set; get; } = ConfigConst.NOT_SET;
+        public string ResourceSubTypeName { private set; get; } = ConfigConst.NOT_SET;
         public int TypeID { private set; get; } = ConfigConst.DEFAULT_TYPE_ID;
         public int TypeCategoryID { private set; get; } = ConfigConst.DEFAULT_TYPE_CATEGORY_ID;
         public bool IsActuationResource { private set; get; } = false;
@@ -44,14 +47,20 @@ namespace LabBenchStudios.Pdt.Common
         public bool IsSystemResource { private set; get; } = false;
         public bool IsSubscription { private set; get; } = false;
 
-        public string PersistenceName { set; get; } = null;
+        private IotDataContext _dataContext = null;
 
+        private string _fullResourceName = ConfigConst.NOT_SET;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public IotDataContext DataContext {
             get => this._dataContext;
             set {
                 if ((value != null) && (value is IotDataContext))
                 {
                     this._dataContext = value;
+
                     this.DeviceName = this._dataContext.GetDeviceID();
                     this.TypeID = this._dataContext.GetTypeID();
                     this.TypeCategoryID = this._dataContext.GetTypeCategoryID();
@@ -63,10 +72,16 @@ namespace LabBenchStudios.Pdt.Common
                     else if (this._dataContext is ConnectionStateData)
                     {
                         this.IsConnStateResource = true;
-                    } else if (this._dataContext is SensorData)
+                    }
+                    else if (this._dataContext is MessageData)
+                    {
+                        this.IsMessageResource = true;
+                    }
+                    else if (this._dataContext is SensorData)
                     {
                         this.IsSensingResource = true;
-                    } else if (this._dataContext is SystemPerformanceData)
+                    }
+                    else if (this._dataContext is SystemPerformanceData)
                     {
                         this.IsSystemResource = true;
                     }
@@ -76,15 +91,21 @@ namespace LabBenchStudios.Pdt.Common
             }
         }
 
-        private IotDataContext _dataContext = null;
+        // constructors
 
-        private string _fullResourceName = "Not-Set";
-
+        /// <summary>
+        /// 
+        /// </summary>
         public ResourceNameContainer()
         {
             this.InitFullResourceName();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="deviceName"></param>
+        /// <param name="resourceTypeName"></param>
         public ResourceNameContainer(string deviceName, string resourceTypeName)
         {
             DeviceName = deviceName;
@@ -93,31 +114,65 @@ namespace LabBenchStudios.Pdt.Common
             this.InitFullResourceName();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="deviceName"></param>
+        /// <param name="resourceTypeName"></param>
+        /// <param name="data"></param>
         public ResourceNameContainer(string deviceName, string resourceTypeName, IotDataContext data)
         {
             DeviceName = deviceName;
             ResourceTypeName = resourceTypeName;
             DataContext = data;
 
-            TypeID = data.GetDeviceType();
             TypeCategoryID = data.GetDeviceCategory();
+            TypeID = data.GetDeviceType();
 
             this.InitFullResourceName();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="resource"></param>
+        public ResourceNameContainer(ResourceNameContainer resource)
+        {
+            if (resource != null)
+            {
+                ProductPrefix = resource.ProductPrefix;
+                DeviceName = resource.DeviceName;
+                ResourceTypeName = resource.ResourceTypeName;
+                DataContext = resource.DataContext;
+
+                TypeCategoryID = resource.TypeCategoryID;
+                TypeID = resource.TypeID;
+            }
+
+            this.InitFullResourceName();
+        }
+
+
         // public methods
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public string GetFullResourceName()
         {
             return this._fullResourceName;
         }
 
-
-        // private methods
-
-        private void InitFullResourceName()
+        /// <summary>
+        /// 
+        /// </summary>
+        public void InitFullResourceName()
         {
-            this._fullResourceName = this.ProductPrefix + ConfigConst.RESOURCE_SEPARATOR + this.DeviceName + ConfigConst.RESOURCE_SEPARATOR + this.ResourceTypeName;
+            this._fullResourceName =
+                this.ProductPrefix + ConfigConst.RESOURCE_SEPARATOR +
+                this.DeviceName + ConfigConst.RESOURCE_SEPARATOR +
+                this.ResourceTypeName;
         }
     }
 }

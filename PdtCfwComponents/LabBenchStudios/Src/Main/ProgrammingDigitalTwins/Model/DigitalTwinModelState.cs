@@ -61,7 +61,7 @@ namespace LabBenchStudios.Pdt.Model
 
         private ModelNameUtil.DtmiControllerEnum controllerID;
 
-        private string rawModelJson = null;
+        private string modelJson = null;
 
         private DigitalTwinModelState parentState = null;
 
@@ -88,15 +88,6 @@ namespace LabBenchStudios.Pdt.Model
                 ConfigConst.NOT_SET, ConfigConst.NOT_SET,
                 ConfigConst.DEFAULT_TYPE_CATEGORY_ID, ConfigConst.DEFAULT_TYPE_ID)
         {
-            /*
-            if (dataSyncKey != null)
-            {
-                base.SetName(dataSyncKey.GetName());
-                base.SetDeviceID(this.dataSyncKey.GetDeviceID());
-                base.SetLocationID(this.dataSyncKey.GetLocationID());
-            }
-            */
-
             if (dataSyncKey != null)
             {
                 base.SetName(dataSyncKey.GetName());
@@ -112,12 +103,15 @@ namespace LabBenchStudios.Pdt.Model
         /// </summary>
         /// <param name="name"></param>
         /// <param name="deviceID"></param>
+        /// <param name="locationID"></param>
         public DigitalTwinModelState(
-            string name, string deviceID) :
+            string name, string deviceID, string locationID) :
             base(
                 name, deviceID,
                 ConfigConst.DEFAULT_TYPE_CATEGORY_ID, ConfigConst.DEFAULT_TYPE_ID)
         {
+            base.SetLocationID(locationID);
+
             InitState();
         }
 
@@ -126,12 +120,15 @@ namespace LabBenchStudios.Pdt.Model
         /// </summary>
         /// <param name="name"></param>
         /// <param name="deviceID"></param>
+        /// <param name="locationID"></param>
         /// <param name="typeCategoryID"></param>
         /// <param name="typeID"></param>
         public DigitalTwinModelState(
-            string name, string deviceID, int typeCategoryID, int typeID) :
+            string name, string deviceID, string locationID, int typeCategoryID, int typeID) :
             base(name, deviceID, typeCategoryID, typeID)
         {
+            base.SetLocationID(locationID);
+
             InitState();
         }
 
@@ -147,7 +144,7 @@ namespace LabBenchStudios.Pdt.Model
         /// Components are expected to be leaf nodes
         /// </summary>
         /// <param name="modelState"></param>
-        public void AddConnectedModelState(DigitalTwinModelState modelState)
+        public DigitalTwinModelState AddConnectedModelState(DigitalTwinModelState modelState)
         {
             if (modelState != null)
             {
@@ -163,6 +160,8 @@ namespace LabBenchStudios.Pdt.Model
                     this.attachedComponents.Add(key, modelState);
                 }
             }
+
+            return this;
         }
 
         /// <summary>
@@ -181,7 +180,7 @@ namespace LabBenchStudios.Pdt.Model
             return null;
         }
 
-        public void BuildDataSyncKey()
+        public DigitalTwinModelState BuildDataSyncKey()
         {
             this.prevDataSyncKeyStr = this.dataSyncKeyStr;
 
@@ -200,6 +199,8 @@ namespace LabBenchStudios.Pdt.Model
                     this.prevDataSyncKeyStr = null;
                 }
             }
+
+            return this;
         }
 
         /// <summary>
@@ -208,7 +209,7 @@ namespace LabBenchStudios.Pdt.Model
         /// 
         /// This must be invoked for an instance key to be generated, however.
         /// </summary>
-        public void BuildModelSyncKey()
+        public DigitalTwinModelState BuildModelSyncKey()
         {
             this.prevModelSyncKeyStr = this.modelSyncKeyStr;
 
@@ -225,12 +226,14 @@ namespace LabBenchStudios.Pdt.Model
                     this.prevModelSyncKeyStr = null;
                 }
             }
+
+            return this;
         }
 
         /// <summary>
         /// This will simply re-parse the stored raw JSON data.
         /// This is typically invoked internally after the JSON
-        /// is set via SetRawModelJson(); however, it can be
+        /// is set via SetModelJson(); however, it can be
         /// called to re-generate any internal structures,
         /// which can be useful when the state instance itself
         /// needs to reset.
@@ -240,6 +243,7 @@ namespace LabBenchStudios.Pdt.Model
         {
             // TODO: implement this - parse the DTDL and
             // instance all properties / relationships
+
             return true;
         }
 
@@ -273,13 +277,28 @@ namespace LabBenchStudios.Pdt.Model
         }
 
         /// <summary>
-        /// 
+        /// This string is used to uniquely represent this model's assigned
+        /// unique incoming telemetry state.
         /// </summary>
-        /// <param name="key"></param>
         /// <returns></returns>
-        public bool HasConnectedModelState(string key)
+        public string GetDataSyncKeyString()
         {
-            return (this.attachedComponents != null && this.attachedComponents.ContainsKey(key));
+            return this.dataSyncKeyStr;
+        }
+
+        /// <summary>
+        /// This string is used to uniquely represent this model's assigned
+        /// unique incoming telemetry state.
+        /// 
+        /// The instance sync key and telemetry sync key are used to ensure
+        /// the source system data (which knows nothing of the digital twin)
+        /// can be processed by the appropriate digital twin instance - this
+        /// state object (which itself knows nothing of the source system).
+        /// </summary>
+        /// <returns></returns>
+        public DigitalTwinDataSyncKey GetDataSyncKey()
+        {
+            return this.dataSyncKey;
         }
 
         /// <summary>
@@ -333,31 +352,6 @@ namespace LabBenchStudios.Pdt.Model
         }
 
         /// <summary>
-        /// This string is used to uniquely represent this model's assigned
-        /// unique incoming telemetry state.
-        /// </summary>
-        /// <returns></returns>
-        public string GetDataSyncKeyString()
-        {
-            return this.dataSyncKeyStr;
-        }
-
-        /// <summary>
-        /// This string is used to uniquely represent this model's assigned
-        /// unique incoming telemetry state.
-        /// 
-        /// The instance sync key and telemetry sync key are used to ensure
-        /// the source system data (which knows nothing of the digital twin)
-        /// can be processed by the appropriate digital twin instance - this
-        /// state object (which itself knows nothing of the source system).
-        /// </summary>
-        /// <returns></returns>
-        public DigitalTwinDataSyncKey GetDataSyncKey()
-        {
-            return this.dataSyncKey;
-        }
-
-        /// <summary>
         /// The full DTMI model ID used by this component. Any other
         /// instances of this state class that are configured with the
         /// same controller ID will have the same DTMI Model ID.
@@ -397,9 +391,9 @@ namespace LabBenchStudios.Pdt.Model
         /// 
         /// </summary>
         /// <returns></returns>
-        public string GetRawModelJson()
+        public string GetModelJson()
         {
-            return this.rawModelJson;
+            return this.modelJson;
         }
 
         /// <summary>
@@ -493,6 +487,7 @@ namespace LabBenchStudios.Pdt.Model
 
                     if (sensorData != null)
                     {
+                        this.ProcessIncomingSensorData(sensorData);
                         this.virtualAssetListener.HandleSensorData(sensorData);
                         return true;
                     }
@@ -556,6 +551,16 @@ namespace LabBenchStudios.Pdt.Model
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public bool HasConnectedModelState(string key)
+        {
+            return (this.attachedComponents != null && this.attachedComponents.ContainsKey(key));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="deviceID"></param>
         public DigitalTwinModelState SetConnectedDeviceID(string deviceID)
         {
@@ -607,9 +612,9 @@ namespace LabBenchStudios.Pdt.Model
         /// 
         /// </summary>
         /// <param name="json"></param>
-        public DigitalTwinModelState SetRawModelJson(string json)
+        public DigitalTwinModelState SetModelJson(string json)
         {
-            this.rawModelJson = json;
+            this.modelJson = json;
 
             return this;
         }
@@ -684,6 +689,22 @@ namespace LabBenchStudios.Pdt.Model
 
             this.BuildDataSyncKey();
             this.BuildModelSyncKey();
+        }
+
+        private void ProcessIncomingSensorData(SensorData data)
+        {
+            // assume the incoming data name and the DTDL used as the model
+            // for this state object are synchronized name-wise
+            //
+            // e.g., the name 'relativeHumidity' contained within the DTDL interface
+            // must also match with the SensorData 'name' sent from the physical thing
+            string key = data.GetName();
+
+            if (this.modelProperties.ContainsKey(key))
+            {
+                DigitalTwinProperty prop = this.modelProperties[key];
+                prop.ApplyTelemetry(data);
+            }
         }
 
     }

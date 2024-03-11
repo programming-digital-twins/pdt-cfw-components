@@ -169,6 +169,7 @@ namespace LabBenchStudios.Pdt.Common
 
         public const int COMMAND_OFF = DEFAULT_COMMAND;
         public const int COMMAND_ON = 1;
+
         public static readonly string COMMAND_KEY = "Command";
 
         public static readonly string ON_KEY = "ON";
@@ -181,7 +182,8 @@ namespace LabBenchStudios.Pdt.Common
         public const int DEFAULT_SENSOR_TYPE = DEFAULT_TYPE_ID;
 
         public const int ENV_TYPE_CATEGORY = 1000;
-        public const int ENV_DEVICE_TYPE = 1000;
+        public const int ENV_DEVICE_TYPE = ENV_TYPE_CATEGORY;
+
         public const int HVAC_ACTUATOR_TYPE = 1001;
         public const int HUMIDIFIER_ACTUATOR_TYPE = 1002;
         public const int IMPELLER_RPM_ACTUATOR_TYPE = 1110;
@@ -189,13 +191,19 @@ namespace LabBenchStudios.Pdt.Common
         public const int HUMIDITY_SENSOR_TYPE = 1010;
         public const int PRESSURE_SENSOR_TYPE = 1012;
         public const int TEMP_SENSOR_TYPE = 1013;
-        public const int FLUID_VISCOSITY_SENSOR_TYPE = 1020;
-        public const int FLUID_RATE_SENSOR_TYPE = 1021;
-        public const int IMPELLER_RPM_SENSOR_TYPE = 1022;
 
-        public const int UTILITY_SYSTEM_TYPE_CATEGORY = 2000;
-        public const int HEATING_SYSTEM_TYPE = 2001;
-        public const int POWER_WINDMILL_SYSTEM_TYPE = 2002;
+        public const int UTILITY_SYSTEM_TYPE_CATEGORY = 4000;
+        public const int UTILITY_SYSTEM_DEVICE_TYPE = UTILITY_SYSTEM_TYPE_CATEGORY;
+
+        public const int HEATING_SYSTEM_TYPE = 4100;
+        public const int FLUID_VISCOSITY_SENSOR_TYPE = 4101;
+        public const int FLUID_RATE_SENSOR_TYPE = 4102;
+        public const int IMPELLER_RPM_SENSOR_TYPE = 4103;
+
+        public const int POWER_WINDMILL_SYSTEM_TYPE = 4200;
+        public const int POWER_OUTPUT_SENSOR_TYPE = 4201;
+        public const int GENERATOR_TEMP_SENSOR_TYPE = 4202;
+        public const int ROTATIONAL_SPEED_SENSOR_TYPE = 4203;
 
         public static readonly string HUMIDIFIER_NAME = "Humidifier";
         public static readonly string THERMOSTAT_NAME = "Thermostat";
@@ -259,7 +267,8 @@ namespace LabBenchStudios.Pdt.Common
 
         public static readonly string RESOURCE_MGMT_NAME = "ResourceMgmt";
 
-        public const int SYSTEM_PERF_TYPE = 9000;
+        public const int SYSTEM_PERF_TYPE_CATEGORY = 9000;
+        public const int SYSTEM_PERF_TYPE = SYSTEM_PERF_TYPE_CATEGORY;
         public const int CPU_UTIL_TYPE = 9001;
         public const int MEM_UTIL_TYPE = 9002;
         public const int DISK_UTIL_TYPE = 9003;

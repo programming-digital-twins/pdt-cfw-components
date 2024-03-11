@@ -60,6 +60,7 @@ namespace LabBenchStudios.Pdt.Model
         private DateTime lastTelemetryUpdate = DateTime.MinValue;
         private DateTime lastTwinUpdate = DateTime.MinValue;
 
+        private IotDataContext dataContext = null;
         private DataValueContainer propertyValues = null;
 
         public DigitalTwinProperty()
@@ -86,7 +87,8 @@ namespace LabBenchStudios.Pdt.Model
         {
             if (data != null)
             {
-
+                this.UpdateDataContext(data);
+                this.UpdatePropertyValues(data.GetDataValues());
             }
         }
 
@@ -236,9 +238,23 @@ namespace LabBenchStudios.Pdt.Model
             return sb.ToString();
         }
 
+        public void UpdateDataContext(IotDataContext data)
+        {
+            if (data != null)
+            {
+                this.dataContext.SetName(data.GetName());
+                this.dataContext.SetDeviceID(data.GetDeviceID());
+                this.dataContext.SetTypeCategoryID(data.GetTypeCategoryID());
+                this.dataContext.SetTypeID(data.GetTypeID());
+            }
+        }
+
         public void UpdatePropertyValues(DataValueContainer values)
         {
-            this.propertyValues.UpdateData(values);
+            if (values != null)
+            {
+                this.propertyValues.UpdateData(values);
+            }
         }
 
         // private methods
@@ -246,6 +262,8 @@ namespace LabBenchStudios.Pdt.Model
         private void InitProperty()
         {
             this.commandOptions = new HashSet<int>();
+            this.propertyValues = new DataValueContainer();
+            this.dataContext    = new IotDataContext();
             this.propertyValues = new DataValueContainer();
         }
     }

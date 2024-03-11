@@ -134,6 +134,14 @@ namespace LabBenchStudios.Pdt.Data
 
         public void SetStatusCode(int val) { this.statusCode = val; this.UpdateTimeStamp(); }
 
+        public void SetDeviceID(string name) { if (!string.IsNullOrEmpty(name)) { this.deviceID = name; }; this.UpdateTimeStamp(); }
+
+        public void SetName(string name) { if (!string.IsNullOrEmpty(name)) { this.name = name; }; this.UpdateTimeStamp(); }
+
+        public void SetTypeCategoryID(int val) { if (val >= 0) { this.typeCategoryID = val; }; this.UpdateTimeStamp(); }
+
+        public void SetTypeID(int val) { if (val >= 0) { this.typeID = val; }; this.UpdateTimeStamp(); }
+
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
@@ -173,14 +181,6 @@ namespace LabBenchStudios.Pdt.Data
         }
 
         // protected methods
-
-        protected void SetDeviceID(string name) { if (! string.IsNullOrEmpty(name)) { this.deviceID = name; }; this.UpdateTimeStamp(); }
-
-        protected void SetName(string name) { if (! string.IsNullOrEmpty(name)) { this.name = name; }; this.UpdateTimeStamp(); }
-
-        protected void SetTypeCategoryID(int val) { if (val >= 0) { this.typeCategoryID = val; }; this.UpdateTimeStamp(); }
-
-        protected void SetTypeID(int val) { if (val >= 0) { this.typeID = val; }; this.UpdateTimeStamp(); }
 
         protected void UpdateTimeStamp()
         {

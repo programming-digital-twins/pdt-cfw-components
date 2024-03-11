@@ -112,6 +112,7 @@ namespace LabBenchStudios.Pdt.Common
         private EventProcessor()
         {
             this.digitalTwinModelManager = new DigitalTwinModelManager();
+            this.digitalTwinModelManager.SetSystemStatusEventListener(this);
 
             this.dataContextEventListenerList = new List<IDataContextEventListener>();
             this.systemStatusEventListenerList = new List<ISystemStatusEventListener>();
@@ -203,12 +204,13 @@ namespace LabBenchStudios.Pdt.Common
         /// <returns></returns>
         public bool LoadDigitalTwinModels(string modelFilePath)
         {
-            if (this.digitalTwinModelManager != null)
+            // tell model manager to update its model file path (and [re]load models)
+            if (this.digitalTwinModelManager.SetModelFilePath(modelFilePath))
             {
-                if (this.digitalTwinModelManager.SetModelFilePath(modelFilePath))
-                {
-                    return this.digitalTwinModelManager.BuildModelData();
-                }
+                // notify all interested listeners that (new) models have been (re) loaded
+                this.OnModelUpdateEvent();
+
+                return true;
             }
 
             Console.WriteLine($"Failed to (re)load Digital Twin models from path {modelFilePath}");

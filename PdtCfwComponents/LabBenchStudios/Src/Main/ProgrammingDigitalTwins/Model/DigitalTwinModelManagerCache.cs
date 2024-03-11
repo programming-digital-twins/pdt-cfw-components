@@ -129,6 +129,24 @@ namespace LabBenchStudios.Pdt.Model
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public int GetCountOfCachedJsonModels()
+        {
+            return this.digitalTwinDtdlJsonCache.Count;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public int GetCountOfCachedModelStates()
+        {
+            return this.digitalTwinStateCache.Count;
+        }
+
+        /// <summary>
         /// Returns the DTDL JSON for the given controller
         /// </summary>
         /// <param name="dtmiController"></param>
@@ -163,6 +181,11 @@ namespace LabBenchStudios.Pdt.Model
 
             Console.WriteLine($"No DT model state available for key {modelStateKey}");
             return null;
+        }
+
+        public List<string> GetStoredDataSyncKeys()
+        {
+            return new List<string>(this.digitalTwinStateLookupMap.Keys);
         }
 
         /// <summary>
@@ -242,7 +265,7 @@ namespace LabBenchStudios.Pdt.Model
 
                     string rawJson = this.GetDigitalTwinModelJson(modelState.GetModelControllerID());
 
-                    modelState.SetRawModelJson(rawJson);
+                    modelState.SetModelJson(rawJson);
                 }
             }
 

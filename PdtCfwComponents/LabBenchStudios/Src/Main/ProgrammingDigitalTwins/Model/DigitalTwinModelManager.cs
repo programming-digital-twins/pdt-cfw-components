@@ -25,7 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-
+using System.Text;
 using DTDLParser.Models;
 
 using LabBenchStudios.Pdt.Common;
@@ -50,7 +50,9 @@ namespace LabBenchStudios.Pdt.Model
         // this contains all the DT model parsed instances
         // this is indexed by the DTDLParser DTMI absolute URI (string)
         private IReadOnlyDictionary<string, DTInterfaceInfo> digitalTwinInterfaceCache;
-
+        
+        // useful for passing event messages and debugging
+        private ISystemStatusEventListener eventListener = null;
 
         /// <summary>
         /// Default constructor. Uses the default model file path specified
@@ -75,6 +77,28 @@ namespace LabBenchStudios.Pdt.Model
         }
 
         // public methods
+
+        /// <summary>
+        /// This will trigger a request to model manager to load
+        /// (or reload) this state objects respective model.
+        /// </summary>
+        /// <returns></returns>
+        public bool BuildModelData()
+        {
+            if (! string.IsNullOrEmpty(this.modelFilePath) && Directory.Exists(modelFilePath))
+            {
+                bool areInterfacesLoaded = this.LoadAndValidateDtdlModelInterfaceData();
+                bool areJsonFilesLoaded  = this.LoadAndValidateDtdlModelJsonData();
+
+                // both should either succeed or fail
+                return (areInterfacesLoaded && areJsonFilesLoaded);
+            }
+            else
+            {
+                Console.WriteLine($"Ignoring DTDL reload request. File path is invalid: {this.modelFilePath}");
+                return false;
+            }
+        }
 
         /// <summary>
         /// 
@@ -108,18 +132,7 @@ namespace LabBenchStudios.Pdt.Model
         {
             var dtModelState = new DigitalTwinModelState(dataSyncKey);
 
-            dtModelState
-                .SetModelControllerID(controllerID)
-                .SetRawModelJson(this.digitalTwinModelMgrCache.GetDigitalTwinModelJson(controllerID))
-                .SetVirtualAssetListener(stateUpdateListener);
-
-            dtModelState.BuildModelData();
-            dtModelState.BuildDataSyncKey();
-            dtModelState.BuildModelSyncKey();
-
-            this.UpdateModelStateProperties(dtModelState);
-
-            return this.digitalTwinModelMgrCache.UpdateDigitalTwinModelStateCache(dtModelState);
+            return this.ConfigureAndStoreModelState(dtModelState, controllerID, stateUpdateListener);
         }
 
         /// <summary>
@@ -156,22 +169,9 @@ namespace LabBenchStudios.Pdt.Model
             ModelNameUtil.DtmiControllerEnum controllerID,
             IDataContextEventListener stateUpdateListener)
         {
-            var dtModelState = new DigitalTwinModelState(deviceID, locationID);
+            var dtModelState = new DigitalTwinModelState(deviceID, deviceID, locationID);
 
-            dtModelState
-                .SetConnectedDeviceID(deviceID)
-                .SetConnectedDeviceLocation(locationID)
-                .SetModelControllerID(controllerID)
-                .SetRawModelJson(this.digitalTwinModelMgrCache.GetDigitalTwinModelJson(controllerID))
-                .SetVirtualAssetListener(stateUpdateListener);
-            
-            dtModelState.BuildModelData();
-            dtModelState.BuildDataSyncKey();
-            dtModelState.BuildModelSyncKey();
-
-            this.UpdateModelStateProperties(dtModelState);
-
-            return this.digitalTwinModelMgrCache.UpdateDigitalTwinModelStateCache(dtModelState);
+            return this.ConfigureAndStoreModelState(dtModelState, controllerID, stateUpdateListener);
         }
 
         /// <summary>
@@ -203,6 +203,24 @@ namespace LabBenchStudios.Pdt.Model
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public int GetCountOfCachedJsonModels()
+        {
+            return this.digitalTwinModelMgrCache.GetCountOfCachedJsonModels();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public int GetCountOfCachedModelStates()
+        {
+            return this.digitalTwinModelMgrCache.GetCountOfCachedModelStates();
         }
 
         /// <summary>
@@ -370,27 +388,12 @@ namespace LabBenchStudios.Pdt.Model
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="dtController"></param>
-        public void RegisterModelController(DigitalTwinModelState dtController)
+        /// <param name="listener"></param>
+        public void SetSystemStatusEventListener(ISystemStatusEventListener listener)
         {
-
-        }
-
-        /// <summary>
-        /// This will trigger a request to model manager to load
-        /// (or reload) this state objects respective model.
-        /// </summary>
-        /// <returns></returns>
-        public bool BuildModelData()
-        {
-            if (!string.IsNullOrEmpty(this.modelFilePath) && Directory.Exists(modelFilePath))
+            if (listener != null)
             {
-                return this.LoadAndValidateDtdlModels();
-            }
-            else
-            {
-                Console.WriteLine($"Ignoring DTDL reload request. File path is invalid: {this.modelFilePath}");
-                return false;
+                this.eventListener = listener;
             }
         }
 
@@ -401,10 +404,27 @@ namespace LabBenchStudios.Pdt.Model
         /// <returns></returns>
         public bool SetModelFilePath(string modelFilePath)
         {
+            return this.SetModelFilePath(modelFilePath, true);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="modelFilePath"></param>
+        /// <param name="reloadModels"></param>
+        /// <returns></returns>
+        public bool SetModelFilePath(string modelFilePath, bool reloadModels)
+        {
             if (!string.IsNullOrEmpty(modelFilePath) && Directory.Exists(modelFilePath))
             {
                 Console.WriteLine($"Setting model file path. File path is good: {modelFilePath}");
                 this.modelFilePath = modelFilePath;
+
+                if (reloadModels)
+                {
+                    this.BuildModelData();
+                }
+
                 return true;
             }
 
@@ -438,7 +458,10 @@ namespace LabBenchStudios.Pdt.Model
             {
                 switch (dataContext.GetTypeID())
                 {
-
+                    // TODO: this call will send a command to the appropriate edge device
+                    //  - validate the command - ensure it's legit and authorized
+                    //  - map the command to the appropriate destination topic / resource
+                    //  - notify the appropriate listener 
                 }
 
                 success = true;
@@ -450,28 +473,77 @@ namespace LabBenchStudios.Pdt.Model
         // private methods
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dtModelState"></param>
+        /// <param name="controllerID"></param>
+        /// <param name="stateUpdateListener"></param>
+        /// <returns></returns>
+        private DigitalTwinModelState ConfigureAndStoreModelState(
+            DigitalTwinModelState dtModelState,
+            ModelNameUtil.DtmiControllerEnum controllerID,
+            IDataContextEventListener stateUpdateListener)
+        {
+            // DigitalTwinModelState implements the Builder patter for most methods
+            //  - set properties first, then build the requisite internal structures
+            dtModelState
+                .SetModelControllerID(controllerID)
+                .SetModelJson(this.digitalTwinModelMgrCache.GetDigitalTwinModelJson(controllerID))
+                .SetVirtualAssetListener(stateUpdateListener);
+
+            dtModelState
+                .BuildDataSyncKey()
+                .BuildModelSyncKey();
+
+            dtModelState.BuildModelData();
+
+            this.UpdateModelStateProperties(dtModelState);
+
+            return this.digitalTwinModelMgrCache.UpdateDigitalTwinModelStateCache(dtModelState);
+        }
+
+        /// <summary>
         /// Unfortunately, this method results in each DTDL model being loaded twice
         /// Future optimizations will probably remove this redundancy.
         /// </summary>
-        private bool LoadAndValidateDtdlModels()
+        private bool LoadAndValidateDtdlModelJsonData()
         {
-            bool success = false;
+            if (this.digitalTwinModelMgrCache.LoadDigitalTwinJsonModels(this.modelFilePath))
+            {
+                Console.WriteLine($"Successfully loaded DTDL JSON data from path {this.modelFilePath}");
 
+                return true;
+            }
+            else
+            {
+                Console.WriteLine($"Failed to load DTDL JSON data from path {this.modelFilePath}");
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Unfortunately, this method results in each DTDL model being loaded twice
+        /// Future optimizations will probably remove this redundancy.
+        /// </summary>
+        private bool LoadAndValidateDtdlModelInterfaceData()
+        {
             // update DTDL object cache
             this.digitalTwinInterfaceCache = ModelParserUtil.LoadAllDtdlInterfaces(this.modelFilePath);
 
-            if (this.digitalTwinInterfaceCache == null)
+            if (this.digitalTwinInterfaceCache != null)
             {
-                Console.WriteLine($"Failed to load DTDL models from path {this.modelFilePath}");
+                Console.WriteLine($"Successfully loaded DTDL model interfaces from path {this.modelFilePath}");
+                this.hasSuccessfulDataLoad = true;
 
-                return false;
+                return true;
+            }
+            else
+            {
+                Console.WriteLine($"Failed to load DTDL model interfaces from path {this.modelFilePath}");
             }
 
-            success = this.digitalTwinModelMgrCache.LoadDigitalTwinJsonModels(this.modelFilePath);
-
-            this.hasSuccessfulDataLoad = success;
-
-            return success;
+            return false;
         }
 
         /// <summary>
@@ -520,18 +592,23 @@ namespace LabBenchStudios.Pdt.Model
                         telemetry.SetDetail(dtdlTelemetry.ToString());
                         telemetry.SetAsEnabled(true);
                         telemetry.SetAsTelemetry(true);
+                        telemetry.SetAsWriteable(false);
 
                         Console.WriteLine($"Adding telemetry to state {telemetry}");
                         modelState.AddModelProperty(telemetry);
                     }
 
-                    Console.WriteLine($"\n\n=====\n{modelState.GetRawModelJson()}\n\n=====\n");
-                    Console.WriteLine(
+                    StringBuilder sb = new StringBuilder();
+
+                    sb.Append($"\n\n=====\n{modelState.GetModelJson()}\n\n=====\n");
+                    sb.Append(
                         $"\nLoaded interface for model:" +
                         $"\n -> Model ID: {modelState.GetModelID()}" +
                         $"\n -> Data Sync Key: {modelState.GetDataSyncKey()}" +
                         $"\n -> Model Sync Key: {modelState.GetModelSyncKeyString()}");
 
+                    Console.WriteLine(sb.ToString());
+                    this.eventListener?.LogDebugMessage(sb.ToString());
                 }
                 else
                 {
