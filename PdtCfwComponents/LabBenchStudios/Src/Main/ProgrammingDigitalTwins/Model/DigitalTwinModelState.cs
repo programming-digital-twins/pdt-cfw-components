@@ -66,6 +66,7 @@ namespace LabBenchStudios.Pdt.Model
         private DigitalTwinModelState parentState = null;
 
         private bool hasParent = false;
+        private bool enableIncomingTelemetryProcessing = true;
 
         private IDataContextEventListener virtualAssetListener = null;
 
@@ -249,6 +250,63 @@ namespace LabBenchStudios.Pdt.Model
             // instance all properties / relationships
 
             return true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="enable"></param>
+        public void EnableIncomingTelemetryProcessing(bool enable)
+        {
+            Console.WriteLine($"Setting 'enable incoming telemetry processing' flag: {enable}");
+
+            this.enableIncomingTelemetryProcessing = enable;
+        }
+
+        /// <summary>
+        /// This method is invoked when local state is updated and needs to
+        /// be sent to the 'remote' system.
+        /// </summary>
+        /// <param name="dataContext"></param>
+        /// <returns></returns>
+        public ResourceNameContainer GenerateOutgoingStateUpdate(IotDataContext dataContext)
+        {
+            if (dataContext != null)
+            {
+                ResourceNameContainer resource =
+                    new ResourceNameContainer(
+                        this.GetDeviceID(),
+                        dataContext.GetName(),
+                        dataContext);
+
+                return resource;
+            }
+
+            return null;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public ResourceNameContainer GetCommandResource()
+        {
+            return this.GetCommandResource(null);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="resourceType"></param>
+        /// <returns></returns>
+        public ResourceNameContainer GetCommandResource(string resourceType)
+        {
+            if (! string.IsNullOrEmpty(resourceType))
+            {
+                resourceType = ConfigConst.ACTUATOR_CMD;
+            }
+
+            return new ResourceNameContainer(this.GetDeviceID(), resourceType);
         }
 
         /// <summary>
@@ -469,6 +527,13 @@ namespace LabBenchStudios.Pdt.Model
         /// <returns></returns>
         public bool HandleIncomingTelemetry(IotDataContext dataContext)
         {
+            // quick fast exit check
+            if (! this.enableIncomingTelemetryProcessing)
+            {
+                return true;
+            }
+
+            // process the incoming data
             if (dataContext != null)
             {
                 Console.WriteLine(
@@ -530,28 +595,6 @@ namespace LabBenchStudios.Pdt.Model
         }
 
         /// <summary>
-        /// This method is invoked when local state is updated and needs to
-        /// be sent to the 'remote' system.
-        /// </summary>
-        /// <param name="dataContext"></param>
-        /// <returns></returns>
-        public ResourceNameContainer GenerateOutgoingStateUpdate(IotDataContext dataContext)
-        {
-            if (dataContext != null)
-            {
-                ResourceNameContainer resource =
-                    new ResourceNameContainer(
-                        this.GetDeviceID(),
-                        dataContext.GetName(),
-                        dataContext);
-
-                return resource;
-            }
-
-            return null;
-        }
-
-        /// <summary>
         /// 
         /// </summary>
         /// <param name="key"></param>
@@ -570,6 +613,15 @@ namespace LabBenchStudios.Pdt.Model
             // base class will handle validation of the name
             base.SetDeviceID(deviceID);
 
+            // update all attached components
+            if (this.attachedComponents != null)
+            {
+                foreach (string key in this.attachedComponents.Keys)
+                {
+                    this.attachedComponents[key].SetConnectedDeviceID(deviceID);
+                }
+            }
+
             return this;
         }
 
@@ -581,6 +633,15 @@ namespace LabBenchStudios.Pdt.Model
         {
             // base class will handle validation of the name
             base.SetLocationID(locationID);
+
+            // update all attached components
+            if (this.attachedComponents != null)
+            {
+                foreach (string key in this.attachedComponents.Keys)
+                {
+                    this.attachedComponents[key].SetConnectedDeviceID(locationID);
+                }
+            }
 
             return this;
         }
@@ -650,20 +711,47 @@ namespace LabBenchStudios.Pdt.Model
             return this;
         }
 
-        public void UpdateConnectionState(string deviceID, string locationID)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="processor"></param>
+        /// <returns></returns>
+        public bool UpdateConnectionState(IDigitalTwinStateProcessor processor)
         {
+            if (processor != null)
+            {
+                return this.UpdateConnectionState(processor.GetDeviceID(), processor.GetLocationID());
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="deviceID"></param>
+        /// <param name="locationID"></param>
+        /// <returns></returns>
+        public bool UpdateConnectionState(string deviceID, string locationID)
+        {
+            bool success = false;
+
             if (! string.IsNullOrEmpty(deviceID))
             {
                 base.SetDeviceID(deviceID);
+                success = true;
             }
 
             if (! string.IsNullOrEmpty(locationID))
             {
                 base.SetLocationID(locationID);
+                success = true;
             }
 
             this.BuildDataSyncKey();
             this.BuildModelSyncKey();
+
+            return success;
         }
 
         /// <summary>

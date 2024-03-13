@@ -177,6 +177,7 @@ namespace LabBenchStudios.Pdt.Model
         {
             Barometer,
             EdgeComputingDevice,
+            EnvironmentalSensors,
             FluidPump,
             HeatingSystem,
             Humidifier,
@@ -198,6 +199,9 @@ namespace LabBenchStudios.Pdt.Model
 
                 case DtmiControllerEnum.EdgeComputingDevice:
                     modelFileName = CONTROLLER_EDGE_COMPUTE_DEVICE_DTDL_MODEL; break;
+
+                case DtmiControllerEnum.EnvironmentalSensors:
+                    modelFileName = COMPONENT_ENV_SENSORS_DTDL_MODEL; break;
 
                 case DtmiControllerEnum.FluidPump:
                     modelFileName = CONTROLLER_FLUID_PUMP_DTDL_MODEL; break;

@@ -39,7 +39,7 @@ namespace LabBenchStudios.Pdt.Model
     /// It will store both the raw JSON and the DTInterfaceInfo for each
     /// DTMI absolute URI, using the latter as the key for each separate cache.
     /// </summary>
-    public class DigitalTwinModelManager : IDigitalTwinStateProcessor, IDataContextEventListener
+    public class DigitalTwinModelManager : IDataContextEventListener
     {
         private string modelFilePath = ModelNameUtil.DEFAULT_MODEL_FILE_PATH;
 
@@ -98,6 +98,43 @@ namespace LabBenchStudios.Pdt.Model
                 Console.WriteLine($"Ignoring DTDL reload request. File path is invalid: {this.modelFilePath}");
                 return false;
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="processor"></param>
+        /// <param name="useGuid"></param>
+        /// <param name="addToParent"></param>
+        /// <param name="controllerID"></param>
+        /// <param name="stateUpdateListener"></param>
+        /// <returns></returns>
+        public DigitalTwinModelState CreateModelState(
+            IDigitalTwinStateProcessor processor,
+            bool useGuid,
+            bool addToParent,
+            ModelNameUtil.DtmiControllerEnum controllerID,
+            IDataContextEventListener stateUpdateListener)
+        {
+            if (processor != null)
+            {
+                DigitalTwinModelState createdProcessor =
+                    this.CreateModelState(
+                        processor.GetDeviceID(),
+                        processor.GetLocationID(),
+                        useGuid,
+                        controllerID,
+                        stateUpdateListener);
+
+                if (addToParent)
+                {
+                    processor.AddConnectedModelState(createdProcessor);
+                }
+
+                return createdProcessor;
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -175,17 +212,6 @@ namespace LabBenchStudios.Pdt.Model
         }
 
         /// <summary>
-        /// Returns the internally stored DT Model State instance using
-        /// its model state key.
-        /// </summary>
-        /// <param name="modelStateKey"></param>
-        /// <returns></returns>
-        public DigitalTwinModelState GetDigitalTwinModelState(string modelStateKey)
-        {
-            return this.digitalTwinModelMgrCache.GetDigitalTwinModelState(modelStateKey);
-        }
-
-        /// <summary>
         /// Generates a new List<string> of DTMI absolute URI's when called.
         /// </summary>
         /// <returns></returns>
@@ -234,6 +260,17 @@ namespace LabBenchStudios.Pdt.Model
         }
 
         /// <summary>
+        /// Returns the internally stored DT Model State instance using
+        /// its model state key.
+        /// </summary>
+        /// <param name="modelStateKey"></param>
+        /// <returns></returns>
+        public DigitalTwinModelState GetDigitalTwinModelState(string modelStateKey)
+        {
+            return this.digitalTwinModelMgrCache.GetDigitalTwinModelState(modelStateKey);
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="data"></param>
@@ -253,18 +290,6 @@ namespace LabBenchStudios.Pdt.Model
 
             // TODO: log msg?
             return false;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="dataContext"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public ResourceNameContainer GenerateOutgoingStateUpdate(IotDataContext dataContext)
-        {
-            // not implemented
-            return null;
         }
 
         /// <summary>

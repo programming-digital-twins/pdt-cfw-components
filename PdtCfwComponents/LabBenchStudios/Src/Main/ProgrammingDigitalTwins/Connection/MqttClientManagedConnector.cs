@@ -405,7 +405,6 @@ namespace LabBenchStudios.Pdt.Connection
 
             this.eventListener?.LogDebugMessage("Raw Incoming JSON:\n" + jsonData);
 
-
             // one conversion to retrieve meta data for incoming message
             IotDataContext dataContext = DataUtil.JsonToIotDataContext(jsonData);
 

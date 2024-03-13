@@ -23,15 +23,35 @@
  */
 
 using LabBenchStudios.Pdt.Data;
+using LabBenchStudios.Pdt.Model;
 
 namespace LabBenchStudios.Pdt.Common
 {
     public interface IDigitalTwinStateProcessor
     {
-        bool HandleIncomingTelemetry(IotDataContext dataContext);
+        DigitalTwinModelState AddConnectedModelState(DigitalTwinModelState modelState);
+
+        bool BuildModelData();
+
+        void EnableIncomingTelemetryProcessing(bool enable);
+
+        string GetDeviceID();
+
+        string GetLocationID();
+
+        ResourceNameContainer GetCommandResource();
+
+        ResourceNameContainer GetCommandResource(string resourceType);
 
         ResourceNameContainer GenerateOutgoingStateUpdate(IotDataContext dataContext);
 
-        bool BuildModelData();
+        ModelNameUtil.DtmiControllerEnum GetModelControllerID();
+
+        bool HandleIncomingTelemetry(IotDataContext dataContext);
+
+        bool UpdateConnectionState(string deviceID, string locationID);
+
+        bool UpdateConnectionState(IDigitalTwinStateProcessor processor);
+
     }
 }
