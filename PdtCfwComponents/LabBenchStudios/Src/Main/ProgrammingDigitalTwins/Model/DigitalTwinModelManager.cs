@@ -42,6 +42,7 @@ namespace LabBenchStudios.Pdt.Model
     public class DigitalTwinModelManager : IDataContextEventListener
     {
         private string modelFilePath = ModelNameUtil.DEFAULT_MODEL_FILE_PATH;
+        private string resourcePrefix = ConfigConst.PRODUCT_NAME;
 
         private bool hasSuccessfulDataLoad = false;
 
@@ -71,9 +72,9 @@ namespace LabBenchStudios.Pdt.Model
         /// <param name="modelFilePath"></param>
         public DigitalTwinModelManager(string modelFilePath)
         {
-            this.SetModelFilePath(modelFilePath);
-
             this.digitalTwinModelMgrCache = new DigitalTwinModelManagerCache();
+
+            this.SetModelFilePath(modelFilePath);
         }
 
         // public methods
@@ -212,6 +213,31 @@ namespace LabBenchStudios.Pdt.Model
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="deviceID"></param>
+        /// <param name="locationID"></param>
+        /// <param name="typeCategoryID"></param>
+        /// <param name="typeID"></param>
+        /// <param name="useGuid"></param>
+        /// <param name="controllerID"></param>
+        /// <param name="stateUpdateListener"></param>
+        /// <returns></returns>
+        public DigitalTwinModelState CreateModelState(
+            string deviceID,
+            string locationID,
+            int typeCategoryID,
+            int typeID,
+            bool useGuid,
+            ModelNameUtil.DtmiControllerEnum controllerID,
+            IDataContextEventListener stateUpdateListener)
+        {
+            var dtModelState = new DigitalTwinModelState(deviceID, deviceID, locationID, typeCategoryID, typeID);
+
+            return this.ConfigureAndStoreModelState(dtModelState, controllerID, stateUpdateListener);
+        }
+
+        /// <summary>
         /// Generates a new List<string> of DTMI absolute URI's when called.
         /// </summary>
         /// <returns></returns>
@@ -268,6 +294,15 @@ namespace LabBenchStudios.Pdt.Model
         public DigitalTwinModelState GetDigitalTwinModelState(string modelStateKey)
         {
             return this.digitalTwinModelMgrCache.GetDigitalTwinModelState(modelStateKey);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string GetResourcePrefix()
+        {
+            return this.resourcePrefix;
         }
 
         /// <summary>
@@ -455,6 +490,20 @@ namespace LabBenchStudios.Pdt.Model
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="prefix"></param>
+        public void SetResourcePrefix(string prefix)
+        {
+            if (! string.IsNullOrEmpty(prefix))
+            {
+                this.resourcePrefix = prefix;
+
+                this.digitalTwinModelMgrCache.SetResourcePrefix(prefix);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="dtModelState"></param>
         /// <returns></returns>
         public bool UpdateModelState(DigitalTwinModelState dtModelState)
@@ -509,7 +558,8 @@ namespace LabBenchStudios.Pdt.Model
             dtModelState
                 .SetModelControllerID(controllerID)
                 .SetModelJson(this.digitalTwinModelMgrCache.GetDigitalTwinModelJson(controllerID))
-                .SetVirtualAssetListener(stateUpdateListener);
+                .SetVirtualAssetListener(stateUpdateListener)
+                .SetResourcePrefix(this.resourcePrefix);
 
             dtModelState
                 .BuildDataSyncKey()
@@ -580,43 +630,9 @@ namespace LabBenchStudios.Pdt.Model
                 {
                     Console.WriteLine($"Found interface for model ID {modelState.GetModelID()}: {interfaceInfo.DisplayName}");
 
-                    // TODO: update the properties list with Property and Telemetry DTDL data!!
-
-                    IReadOnlyDictionary<string, DTPropertyInfo> propEntries = interfaceInfo.Properties;
-
-                    foreach (var propEntry in propEntries)
-                    {
-                        DigitalTwinProperty prop = new DigitalTwinProperty(propEntry.Key);
-                        DTPropertyInfo dtdlProp = propEntry.Value;
-
-                        prop.SetDisplayName(dtdlProp.Name);
-                        prop.SetDescription(dtdlProp.Schema.Comment);
-                        prop.SetDetail(dtdlProp.ToString());
-                        prop.SetAsEnabled(true);
-                        prop.SetAsTelemetry(false);
-                        prop.SetAsWriteable(dtdlProp.Writable);
-
-                        Console.WriteLine($"Adding property to state {prop}");
-                        modelState.AddModelProperty(prop);
-                    }
-
-                    IReadOnlyDictionary<string, DTTelemetryInfo> telemetryEntries = interfaceInfo.Telemetries;
-
-                    foreach (var telemetryEntry in telemetryEntries)
-                    {
-                        DigitalTwinProperty telemetry = new DigitalTwinProperty(telemetryEntry.Key);
-                        DTTelemetryInfo dtdlTelemetry = telemetryEntry.Value;
-
-                        telemetry.SetDisplayName(dtdlTelemetry.Name);
-                        telemetry.SetDescription(dtdlTelemetry.Schema.Comment);
-                        telemetry.SetDetail(dtdlTelemetry.ToString());
-                        telemetry.SetAsEnabled(true);
-                        telemetry.SetAsTelemetry(true);
-                        telemetry.SetAsWriteable(false);
-
-                        Console.WriteLine($"Adding telemetry to state {telemetry}");
-                        modelState.AddModelProperty(telemetry);
-                    }
+                    this.AddPropertiesToModelState(modelState, interfaceInfo);
+                    this.AddCommandsToModelState(modelState, interfaceInfo);
+                    this.AddTelemetriesToModelState(modelState, interfaceInfo);
 
                     StringBuilder sb = new StringBuilder();
 
@@ -635,6 +651,136 @@ namespace LabBenchStudios.Pdt.Model
                     Console.WriteLine($"No interface for model ID {modelState.GetModelID()}");
                 }
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="modelState"></param>
+        /// <param name="interfaceInfo"></param>
+        private void AddCommandsToModelState(DigitalTwinModelState modelState, DTInterfaceInfo interfaceInfo)
+        {
+            IReadOnlyDictionary<string, DTCommandInfo> commandEntries = interfaceInfo.Commands;
+
+            foreach (var commandEntry in commandEntries)
+            {
+                DigitalTwinProperty command = new DigitalTwinProperty(commandEntry.Key);
+                DTCommandInfo dtdlCommand = commandEntry.Value;
+
+                command.SetDisplayName(dtdlCommand.Name);
+                command.SetDescription(dtdlCommand.Description.ToString());
+                command.SetDetail(dtdlCommand.ToString());
+                command.SetAsEnabled(true);
+                command.SetAsCommand(true);
+                command.SetAsWriteable(false);
+
+                command.SetRequestType(ModelParserUtil.GetPropertyType(dtdlCommand.Request.Schema.EntityKind));
+                command.SetResponseType(ModelParserUtil.GetPropertyType(dtdlCommand.Response.Schema.EntityKind));
+                command.SetPropertyType(command.GetRequestType());
+
+                modelState.AddModelProperty(command);
+
+                // debugging
+                StringBuilder sbProp = new StringBuilder();
+
+                sbProp.Append(command.ToString());
+                sbProp.Append('\n').Append("Command Entity Kind: ").Append(dtdlCommand.EntityKind);
+                sbProp.Append('\n').Append("Command Class ID: ").Append(dtdlCommand.ClassId);
+                sbProp.Append('\n').Append("Command Request Entity Kind: ").Append(dtdlCommand.Request.Schema.EntityKind);
+                sbProp.Append('\n').Append("Command Request Class ID: ").Append(dtdlCommand.Request.Schema.ClassId);
+                sbProp.Append('\n').Append("Command Response Entity Kind: ").Append(dtdlCommand.Response.Schema.EntityKind);
+                sbProp.Append('\n').Append("Command Response Class ID: ").Append(dtdlCommand.Response.Schema.ClassId);
+
+                Console.WriteLine($"Adding command to state {sbProp.ToString()}");
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="modelState"></param>
+        /// <param name="interfaceInfo"></param>
+        private void AddPropertiesToModelState(DigitalTwinModelState modelState, DTInterfaceInfo interfaceInfo)
+        {
+            IReadOnlyDictionary<string, DTPropertyInfo> propEntries = interfaceInfo.Properties;
+
+            foreach (var propEntry in propEntries)
+            {
+                DigitalTwinProperty prop = new DigitalTwinProperty(propEntry.Key);
+                DTPropertyInfo dtdlProp = propEntry.Value;
+
+                prop.SetDisplayName(dtdlProp.Name);
+                prop.SetDescription(dtdlProp.Schema.Comment);
+                prop.SetDetail(dtdlProp.ToString());
+                prop.SetAsEnabled(true);
+                prop.SetAsTelemetry(false);
+                prop.SetAsWriteable(dtdlProp.Writable);
+
+                prop.SetPropertyType(ModelParserUtil.GetPropertyType(dtdlProp.Schema.EntityKind));
+
+                modelState.AddModelProperty(prop);
+
+                // debugging
+                StringBuilder sbProp = new StringBuilder();
+
+                sbProp.Append(prop.ToString());
+                sbProp.Append('\n').Append("Property Entity Kind: ").Append(dtdlProp.EntityKind);
+                sbProp.Append('\n').Append("Property Class ID: ").Append(dtdlProp.ClassId);
+                sbProp.Append('\n').Append("Property Schema Entity Kind: ").Append(dtdlProp.Schema.EntityKind);
+                sbProp.Append('\n').Append("Property Schema Class ID: ").Append(dtdlProp.Schema.ClassId);
+
+                Console.WriteLine($"Adding property to state {sbProp.ToString()}");
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="modelState"></param>
+        /// <param name="interfaceInfo"></param>
+        private void AddTelemetriesToModelState(DigitalTwinModelState modelState, DTInterfaceInfo interfaceInfo)
+        {
+            IReadOnlyDictionary<string, DTTelemetryInfo> telemetryEntries = interfaceInfo.Telemetries;
+
+            foreach (var telemetryEntry in telemetryEntries)
+            {
+                DigitalTwinProperty telemetry = new DigitalTwinProperty(telemetryEntry.Key);
+                DTTelemetryInfo dtdlTelemetry = telemetryEntry.Value;
+
+                telemetry.SetDisplayName(dtdlTelemetry.Name);
+                telemetry.SetDescription(dtdlTelemetry.Schema.Comment);
+                telemetry.SetDetail(dtdlTelemetry.ToString());
+                telemetry.SetAsEnabled(true);
+                telemetry.SetAsTelemetry(true);
+                telemetry.SetAsWriteable(false);
+
+                telemetry.SetPropertyType(ModelParserUtil.GetPropertyType(dtdlTelemetry.Schema.EntityKind));
+
+                modelState.AddModelProperty(telemetry);
+
+                // debugging
+                StringBuilder sbProp = new StringBuilder();
+
+                sbProp.Append(telemetry.ToString());
+                sbProp.Append('\n').Append("Telemetry Entity Kind: ").Append(dtdlTelemetry.EntityKind);
+                sbProp.Append('\n').Append("Telemetry Class ID: ").Append(dtdlTelemetry.ClassId);
+                sbProp.Append('\n').Append("Telemetry Schema Entity Kind: ").Append(dtdlTelemetry.Schema.EntityKind);
+                sbProp.Append('\n').Append("Telemetry Schema Class ID: ").Append(dtdlTelemetry.Schema.ClassId);
+
+                Console.WriteLine($"Adding telemetry to state {sbProp.ToString()}");
+            }
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append($"\n\n=====\n{modelState.GetModelJson()}\n\n=====\n");
+            sb.Append(
+                $"\nLoaded interface for model:" +
+                $"\n -> Model ID: {modelState.GetModelID()}" +
+                $"\n -> Data Sync Key: {modelState.GetDataSyncKey()}" +
+                $"\n -> Model Sync Key: {modelState.GetModelSyncKeyString()}");
+
+            Console.WriteLine(sb.ToString());
+            this.eventListener?.LogDebugMessage(sb.ToString());
         }
 
     }

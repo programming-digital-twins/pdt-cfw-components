@@ -310,6 +310,22 @@ namespace LabBenchStudios.Pdt.Model
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="prefix"></param>
+        public void SetResourcePrefix(string prefix)
+        {
+            if (!string.IsNullOrEmpty(prefix))
+            {
+                foreach (string key in this.digitalTwinStateCache.Keys)
+                {
+                    DigitalTwinModelState dtState = this.digitalTwinStateCache[key];
+                    dtState.SetResourcePrefix(prefix);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="dtModelState"></param>
         /// <returns></returns>
         public DigitalTwinModelState UpdateDigitalTwinModelStateCache(DigitalTwinModelState dtModelState)

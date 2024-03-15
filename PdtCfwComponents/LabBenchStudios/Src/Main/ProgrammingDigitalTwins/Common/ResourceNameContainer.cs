@@ -29,16 +29,17 @@ namespace LabBenchStudios.Pdt.Common
 {
     public class ResourceNameContainer
     {
-        public string ProductPrefix { set; get; } = ConfigConst.PRODUCT_NAME;
+        public string ResourcePrefix { set; get; } = ConfigConst.PRODUCT_NAME;
         public string DeviceName { set; get; } = ConfigConst.NOT_SET;
+        public string DeviceLocation { set; get; } = ConfigConst.NOT_SET;
         public string ResourceTypeName { set; get; } = ConfigConst.NOT_SET;
         public string PersistenceName { set; get; } = ConfigConst.NOT_SET;
 
+        public int TypeID { set; get; } = ConfigConst.DEFAULT_TYPE_ID;
+        public int TypeCategoryID { set; get; } = ConfigConst.DEFAULT_TYPE_CATEGORY_ID;
 
         public string FullTypeName { private set; get; } = ConfigConst.NOT_SET;
         public string ResourceSubTypeName { private set; get; } = ConfigConst.NOT_SET;
-        public int TypeID { private set; get; } = ConfigConst.DEFAULT_TYPE_ID;
-        public int TypeCategoryID { private set; get; } = ConfigConst.DEFAULT_TYPE_CATEGORY_ID;
         public bool IsActuationResource { private set; get; } = false;
         public bool IsConnStateResource { private set; get; } = false;
         public bool IsMediaResource { private set; get; } = false;
@@ -62,6 +63,7 @@ namespace LabBenchStudios.Pdt.Common
                     this._dataContext = value;
 
                     this.DeviceName = this._dataContext.GetDeviceID();
+                    this.DeviceLocation = this._dataContext.GetLocationID();
                     this.TypeID = this._dataContext.GetTypeID();
                     this.TypeCategoryID = this._dataContext.GetTypeCategoryID();
 
@@ -117,6 +119,21 @@ namespace LabBenchStudios.Pdt.Common
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="resourcePrefix"></param>
+        /// <param name="deviceName"></param>
+        /// <param name="resourceTypeName"></param>
+        public ResourceNameContainer(string resourcePrefix, string deviceName, string resourceTypeName)
+        {
+            ResourcePrefix = resourcePrefix;
+            DeviceName = deviceName;
+            ResourceTypeName = resourceTypeName;
+
+            this.InitFullResourceName();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="deviceName"></param>
         /// <param name="resourceTypeName"></param>
         /// <param name="data"></param>
@@ -135,12 +152,32 @@ namespace LabBenchStudios.Pdt.Common
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="resourcePrefix"></param>
+        /// <param name="deviceName"></param>
+        /// <param name="resourceTypeName"></param>
+        /// <param name="data"></param>
+        public ResourceNameContainer(string resourcePrefix, string deviceName, string resourceTypeName, IotDataContext data)
+        {
+            ResourcePrefix = resourcePrefix;
+            DeviceName = deviceName;
+            ResourceTypeName = resourceTypeName;
+            DataContext = data;
+
+            TypeCategoryID = data.GetDeviceCategory();
+            TypeID = data.GetDeviceType();
+
+            this.InitFullResourceName();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="resource"></param>
         public ResourceNameContainer(ResourceNameContainer resource)
         {
             if (resource != null)
             {
-                ProductPrefix = resource.ProductPrefix;
+                ResourcePrefix = resource.ResourcePrefix;
                 DeviceName = resource.DeviceName;
                 ResourceTypeName = resource.ResourceTypeName;
                 DataContext = resource.DataContext;
@@ -170,9 +207,20 @@ namespace LabBenchStudios.Pdt.Common
         public void InitFullResourceName()
         {
             this._fullResourceName =
-                this.ProductPrefix + ConfigConst.RESOURCE_SEPARATOR +
+                this.ResourcePrefix + ConfigConst.RESOURCE_SEPARATOR +
                 this.DeviceName + ConfigConst.RESOURCE_SEPARATOR +
                 this.ResourceTypeName;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return this.GetFullResourceName();
+        }
+
     }
+
 }

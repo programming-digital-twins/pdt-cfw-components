@@ -56,12 +56,17 @@ namespace LabBenchStudios.Pdt.Model
         private bool isEnabled = false;
         private bool isWriteable = false;
         private bool isTelemetry = false;
+        private bool isCommand = false;
 
         private DateTime lastTelemetryUpdate = DateTime.MinValue;
         private DateTime lastTwinUpdate = DateTime.MinValue;
 
         private IotDataContext dataContext = null;
         private DataValueContainer propertyValues = null;
+
+        private ModelNameUtil.DtmiPropertyTypeEnum propertyType = ModelNameUtil.DtmiPropertyTypeEnum.Undefined;
+        private ModelNameUtil.DtmiPropertyTypeEnum requestType  = ModelNameUtil.DtmiPropertyTypeEnum.Undefined;
+        private ModelNameUtil.DtmiPropertyTypeEnum responseType = ModelNameUtil.DtmiPropertyTypeEnum.Undefined;
 
         public DigitalTwinProperty()
         {
@@ -128,7 +133,7 @@ namespace LabBenchStudios.Pdt.Model
 
         public HashSet<int> GetCommandOptions()
         {
-            return commandOptions;
+            return this.commandOptions;
         }
 
         public string GetDescription()
@@ -148,12 +153,32 @@ namespace LabBenchStudios.Pdt.Model
 
         public string GetPropertyName()
         {
-            return name;
+            return this.name;
+        }
+
+        public ModelNameUtil.DtmiPropertyTypeEnum GetPropertyType()
+        {
+            return this.propertyType;
+        }
+
+        public ModelNameUtil.DtmiPropertyTypeEnum GetRequestType()
+        {
+            return this.requestType;
+        }
+
+        public ModelNameUtil.DtmiPropertyTypeEnum GetResponseType()
+        {
+            return this.responseType;
         }
 
         public DataValueContainer GetPropertyValues()
         {
-            return propertyValues;
+            return this.propertyValues;
+        }
+
+        public bool IsCommand()
+        {
+            return this.isCommand;
         }
 
         public bool IsPropertyEnabled()
@@ -169,6 +194,11 @@ namespace LabBenchStudios.Pdt.Model
         public bool IsPropertyTelemetry()
         {
             return this.isTelemetry;
+        }
+
+        public void SetAsCommand(bool isCommand)
+        {
+            this.isCommand = isCommand;
         }
 
         public void SetAsEnabled(bool isEnabled)
@@ -209,30 +239,50 @@ namespace LabBenchStudios.Pdt.Model
             }
         }
 
+        public void SetPropertyType(ModelNameUtil.DtmiPropertyTypeEnum type)
+        {
+            this.propertyType = type;
+        }
+
+        public void SetRequestType(ModelNameUtil.DtmiPropertyTypeEnum type)
+        {
+            this.requestType = type;
+        }
+
+        public void SetResponseType(ModelNameUtil.DtmiPropertyTypeEnum type)
+        {
+            this.responseType = type;
+        }
+
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder(base.ToString());
 
-            String lfString = "\n";
+            String lfString = "\n\t";
 
             if (! this.usePrettyPrint)
             {
-                lfString = "";
+                lfString = ";";
             }
 
             if (this.usePrettyPrint)
             {
                 sb.Append(lfString).Append("----------");
+                sb.Append(lfString);
             }
 
             sb
-              .Append(lfString).Append("name").Append('=').Append(this.name).Append(';')
-              .Append(lfString).Append("displayName").Append('=').Append(this.displayName).Append(';')
-              .Append(lfString).Append("description").Append('=').Append(this.description).Append(';')
-              .Append(lfString).Append("detail").Append('=').Append(this.detail).Append(';')
-              .Append(lfString).Append("values").Append('=').Append(this.propertyValues).Append(';')
-              .Append(lfString).Append("isEnabled").Append('=').Append(this.isEnabled).Append(';')
-              .Append(lfString).Append("isWriteable").Append('=').Append(this.isWriteable).Append(';')
+              .Append("name").Append('=').Append(this.name)
+              .Append(lfString).Append("displayName").Append('=').Append(this.displayName)
+              .Append(lfString).Append("description").Append('=').Append(this.description)
+              .Append(lfString).Append("propType").Append('=').Append(this.propertyType)
+              .Append(lfString).Append("requestType").Append('=').Append(this.requestType)
+              .Append(lfString).Append("responseType").Append('=').Append(this.responseType)
+              .Append(lfString).Append("detail").Append('=').Append(this.detail)
+              .Append(lfString).Append("values").Append('=').Append(this.propertyValues)
+              .Append(lfString).Append("isEnabled").Append('=').Append(this.isEnabled)
+              .Append(lfString).Append("isCommand").Append('=').Append(this.isCommand)
+              .Append(lfString).Append("isWriteable").Append('=').Append(this.isWriteable)
               .Append(lfString).Append("isTelemetry").Append('=').Append(this.isTelemetry);
 
             return sb.ToString();

@@ -81,6 +81,15 @@ namespace LabBenchStudios.Pdt.Data
             this.UpdateTimeStamp();
         }
 
+        public IotDataContext(string name, string deviceID, string locationID)
+        {
+            if (!string.IsNullOrEmpty(name)) { this.name = name; }
+            if (!string.IsNullOrEmpty(deviceID)) { this.deviceID = deviceID; }
+            if (!string.IsNullOrEmpty(locationID)) { this.locationID = locationID; }
+
+            this.UpdateTimeStamp();
+        }
+
         public IotDataContext(string name, string deviceID, int typeCategoryID, int typeID)
         {
             if (! string.IsNullOrEmpty(name)) { this.name = name; }

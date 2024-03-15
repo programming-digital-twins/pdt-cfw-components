@@ -173,6 +173,23 @@ namespace LabBenchStudios.Pdt.Model
         public static readonly string PRODUCT_NAME_PLACEHOLDER = "PRODUCT_NAME";
         public static readonly string MODEL_NAME_PLACEHOLDER = "MODEL_NAME";
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public enum DtmiPropertyTypeEnum
+        {
+            Command,
+            Count,
+            Value,
+            Message,
+            Schedule,
+            Toggle,
+            Undefined
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public enum DtmiControllerEnum
         {
             Barometer,
@@ -188,6 +205,11 @@ namespace LabBenchStudios.Pdt.Model
             Custom
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="controllerID"></param>
+        /// <returns></returns>
         public static string GetModelFileName(DtmiControllerEnum controllerID)
         {
             string modelFileName = BASE_IOT_MODEL_CONTEXT_DTDL_MODEL;
@@ -229,6 +251,77 @@ namespace LabBenchStudios.Pdt.Model
             }
 
             return modelFileName;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="controllerID"></param>
+        /// <param name="deviceID"></param>
+        /// <param name="locationID"></param>
+        /// <returns></returns>
+        public static IotDataContext GenerateDataContext(
+            DtmiControllerEnum controllerID, string deviceID, string locationID)
+        {
+            IotDataContext dataContext = new IotDataContext(controllerID.ToString(), deviceID, locationID);
+
+            switch (controllerID)
+            {
+                case DtmiControllerEnum.Barometer:
+                    dataContext.SetTypeCategoryID(ConfigConst.ENV_TYPE_CATEGORY);
+                    dataContext.SetTypeID(ConfigConst.BAROMETER_TYPE);
+                    break;
+
+                case DtmiControllerEnum.EdgeComputingDevice:
+                    dataContext.SetTypeCategoryID(ConfigConst.SYSTEM_TYPE_CATEGORY);
+                    dataContext.SetTypeID(ConfigConst.SYSTEM_PERF_TYPE);
+                    break;
+
+                case DtmiControllerEnum.EnvironmentalSensors:
+                    dataContext.SetTypeCategoryID(ConfigConst.ENV_TYPE_CATEGORY);
+                    dataContext.SetTypeID(ConfigConst.ENV_TYPE_CATEGORY);
+                    break;
+
+                case DtmiControllerEnum.FluidPump:
+                    dataContext.SetTypeCategoryID(ConfigConst.UTILITY_SYSTEM_TYPE_CATEGORY);
+                    dataContext.SetTypeID(ConfigConst.FLUID_PUMP_TYPE);
+                    break;
+
+                case DtmiControllerEnum.HeatingSystem:
+                    dataContext.SetTypeCategoryID(ConfigConst.UTILITY_SYSTEM_TYPE_CATEGORY);
+                    dataContext.SetTypeID(ConfigConst.HEATING_SYSTEM_TYPE);
+                    break;
+
+                case DtmiControllerEnum.Humidifier:
+                    dataContext.SetTypeCategoryID(ConfigConst.ENV_TYPE_CATEGORY);
+                    dataContext.SetTypeID(ConfigConst.HUMIDIFIER_TYPE);
+                    break;
+
+                case DtmiControllerEnum.Thermostat:
+                    dataContext.SetTypeCategoryID(ConfigConst.ENV_TYPE_CATEGORY);
+                    dataContext.SetTypeID(ConfigConst.THERMOSTAT_TYPE);
+                    break;
+
+                case DtmiControllerEnum.InteriorRoom:
+                    dataContext.SetTypeCategoryID(ConfigConst.STRUCTURE_TYPE_CATEGORY);
+                    dataContext.SetTypeID(ConfigConst.STRUCTURE_SPACE_TYPE);
+                    break;
+
+                case DtmiControllerEnum.PowerWindmill:
+                    dataContext.SetTypeCategoryID(ConfigConst.UTILITY_SYSTEM_TYPE_CATEGORY);
+                    dataContext.SetTypeID(ConfigConst.POWER_WINDMILL_SYSTEM_TYPE);
+                    break;
+
+                case DtmiControllerEnum.ResidentialStructure:
+                    dataContext.SetTypeCategoryID(ConfigConst.STRUCTURE_TYPE_CATEGORY);
+                    dataContext.SetTypeID(ConfigConst.STRUCTURE_TYPE);
+                    break;
+
+                default:
+                    break;
+            }
+
+            return dataContext;
         }
 
         /// <summary>
@@ -381,11 +474,22 @@ namespace LabBenchStudios.Pdt.Model
             return sb.ToString();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="controllerID"></param>
+        /// <returns></returns>
         public static string CreateModelID(DtmiControllerEnum controllerID)
         {
             return CreateModelID(controllerID, ModelNameUtil.DTMI_CURRENT_VERSION);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="controllerID"></param>
+        /// <param name="version"></param>
+        /// <returns></returns>
         public static string CreateModelID(DtmiControllerEnum controllerID, int version)
         {
             string modelName = IOT_MODEL_CONTEXT_NAME;
@@ -438,11 +542,24 @@ namespace LabBenchStudios.Pdt.Model
             return ModelNameUtil.CreateModelID(ModelNameUtil.DTMI_PREFIX, modelName, version);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="modelName"></param>
+        /// <param name="version"></param>
+        /// <returns></returns>
         public static string CreateModelID(string modelName, int version)
         {
             return ModelNameUtil.CreateModelID(ModelNameUtil.DTMI_PREFIX, modelName, version);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dtmiPrefix"></param>
+        /// <param name="modelName"></param>
+        /// <param name="version"></param>
+        /// <returns></returns>
         public static string CreateModelID(string dtmiPrefix, string modelName, int version)
         {
             if (! string.IsNullOrEmpty(dtmiPrefix) &&
@@ -458,11 +575,16 @@ namespace LabBenchStudios.Pdt.Model
             return ModelNameUtil.IOT_MODEL_CONTEXT_MODEL_ID;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dtmiURI"></param>
+        /// <returns></returns>
         public static string GetNameFromDtmiURI(string dtmiURI)
         {
             if (dtmiURI != null)
             {
-                string[] parts = dtmiURI.Split(new char[] { ':' , ';'});
+                string[] parts = dtmiURI.Split(new char[] { ':' , ';' });
 
                 if (parts.Length > 1)
                 {
@@ -473,6 +595,11 @@ namespace LabBenchStudios.Pdt.Model
             return ModelNameUtil.IOT_MODEL_CONTEXT_NAME;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="typeID"></param>
+        /// <returns></returns>
         public static string GetModelID(int typeID)
         {
             string modelID = null;

@@ -43,6 +43,8 @@ namespace LabBenchStudios.Pdt.Model
     [JsonObject(MemberSerialization.OptIn)]
     public class DigitalTwinModelState : IotDataContext, IDigitalTwinStateProcessor
     {
+        private string resourcePrefix = ConfigConst.PRODUCT_NAME;
+
         // this is the DTMI for the model (e.g., dtmi:LabBenchStudios.Pdt.{modelName};1)
         private string modelID = ModelNameUtil.IOT_MODEL_CONTEXT_MODEL_ID;
         private string modelGUID = System.Guid.NewGuid().ToString();
@@ -275,6 +277,7 @@ namespace LabBenchStudios.Pdt.Model
             {
                 ResourceNameContainer resource =
                     new ResourceNameContainer(
+                        this.resourcePrefix,
                         this.GetDeviceID(),
                         dataContext.GetName(),
                         dataContext);
@@ -284,7 +287,18 @@ namespace LabBenchStudios.Pdt.Model
 
             return null;
         }
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetAllModelKeys()
+        {
+            List<string> keys = new List<string>(this.modelProperties.Keys);
+
+            return keys;
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -306,7 +320,7 @@ namespace LabBenchStudios.Pdt.Model
                 resourceType = ConfigConst.ACTUATOR_CMD;
             }
 
-            return new ResourceNameContainer(this.GetDeviceID(), resourceType);
+            return new ResourceNameContainer(this.GetResourcePrefix(), this.GetDeviceID(), resourceType);
         }
 
         /// <summary>
@@ -462,17 +476,6 @@ namespace LabBenchStudios.Pdt.Model
         /// 
         /// </summary>
         /// <returns></returns>
-        public List<string> GetAllModelKeys()
-        {
-            List<string> keys = new List<string>(this.modelProperties.Keys);
-
-            return keys;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         public List<string> GetModelPropertyKeys()
         {
             List<string> keys = new List<string>();
@@ -517,6 +520,15 @@ namespace LabBenchStudios.Pdt.Model
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string GetResourcePrefix()
+        {
+            return this.resourcePrefix;
         }
 
         /// <summary>
@@ -649,10 +661,35 @@ namespace LabBenchStudios.Pdt.Model
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="key"></param>
+        public DigitalTwinModelState SetDataSyncKey(DigitalTwinDataSyncKey key)
+        {
+            if (key != null)
+            {
+                this.dataSyncKey = key;
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="controllerID"></param>
         public DigitalTwinModelState SetModelControllerID(ModelNameUtil.DtmiControllerEnum controllerID)
         {
             this.controllerID = controllerID;
+
+            return this;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="json"></param>
+        public DigitalTwinModelState SetModelJson(string json)
+        {
+            this.modelJson = json;
 
             return this;
         }
@@ -675,23 +712,12 @@ namespace LabBenchStudios.Pdt.Model
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="json"></param>
-        public DigitalTwinModelState SetModelJson(string json)
+        /// <param name="prefix"></param>
+        public DigitalTwinModelState SetResourcePrefix(string prefix)
         {
-            this.modelJson = json;
-
-            return this;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="key"></param>
-        public DigitalTwinModelState SetDataSyncKey(DigitalTwinDataSyncKey key)
-        {
-            if (key != null)
+            if (! string.IsNullOrEmpty(prefix))
             {
-                this.dataSyncKey = key;
+                this.resourcePrefix = prefix;
             }
 
             return this;
@@ -782,6 +808,10 @@ namespace LabBenchStudios.Pdt.Model
             this.BuildModelSyncKey();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
         private void ProcessIncomingSensorData(SensorData data)
         {
             // assume the incoming data name and the DTDL used as the model

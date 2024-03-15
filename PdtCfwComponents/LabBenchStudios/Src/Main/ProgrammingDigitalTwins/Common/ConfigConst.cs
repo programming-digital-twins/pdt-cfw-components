@@ -186,11 +186,25 @@ namespace LabBenchStudios.Pdt.Common
 
         public const int HVAC_ACTUATOR_TYPE = 1001;
         public const int HUMIDIFIER_ACTUATOR_TYPE = 1002;
-        public const int IMPELLER_RPM_ACTUATOR_TYPE = 1110;
+        public const int HUMIDIFIER_TYPE = HUMIDIFIER_ACTUATOR_TYPE;
+        public const int BAROMETER_TYPE = 1003;
+        public const int THERMOSTAT_TYPE = 1004;
 
         public const int HUMIDITY_SENSOR_TYPE = 1010;
         public const int PRESSURE_SENSOR_TYPE = 1012;
         public const int TEMP_SENSOR_TYPE = 1013;
+
+        public const int DISPLAY_CATEGORY_TYPE = 2000;
+        public const int DISPLAY_DEVICE_TYPE = 2000;
+        public const int LED_DISPLAY_ACTUATOR_TYPE = 2001;
+
+        public const int MEDIA_TYPE_CATEGORY = 3000;
+        public const int DEFAULT_MEDIA_TYPE = 3000;
+        public const int MEDIA_DEVICE_TYPE = 3000;
+        public const int CAMERA_SENSOR_TYPE = 3101;
+        public const int VIDEO_SYSTEM_TYPE = 3201;
+        public const int AUDIO_SYSTEM_TYPE = 3301;
+        public const int LIGHTING_SYSTEM_TYPE = 3401;
 
         public const int UTILITY_SYSTEM_TYPE_CATEGORY = 4000;
         public const int UTILITY_SYSTEM_DEVICE_TYPE = UTILITY_SYSTEM_TYPE_CATEGORY;
@@ -198,12 +212,45 @@ namespace LabBenchStudios.Pdt.Common
         public const int HEATING_SYSTEM_TYPE = 4100;
         public const int FLUID_VISCOSITY_SENSOR_TYPE = 4101;
         public const int FLUID_RATE_SENSOR_TYPE = 4102;
-        public const int IMPELLER_RPM_SENSOR_TYPE = 4103;
+        public const int FLUID_PUMP_TYPE = 4103;
+        public const int IMPELLER_RPM_SENSOR_TYPE = 4105;
+        public const int IMPELLER_RPM_ACTUATOR_TYPE = 4107;
 
         public const int POWER_WINDMILL_SYSTEM_TYPE = 4200;
         public const int POWER_OUTPUT_SENSOR_TYPE = 4201;
         public const int GENERATOR_TEMP_SENSOR_TYPE = 4202;
         public const int ROTATIONAL_SPEED_SENSOR_TYPE = 4203;
+
+        public const int ENERGY_TYPE_CATEGORY = 5000;
+        public const int STORAGE_LEVEL = 5001;
+        public const int STORAGE_DRAW = 5002;
+        public const int OIL_SYSTEM_TYPE = 5401;
+        public const int NATGAS_SYSTEM_TYPE = 5402;
+        public const int PROPANE_SYSTEM_TYPE = 5403;
+        public const int WIND_SYSTEM_TYPE = 5501;
+        public const int SOLAR_SYSTEM_TYPE = 5601;
+        public const int HYDRO_SYSTEM_TYPE = 5701;
+        public const int GEOTHERMAL_SYSTEM_TYPE = 5801;
+        public const int HYDROGEN_SYSTEM_TYPE = 5901;
+
+        public const int STRUCTURE_TYPE_CATEGORY = 7200;
+        public const int STRUCTURE_TYPE = 7201;
+        public const int STRUCTURE_LEVEL_TYPE = 7202;
+        public const int STRUCTURE_SPACE_TYPE = 7203;
+
+        public const int SYSTEM_TYPE_CATEGORY = 8000;
+        public const int SYSTEM_MGMT_TYPE = 8000;
+        public const int RESOURCE_MGMT_TYPE = 8001;
+        public const int SYSTEM_CONN_STATE_TYPE = 8002;
+
+        public const int SYSTEM_PERF_TYPE_CATEGORY = 9000;
+        public const int SYSTEM_PERF_TYPE = SYSTEM_PERF_TYPE_CATEGORY;
+        public const int CPU_UTIL_TYPE = 9001;
+        public const int MEM_UTIL_TYPE = 9002;
+        public const int DISK_UTIL_TYPE = 9003;
+
+        public const int MESSAGE_TYPE_CATEGORY = 10000;
+        public const int MESSAGE_TYPE = 10001;
 
         public static readonly string HUMIDIFIER_NAME = "Humidifier";
         public static readonly string THERMOSTAT_NAME = "Thermostat";
@@ -222,63 +269,25 @@ namespace LabBenchStudios.Pdt.Common
         public static readonly string FLOW_RATE_NAME = "FlowRate";
         public static readonly string RPM_NAME = "RPM";
 
-        public const int DISPLAY_CATEGORY_TYPE = 2000;
-        public const int DISPLAY_DEVICE_TYPE = 2000;
-        public const int LED_DISPLAY_ACTUATOR_TYPE = 2001;
-
         public static readonly string MEDIA_TYPE_NAME = "MediaType";
-        public const int MEDIA_TYPE_CATEGORY = 3000;
-        public const int DEFAULT_MEDIA_TYPE = 3000;
-        public const int MEDIA_DEVICE_TYPE = 3000;
-        public const int CAMERA_SENSOR_TYPE = 3101;
-        public const int VIDEO_SYSTEM_TYPE = 3201;
-        public const int AUDIO_SYSTEM_TYPE = 3301;
-        public const int LIGHTING_SYSTEM_TYPE = 3401;
 
         public static readonly string LUMENS_NAME = "Lumens";
         public static readonly string DECIBELS_NAME = "Decibels";
         public static readonly string COLOR_NAME = "Color";
         public static readonly string PLAYING_NAME = "Playing";
 
-        public const int ENERGY_TYPE_CATEGORY = 4000;
-        public const int STORAGE_LEVEL = 4001;
-        public const int STORAGE_DRAW = 4002;
-
         public static readonly string STORAGE_LEVEL_NAME = "StorageLevel";
         public static readonly string STORAGE_DRAW_NAME = "StorageDraw";
-
-        public const int OIL_SYSTEM_TYPE = 4101;
-        public const int NATGAS_SYSTEM_TYPE = 4102;
-        public const int PROPANE_SYSTEM_TYPE = 4103;
-        public const int WIND_SYSTEM_TYPE = 4201;
-        public const int SOLAR_SYSTEM_TYPE = 4301;
-        public const int HYDRO_SYSTEM_TYPE = 4401;
-        public const int GEOTHERMAL_SYSTEM_TYPE = 4501;
-        public const int HYDROGEN_SYSTEM_TYPE = 4601;
 
         public static readonly string WATTAGE_NAME = "Wattage";
         public static readonly string AMPERAGE_NAME = "Amperage";
         public static readonly string VOLTAGE_NAME = "Voltage";
 
-        public const int SYSTEM_TYPE_CATEGORY = 8000;
-        public const int SYSTEM_MGMT_TYPE = 8000;
-        public const int RESOURCE_MGMT_TYPE = 8001;
-        public const int SYSTEM_CONN_STATE_TYPE = 8002;
-
         public static readonly string RESOURCE_MGMT_NAME = "ResourceMgmt";
-
-        public const int SYSTEM_PERF_TYPE_CATEGORY = 9000;
-        public const int SYSTEM_PERF_TYPE = SYSTEM_PERF_TYPE_CATEGORY;
-        public const int CPU_UTIL_TYPE = 9001;
-        public const int MEM_UTIL_TYPE = 9002;
-        public const int DISK_UTIL_TYPE = 9003;
 
         public static readonly string CPU_UTIL_NAME = "DeviceCpuUtil";
         public static readonly string DISK_UTIL_NAME = "DeviceDiskUtil";
         public static readonly string MEM_UTIL_NAME = "DeviceMemUtil";
-
-        public const int MESSAGE_TYPE_CATEGORY = 10000;
-        public const int MESSAGE_TYPE = 10001;
 
         //////////
         // status codes

@@ -46,7 +46,7 @@ namespace LabBenchStudios.Pdt.Connection
         private string serverHost = "localhost";
         private int serverPort = 1883;
         private string clientID = "UnityDTClient";
-        private string productName = ConfigConst.PRODUCT_NAME;
+        private string topicPrefix = ConfigConst.PRODUCT_NAME;
         private bool isEncrypted = false;
         private bool isConnected = false;
         private bool areIncomingMessagesPaused = false;
@@ -69,7 +69,7 @@ namespace LabBenchStudios.Pdt.Connection
 
         public MqttClientManagedConnector(
             string serverHost, int serverPort, string clientID,
-            string productName, ISystemStatusEventListener eventListener)
+            string topicPrefix, ISystemStatusEventListener eventListener)
         {
             if (serverHost != null)
             {
@@ -86,15 +86,17 @@ namespace LabBenchStudios.Pdt.Connection
                 this.clientID = clientID;
             }
 
-            if (productName != null && productName.Length > 0)
+            if (topicPrefix != null && topicPrefix.Length > 0)
             {
-                this.productName = productName;
+                this.topicPrefix = topicPrefix;
             }
 
             this.eventListener = eventListener;
-            this.connStateData = new ConnectionStateData(this.productName, "UUID", this.serverHost, this.serverPort);
+            this.connStateData =
+                new ConnectionStateData(
+                    this.topicPrefix, ConfigConst.PRODUCT_NAME, this.serverHost, this.serverPort);
 
-            this.connStateData.SetMessage("Server host: " + this.serverHost + ", Product name: " + this.productName);
+            this.connStateData.SetMessage($"Server host: {this.serverHost}, topicPrefix: {this.topicPrefix}");
             this.eventListener?.OnMessagingSystemStatusUpdate(GetConnectionStateCopy());
         }
 
@@ -229,9 +231,9 @@ namespace LabBenchStudios.Pdt.Connection
             {
                 this.eventListener?.LogDebugMessage("MQTT client disconnecting...");
 
-                this.connStateData.SetMessage("Disconnected");
-                this.connStateData.SetIsClientDisconnectedFlag(true);
-                this.connStateData.SetStatusCode(ConfigConst.DISCONN_SUCCESS_STATUS_CODE);
+                this.connStateData?.SetMessage("Disconnected");
+                this.connStateData?.SetIsClientDisconnectedFlag(true);
+                this.connStateData?.SetStatusCode(ConfigConst.DISCONN_SUCCESS_STATUS_CODE);
                 this.eventListener?.OnMessagingSystemStatusUpdate(GetConnectionStateCopy());
 
                 await this.mqttClient.StopAsync();
@@ -290,11 +292,13 @@ namespace LabBenchStudios.Pdt.Connection
 
                 if (resource == null)
                 {
-                    topicName = this.productName + "/#"; // e.g., PDT/#
+                    topicName = this.topicPrefix + "/#"; // e.g., PDT/#
                 }
                 else
                 {
-                    resource.ProductPrefix = this.productName;
+                    // TODO: next LOC no longer needed
+                    resource.ResourcePrefix = this.topicPrefix;
+
                     topicName = resource.GetFullResourceName();
                 }
 

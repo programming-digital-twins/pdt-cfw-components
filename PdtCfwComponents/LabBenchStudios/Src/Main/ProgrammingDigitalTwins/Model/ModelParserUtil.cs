@@ -58,6 +58,46 @@ namespace LabBenchStudios.Pdt.Model
             }
         }
 
+        public static ModelNameUtil.DtmiPropertyTypeEnum GetPropertyType(DTEntityKind entityKind)
+        {
+            switch (entityKind)
+            {
+                case DTEntityKind.Boolean:
+                    return ModelNameUtil.DtmiPropertyTypeEnum.Toggle;
+
+                case DTEntityKind.Date:
+                    return ModelNameUtil.DtmiPropertyTypeEnum.Schedule;
+
+                case DTEntityKind.DateTime:
+                    return ModelNameUtil.DtmiPropertyTypeEnum.Schedule;
+
+                case DTEntityKind.Time:
+                    return ModelNameUtil.DtmiPropertyTypeEnum.Schedule;
+
+                case DTEntityKind.Duration:
+                    return ModelNameUtil.DtmiPropertyTypeEnum.Schedule;
+
+                case DTEntityKind.Double:
+                    return ModelNameUtil.DtmiPropertyTypeEnum.Value;
+
+                case DTEntityKind.Float:
+                    return ModelNameUtil.DtmiPropertyTypeEnum.Value;
+
+                case DTEntityKind.Integer:
+                    return ModelNameUtil.DtmiPropertyTypeEnum.Count;
+
+                case DTEntityKind.Long:
+                    return ModelNameUtil.DtmiPropertyTypeEnum.Count;
+
+                case DTEntityKind.String:
+                    return ModelNameUtil.DtmiPropertyTypeEnum.Message;
+
+                default:
+                    return ModelNameUtil.DtmiPropertyTypeEnum.Undefined;
+
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
