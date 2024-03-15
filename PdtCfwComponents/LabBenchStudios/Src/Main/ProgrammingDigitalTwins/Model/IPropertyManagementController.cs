@@ -40,6 +40,8 @@ namespace LabBenchStudios.Pdt.Model
 
         DigitalTwinProperty GetDigitalTwinProperty();
 
+        bool IsChanged();
+
         bool IsCommand();
 
         bool IsSelected();
