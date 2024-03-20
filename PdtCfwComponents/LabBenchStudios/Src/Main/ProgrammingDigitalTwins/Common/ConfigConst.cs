@@ -102,10 +102,6 @@ namespace LabBenchStudios.Pdt.Common
 
         public static readonly string COMMAND_PROP = "command";
         public static readonly string STATE_DATA_PROP = "stateData";
-        public static readonly string UNIT_PROP = "unit";
-        public static readonly string VALUE_PROP = "value";
-        public static readonly string TARGET_VALUE_PROP = "targetValue";
-        public static readonly string DATA_VALUES_PROP = "dataValues";
         public static readonly string IS_RESPONSE_PROP = "isResponse";
 
         public static readonly string MODEL_ID_PROP = "modelID";
@@ -123,6 +119,10 @@ namespace LabBenchStudios.Pdt.Common
         public static readonly string USE_SEQUENCE_NUMBER_PROP = "useSeqNo";
         public static readonly string SEQUENCE_NUMBER_TOTAL_PROP = "seqNoTotal";
 
+        public static readonly string DATA_VALUES_PROP = "dataValues";
+        public static readonly string UNIT_PROP = "unit";
+        public static readonly string VALUE_PROP = "value";
+        public static readonly string TARGET_VALUE_PROP = "targetValue";
         public static readonly string RANGE_NOMINAL_FLOOR_PROP = "rangeNominalFloor";
         public static readonly string RANGE_NOMINAL_CEILING_PROP = "rangeNominalCeiling";
         public static readonly string RANGE_MAX_FLOOR_PROP = "rangeMaxFloor";
@@ -216,7 +216,7 @@ namespace LabBenchStudios.Pdt.Common
         public const int IMPELLER_RPM_SENSOR_TYPE = 4105;
         public const int IMPELLER_RPM_ACTUATOR_TYPE = 4107;
 
-        public const int POWER_WINDMILL_SYSTEM_TYPE = 4200;
+        public const int WIND_TURBINE_SYSTEM_TYPE = 4200;
         public const int POWER_OUTPUT_SENSOR_TYPE = 4201;
         public const int GENERATOR_TEMP_SENSOR_TYPE = 4202;
         public const int ROTATIONAL_SPEED_SENSOR_TYPE = 4203;
@@ -256,6 +256,7 @@ namespace LabBenchStudios.Pdt.Common
         public static readonly string THERMOSTAT_NAME = "Thermostat";
         public static readonly string PRESSURE_NAME = "BarometricPressure";
         public static readonly string FLUID_PUMP_NAME = "FluidPump";
+        public static readonly string WIND_TURBINE_NAME = "WindTurbine";
 
         public static readonly string HUMIDIFIER_ACTUATOR_NAME = "HumidifierActuator";
         public static readonly string HVAC_ACTUATOR_NAME = "HvacActuator";

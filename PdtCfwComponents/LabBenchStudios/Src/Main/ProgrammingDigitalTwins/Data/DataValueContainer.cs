@@ -106,14 +106,13 @@ namespace LabBenchStudios.Pdt.Data
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.Append(',');
-            sb.Append(ConfigConst.UNIT_PROP).Append('=').Append(this.GetUnit()).Append(',');
+            sb.Append(ConfigConst.UNIT_PROP).Append('=').Append(this.unit).Append(',');
             sb.Append(ConfigConst.VALUE_PROP).Append('=').Append(this.value).Append(',');
             sb.Append(ConfigConst.TARGET_VALUE_PROP).Append('=').Append(this.targetValue).Append(',');
             sb.Append(ConfigConst.NOMINAL_VALUE_DELTA_PROP).Append('=').Append(this.nominalValueDelta).Append(',');
             sb.Append(ConfigConst.MAX_VALUE_DELTA_PROP).Append('=').Append(this.maxValueDelta).Append(',');
             sb.Append(ConfigConst.RANGE_NOMINAL_FLOOR_PROP).Append('=').Append(this.rangeNominalFloor).Append(',');
-            sb.Append(ConfigConst.RANGE_NOMINAL_CEILING_PROP).Append('=').Append(this.rangeNominalCeiling);
+            sb.Append(ConfigConst.RANGE_NOMINAL_CEILING_PROP).Append('=').Append(this.rangeNominalCeiling).Append(',');
             sb.Append(ConfigConst.RANGE_MAX_FLOOR_PROP).Append('=').Append(this.rangeMaxFloor).Append(',');
             sb.Append(ConfigConst.RANGE_MAX_CEILING_PROP).Append('=').Append(this.rangeMaxCeiling);
 

@@ -83,6 +83,36 @@ namespace LabBenchStudios.Pdt.Test.Data
         }
 
         [Test]
+        public void ConvertIotDataContextWithValuesToJsonAndBack()
+        {
+            IotDataContextWithValues data = new IotDataContextWithValues("WindTurbine", "device001", ConfigConst.UTILITY_SYSTEM_TYPE_CATEGORY, ConfigConst.WIND_TURBINE_SYSTEM_TYPE);
+
+            DataValueContainer rotationalSpeedValues = new DataValueContainer();
+            rotationalSpeedValues.SetValue(50.0f);
+            rotationalSpeedValues.SetRangeNominalFloor(5.0f);
+            rotationalSpeedValues.SetRangeNominalCeiling(100.0f);
+            data.AddDataValues("rotationalSpeed", rotationalSpeedValues);
+
+            DataValueContainer powerOutputValues = new DataValueContainer();
+            powerOutputValues.SetValue(25000.0f);
+            powerOutputValues.SetRangeNominalFloor(5000.0f);
+            powerOutputValues.SetRangeNominalCeiling(50000.0f);
+            data.AddDataValues("powerOutput", powerOutputValues);
+
+            string jsonData = DataUtil.IotDataContextWithValuesToJson(data);
+
+            Console.WriteLine(data.ToString());
+            Console.WriteLine(jsonData);
+
+            IotDataContextWithValues data2 = DataUtil.JsonToIotDataContextWithValues(jsonData);
+            //SensorData data2 = DataUtil.JsonToSensorDataUpdated(jsonData);
+
+            Console.WriteLine(data2.ToString());
+
+            //Assert.Equals(data2.GetValue(), data.GetValue());
+        }
+
+        [Test]
         public void ConvertSampleSerializedJsonToSensorData()
         {
             string jsonData = "{\r\n    \"timeStamp\": \"2019-01-20T15:38:35.123123\",\r\n    \"hasError\": false,\r\n    \"name\": \"FooBar SensorData\",\r\n    \"typeID\": 1001,\r\n    \"statusCode\": 0,\r\n    \"latitude\": 0.0,\r\n    \"longitude\": 0.0,\r\n    \"elevation\": 0.0,\r\n    \"locationID\": \"constraineddevice001\",\r\n    \"isResponse\": false,\r\n    \"command\": 0,\r\n    \"stateData\": null,\r\n    \"value\": 15.0\r\n}";

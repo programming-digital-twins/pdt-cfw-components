@@ -73,6 +73,17 @@ namespace LabBenchStudios.Pdt.Data
             return jsonData;
         }
 
+        public static string IotDataContextWithValuesToJson(IotDataContextWithValues data)
+        {
+            string jsonData = JsonConvert.SerializeObject(data, new JsonSerializerSettings
+            {
+                ContractResolver = camelCaseResolver,
+                Formatting = Formatting.Indented
+            });
+
+            return jsonData;
+        }
+
         public static string MessageDataToJson(MessageData data)
         {
             string jsonData = JsonConvert.SerializeObject(data, new JsonSerializerSettings
@@ -174,6 +185,23 @@ namespace LabBenchStudios.Pdt.Data
 
             //IotDataContext data = JsonConvert.DeserializeObject<IotDataContext>(jsonData);
             IotDataContext data = new IotDataContext();
+            JsonConvert.PopulateObject(jsonData, data, new JsonSerializerSettings
+            {
+                ContractResolver = camelCaseResolver,
+                Formatting = Formatting.Indented
+            });
+
+            return data;
+        }
+
+        public static IotDataContextWithValues JsonToIotDataContextWithValues(string jsonData)
+        {
+            if (string.IsNullOrEmpty(jsonData)) { return null; }
+
+            jsonData = NormalizeData(jsonData);
+
+            //IotDataContextWithValues data = JsonConvert.DeserializeObject<IotDataContextWithValues>(jsonData);
+            IotDataContextWithValues data = new IotDataContextWithValues();
             JsonConvert.PopulateObject(jsonData, data, new JsonSerializerSettings
             {
                 ContractResolver = camelCaseResolver,

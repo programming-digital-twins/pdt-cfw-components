@@ -145,7 +145,20 @@ namespace LabBenchStudios.Pdt.Data
 
         public void SetDeviceID(string name) { if (!string.IsNullOrEmpty(name)) { this.deviceID = name; }; this.UpdateTimeStamp(); }
 
-        public void SetName(string name) { if (!string.IsNullOrEmpty(name)) { this.name = name; }; this.UpdateTimeStamp(); }
+        public void SetName(string name)
+        {
+            if (!string.IsNullOrEmpty(name))
+            {
+                string prevName = this.name;
+                this.name = name;
+
+                if (!prevName.Equals(this.name))
+                {
+                    this.OnNameUpdate(prevName);
+                    this.UpdateTimeStamp();
+                }
+            }
+        }
 
         public void SetTypeCategoryID(int val) { if (val >= 0) { this.typeCategoryID = val; }; this.UpdateTimeStamp(); }
 
@@ -190,6 +203,11 @@ namespace LabBenchStudios.Pdt.Data
         }
 
         // protected methods
+
+        protected virtual void OnNameUpdate(string prevName)
+        {
+            // nothing to do - sub-class can override
+        }
 
         protected void UpdateTimeStamp()
         {

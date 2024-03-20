@@ -309,7 +309,7 @@ namespace LabBenchStudios.Pdt.Model
 
                 case DtmiControllerEnum.PowerWindmill:
                     dataContext.SetTypeCategoryID(ConfigConst.UTILITY_SYSTEM_TYPE_CATEGORY);
-                    dataContext.SetTypeID(ConfigConst.POWER_WINDMILL_SYSTEM_TYPE);
+                    dataContext.SetTypeID(ConfigConst.WIND_TURBINE_SYSTEM_TYPE);
                     break;
 
                 case DtmiControllerEnum.ResidentialStructure:

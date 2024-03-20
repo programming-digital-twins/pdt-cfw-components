@@ -22,10 +22,14 @@
  * SOFTWARE.
  */
 
+using LabBenchStudios.Pdt.Data;
+
 namespace LabBenchStudios.Pdt.Common
 {
     public interface IDataContextExtendedListener : IDataContextEventListener
     {
+        ThresholdCrossingContainer GetThresholdCrossingContainer();
+
         void SetDigitalTwinStateProcessor(IDigitalTwinStateProcessor dtStateProcessor);
 
     }
