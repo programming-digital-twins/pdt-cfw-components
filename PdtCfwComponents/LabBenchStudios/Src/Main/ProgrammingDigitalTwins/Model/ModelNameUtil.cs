@@ -117,7 +117,7 @@ namespace LabBenchStudios.Pdt.Model
         public const string HEATING_ZONE_NAME = "heatingZone";
         public const string BAROMETER_NAME = "barometer";
         public const string HUMIDIFIER_NAME = "humidifier";
-        public const string POWER_WINDMILL_NAME = "powerWindmill";
+        public const string WIND_TURBINE_NAME = "powerWindmill";
         public const string THERMOSTAT_NAME = "thermostat";
 
         public const string SYSTEM_PERFORMANCE_DATA_NAME = "systemPerformanceData";
@@ -161,7 +161,7 @@ namespace LabBenchStudios.Pdt.Model
         public static readonly string HEATING_ZONE_CONTROLLER_MODEL_ID = CreateModelID(DTMI_PREFIX, HEATING_ZONE_NAME, DTMI_CURRENT_VERSION);
         public static readonly string BAROMETER_CONTROLLER_MODEL_ID = CreateModelID(DTMI_PREFIX, BAROMETER_NAME, DTMI_CURRENT_VERSION);
         public static readonly string HUMIDIFIER_CONTROLLER_MODEL_ID = CreateModelID(DTMI_PREFIX, HUMIDIFIER_NAME, DTMI_CURRENT_VERSION);
-        public static readonly string POWER_WINDMILL_CONTROLLER_MODEL_ID = CreateModelID(DTMI_PREFIX, POWER_WINDMILL_NAME, DTMI_CURRENT_VERSION);
+        public static readonly string POWER_WINDMILL_CONTROLLER_MODEL_ID = CreateModelID(DTMI_PREFIX, WIND_TURBINE_NAME, DTMI_CURRENT_VERSION);
         public static readonly string THERMOSTAT_CONTROLLER_MODEL_ID = CreateModelID(DTMI_PREFIX, THERMOSTAT_NAME, DTMI_CURRENT_VERSION);
         public static readonly string DEVICE_SYS_PERF_COMPONENT_MODEL_ID = CreateModelID(DTMI_PREFIX, SYSTEM_PERFORMANCE_DATA_NAME, DTMI_CURRENT_VERSION);
         public static readonly string ENV_SENSORS_COMPONENT_MODEL_ID = CreateModelID(DTMI_PREFIX, ENVIRONMENTAL_SENSOR_DATA_NAME, DTMI_CURRENT_VERSION);
@@ -200,7 +200,7 @@ namespace LabBenchStudios.Pdt.Model
             Humidifier,
             Thermostat,
             InteriorRoom,
-            PowerWindmill,
+            WindTurbine,
             ResidentialStructure,
             Custom
         }
@@ -240,7 +240,7 @@ namespace LabBenchStudios.Pdt.Model
                 case DtmiControllerEnum.InteriorRoom:
                     modelFileName = CONTEXT_INTERIOR_ROOM_DTDL_MODEL; break;
 
-                case DtmiControllerEnum.PowerWindmill:
+                case DtmiControllerEnum.WindTurbine:
                     modelFileName = CONTROLLER_POWER_WINDMILL_DTDL_MODEL; break;
 
                 case DtmiControllerEnum.ResidentialStructure:
@@ -307,7 +307,7 @@ namespace LabBenchStudios.Pdt.Model
                     dataContext.SetTypeID(ConfigConst.STRUCTURE_SPACE_TYPE);
                     break;
 
-                case DtmiControllerEnum.PowerWindmill:
+                case DtmiControllerEnum.WindTurbine:
                     dataContext.SetTypeCategoryID(ConfigConst.UTILITY_SYSTEM_TYPE_CATEGORY);
                     dataContext.SetTypeID(ConfigConst.WIND_TURBINE_SYSTEM_TYPE);
                     break;
@@ -524,8 +524,8 @@ namespace LabBenchStudios.Pdt.Model
                     modelName = INTERIOR_ROOM_NAME;
                     break;
 
-                case DtmiControllerEnum.PowerWindmill:
-                    modelName = POWER_WINDMILL_NAME;
+                case DtmiControllerEnum.WindTurbine:
+                    modelName = WIND_TURBINE_NAME;
                     break;
 
                 case DtmiControllerEnum.ResidentialStructure:
@@ -644,6 +644,18 @@ namespace LabBenchStudios.Pdt.Model
                     break;
 
                 case ConfigConst.WIND_SYSTEM_TYPE:
+                    modelID = ModelNameUtil.POWER_WINDMILL_CONTROLLER_MODEL_ID;
+                    break;
+
+                case ConfigConst.WIND_TURBINE_POWER_OUTPUT_SENSOR_TYPE:
+                    modelID = ModelNameUtil.POWER_WINDMILL_CONTROLLER_MODEL_ID;
+                    break;
+
+                case ConfigConst.WIND_TURBINE_AIR_SPEED_SENSOR_TYPE:
+                    modelID = ModelNameUtil.POWER_WINDMILL_CONTROLLER_MODEL_ID;
+                    break;
+
+                case ConfigConst.WIND_TURBINE_ROTATIONAL_SPEED_SENSOR_TYPE:
                     modelID = ModelNameUtil.POWER_WINDMILL_CONTROLLER_MODEL_ID;
                     break;
 

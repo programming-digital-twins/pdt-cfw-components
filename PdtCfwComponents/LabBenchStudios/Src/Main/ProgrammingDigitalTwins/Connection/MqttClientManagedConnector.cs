@@ -431,6 +431,15 @@ namespace LabBenchStudios.Pdt.Connection
                         this.eventListener?.OnMessagingSystemDataReceived(envData);
                         break;
 
+                    case ConfigConst.ENERGY_TYPE_CATEGORY:
+                        // it's SensorData - convert once more to get SensorData from payload
+                        SensorData energyData = DataUtil.JsonToSensorData(jsonData);
+
+                        // notify event manager, which will distribute to all listeners
+                        this.eventListener?.LogDebugMessage("NORMAL: Processing ENERGY SensorData: " + categoryID);
+                        this.eventListener?.OnMessagingSystemDataReceived(energyData);
+                        break;
+
                     case ConfigConst.UTILITY_SYSTEM_TYPE_CATEGORY:
                         // it's SensorData - convert once more to get SensorData from payload
                         SensorData utilData = DataUtil.JsonToSensorData(jsonData);

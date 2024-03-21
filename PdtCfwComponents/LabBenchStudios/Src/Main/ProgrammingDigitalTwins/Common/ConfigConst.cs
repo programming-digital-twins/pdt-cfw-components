@@ -217,9 +217,12 @@ namespace LabBenchStudios.Pdt.Common
         public const int IMPELLER_RPM_ACTUATOR_TYPE = 4107;
 
         public const int WIND_TURBINE_SYSTEM_TYPE = 4200;
-        public const int POWER_OUTPUT_SENSOR_TYPE = 4201;
-        public const int GENERATOR_TEMP_SENSOR_TYPE = 4202;
-        public const int ROTATIONAL_SPEED_SENSOR_TYPE = 4203;
+        public const int WIND_TURBINE_POWER_OUTPUT_SENSOR_TYPE = 4201;
+        public const int WIND_TURBINE_GENERATOR_TEMP_SENSOR_TYPE = 4202;
+        public const int WIND_TURBINE_ROTATIONAL_SPEED_SENSOR_TYPE = 4203;
+        public const int WIND_TURBINE_AIR_SPEED_SENSOR_TYPE = 4204;
+
+        public const int WIND_TURBINE_BRAKE_SYSTEM_ACTUATOR_TYPE = 4301;
 
         public const int ENERGY_TYPE_CATEGORY = 5000;
         public const int STORAGE_LEVEL = 5001;
