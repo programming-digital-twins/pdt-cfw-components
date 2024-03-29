@@ -33,6 +33,7 @@ namespace LabBenchStudios.Pdt.Common
         public static readonly char RESOURCE_SUBTYPE_SEPARATOR = '-';
 
         public static readonly string NOT_SET = "Not-Set";
+        public static readonly string UUID_NAME = "UUID";
         public static readonly string DEFAULT_HOST = "localhost";
 
         public const int DEFAULT_COAP_PORT = 5683;
@@ -92,6 +93,7 @@ namespace LabBenchStudios.Pdt.Common
         public static readonly string DEVICE_ID_PROP = "deviceID";
         public static readonly string TYPE_CATEGORY_ID_PROP = "typeCategoryID";
         public static readonly string TYPE_ID_PROP = "typeID";
+        public static readonly string TYPE_NAME_PROP = "typeName";
         public static readonly string TIMESTAMP_PROP = "timeStamp";
         public static readonly string HAS_ERROR_PROP = "hasError";
         public static readonly string STATUS_CODE_PROP = "statusCode";
@@ -103,6 +105,7 @@ namespace LabBenchStudios.Pdt.Common
         public static readonly string COMMAND_PROP = "command";
         public static readonly string STATE_DATA_PROP = "stateData";
         public static readonly string IS_RESPONSE_PROP = "isResponse";
+        public static readonly string IS_INTERNAL_MSG_PROP = "isInternalMsg";
 
         public static readonly string MODEL_ID_PROP = "modelID";
 
@@ -137,6 +140,7 @@ namespace LabBenchStudios.Pdt.Common
         public static readonly string MESSAGE_DATA_PROP = "msgData";
 
         public static readonly string HOST_NAME_PROP = "hostName";
+        public static readonly string HOST_PORT_PROP = "hostPort";
         public static readonly string MESSAGE_IN_COUNT_PROP = "msgInCount";
         public static readonly string MESSAGE_OUT_COUNT_PROP = "msgOutCount";
         public static readonly string IS_CONNECTING_PROP = "isConnecting";
@@ -167,8 +171,9 @@ namespace LabBenchStudios.Pdt.Common
         public static readonly string SYSTEM_PERF_NAME = "SystemPerformance";
         public static readonly string CAMERA_SENSOR_NAME = "CameraSensor";
 
-        public const int COMMAND_OFF = DEFAULT_COMMAND;
         public const int COMMAND_ON = 1;
+        public const int COMMAND_OFF = 2;
+        public const int COMMAND_MSG_ONLY = 5;
 
         public static readonly string COMMAND_KEY = "Command";
 

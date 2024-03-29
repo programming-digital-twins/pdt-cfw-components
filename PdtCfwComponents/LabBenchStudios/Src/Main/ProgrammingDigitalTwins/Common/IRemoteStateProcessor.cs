@@ -28,7 +28,7 @@ namespace LabBenchStudios.Pdt.Common
 {
     public interface IRemoteStateProcessor
     {
-        void EnableLiveDataFeed(bool enable);
+        void EnableLiveDataFeed(ConnectionStateData connStateData, bool enable);
 
         void EnableSimulatedDataFeed(bool enable);
 
@@ -37,6 +37,10 @@ namespace LabBenchStudios.Pdt.Common
         void EnableOutoingPhysicalThingUpdates(bool enable);
 
         bool SendStateUpdateToPhysicalThing(ResourceNameContainer resource);
+
+        bool StartConnectionResources();
+
+        bool StopConnectionResources();
 
     }
 }

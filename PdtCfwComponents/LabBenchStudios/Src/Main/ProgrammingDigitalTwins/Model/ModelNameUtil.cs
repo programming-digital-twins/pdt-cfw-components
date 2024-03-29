@@ -308,7 +308,7 @@ namespace LabBenchStudios.Pdt.Model
                     break;
 
                 case DtmiControllerEnum.WindTurbine:
-                    dataContext.SetTypeCategoryID(ConfigConst.UTILITY_SYSTEM_TYPE_CATEGORY);
+                    dataContext.SetTypeCategoryID(ConfigConst.ENERGY_TYPE_CATEGORY);
                     dataContext.SetTypeID(ConfigConst.WIND_TURBINE_SYSTEM_TYPE);
                     break;
 

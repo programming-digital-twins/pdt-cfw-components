@@ -128,7 +128,8 @@ namespace LabBenchStudios.Pdt.Common
 
             // ignore these
             this.testDeviceIDSet = new HashSet<string>();
-            this.testDeviceIDSet.Add("UUID");
+            this.testDeviceIDSet.Add(ConfigConst.UUID_NAME);
+            this.testDeviceIDSet.Add(ConfigConst.NOT_SET);
         }
 
 
@@ -481,9 +482,19 @@ namespace LabBenchStudios.Pdt.Common
         /// <param name="enable"></param>
         public void ProcessLiveDataFeedEngageRequest(bool enable)
         {
+            this.ProcessLiveDataFeedEngageRequest(null, enable);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connStateData"></param>
+        /// <param name="enable"></param>
+        public void ProcessLiveDataFeedEngageRequest(ConnectionStateData connStateData, bool enable)
+        {
             if (this.remoteStateProcessor != null)
             {
-                this.remoteStateProcessor.EnableLiveDataFeed(enable);
+                this.remoteStateProcessor.EnableLiveDataFeed(connStateData, enable);
             }
             else
             {
@@ -507,6 +518,34 @@ namespace LabBenchStudios.Pdt.Common
                 Console.WriteLine(
                     $"No composite remote command processor registered. Ignoring simulated data feed engagement request.");
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public bool StartConnectionResources()
+        {
+            if (this.remoteStateProcessor != null)
+            {
+                return this.remoteStateProcessor.StartConnectionResources();
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public bool StopConnectionResources()
+        {
+            if (this.remoteStateProcessor != null)
+            {
+                return this.remoteStateProcessor.StopConnectionResources();
+            }
+
+            return false;
         }
 
 
@@ -542,11 +581,15 @@ namespace LabBenchStudios.Pdt.Common
             {
                 string deviceID = data.GetDeviceID();
 
-                // check bogus list first - we only want to add legit ID's
-                if (!this.testDeviceIDSet.Contains(deviceID))
+                // validate deviceID - make sure it's legit
+                if (!string.IsNullOrEmpty(deviceID))
                 {
-                    // the Set structure will ensure only unique ID's
-                    this.knownDeviceIDSet.Add(deviceID);
+                    // check bogus / test list - only add legit ID's
+                    if (!this.testDeviceIDSet.Contains(deviceID))
+                    {
+                        // the Set structure will ensure only unique ID's
+                        this.knownDeviceIDSet.Add(deviceID);
+                    }
                 }
             }
         }

@@ -47,6 +47,9 @@ namespace LabBenchStudios.Pdt.Data
         private string name = ConfigConst.NOT_SET;
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        private string typeName = ConfigConst.NOT_SET;
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private string deviceUUID = ConfigConst.NOT_SET;
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
@@ -129,6 +132,8 @@ namespace LabBenchStudios.Pdt.Data
 
         public int GetTypeCategoryID() { return this.typeCategoryID; }
 
+        public string GetTypeName() { return this.typeName; }
+
         public void OverrideTimeStamp(string timeStamp) { this.timeStamp = timeStamp; }
 
         public void SetLatitude(float val) { this.latitude = val; this.UpdateTimeStamp(); }
@@ -160,9 +165,32 @@ namespace LabBenchStudios.Pdt.Data
             }
         }
 
-        public void SetTypeCategoryID(int val) { if (val >= 0) { this.typeCategoryID = val; }; this.UpdateTimeStamp(); }
+        public void SetTypeCategoryID(int val)
+        {
+            if (val >= 0)
+            {
+                this.typeCategoryID = val;
+                this.UpdateTimeStamp();
+            }
+        }
 
-        public void SetTypeID(int val) { if (val >= 0) { this.typeID = val; }; this.UpdateTimeStamp(); }
+        public void SetTypeID(int val)
+        {
+            if (val >= 0)
+            {
+                this.typeID = val;
+                this.UpdateTimeStamp();
+            }
+        }
+
+        public void SetTypeName(string name)
+        {
+            if (! string.IsNullOrEmpty(name))
+            {
+                this.typeName = name;
+                this.UpdateTimeStamp();
+            }
+        }
 
         public override string ToString()
         {
@@ -170,6 +198,7 @@ namespace LabBenchStudios.Pdt.Data
 
             sb.Append(ConfigConst.NAME_PROP).Append('=').Append(this.name).Append(',');
             sb.Append(ConfigConst.DEVICE_ID_PROP).Append('=').Append(this.deviceID).Append(',');
+            sb.Append(ConfigConst.TYPE_NAME_PROP).Append('=').Append(this.typeName).Append(',');
             sb.Append(ConfigConst.TYPE_ID_PROP).Append('=').Append(this.typeID).Append(',');
             sb.Append(ConfigConst.TYPE_CATEGORY_ID_PROP).Append('=').Append(this.typeCategoryID).Append(',');
             sb.Append(ConfigConst.TIMESTAMP_PROP).Append('=').Append(this.timeStamp).Append(',');
