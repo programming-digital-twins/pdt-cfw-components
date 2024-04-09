@@ -270,9 +270,11 @@ namespace LabBenchStudios.Pdt.Common
         public static readonly string HVAC_ACTUATOR_NAME = "HvacActuator";
         public static readonly string CIRCULATOR_PUMP_ACTUATOR_NAME = "CirculatorPumpActuator";
 
-        public static readonly string HUMIDITY_SENSOR_NAME = "RelativeHumidity";
+        public static readonly string HUMIDITY_SENSOR_NAME = "Hygrometer";
+        //public static readonly string HUMIDITY_SENSOR_NAME = "RelativeHumidity";
         public static readonly string PRESSURE_SENSOR_NAME = "PressureSensor";
         public static readonly string TEMP_SENSOR_NAME = "Temperature";
+        //public static readonly string TEMP_SENSOR_NAME = "Temperature";
 
         public static readonly string VISCOSITY_NAME = "Viscosity";
         public static readonly string FLOW_RATE_NAME = "FlowRate";
