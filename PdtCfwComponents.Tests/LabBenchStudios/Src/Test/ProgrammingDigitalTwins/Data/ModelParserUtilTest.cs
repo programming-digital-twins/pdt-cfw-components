@@ -219,7 +219,7 @@ namespace LabBenchStudios.Pdt.Test.Data
             {
                 ModelNameUtil.BASE_IOT_MODEL_CONTEXT_DTDL_MODEL,
                 ModelNameUtil.COMPONENT_ENV_SENSORS_DTDL_MODEL,
-                ModelNameUtil.CONTROLLER_POWER_WINDMILL_DTDL_MODEL
+                ModelNameUtil.CONTROLLER_WIND_TURBINE_DTDL_MODEL
             };
 
             Assert.That(
