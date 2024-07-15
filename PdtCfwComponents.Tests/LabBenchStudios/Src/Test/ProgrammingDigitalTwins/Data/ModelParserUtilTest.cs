@@ -209,7 +209,7 @@ namespace LabBenchStudios.Pdt.Test.Data
         }
 
         [Test]
-        public void CheckValidityOfPowerWindmillControllerDtdl()
+        public void CheckValidityOfWindTurbineControllerDtdl()
         {
             // This file extends BASE_IOT_MODEL_CONTEXT_DTDL_MODEL ID
             //

@@ -1,10 +1,14 @@
 {
   "@context": [
     "dtmi:dtdl:context;3",
+    "dtmi:dtdl:extension:mqtt;1",
     "dtmi:dtdl:extension:quantitativeTypes;1"
   ],
   "@id": "dtmi:LabBenchStudios:PDT:windTurbine;1",
-  "@type": [ "Interface" ],
+  "@type": [ "Interface", "Mqtt" ],
+  "telemetryTopic": "{productId}/{locationId}/{deviceId}/telemetry",
+  "commandTopic": "{productId}/{locationId}/{deviceId}/command",
+  "payloadFormat": "piot/3",
   "displayName": "Wind Turbine",
   "extends": "dtmi:LabBenchStudios:PDT:iotModelContext;1",
   "contents": [
