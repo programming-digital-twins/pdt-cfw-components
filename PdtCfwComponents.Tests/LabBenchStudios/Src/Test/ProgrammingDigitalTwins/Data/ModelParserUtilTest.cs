@@ -307,6 +307,21 @@ namespace LabBenchStudios.Pdt.Test.Data
                 Is.True);
         }
 
+        [Test]
+        public void CheckValidityOfSampleMqttDtdl()
+        {
+            // This test file should remain standalone and have no other dependencies
+            var modelList = new List<string>
+            {
+                "Lbs_Pdt_MqttTest.json"
+            };
+
+            Assert.That(
+                this.RunDtdlValidation(
+                    DTDL_TEST_MODEL_FILEPATH + "Mqtt/", modelList),
+                Is.True);
+        }
+
         private bool RunDtdlValidation(string modelPath, string modelName)
         {
             string jsonData = ModelParserUtil.LoadDtdlFile(modelPath + modelName);
