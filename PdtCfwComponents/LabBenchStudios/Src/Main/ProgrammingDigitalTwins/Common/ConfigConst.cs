@@ -200,16 +200,17 @@ namespace LabBenchStudios.Pdt.Common
         public const int TEMP_SENSOR_TYPE = 1013;
 
         public const int DISPLAY_CATEGORY_TYPE = 2000;
-        public const int DISPLAY_DEVICE_TYPE = 2000;
+        public const int DISPLAY_DEVICE_TYPE = DISPLAY_CATEGORY_TYPE;
         public const int LED_DISPLAY_ACTUATOR_TYPE = 2001;
 
         public const int MEDIA_TYPE_CATEGORY = 3000;
-        public const int DEFAULT_MEDIA_TYPE = 3000;
+        public const int DEFAULT_MEDIA_TYPE = MEDIA_TYPE_CATEGORY;
         public const int MEDIA_DEVICE_TYPE = 3000;
         public const int CAMERA_SENSOR_TYPE = 3101;
         public const int VIDEO_SYSTEM_TYPE = 3201;
         public const int AUDIO_SYSTEM_TYPE = 3301;
         public const int LIGHTING_SYSTEM_TYPE = 3401;
+
 
         public const int UTILITY_SYSTEM_TYPE_CATEGORY = 4000;
         public const int UTILITY_SYSTEM_DEVICE_TYPE = UTILITY_SYSTEM_TYPE_CATEGORY;
@@ -221,25 +222,33 @@ namespace LabBenchStudios.Pdt.Common
         public const int IMPELLER_RPM_SENSOR_TYPE = 4105;
         public const int IMPELLER_RPM_ACTUATOR_TYPE = 4107;
 
-        public const int WIND_TURBINE_SYSTEM_TYPE = 4200;
-        public const int WIND_TURBINE_POWER_OUTPUT_SENSOR_TYPE = 4201;
-        public const int WIND_TURBINE_GENERATOR_TEMP_SENSOR_TYPE = 4202;
-        public const int WIND_TURBINE_ROTATIONAL_SPEED_SENSOR_TYPE = 4203;
-        public const int WIND_TURBINE_AIR_SPEED_SENSOR_TYPE = 4204;
+        public const int ELECTRICAL_SYSTEM_TYPE = 4200;
+        public const int POWER_OUTPUT_SENSOR_TYPE = 4201;
 
-        public const int WIND_TURBINE_BRAKE_SYSTEM_ACTUATOR_TYPE = 4301;
+        public const int WIND_TURBINE_POWER_OUTPUT_SENSOR_TYPE = 4301;
+        public const int WIND_TURBINE_GENERATOR_TEMP_SENSOR_TYPE = 4302;
+        public const int WIND_TURBINE_ROTATIONAL_SPEED_SENSOR_TYPE = 4303;
+        public const int WIND_TURBINE_AIR_SPEED_SENSOR_TYPE = 4304;
+
+        public const int WIND_TURBINE_BRAKE_SYSTEM_ACTUATOR_TYPE = 4320;
 
         public const int ENERGY_TYPE_CATEGORY = 5000;
         public const int STORAGE_LEVEL = 5001;
         public const int STORAGE_DRAW = 5002;
-        public const int OIL_SYSTEM_TYPE = 5401;
-        public const int NATGAS_SYSTEM_TYPE = 5402;
-        public const int PROPANE_SYSTEM_TYPE = 5403;
-        public const int WIND_SYSTEM_TYPE = 5501;
-        public const int SOLAR_SYSTEM_TYPE = 5601;
-        public const int HYDRO_SYSTEM_TYPE = 5701;
-        public const int GEOTHERMAL_SYSTEM_TYPE = 5801;
-        public const int HYDROGEN_SYSTEM_TYPE = 5901;
+
+        public const int NATURAL_RESOURCE_ENERGY_SYSTEM_TYPE = 5100;
+        public const int WIND_SYSTEM_TYPE = 5101;
+        public const int WIND_TURBINE_SYSTEM_TYPE = WIND_SYSTEM_TYPE;
+        public const int SOLAR_SYSTEM_TYPE = 5102;
+        public const int HYDRO_SYSTEM_TYPE = 5103;
+        public const int GEOTHERMAL_SYSTEM_TYPE = 5104;
+        public const int OTHER_ENERGY_SYSTEM_TYPE = 5200;
+        public const int HYDROGEN_SYSTEM_TYPE = 5201;
+        public const int FOSSIL_FUEL_ENERGY_SYSTEM_TYPE = 5900;
+        public const int OIL_SYSTEM_TYPE = 5901;
+        public const int NATGAS_SYSTEM_TYPE = 5902;
+        public const int PROPANE_SYSTEM_TYPE = 5903;
+        public const int GASOLINE_SYSTEM_TYPE = 5904;
 
         public const int STRUCTURE_TYPE_CATEGORY = 7200;
         public const int STRUCTURE_TYPE = 7201;

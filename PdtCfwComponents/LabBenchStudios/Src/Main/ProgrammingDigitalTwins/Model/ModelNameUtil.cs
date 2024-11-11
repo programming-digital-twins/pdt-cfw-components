@@ -95,7 +95,7 @@ namespace LabBenchStudios.Pdt.Model
         public static readonly string CONTROLLER_FLUID_PUMP_DTDL_MODEL = MODEL_FILE_NAME_PREFIX + "Controller_FluidPump.json";
         public static readonly string CONTROLLER_HEATING_ZONE_DTDL_MODEL = MODEL_FILE_NAME_PREFIX + "Controller_HeatingZone.json";
         public static readonly string CONTROLLER_HUMIDIFIER_DTDL_MODEL = MODEL_FILE_NAME_PREFIX + "Controller_Humidifier.json";
-        public static readonly string CONTROLLER_POWER_WINDMILL_DTDL_MODEL = MODEL_FILE_NAME_PREFIX + "Controller_PowerWindmill.json";
+        public static readonly string CONTROLLER_WIND_TURBINE_DTDL_MODEL = MODEL_FILE_NAME_PREFIX + "Controller_WindTurbine.json";
         public static readonly string CONTROLLER_THERMOSTAT_DTDL_MODEL = MODEL_FILE_NAME_PREFIX + "Controller_Thermostat.json";
 
         // these model files represent the telemetry description for all data generation systems and components
@@ -117,7 +117,7 @@ namespace LabBenchStudios.Pdt.Model
         public const string HEATING_ZONE_NAME = "heatingZone";
         public const string BAROMETER_NAME = "barometer";
         public const string HUMIDIFIER_NAME = "humidifier";
-        public const string WIND_TURBINE_NAME = "powerWindmill";
+        public const string WIND_TURBINE_NAME = "windTurbine";
         public const string THERMOSTAT_NAME = "thermostat";
 
         public const string SYSTEM_PERFORMANCE_DATA_NAME = "systemPerformanceData";
@@ -161,7 +161,7 @@ namespace LabBenchStudios.Pdt.Model
         public static readonly string HEATING_ZONE_CONTROLLER_MODEL_ID = CreateModelID(DTMI_PREFIX, HEATING_ZONE_NAME, DTMI_CURRENT_VERSION);
         public static readonly string BAROMETER_CONTROLLER_MODEL_ID = CreateModelID(DTMI_PREFIX, BAROMETER_NAME, DTMI_CURRENT_VERSION);
         public static readonly string HUMIDIFIER_CONTROLLER_MODEL_ID = CreateModelID(DTMI_PREFIX, HUMIDIFIER_NAME, DTMI_CURRENT_VERSION);
-        public static readonly string POWER_WINDMILL_CONTROLLER_MODEL_ID = CreateModelID(DTMI_PREFIX, WIND_TURBINE_NAME, DTMI_CURRENT_VERSION);
+        public static readonly string WIND_TURBINE_CONTROLLER_MODEL_ID = CreateModelID(DTMI_PREFIX, WIND_TURBINE_NAME, DTMI_CURRENT_VERSION);
         public static readonly string THERMOSTAT_CONTROLLER_MODEL_ID = CreateModelID(DTMI_PREFIX, THERMOSTAT_NAME, DTMI_CURRENT_VERSION);
         public static readonly string DEVICE_SYS_PERF_COMPONENT_MODEL_ID = CreateModelID(DTMI_PREFIX, SYSTEM_PERFORMANCE_DATA_NAME, DTMI_CURRENT_VERSION);
         public static readonly string ENV_SENSORS_COMPONENT_MODEL_ID = CreateModelID(DTMI_PREFIX, ENVIRONMENTAL_SENSOR_DATA_NAME, DTMI_CURRENT_VERSION);
@@ -241,7 +241,7 @@ namespace LabBenchStudios.Pdt.Model
                     modelFileName = CONTEXT_INTERIOR_ROOM_DTDL_MODEL; break;
 
                 case DtmiControllerEnum.WindTurbine:
-                    modelFileName = CONTROLLER_POWER_WINDMILL_DTDL_MODEL; break;
+                    modelFileName = CONTROLLER_WIND_TURBINE_DTDL_MODEL; break;
 
                 case DtmiControllerEnum.ResidentialStructure:
                     modelFileName = CONTEXT_RESIDENTIAL_STRUCTURE_DTDL_MODEL; break;
@@ -644,19 +644,19 @@ namespace LabBenchStudios.Pdt.Model
                     break;
 
                 case ConfigConst.WIND_SYSTEM_TYPE:
-                    modelID = ModelNameUtil.POWER_WINDMILL_CONTROLLER_MODEL_ID;
+                    modelID = ModelNameUtil.WIND_TURBINE_CONTROLLER_MODEL_ID;
                     break;
 
                 case ConfigConst.WIND_TURBINE_POWER_OUTPUT_SENSOR_TYPE:
-                    modelID = ModelNameUtil.POWER_WINDMILL_CONTROLLER_MODEL_ID;
+                    modelID = ModelNameUtil.WIND_TURBINE_CONTROLLER_MODEL_ID;
                     break;
 
                 case ConfigConst.WIND_TURBINE_AIR_SPEED_SENSOR_TYPE:
-                    modelID = ModelNameUtil.POWER_WINDMILL_CONTROLLER_MODEL_ID;
+                    modelID = ModelNameUtil.WIND_TURBINE_CONTROLLER_MODEL_ID;
                     break;
 
                 case ConfigConst.WIND_TURBINE_ROTATIONAL_SPEED_SENSOR_TYPE:
-                    modelID = ModelNameUtil.POWER_WINDMILL_CONTROLLER_MODEL_ID;
+                    modelID = ModelNameUtil.WIND_TURBINE_CONTROLLER_MODEL_ID;
                     break;
 
                 default:

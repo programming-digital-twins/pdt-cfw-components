@@ -1,11 +1,11 @@
 {
-  "@id": "dtmi:LabBenchStudios:PDT:powerWindmill;1",
-  "@type": "Interface",
   "@context": [
     "dtmi:dtdl:context;3",
     "dtmi:dtdl:extension:quantitativeTypes;1"
   ],
-  "displayName": "Power Windmill",
+  "@id": "dtmi:LabBenchStudios:PDT:windTurbine;1",
+  "@type": [ "Interface" ],
+  "displayName": "Wind Turbine",
   "extends": "dtmi:LabBenchStudios:PDT:iotModelContext;1",
   "contents": [
     {
@@ -32,7 +32,7 @@
     {
       "@type": [ "Property", "TimeSpan" ],
       "name": "startupTimeSpan",
-      "displayName": "Time to Start Windmill in Seconds",
+      "displayName": "Time to Start Wind Turbine in Seconds",
       "schema": "float",
       "unit": "second"
     },
@@ -95,15 +95,15 @@
     },
     {
       "@type": "Command",
-      "name": "enableWindmill",
+      "name": "enableWindTurbine",
       "request": {
-        "name": "runWindmill",
-        "displayName": "Start Windmill",
-        "description": "Triggers the windmill to start under mains power.",
+        "name": "runWindTurbine",
+        "displayName": "Start Wind Turbine",
+        "description": "Triggers the wind turbine to start under mains power.",
         "schema": "boolean"
       },
       "response": {
-        "name": "windmillRunning",
+        "name": "windTurbineRunning",
         "schema": "boolean"
       }
     }
