@@ -39,6 +39,9 @@ namespace LabBenchStudios.Pdt.Data
         [JsonProperty]
         private int command = 0;
 
+        [JsonProperty]
+        private string commandName = ConfigConst.NOT_SET;
+
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private string stateData = ConfigConst.NOT_SET;
 
@@ -61,6 +64,8 @@ namespace LabBenchStudios.Pdt.Data
 
         public int GetCommand() { return this.command; }
 
+        public string GetCommandName() { return this.commandName; }
+
         public DataValueContainer GetDataValues() { return this.dataValues; }
 
         public float GetValue()
@@ -73,6 +78,8 @@ namespace LabBenchStudios.Pdt.Data
         public bool IsResponse() { return this.isResponse; }
 
         public void SetCommand(int val) { if (val >= 0) this.command = val; base.UpdateTimeStamp(); }
+
+        public void SetCommandName(string name) { if (name != null) this.commandName = name; base.UpdateTimeStamp(); }
 
         public void SetDataValues(DataValueContainer data)
         {
@@ -97,7 +104,7 @@ namespace LabBenchStudios.Pdt.Data
 
         public void SetResponse(bool isResponse) { this.isResponse = isResponse; base.UpdateTimeStamp(); }
 
-        public void SetStateData(string data) { if (! string.IsNullOrEmpty(data)) this.stateData = data; base.UpdateTimeStamp(); }
+        public void SetStateData(string data) { if (!string.IsNullOrEmpty(data)) this.stateData = data; base.UpdateTimeStamp(); }
 
         public override string ToString()
         {
@@ -105,6 +112,7 @@ namespace LabBenchStudios.Pdt.Data
 
             sb.Append(',');
             sb.Append(ConfigConst.COMMAND_PROP).Append('=').Append(this.command).Append(',');
+            sb.Append(ConfigConst.COMMAND_NAME_PROP).Append('=').Append(this.commandName).Append(',');
             sb.Append(ConfigConst.STATE_DATA_PROP).Append('=').Append(this.stateData).Append(',');
             sb.Append(ConfigConst.IS_RESPONSE_PROP).Append('=').Append(this.isResponse).Append(',');
             sb.Append(this.dataValues.ToString());
@@ -119,6 +127,7 @@ namespace LabBenchStudios.Pdt.Data
                 base.UpdateData(data);
 
                 this.command = data.GetCommand();
+                this.commandName = data.GetCommandName();
                 this.stateData = data.GetStateData();
                 this.isResponse = data.IsResponse();
 

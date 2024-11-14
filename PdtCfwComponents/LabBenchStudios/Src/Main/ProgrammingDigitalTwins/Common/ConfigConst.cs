@@ -103,6 +103,7 @@ namespace LabBenchStudios.Pdt.Common
         public static readonly string ELEVATION_PROP = "elevation";
 
         public static readonly string COMMAND_PROP = "command";
+        public static readonly string COMMAND_NAME_PROP = "commandName";
         public static readonly string STATE_DATA_PROP = "stateData";
         public static readonly string IS_RESPONSE_PROP = "isResponse";
         public static readonly string IS_INTERNAL_MSG_PROP = "isInternalMsg";
