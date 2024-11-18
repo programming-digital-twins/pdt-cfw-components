@@ -206,7 +206,7 @@ namespace LabBenchStudios.Pdt.Common
         public bool LoadDigitalTwinModels(string modelFilePath)
         {
             // tell model manager to update its model file path (and [re]load models)
-            if (this.digitalTwinModelManager.SetModelFilePath(modelFilePath))
+            if (this.digitalTwinModelManager.UpdateModelFilePaths(modelFilePath))
             {
                 // notify all interested listeners that (new) models have been (re) loaded
                 this.OnModelUpdateEvent();
@@ -215,6 +215,27 @@ namespace LabBenchStudios.Pdt.Common
             }
 
             Console.WriteLine($"Failed to (re)load Digital Twin models from path {modelFilePath}");
+
+            return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="modelFilePathList"></param>
+        /// <returns></returns>
+        public bool LoadDigitalTwinModels(List<string> modelFilePathList)
+        {
+            // tell model manager to update its model file path (and [re]load models)
+            if (this.digitalTwinModelManager.UpdateModelFilePaths(modelFilePathList))
+            {
+                // notify all interested listeners that (new) models have been (re) loaded
+                this.OnModelUpdateEvent();
+
+                return true;
+            }
+
+            Console.WriteLine($"Failed to (re)load Digital Twin models from path list {modelFilePathList}");
 
             return false;
         }

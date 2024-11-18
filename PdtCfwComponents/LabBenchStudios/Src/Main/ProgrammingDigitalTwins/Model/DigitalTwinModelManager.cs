@@ -41,7 +41,8 @@ namespace LabBenchStudios.Pdt.Model
     /// </summary>
     public class DigitalTwinModelManager : IDataContextEventListener
     {
-        private string modelFilePath = ModelNameUtil.DEFAULT_MODEL_FILE_PATH;
+        private HashSet<string> modelFilePaths = new HashSet<string>();
+
         private string resourcePrefix = ConfigConst.PRODUCT_NAME;
 
         private bool hasSuccessfulDataLoad = false;
@@ -74,7 +75,7 @@ namespace LabBenchStudios.Pdt.Model
         {
             this.digitalTwinModelMgrCache = new DigitalTwinModelManagerCache();
 
-            this.SetModelFilePath(modelFilePath);
+            this.UpdateModelFilePaths(modelFilePath);
         }
 
         // public methods
@@ -86,7 +87,7 @@ namespace LabBenchStudios.Pdt.Model
         /// <returns></returns>
         public bool BuildModelData()
         {
-            if (!string.IsNullOrEmpty(this.modelFilePath) && Directory.Exists(modelFilePath))
+            if (this.modelFilePaths.Count > 0)
             {
                 bool areInterfacesLoaded = this.LoadAndValidateDtdlModelInterfaceData();
                 bool areJsonFilesLoaded = this.LoadAndValidateDtdlModelJsonData();
@@ -96,7 +97,7 @@ namespace LabBenchStudios.Pdt.Model
             }
             else
             {
-                Console.WriteLine($"Ignoring DTDL reload request. File path is invalid: {this.modelFilePath}");
+                Console.WriteLine($"Ignoring DTDL reload request. No stored file paths to process.");
                 return false;
             }
         }
@@ -251,7 +252,7 @@ namespace LabBenchStudios.Pdt.Model
             }
             else
             {
-                Console.WriteLine($"No DTDL model cache loaded from file path {this.modelFilePath}");
+                Console.WriteLine($"No DTDL model cache loaded from stored file paths.");
             }
 
             return null;
@@ -457,9 +458,35 @@ namespace LabBenchStudios.Pdt.Model
         /// </summary>
         /// <param name="modelFilePath"></param>
         /// <returns></returns>
-        public bool SetModelFilePath(string modelFilePath)
+        public bool UpdateModelFilePaths(string modelFilePath)
         {
-            return this.SetModelFilePath(modelFilePath, true);
+            return this.UpdateModelFilePaths(modelFilePath, true);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="modelFilePathList"></param>
+        /// <returns></returns>
+        public bool UpdateModelFilePaths(List<string> modelFilePathList)
+        {
+            int counter = 0;
+            int modelFileCount = 0;
+
+            if (modelFilePathList != null && modelFilePathList.Count > 0)
+            {
+                modelFileCount = modelFilePathList.Count;
+
+                foreach (string modelFilePath in modelFilePathList)
+                {
+                    if (this.UpdateModelFilePaths(modelFilePath))
+                    {
+                        counter++;
+                    }
+                }
+            }
+
+            return (counter > 0 && modelFileCount == counter ? true : false);
         }
 
         /// <summary>
@@ -468,25 +495,26 @@ namespace LabBenchStudios.Pdt.Model
         /// <param name="modelFilePath"></param>
         /// <param name="reloadModels"></param>
         /// <returns></returns>
-        public bool SetModelFilePath(string modelFilePath, bool reloadModels)
+        public bool UpdateModelFilePaths(string modelFilePath, bool reloadModels)
         {
-            if (!string.IsNullOrEmpty(modelFilePath) && Directory.Exists(modelFilePath))
+            if (this.IsModelFilePathValid(modelFilePath))
             {
-                Console.WriteLine($"Setting model file path. File path is good: {modelFilePath}");
-                this.modelFilePath = modelFilePath;
+                this.modelFilePaths.Add(modelFilePath);
 
                 if (reloadModels)
                 {
-                    this.BuildModelData();
+                    if (! this.BuildModelData())
+                    {
+                        Console.WriteLine("Failed to reload models. Check DTDL manager log output.");
+                    }
                 }
 
                 return true;
             }
 
-            Console.WriteLine($"Failed to set model file path. File path is invalid: {modelFilePath}");
             return false;
         }
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -573,20 +601,36 @@ namespace LabBenchStudios.Pdt.Model
         }
 
         /// <summary>
-        /// Unfortunately, this method results in each DTDL model being loaded twice
-        /// Future optimizations will probably remove this redundancy.
+        /// 
         /// </summary>
-        private bool LoadAndValidateDtdlModelJsonData()
+        /// <param name="modelFilePath"></param>
+        /// <returns></returns>
+        private bool IsModelFilePathValid(string modelFilePath)
         {
-            if (this.digitalTwinModelMgrCache.LoadDigitalTwinJsonModels(this.modelFilePath))
+            if (!string.IsNullOrEmpty(modelFilePath))
             {
-                Console.WriteLine($"Successfully loaded DTDL JSON data from path {this.modelFilePath}");
+                if (!this.modelFilePaths.Contains(modelFilePath))
+                {
+                    if (Directory.Exists(modelFilePath))
+                    {
+                        Console.WriteLine($"Updating model file paths. New file path is good: {modelFilePath}");
 
-                return true;
+                        return true;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Failed to update model file paths. Requested model file path doesn't exist: {modelFilePath}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Failed to update model file paths. File path already used and stored: {modelFilePath}");
+                }
+
             }
             else
             {
-                Console.WriteLine($"Failed to load DTDL JSON data from path {this.modelFilePath}");
+                Console.WriteLine($"Failed to update model file paths. File path is null or empty: {modelFilePath}");
             }
 
             return false;
@@ -596,24 +640,59 @@ namespace LabBenchStudios.Pdt.Model
         /// Unfortunately, this method results in each DTDL model being loaded twice
         /// Future optimizations will probably remove this redundancy.
         /// </summary>
+        private bool LoadAndValidateDtdlModelJsonData()
+        {
+            int files = this.modelFilePaths.Count;
+            int counter = 0;
+
+            foreach (string dtdlFilePath in this.modelFilePaths)
+            {
+                if (this.digitalTwinModelMgrCache.LoadDigitalTwinJsonModels(dtdlFilePath))
+                {
+                    Console.WriteLine($"Successfully loaded DTDL JSON data from path {dtdlFilePath}");
+                    counter++;
+                }
+                else
+                {
+                    Console.WriteLine($"Failed to load DTDL JSON data from path {dtdlFilePath}");
+                }
+            }
+
+            Console.WriteLine($"Loaded and validated DTDL model files: {counter} out of {files}");
+
+            return (counter > 0 ? true : false);
+        }
+
+        /// <summary>
+        /// Unfortunately, this method results in each DTDL model being loaded twice
+        /// Future optimizations will probably remove this redundancy.
+        /// </summary>
         private bool LoadAndValidateDtdlModelInterfaceData()
         {
-            // update DTDL object cache
-            this.digitalTwinInterfaceCache = ModelParserUtil.LoadAllDtdlInterfaces(this.modelFilePath);
+            int records = this.modelFilePaths.Count;
+            int counter = 0;
 
-            if (this.digitalTwinInterfaceCache != null)
+            foreach (string dtdlFilePath in this.modelFilePaths)
             {
-                Console.WriteLine($"Successfully loaded DTDL model interfaces from path {this.modelFilePath}");
-                this.hasSuccessfulDataLoad = true;
+                // update DTDL object cache
+                this.digitalTwinInterfaceCache = ModelParserUtil.LoadAllDtdlInterfaces(dtdlFilePath);
 
-                return true;
-            }
-            else
-            {
-                Console.WriteLine($"Failed to load DTDL model interfaces from path {this.modelFilePath}");
+                if (this.digitalTwinInterfaceCache != null)
+                {
+                    Console.WriteLine($"Successfully loaded DTDL model interfaces from path {dtdlFilePath}");
+                    counter++;
+                }
+                else
+                {
+                    Console.WriteLine($"Failed to load DTDL model interfaces from path {dtdlFilePath}");
+                }
             }
 
-            return false;
+            Console.WriteLine($"Loaded and validated DTDL model interfaces: {counter} out of {records}");
+
+            this.hasSuccessfulDataLoad = (counter > 0 ? true : false);
+
+            return (this.hasSuccessfulDataLoad);
         }
 
         /// <summary>
