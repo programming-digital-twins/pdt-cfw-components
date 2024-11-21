@@ -1,0 +1,58 @@
+{
+    "info": {
+        "version": "2024-11-18"
+    },
+    "typeCategories": {
+        "windTurbineUtilityTypeCategory": {
+            "name": "windTurbineUtilityTypeCategory",
+            "description": "Wind Turbine utility category configuration.",
+            "displayName": "Wind Turbine Utility Category",
+            "dtmlIdRef": "dtmi:LabBenchStudios:PDT:windTurbine;1",
+            "id": 4300,
+            "minId": 4301,
+            "maxId": 4399,
+            "typeEntries": {
+                "windTurbineBrakeSystemActuator": {
+                    "name": "windTurbineBrakeSystemActuator",
+                    "description": "Wind turbine brake system actuator type configuration.",
+                    "displayName": "Wind Turbine Brake System Actuator",
+                    "dtmlIdRef": "dtmi:LabBenchStudios:PDT:windTurbine;1",
+                    "componentType": "actuator",
+                    "id": 4320
+                },
+                "windTurbinePowerOutput": {
+                    "name": "windTurbinePowerOutput",
+                    "description": "Wind turbine power output type configuration.",
+                    "displayName": "Wind Turbine Power Output",
+                    "dtmlIdRef": "dtmi:LabBenchStudios:PDT:windTurbine;1",
+                    "componentType": "sensor",
+                    "id": 4301
+                },
+                "windTurbineGeneratorTemperature": {
+                    "name": "windTurbineGeneratorTemperature",
+                    "description": "Wind turbine generator temperature type configuration.",
+                    "displayName": "Wind Turbine Generator Temperature",
+                    "dtmlIdRef": "dtmi:LabBenchStudios:PDT:windTurbine;1",
+                    "componentType": "sensor",
+                    "id": 4302
+                },
+                "windTurbineRotationalSpeed": {
+                    "name": "windTurbineRotationalSpeed",
+                    "description": "Wind turbine rotational speed type configuration.",
+                    "displayName": "Wind Turbine Rotational Speed",
+                    "dtmlId": "dtmi:LabBenchStudios:PDT:windTurbine;1",
+                    "componentType": "sensor",
+                    "id": 4303
+                },
+                "windTurbineAirSpeed": {
+                    "name": "windTurbineAirSpeed",
+                    "description": "Wind turbine air speed type configuration.",
+                    "displayName": "Wind Turbine Air Speed",
+                    "dtmlIdRef": "dtmi:LabBenchStudios:PDT:windTurbine;1",
+                    "componentType": "sensor",
+                    "id": 4304
+                }
+            }
+        }
+    }
+}

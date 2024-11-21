@@ -226,6 +226,7 @@ namespace LabBenchStudios.Pdt.Common
         public const int ELECTRICAL_SYSTEM_TYPE = 4200;
         public const int POWER_OUTPUT_SENSOR_TYPE = 4201;
 
+        public const int WIND_TURBINE_UTILITY_TYPE_CATEGORY = 4300;
         public const int WIND_TURBINE_POWER_OUTPUT_SENSOR_TYPE = 4301;
         public const int WIND_TURBINE_GENERATOR_TEMP_SENSOR_TYPE = 4302;
         public const int WIND_TURBINE_ROTATIONAL_SPEED_SENSOR_TYPE = 4303;

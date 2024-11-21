@@ -1,0 +1,34 @@
+{
+    "info": {
+        "version": "2024-11-18"
+    },
+    "typeCategories": {
+        "heatingSystem": {
+            "name": "heatingSystem",
+            "description": "Heating system category configuration.",
+            "displayName": "Heating System Category",
+            "dtmlIdRef": "dtmi:LabBenchStudios:PDT:heatingSystem;1",
+            "id": 1000,
+            "minId": 1001,
+            "maxId": 1999,
+            "typeEntries": {
+                "targetTemperature": {
+                    "name": "targetTemperature",
+                    "description": "HVAC actuator type configuration.",
+                    "displayName": "HVAC",
+                    "dtmlIdRef": "dtmi:LabBenchStudios:PDT:heatingSystem;1",
+                    "componentType": "actuator",
+                    "id": 1001
+                },
+                "targetHumidity": {
+                    "name": "targetHumidity",
+                    "description": "Humidifier actuator type configuration.",
+                    "displayName": "Humidifier",
+                    "dtmlIdRef": "dtmi:LabBenchStudios:PDT:humidifier;1",
+                    "componentType": "actuator",
+                    "id": 1002
+               }
+            }
+        }
+    }
+}
