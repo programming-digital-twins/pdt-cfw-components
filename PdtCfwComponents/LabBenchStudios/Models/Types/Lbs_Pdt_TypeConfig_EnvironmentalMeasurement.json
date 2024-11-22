@@ -1,42 +1,36 @@
 {
-    "info": {
-        "version": "2024-11-18"
+  "name": "environmentalSensorData",
+  "version": "2024-11-18",
+  "description": "Environmental sensor data category configuration.",
+  "displayName": "Environmental Sensor Data Category",
+  "dtmlIdRef": "dtmi:LabBenchStudios:PDT:environmentalSensorData;1",
+  "id": 1000,
+  "minId": 1001,
+  "maxId": 1999,
+  "typeEntries": {
+    "relativeHumidity": {
+      "name": "relativeHumidity",
+      "description": "Humidity type configuration.",
+      "displayName": "Humidity",
+      "dtmlIdRef": "dtmi:LabBenchStudios:PDT:relativeHumidityData;1",
+      "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
+      "id": 1010
     },
-    "typeCategories": {
-        "environmentalSensorData": {
-            "name": "environmentalSensorData",
-            "description": "Environmental sensor data category configuration.",
-            "displayName": "Environmental Sensor Data Category",
-            "dtmlIdRef": "dtmi:LabBenchStudios:PDT:environmentalSensorData;1",
-            "id": 1000,
-            "minId": 1001,
-            "maxId": 1999,
-            "typeEntries": {
-                "relativeHumidity": {
-                    "name": "relativeHumidity",
-                    "description": "Humidity type configuration.",
-                    "displayName": "Humidity",
-                    "dtmlIdRef": "dtmi:LabBenchStudios:PDT:relativeHumidityData;1",
-                    "componentType": "sensor",
-                    "id": 1010
-                },
-                "barometricPressure": {
-                    "name": "barometricPressure",
-                    "description": "Barometric pressure type configuration.",
-                    "displayName": "Pressure",
-                    "dtmlIdRef": "dtmi:LabBenchStudios:PDT:barometricPressureData;1",
-                    "componentType": "sensor",
-                    "id": 1011
-                },
-                "temperature": {
-                    "name": "temperature",
-                    "description": "Temperature type configuration.",
-                    "displayName": "Temperature",
-                    "dtmlIdRef": "dtmi:LabBenchStudios:PDT:temperatureData;1",
-                    "componentType": "sensor",
-                    "id": 1012
-                }
-            }
-        }
+    "barometricPressure": {
+      "name": "barometricPressure",
+      "description": "Barometric pressure type configuration.",
+      "displayName": "Pressure",
+      "dtmlIdRef": "dtmi:LabBenchStudios:PDT:barometricPressureData;1",
+      "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
+      "id": 1011
+    },
+    "temperature": {
+      "name": "temperature",
+      "description": "Temperature type configuration.",
+      "displayName": "Temperature",
+      "dtmlIdRef": "dtmi:LabBenchStudios:PDT:temperatureData;1",
+      "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
+      "id": 1012
     }
+  }
 }

@@ -36,13 +36,16 @@ namespace LabBenchStudios.Pdt.Data
     public class DataTypeCategoryInfo : DataTypeContext
     {
         [JsonProperty]
+        private string version = string.Empty;
+
+        [JsonProperty]
         private int minId = 0;
 
         [JsonProperty]
         private int maxId = 0;
         
         [JsonProperty]
-        private Dictionary<string, DataTypeInfo> configTypeTable = new Dictionary<string, DataTypeInfo>();
+        private Dictionary<string, DataTypeInfo> typeEntries = new Dictionary<string, DataTypeInfo>();
 
         // necessary for JSON serialization / deserialization
         public DataTypeCategoryInfo()
@@ -52,27 +55,80 @@ namespace LabBenchStudios.Pdt.Data
 
         // public methods
 
+        public void AddTypeEntry(DataTypeInfo dataType)
+        {
+            if (dataType != null)
+            {
+                this.typeEntries.Add(dataType.GetDataTypeName(), dataType);
+            }
+        }
+
+        public int GetDataTypeMinId()
+        {
+            return this.minId;
+        }
+
+        public int GetDataTypeMaxId()
+        {
+            return this.maxId;
+        }
+
         public int GetConfigTypeInfoCount()
         {
-            return this.configTypeTable.Count;
+            return this.typeEntries.Count;
         }
 
         public DataTypeInfo GetConfigType(string typeName)
         {
             if (typeName != null && typeName.Length > 0)
             {
-                if (this.configTypeTable.ContainsKey(typeName))
+                if (this.typeEntries.ContainsKey(typeName))
                 {
-                    return configTypeTable[typeName];
+                    return this.typeEntries[typeName];
                 }
             }
 
             return null;
         }
 
+        public string GetVersion()
+        {
+            return this.version;
+        }
+
+        public override bool IsTypeCategory()
+        {
+            return true;
+        }
+
+        public void SetDataTypeMinId(int id)
+        {
+            this.minId = id;
+        }
+
+        public void SetDataTypeMaxId(int id)
+        {
+            this.maxId = id;
+        }
+
+        public void SetVersion(string version)
+        {
+            this.version = version;
+        }
+
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder(base.ToString());
+
+            sb.Append(base.ToString());
+            sb.Append(",version=").Append(this.version);
+            sb.Append(",minId=").Append(this.minId);
+            sb.Append(",maxId=").Append(this.maxId);
+
+            foreach (string key in this.typeEntries.Keys)
+            {
+                    sb.Append('\n').Append(this.typeEntries[key]);
+            }
 
             return sb.ToString();
         }

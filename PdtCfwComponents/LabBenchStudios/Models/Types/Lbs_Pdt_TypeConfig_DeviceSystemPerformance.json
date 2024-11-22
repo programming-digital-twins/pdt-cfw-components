@@ -1,42 +1,38 @@
 {
-    "info": {
-        "version": "2024-11-18"
-    },
-    "typeCategories": {
-        "systemPerformanceData": {
-            "name": "systemPerformanceData",
-            "description": "System performance data type category configuration.",
-            "displayName": "System Performance Data Category",
-            "dtmlIdRef": "dtmi:LabBenchStudios:PDT:systemPerformanceData;1",
-            "id": 9000,
-            "minId": 9001,
-            "maxId": 9999,
-            "typeEntries": {
-                "cpuUtil": {
-                    "name": "cpuUtil",
-                    "description": "CPU utilization type configuration.",
-                    "displayName": "CPU Utilization",
-                    "dtmlIdRef": "dtmi:LabBenchStudios:PDT:systemPerformanceData;1",
-                    "componentType": "sensor",
-                    "id": 9001
-                },
-                "diskUtil": {
-                    "name": "diskUtil",
-                    "description": "Disk utilization type configuration.",
-                    "displayName": "Disk Utilization",
-                    "dtmlIdRef": "dtmi:LabBenchStudios:PDT:systemPerformanceData;1",
-                    "componentType": "sensor",
-                    "id": 9003
-                },
-                "memUtil": {
-                    "name": "memUtil",
-                    "description": "Memory utilization type configuration.",
-                    "displayName": "Memory Utilization",
-                    "dtmlIdRef": "dtmi:LabBenchStudios:PDT:systemPerformanceData;1",
-                    "componentType": "sensor",
-                    "id": 9002
-                }
-            }
-        }
+  "systemPerformanceData": {
+    "name": "systemPerformanceData",
+    "version": "2024-11-18",
+    "description": "System performance data type category configuration.",
+    "displayName": "System Performance Data Category",
+    "dtmlIdRef": "dtmi:LabBenchStudios:PDT:systemPerformanceData;1",
+    "id": 9000,
+    "minId": 9001,
+    "maxId": 9999,
+    "typeEntries": {
+      "cpuUtil": {
+        "name": "cpuUtil",
+        "description": "CPU utilization type configuration.",
+        "displayName": "CPU Utilization",
+        "dtmlIdRef": "dtmi:LabBenchStudios:PDT:systemPerformanceData;1",
+        "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
+        "id": 9001
+      },
+      "diskUtil": {
+        "name": "diskUtil",
+        "description": "Disk utilization type configuration.",
+        "displayName": "Disk Utilization",
+        "dtmlIdRef": "dtmi:LabBenchStudios:PDT:systemPerformanceData;1",
+        "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
+        "id": 9003
+      },
+      "memUtil": {
+        "name": "memUtil",
+        "description": "Memory utilization type configuration.",
+        "displayName": "Memory Utilization",
+        "dtmlIdRef": "dtmi:LabBenchStudios:PDT:systemPerformanceData;1",
+        "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
+        "id": 9002
+      }
     }
+  }
 }

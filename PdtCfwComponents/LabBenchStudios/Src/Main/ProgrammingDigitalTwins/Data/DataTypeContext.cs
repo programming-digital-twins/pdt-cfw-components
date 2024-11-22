@@ -26,6 +26,7 @@ using LabBenchStudios.Pdt.Common;
 
 using Newtonsoft.Json;
 using System;
+using System.Deployment.Internal;
 using System.Text;
 
 namespace LabBenchStudios.Pdt.Data
@@ -55,9 +56,70 @@ namespace LabBenchStudios.Pdt.Data
 
         // public methods
 
+        public string GetDataTypeName()
+        {
+            return this.name;
+        }
+
+        public string GetDataTypeDisplayName()
+        {
+            return this.displayName;
+        }
+
+        public string GetDataTypeDescription()
+        {
+            return this.description;
+        }
+
+        public string GetDtmlIdReference()
+        {
+            return this.dtmlIdRef;
+        }
+
+        public int GetId()
+        {
+            return this.id;
+        }
+
+        public virtual bool IsTypeCategory()
+        {
+            return false;
+        }
+
+        public void SetDataTypeName(string name)
+        {
+            this.name = name;
+        }
+
+        public void SetDataTypeDisplayName(string displayName)
+        {
+            this.displayName = displayName;
+        }
+
+        public void SetDataTypeDescription(string description)
+        {
+            this.description = description;
+        }
+
+        public void SetDtmlIdReference(string idRef)
+        {
+            this.dtmlIdRef = idRef;
+        }
+
+        public void SetId(int id)
+        {
+            this.id = id;
+        }
+
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder(base.ToString());
+
+            sb.Append(",name=").Append(this.name);
+            sb.Append(",displayName=").Append(this.displayName);
+            sb.Append(",description=").Append(this.description);
+            sb.Append(",dtmlIdRef=").Append(this.dtmlIdRef);
+            sb.Append(",id=").Append(this.id);
 
             return sb.ToString();
         }

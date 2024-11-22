@@ -33,19 +33,27 @@ using System.Text;
 namespace LabBenchStudios.Pdt.Data
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class DataTypeConfigContainer
+    public class DataTypeConfigCache
     {
         [JsonProperty]
         private Dictionary<string, DataTypeCategoryInfo> configCategoryTable = new Dictionary<string, DataTypeCategoryInfo>();
 
 
         // necessary for JSON serialization / deserialization
-        public DataTypeConfigContainer()
+        public DataTypeConfigCache()
         {
         }
 
 
         // public methods
+
+        public void AddDataTypeCategoryInfo(DataTypeCategoryInfo categoryInfo)
+        {
+            if (categoryInfo != null)
+            {
+                this.configCategoryTable.Add(categoryInfo.GetDataTypeName(), categoryInfo);
+            }
+        }
 
         public int GetConfigTypeCategoryInfoCount()
         {
@@ -87,6 +95,13 @@ namespace LabBenchStudios.Pdt.Data
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
+
+            foreach (string key in this.configCategoryTable.Keys)
+            {
+                DataTypeCategoryInfo categoryInfo = this.configCategoryTable[key];
+
+                sb.Append(categoryInfo).Append('\n');
+            }
 
             return sb.ToString();
         }

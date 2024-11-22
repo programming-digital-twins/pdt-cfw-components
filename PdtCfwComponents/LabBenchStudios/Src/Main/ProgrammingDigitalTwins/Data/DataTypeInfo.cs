@@ -33,8 +33,7 @@ namespace LabBenchStudios.Pdt.Data
     [JsonObject(MemberSerialization.OptIn)]
     public class DataTypeInfo : DataTypeContext
     {
-        [JsonProperty]
-        private string componentType = string.Empty;
+        private DataTypeCategoryInfo dataTypeCategory = null;
 
         [JsonProperty]
         private string dataContainerType = string.Empty;
@@ -45,10 +44,45 @@ namespace LabBenchStudios.Pdt.Data
         }
 
         // public methods
+        
+        public IotDataContext createDataContainer()
+        {
+            if (this.dataContainerType != null && this.dataContainerType != string.Empty)
+            {
+                try
+                {
+                    Type t = Type.GetType(this.dataContainerType);
+                    IotDataContext dataContext = (IotDataContext) Activator.CreateInstance(t);
+
+                    // TODO: fill in details
+                    if (this.dataTypeCategory != null)
+                    {
+                        dataContext.SetTypeCategoryID(this.dataTypeCategory.GetId());
+                    }
+
+                    dataContext.SetTypeName(this.GetDataTypeName());
+                    dataContext.SetTypeID(this.GetId());
+
+                    return dataContext;
+                } catch (Exception e)
+                {
+
+                }
+            }
+
+            return null;
+        }
+
+        public string getDataContainerTypeName()
+        {
+            return this.dataContainerType;
+        }
 
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder(base.ToString());
+
+            sb.Append(",dataContainerType=").Append(this.dataContainerType);
 
             return sb.ToString();
         }
