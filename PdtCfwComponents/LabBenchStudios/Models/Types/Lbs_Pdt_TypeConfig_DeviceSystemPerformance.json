@@ -1,6 +1,6 @@
 {
   "systemPerformanceData": {
-    "name": "systemPerformanceData",
+    "typeName": "systemPerformanceData",
     "version": "2024-11-18",
     "description": "System performance data type category configuration.",
     "displayName": "System Performance Data Category",
@@ -10,26 +10,29 @@
     "maxId": 9999,
     "typeEntries": {
       "cpuUtil": {
-        "name": "cpuUtil",
+        "typeName": "cpuUtil",
         "description": "CPU utilization type configuration.",
         "displayName": "CPU Utilization",
         "dtmlIdRef": "dtmi:LabBenchStudios:PDT:systemPerformanceData;1",
+        "resourceName": "/{productName}/{deviceName}/{name}",
         "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
         "id": 9001
       },
       "diskUtil": {
-        "name": "diskUtil",
+        "typeName": "diskUtil",
         "description": "Disk utilization type configuration.",
         "displayName": "Disk Utilization",
         "dtmlIdRef": "dtmi:LabBenchStudios:PDT:systemPerformanceData;1",
+        "resourceName": "/{productName}/{deviceName}/{name}",
         "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
         "id": 9003
       },
       "memUtil": {
-        "name": "memUtil",
+        "typeName": "memUtil",
         "description": "Memory utilization type configuration.",
         "displayName": "Memory Utilization",
         "dtmlIdRef": "dtmi:LabBenchStudios:PDT:systemPerformanceData;1",
+        "resourceName": "/{productName}/{deviceName}/{name}",
         "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
         "id": 9002
       }

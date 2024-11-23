@@ -51,7 +51,7 @@ namespace LabBenchStudios.Pdt.Data
         {
             if (categoryInfo != null)
             {
-                this.configCategoryTable.Add(categoryInfo.GetDataTypeName(), categoryInfo);
+                this.configCategoryTable.Add(categoryInfo.GetName(), categoryInfo);
             }
         }
 

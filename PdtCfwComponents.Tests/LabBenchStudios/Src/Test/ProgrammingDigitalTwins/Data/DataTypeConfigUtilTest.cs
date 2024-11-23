@@ -69,17 +69,17 @@ namespace LabBenchStudios.Pdt.Test.Data
             try
             {
                 DataTypeCategoryInfo categoryInfo = new DataTypeCategoryInfo();
-                categoryInfo.SetDataTypeName("foobar");
-                categoryInfo.SetDataTypeDisplayName("Foobar.");
-                categoryInfo.SetDataTypeDescription("This is the foobar.");
+                categoryInfo.SetTypeName("foobar");
+                categoryInfo.SetDisplayName("Foobar.");
+                categoryInfo.SetDescription("This is the foobar.");
                 categoryInfo.SetDtmlIdReference("dtmi:foo.bar;1");
                 categoryInfo.SetDataTypeMinId(1000);
                 categoryInfo.SetDataTypeMaxId(1999);
 
                 DataTypeInfo typeInfo = new DataTypeInfo();
-                typeInfo.SetDataTypeName("temp");
-                typeInfo.SetDataTypeDisplayName("Temperature.");
-                typeInfo.SetDataTypeDescription("This is the temperature.");
+                typeInfo.SetTypeName("temp");
+                typeInfo.SetDisplayName("Temperature.");
+                typeInfo.SetDescription("This is the temperature.");
                 typeInfo.SetDtmlIdReference("dtmi:temp.erature;1");
                 typeInfo.SetId(1001);
 

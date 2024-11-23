@@ -59,7 +59,7 @@ namespace LabBenchStudios.Pdt.Data
         {
             if (dataType != null)
             {
-                this.typeEntries.Add(dataType.GetDataTypeName(), dataType);
+                this.typeEntries.Add(dataType.GetName(), dataType);
             }
         }
 

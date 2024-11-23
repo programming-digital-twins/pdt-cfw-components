@@ -25,8 +25,6 @@
 using LabBenchStudios.Pdt.Common;
 
 using Newtonsoft.Json;
-using System;
-using System.Deployment.Internal;
 using System.Text;
 
 namespace LabBenchStudios.Pdt.Data
@@ -35,7 +33,7 @@ namespace LabBenchStudios.Pdt.Data
     public class DataTypeContext
     {
         [JsonProperty]
-        private string name = string.Empty;
+        private string typeName = string.Empty;
 
         [JsonProperty]
         private string displayName = string.Empty;
@@ -47,6 +45,9 @@ namespace LabBenchStudios.Pdt.Data
         private string dtmlIdRef = string.Empty;
 
         [JsonProperty]
+        private string resourceName = string.Empty;
+
+        [JsonProperty]
         private int id = 0;
 
         // necessary for JSON serialization / deserialization
@@ -56,17 +57,17 @@ namespace LabBenchStudios.Pdt.Data
 
         // public methods
 
-        public string GetDataTypeName()
+        public string GetTypeName()
         {
-            return this.name;
+            return this.typeName;
         }
 
-        public string GetDataTypeDisplayName()
+        public string GetDisplayName()
         {
             return this.displayName;
         }
 
-        public string GetDataTypeDescription()
+        public string GetDescription()
         {
             return this.description;
         }
@@ -81,22 +82,27 @@ namespace LabBenchStudios.Pdt.Data
             return this.id;
         }
 
+        public string GetResourceName()
+        {
+            return this.resourceName;
+        }
+
         public virtual bool IsTypeCategory()
         {
             return false;
         }
 
-        public void SetDataTypeName(string name)
+        public void SetTypeName(string name)
         {
-            this.name = name;
+            this.typeName = name;
         }
 
-        public void SetDataTypeDisplayName(string displayName)
+        public void SetDisplayName(string displayName)
         {
             this.displayName = displayName;
         }
 
-        public void SetDataTypeDescription(string description)
+        public void SetDescription(string description)
         {
             this.description = description;
         }
@@ -111,14 +117,20 @@ namespace LabBenchStudios.Pdt.Data
             this.id = id;
         }
 
+        public void SetResourceName(string resourceName)
+        {
+            this.resourceName = resourceName;
+        }
+
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder(base.ToString());
 
-            sb.Append(",name=").Append(this.name);
+            sb.Append(",name=").Append(this.typeName);
             sb.Append(",displayName=").Append(this.displayName);
             sb.Append(",description=").Append(this.description);
             sb.Append(",dtmlIdRef=").Append(this.dtmlIdRef);
+            sb.Append(",resourceName=").Append(this.resourceName);
             sb.Append(",id=").Append(this.id);
 
             return sb.ToString();

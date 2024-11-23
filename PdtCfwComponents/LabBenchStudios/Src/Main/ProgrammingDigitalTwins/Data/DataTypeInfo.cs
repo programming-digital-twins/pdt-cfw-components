@@ -60,7 +60,7 @@ namespace LabBenchStudios.Pdt.Data
                         dataContext.SetTypeCategoryID(this.dataTypeCategory.GetId());
                     }
 
-                    dataContext.SetTypeName(this.GetDataTypeName());
+                    dataContext.SetTypeName(this.GetName());
                     dataContext.SetTypeID(this.GetId());
 
                     return dataContext;
