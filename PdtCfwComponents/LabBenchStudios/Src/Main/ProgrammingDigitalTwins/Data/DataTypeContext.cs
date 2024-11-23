@@ -126,7 +126,7 @@ namespace LabBenchStudios.Pdt.Data
         {
             StringBuilder sb = new StringBuilder(base.ToString());
 
-            sb.Append(",name=").Append(this.typeName);
+            sb.Append(",typeName=").Append(this.typeName);
             sb.Append(",displayName=").Append(this.displayName);
             sb.Append(",description=").Append(this.description);
             sb.Append(",dtmlIdRef=").Append(this.dtmlIdRef);
