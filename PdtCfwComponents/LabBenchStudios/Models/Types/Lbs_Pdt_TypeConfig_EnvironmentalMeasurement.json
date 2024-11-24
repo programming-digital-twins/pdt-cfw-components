@@ -3,7 +3,7 @@
   "version": "2024-11-18",
   "description": "Environmental sensor data category configuration.",
   "displayName": "Environmental Sensor Data Category",
-  "dtmlIdRef": "dtmi:LabBenchStudios:PDT:environmentalSensorData;1",
+  "modelName": "environmentalSensorData",
   "id": 1000,
   "minId": 1001,
   "maxId": 1999,
@@ -12,7 +12,7 @@
       "name": "relativeHumidity",
       "description": "Humidity type configuration.",
       "displayName": "Humidity",
-      "dtmlIdRef": "dtmi:LabBenchStudios:PDT:relativeHumidityData;1",
+      "modelName": "relativeHumidityData",
       "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
       "id": 1010
     },
@@ -20,7 +20,7 @@
       "name": "barometricPressure",
       "description": "Barometric pressure type configuration.",
       "displayName": "Pressure",
-      "dtmlIdRef": "dtmi:LabBenchStudios:PDT:barometricPressureData;1",
+      "modelName": "barometricPressureData",
       "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
       "id": 1011
     },
@@ -28,7 +28,7 @@
       "name": "temperature",
       "description": "Temperature type configuration.",
       "displayName": "Temperature",
-      "dtmlIdRef": "dtmi:LabBenchStudios:PDT:temperatureData;1",
+      "modelName": "temperatureData",
       "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
       "id": 1012
     }

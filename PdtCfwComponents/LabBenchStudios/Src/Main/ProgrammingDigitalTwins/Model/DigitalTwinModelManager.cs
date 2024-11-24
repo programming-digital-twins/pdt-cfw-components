@@ -60,7 +60,7 @@ namespace LabBenchStudios.Pdt.Model
         /// Default constructor. Uses the default model file path specified
         /// in ModelNameUtil.
         /// </summary>
-        public DigitalTwinModelManager() : this(ModelNameUtil.DEFAULT_MODEL_FILE_PATH)
+        public DigitalTwinModelManager() : this(ConfigConst.DEFAULT_MODEL_FILE_PATH)
         {
             // nothing to do
         }

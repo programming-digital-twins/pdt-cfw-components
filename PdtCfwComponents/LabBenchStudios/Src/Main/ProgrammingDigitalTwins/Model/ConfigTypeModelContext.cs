@@ -22,17 +22,18 @@
  * SOFTWARE.
  */
 
-using LabBenchStudios.Pdt.Common;
-
-using Newtonsoft.Json;
 using System;
 using System.Deployment.Internal;
 using System.Text;
 
-namespace LabBenchStudios.Pdt.Data
+using Newtonsoft.Json;
+
+using LabBenchStudios.Pdt.Common;
+
+namespace LabBenchStudios.Pdt.Model
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class DataTypeContext
+    public class ConfigTypeModelContext
     {
         [JsonProperty]
         private string name = string.Empty;
@@ -44,36 +45,37 @@ namespace LabBenchStudios.Pdt.Data
         private string description = string.Empty;
 
         [JsonProperty]
-        private string dtmlIdRef = string.Empty;
+        private string modelName = string.Empty;
 
         [JsonProperty]
         private int id = 0;
 
         // necessary for JSON serialization / deserialization
-        public DataTypeContext()
+        public ConfigTypeModelContext() : base()
         {
+            // nothing to do
         }
 
         // public methods
 
-        public string GetDataTypeName()
+        public string GetConfigTypeName()
         {
             return this.name;
         }
 
-        public string GetDataTypeDisplayName()
+        public string GetConfigTypeDisplayName()
         {
             return this.displayName;
         }
 
-        public string GetDataTypeDescription()
+        public string GetConfigTypeDescription()
         {
             return this.description;
         }
 
-        public string GetDtmlIdReference()
+        public string GetModelName()
         {
-            return this.dtmlIdRef;
+            return this.modelName;
         }
 
         public int GetId()
@@ -86,24 +88,24 @@ namespace LabBenchStudios.Pdt.Data
             return false;
         }
 
-        public void SetDataTypeName(string name)
+        public void SetConfigTypeName(string name)
         {
             this.name = name;
         }
 
-        public void SetDataTypeDisplayName(string displayName)
+        public void SetConfigTypeDisplayName(string displayName)
         {
             this.displayName = displayName;
         }
 
-        public void SetDataTypeDescription(string description)
+        public void SetConfigTypeDescription(string description)
         {
             this.description = description;
         }
 
-        public void SetDtmlIdReference(string idRef)
+        public void SetModelName(string modelName)
         {
-            this.dtmlIdRef = idRef;
+            this.modelName = modelName;
         }
 
         public void SetId(int id)
@@ -115,11 +117,11 @@ namespace LabBenchStudios.Pdt.Data
         {
             StringBuilder sb = new StringBuilder(base.ToString());
 
-            sb.Append(",name=").Append(this.name);
-            sb.Append(",displayName=").Append(this.displayName);
-            sb.Append(",description=").Append(this.description);
-            sb.Append(",dtmlIdRef=").Append(this.dtmlIdRef);
-            sb.Append(",id=").Append(this.id);
+            sb.Append(",name=").Append(name);
+            sb.Append(",displayName=").Append(displayName);
+            sb.Append(",description=").Append(description);
+            sb.Append(",modelName=").Append(modelName);
+            sb.Append(",id=").Append(id);
 
             return sb.ToString();
         }

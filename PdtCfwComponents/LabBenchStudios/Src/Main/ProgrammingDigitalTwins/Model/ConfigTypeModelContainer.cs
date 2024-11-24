@@ -22,18 +22,19 @@
  * SOFTWARE.
  */
 
-using LabBenchStudios.Pdt.Common;
-
-using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
-namespace LabBenchStudios.Pdt.Data
+using Newtonsoft.Json;
+
+using LabBenchStudios.Pdt.Common;
+
+namespace LabBenchStudios.Pdt.Model
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class DataTypeCategoryInfo : DataTypeContext
+    public class ConfigTypeModelContainer : ConfigTypeModelContext
     {
         [JsonProperty]
         private string version = string.Empty;
@@ -43,23 +44,24 @@ namespace LabBenchStudios.Pdt.Data
 
         [JsonProperty]
         private int maxId = 0;
-        
+
         [JsonProperty]
-        private Dictionary<string, DataTypeInfo> typeEntries = new Dictionary<string, DataTypeInfo>();
+        private Dictionary<string, ConfigTypeModelEntry> typeEntries = new Dictionary<string, ConfigTypeModelEntry>();
 
         // necessary for JSON serialization / deserialization
-        public DataTypeCategoryInfo()
+        public ConfigTypeModelContainer() : base()
         {
+            // nothing to do
         }
 
 
         // public methods
 
-        public void AddTypeEntry(DataTypeInfo dataType)
+        public void AddTypeEntry(ConfigTypeModelEntry dataType)
         {
             if (dataType != null)
             {
-                this.typeEntries.Add(dataType.GetDataTypeName(), dataType);
+                this.typeEntries.Add(dataType.GetConfigTypeName(), dataType);
             }
         }
 
@@ -78,7 +80,7 @@ namespace LabBenchStudios.Pdt.Data
             return this.typeEntries.Count;
         }
 
-        public DataTypeInfo GetConfigType(string typeName)
+        public ConfigTypeModelEntry GetConfigType(string typeName)
         {
             if (typeName != null && typeName.Length > 0)
             {
@@ -89,6 +91,17 @@ namespace LabBenchStudios.Pdt.Data
             }
 
             return null;
+        }
+
+        public List<ConfigTypeModelEntry> GetConfigTypeList()
+        {
+            List<ConfigTypeModelEntry> configTypeEntries = new List<ConfigTypeModelEntry>();
+
+            foreach (string key in this.typeEntries.Keys) {
+                configTypeEntries.Add(this.typeEntries[key]);
+            }
+
+            return configTypeEntries;
         }
 
         public string GetVersion()
@@ -127,7 +140,7 @@ namespace LabBenchStudios.Pdt.Data
 
             foreach (string key in this.typeEntries.Keys)
             {
-                    sb.Append('\n').Append(this.typeEntries[key]);
+                sb.Append('\n').Append(this.typeEntries[key]);
             }
 
             return sb.ToString();

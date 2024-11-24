@@ -4,7 +4,7 @@
     "version": "2024-11-18",
     "description": "Wind Turbine utility category configuration.",
     "displayName": "Wind Turbine Utility Category",
-    "dtmlIdRef": "dtmi:LabBenchStudios:PDT:windTurbine;1",
+    "modelName": "windTurbine",
     "id": 4300,
     "minId": 4301,
     "maxId": 4399,
@@ -13,7 +13,7 @@
         "name": "windTurbineBrakeSystemActuator",
         "description": "Wind turbine brake system actuator type configuration.",
         "displayName": "Wind Turbine Brake System Actuator",
-        "dtmlIdRef": "dtmi:LabBenchStudios:PDT:windTurbine;1",
+        "modelName": "runWindTurbine",
         "dataContainerType": "LabBenchStudios.Pdt.Data.ActuatorData",
         "id": 4320
       },
@@ -21,7 +21,7 @@
         "name": "windTurbinePowerOutput",
         "description": "Wind turbine power output type configuration.",
         "displayName": "Wind Turbine Power Output",
-        "dtmlIdRef": "dtmi:LabBenchStudios:PDT:windTurbine;1",
+        "modelName": "outputPower",
         "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
         "id": 4301
       },
@@ -29,7 +29,7 @@
         "name": "windTurbineGeneratorTemperature",
         "description": "Wind turbine generator temperature type configuration.",
         "displayName": "Wind Turbine Generator Temperature",
-        "dtmlIdRef": "dtmi:LabBenchStudios:PDT:windTurbine;1",
+        "modelName": "generatorTemperature",
         "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
         "id": 4302
       },
@@ -37,7 +37,7 @@
         "name": "windTurbineRotationalSpeed",
         "description": "Wind turbine rotational speed type configuration.",
         "displayName": "Wind Turbine Rotational Speed",
-        "dtmlId": "dtmi:LabBenchStudios:PDT:windTurbine;1",
+        "modelName": "currentRevolutionPerMinute",
         "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
         "id": 4303
       },
@@ -45,7 +45,7 @@
         "name": "windTurbineAirSpeed",
         "description": "Wind turbine air speed type configuration.",
         "displayName": "Wind Turbine Air Speed",
-        "dtmlIdRef": "dtmi:LabBenchStudios:PDT:windTurbine;1",
+        "modelName": "airSpeed",
         "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
         "id": 4304
       }

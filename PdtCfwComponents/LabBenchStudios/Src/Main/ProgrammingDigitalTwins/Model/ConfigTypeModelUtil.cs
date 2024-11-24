@@ -24,17 +24,18 @@
 
 using System;
 using System.Text;
+using System.Runtime.CompilerServices;
+using System.Collections.Generic;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
 using LabBenchStudios.Pdt.Common;
-using System.Runtime.CompilerServices;
-using System.Collections.Generic;
+using System.IO;
 
-namespace LabBenchStudios.Pdt.Data
+namespace LabBenchStudios.Pdt.Model
 {
-    public static class DataTypeConfigUtil
+    public static class ConfigTypeModelUtil
     {
         //////////
         // 
@@ -70,7 +71,12 @@ namespace LabBenchStudios.Pdt.Data
 
         // public static methods
 
-        public static string DataTypeCategoryInfoToJson(DataTypeCategoryInfo data)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static string DataTypeCategoryInfoToJson(ConfigTypeModelContainer data)
         {
             if (data != null)
             {
@@ -86,19 +92,85 @@ namespace LabBenchStudios.Pdt.Data
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="data"></param>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public static string DataTypeCategoryInfoToJsonFile(ConfigTypeModelContainer data, string filePath)
+        {
+            string jsonData = DataTypeCategoryInfoToJson(data);
+
+            if (jsonData != null && filePath != null)
+            {
+                if (File.Exists(filePath))
+                {
+                    using (StreamWriter writer = new(filePath))
+                    {
+                        writer.Write(jsonData);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Failed to write JSON data to filesystem. File path non-existent: {filePath}");
+                }
+            } else
+            {
+                Console.WriteLine("JSON data and / or file path are null / empty. Ignoring.");
+            }
+
+            return jsonData;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="jsonData"></param>
         /// <returns></returns>
-        public static DataTypeCategoryInfo JsonToDataTypeCategoryInfo(string jsonData)
+        public static ConfigTypeModelContainer JsonToDataTypeCategoryInfo(string jsonData)
         {
             jsonData = NormalizeData(jsonData);
-            
-            DataTypeCategoryInfo data = new DataTypeCategoryInfo();
+
+            ConfigTypeModelContainer data = new ConfigTypeModelContainer();
 
             JsonConvert.PopulateObject(jsonData, data, new JsonSerializerSettings
             {
                 ContractResolver = camelCaseResolver,
                 Formatting = Formatting.Indented
             });
+
+            return data;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public static ConfigTypeModelContainer JsonFileToDataTypeCategoryInfo(string filePath)
+        {
+            ConfigTypeModelContainer data = null;
+
+            if (data != null && filePath != null)
+            {
+                if (File.Exists(filePath))
+                {
+                    string jsonData = null;
+
+                    using (StreamReader reader = new(filePath))
+                    {
+                        jsonData = reader.ReadToEnd();
+                    }
+
+                    data = JsonToDataTypeCategoryInfo(jsonData);
+                }
+                else
+                {
+                    Console.WriteLine($"Failed to write JSON data to filesystem. File path non-existent: {filePath}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("JSON data and / or file path are null / empty. Ignoring.");
+            }
 
             return data;
         }

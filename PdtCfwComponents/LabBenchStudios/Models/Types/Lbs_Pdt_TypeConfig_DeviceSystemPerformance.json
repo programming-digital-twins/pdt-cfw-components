@@ -4,7 +4,7 @@
     "version": "2024-11-18",
     "description": "System performance data type category configuration.",
     "displayName": "System Performance Data Category",
-    "dtmlIdRef": "dtmi:LabBenchStudios:PDT:systemPerformanceData;1",
+    "modelName": "systemPerformanceData",
     "id": 9000,
     "minId": 9001,
     "maxId": 9999,
@@ -13,7 +13,7 @@
         "name": "cpuUtil",
         "description": "CPU utilization type configuration.",
         "displayName": "CPU Utilization",
-        "dtmlIdRef": "dtmi:LabBenchStudios:PDT:systemPerformanceData;1",
+        "modelName": "cpuUtil",
         "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
         "id": 9001
       },
@@ -21,7 +21,7 @@
         "name": "diskUtil",
         "description": "Disk utilization type configuration.",
         "displayName": "Disk Utilization",
-        "dtmlIdRef": "dtmi:LabBenchStudios:PDT:systemPerformanceData;1",
+        "modelName": "diskUtil",
         "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
         "id": 9003
       },
@@ -29,7 +29,7 @@
         "name": "memUtil",
         "description": "Memory utilization type configuration.",
         "displayName": "Memory Utilization",
-        "dtmlIdRef": "dtmi:LabBenchStudios:PDT:systemPerformanceData;1",
+        "modelName": "memUtil",
         "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
         "id": 9002
       }

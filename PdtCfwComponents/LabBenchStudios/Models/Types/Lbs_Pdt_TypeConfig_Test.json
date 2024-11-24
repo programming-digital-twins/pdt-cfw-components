@@ -1,0 +1,20 @@
+{
+  "version": "",
+  "minId": 1000,
+  "maxId": 1999,
+  "typeEntries": {
+    "temp": {
+      "dataContainerType": "",
+      "name": "temp",
+      "displayName": "Temperature.",
+      "description": "This is the temperature.",
+      "modelName": "temperature",
+      "id": 1001
+    }
+  },
+  "name": "foobar",
+  "displayName": "Foobar.",
+  "description": "This is the foobar.",
+  "modelName": "foobar",
+  "id": 0
+}

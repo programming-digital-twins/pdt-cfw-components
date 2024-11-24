@@ -25,7 +25,7 @@
 using System;
 using System.IO;
 using LabBenchStudios.Pdt.Common;
-using LabBenchStudios.Pdt.Data;
+using LabBenchStudios.Pdt.Model;
 using Newtonsoft.Json;
 
 namespace LabBenchStudios.Pdt.Test.Data
@@ -50,7 +50,7 @@ namespace LabBenchStudios.Pdt.Test.Data
 
                 string jsonData = reader.ReadToEnd();
 
-                DataTypeCategoryInfo categoryInfo = DataTypeConfigUtil.JsonToDataTypeCategoryInfo(jsonData);
+                ConfigTypeModelContainer categoryInfo = ConfigTypeModelUtil.JsonToDataTypeCategoryInfo(jsonData);
 
                 Console.WriteLine(categoryInfo);
             }
@@ -68,24 +68,24 @@ namespace LabBenchStudios.Pdt.Test.Data
 
             try
             {
-                DataTypeCategoryInfo categoryInfo = new DataTypeCategoryInfo();
-                categoryInfo.SetDataTypeName("foobar");
-                categoryInfo.SetDataTypeDisplayName("Foobar.");
-                categoryInfo.SetDataTypeDescription("This is the foobar.");
-                categoryInfo.SetDtmlIdReference("dtmi:foo.bar;1");
+                ConfigTypeModelContainer categoryInfo = new ConfigTypeModelContainer();
+                categoryInfo.SetConfigTypeName("foobar");
+                categoryInfo.SetConfigTypeDisplayName("Foobar.");
+                categoryInfo.SetConfigTypeDescription("This is the foobar.");
+                categoryInfo.SetModelName("foobar");
                 categoryInfo.SetDataTypeMinId(1000);
                 categoryInfo.SetDataTypeMaxId(1999);
 
-                DataTypeInfo typeInfo = new DataTypeInfo();
-                typeInfo.SetDataTypeName("temp");
-                typeInfo.SetDataTypeDisplayName("Temperature.");
-                typeInfo.SetDataTypeDescription("This is the temperature.");
-                typeInfo.SetDtmlIdReference("dtmi:temp.erature;1");
+                ConfigTypeModelEntry typeInfo = new ConfigTypeModelEntry();
+                typeInfo.SetConfigTypeName("temp");
+                typeInfo.SetConfigTypeDisplayName("Temperature.");
+                typeInfo.SetConfigTypeDescription("This is the temperature.");
+                typeInfo.SetModelName("temperature");
                 typeInfo.SetId(1001);
 
                 categoryInfo.AddTypeEntry(typeInfo);
 
-                string jsonData = DataTypeConfigUtil.DataTypeCategoryInfoToJson(categoryInfo);
+                string jsonData = ConfigTypeModelUtil.DataTypeCategoryInfoToJson(categoryInfo);
 
                 using StreamWriter writer = new StreamWriter(pathName + fileName);
                 writer.Write(jsonData);

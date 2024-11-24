@@ -36,6 +36,18 @@ namespace LabBenchStudios.Pdt.Common
         public static readonly string UUID_NAME = "UUID";
         public static readonly string DEFAULT_HOST = "localhost";
 
+        public const string RELATIVE_MODEL_PATH_PREFIX = "../../../../Models/";
+
+        public const string DEFAULT_CONFIG_TYPE_FILE_PATH = RELATIVE_MODEL_PATH_PREFIX + "Types/";
+        public const string DEFAULT_MODEL_FILE_PATH = RELATIVE_MODEL_PATH_PREFIX + "Dtdl/";
+
+        public const string MODEL_FILE_NAME_PREFIX = "Lbs_Pdt_";
+        public const string MODEL_FILE_NAME_SUFFIX = "*.json";
+
+        public const string CONFIG_TYPE_FILE_NAME_PREFIX = MODEL_FILE_NAME_PREFIX + "TypeConfig";
+        public const string CONFIG_TYPE_FILE_NAME_PATTERN = CONFIG_TYPE_FILE_NAME_PREFIX + MODEL_FILE_NAME_SUFFIX;
+        public const string MODEL_FILE_NAME_PATTERN = MODEL_FILE_NAME_PREFIX + MODEL_FILE_NAME_SUFFIX;
+
         public const int DEFAULT_COAP_PORT = 5683;
         public const int DEFAULT_COAP_SECURE_PORT = 5684;
         public const int DEFAULT_MQTT_PORT = 1883;

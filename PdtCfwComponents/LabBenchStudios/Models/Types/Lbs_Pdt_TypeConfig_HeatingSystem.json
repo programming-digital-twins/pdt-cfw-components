@@ -3,7 +3,7 @@
   "version": "2024-11-18",
   "description": "Heating system category configuration.",
   "displayName": "Heating System Category",
-  "dtmlIdRef": "dtmi:LabBenchStudios:PDT:heatingSystem;1",
+  "modelName": "heatingSystem",
   "id": 1000,
   "minId": 1001,
   "maxId": 1999,
@@ -12,7 +12,7 @@
       "name": "targetTemperature",
       "description": "HVAC actuator type configuration.",
       "displayName": "HVAC",
-      "dtmlIdRef": "dtmi:LabBenchStudios:PDT:heatingSystem;1",
+      "modelName": "thermostat",
       "dataContainerType": "LabBenchStudios.Pdt.Data.ActuatorData",
       "id": 1001
     },
@@ -20,7 +20,7 @@
       "name": "targetHumidity",
       "description": "Humidifier actuator type configuration.",
       "displayName": "Humidifier",
-      "dtmlIdRef": "dtmi:LabBenchStudios:PDT:humidifier;1",
+      "modelName": "humidifier",
       "dataContainerType": "LabBenchStudios.Pdt.Data.ActuatorData",
       "id": 1002
     }

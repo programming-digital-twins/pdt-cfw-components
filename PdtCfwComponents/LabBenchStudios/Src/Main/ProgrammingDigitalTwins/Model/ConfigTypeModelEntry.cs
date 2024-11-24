@@ -22,60 +22,71 @@
  * SOFTWARE.
  */
 
-using LabBenchStudios.Pdt.Common;
-
-using Newtonsoft.Json;
 using System;
 using System.Text;
 
-namespace LabBenchStudios.Pdt.Data
+using Newtonsoft.Json;
+
+using LabBenchStudios.Pdt.Common;
+using LabBenchStudios.Pdt.Data;
+
+namespace LabBenchStudios.Pdt.Model
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class DataTypeInfo : DataTypeContext
+    public class ConfigTypeModelEntry : ConfigTypeModelContext
     {
-        private DataTypeCategoryInfo dataTypeCategory = null;
+        private ConfigTypeModelContainer configTypeCategory = null;
 
         [JsonProperty]
         private string dataContainerType = string.Empty;
 
         // necessary for JSON serialization / deserialization
-        public DataTypeInfo()
+        public ConfigTypeModelEntry() : base()
         {
+            // nothing to do
         }
 
         // public methods
-        
-        public IotDataContext createDataContainer()
+
+        public IotDataContext CreateDataContainer()
         {
             if (this.dataContainerType != null && this.dataContainerType != string.Empty)
             {
                 try
                 {
                     Type t = Type.GetType(this.dataContainerType);
-                    IotDataContext dataContext = (IotDataContext) Activator.CreateInstance(t);
+                    IotDataContext dataContext = (IotDataContext)Activator.CreateInstance(t);
 
                     // TODO: fill in details
-                    if (this.dataTypeCategory != null)
+                    if (this.configTypeCategory != null)
                     {
-                        dataContext.SetTypeCategoryID(this.dataTypeCategory.GetId());
+                        dataContext.SetTypeCategoryID(this.configTypeCategory.GetId());
                     }
 
-                    dataContext.SetTypeName(this.GetDataTypeName());
-                    dataContext.SetTypeID(this.GetId());
+                    dataContext.SetTypeName(GetConfigTypeName());
+                    dataContext.SetTypeID(GetId());
 
                     return dataContext;
-                } catch (Exception e)
+                }
+                catch (Exception e)
                 {
-
+                    Console.WriteLine($"Failed to create data container from data container type name: {this.dataContainerType}");
                 }
             }
 
             return null;
         }
 
-        public string getDataContainerTypeName()
+        public string GetDataContainerTypeName()
         {
             return this.dataContainerType;
+        }
+
+        public void SetDataContainerTypeName(string typeName)
+        {
+            if (typeName != null) {
+                this.dataContainerType = typeName;
+            }
         }
 
         public override string ToString()
