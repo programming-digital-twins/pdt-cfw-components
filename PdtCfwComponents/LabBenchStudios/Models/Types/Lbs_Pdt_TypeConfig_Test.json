@@ -5,16 +5,18 @@
   "typeEntries": {
     "temp": {
       "dataContainerType": "",
-      "name": "temp",
+      "typeName": "temp",
       "displayName": "Temperature.",
       "description": "This is the temperature.",
       "modelName": "temperature",
+      "resourceName": "PDT/device001/temperature",
       "id": 1001
     }
   },
-  "name": "foobar",
+  "typeName": "foobar",
   "displayName": "Foobar.",
   "description": "This is the foobar.",
   "modelName": "foobar",
+  "resourceName": "PDT/device001/foobar",
   "id": 0
 }

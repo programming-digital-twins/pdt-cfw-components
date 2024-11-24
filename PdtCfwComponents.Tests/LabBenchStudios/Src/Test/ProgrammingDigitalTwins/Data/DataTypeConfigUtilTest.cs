@@ -73,14 +73,16 @@ namespace LabBenchStudios.Pdt.Test.Data
                 categoryInfo.SetConfigTypeDisplayName("Foobar.");
                 categoryInfo.SetConfigTypeDescription("This is the foobar.");
                 categoryInfo.SetModelName("foobar");
-                categoryInfo.SetDataTypeMinId(1000);
-                categoryInfo.SetDataTypeMaxId(1999);
+                categoryInfo.SetResourceName("PDT/device001/foobar");
+                categoryInfo.SetConfigTypeMinId(1000);
+                categoryInfo.SetConfigTypeMaxId(1999);
 
                 ConfigTypeModelEntry typeInfo = new ConfigTypeModelEntry();
                 typeInfo.SetConfigTypeName("temp");
                 typeInfo.SetConfigTypeDisplayName("Temperature.");
                 typeInfo.SetConfigTypeDescription("This is the temperature.");
                 typeInfo.SetModelName("temperature");
+                typeInfo.SetResourceName("PDT/device001/temperature");
                 typeInfo.SetId(1001);
 
                 categoryInfo.AddTypeEntry(typeInfo);

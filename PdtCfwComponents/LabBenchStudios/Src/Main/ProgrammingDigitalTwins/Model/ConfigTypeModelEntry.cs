@@ -63,8 +63,8 @@ namespace LabBenchStudios.Pdt.Model
                         dataContext.SetTypeCategoryID(this.configTypeCategory.GetId());
                     }
 
-                    dataContext.SetTypeName(GetConfigTypeName());
-                    dataContext.SetTypeID(GetId());
+                    dataContext.SetTypeName(this.GetConfigTypeName());
+                    dataContext.SetTypeID(this.GetId());
 
                     return dataContext;
                 }

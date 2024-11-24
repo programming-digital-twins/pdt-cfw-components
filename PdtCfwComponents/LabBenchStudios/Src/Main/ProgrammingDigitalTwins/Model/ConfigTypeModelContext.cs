@@ -22,8 +22,6 @@
  * SOFTWARE.
  */
 
-using System;
-using System.Deployment.Internal;
 using System.Text;
 
 using Newtonsoft.Json;
@@ -36,7 +34,7 @@ namespace LabBenchStudios.Pdt.Model
     public class ConfigTypeModelContext
     {
         [JsonProperty]
-        private string name = string.Empty;
+        private string typeName = string.Empty;
 
         [JsonProperty]
         private string displayName = string.Empty;
@@ -46,6 +44,9 @@ namespace LabBenchStudios.Pdt.Model
 
         [JsonProperty]
         private string modelName = string.Empty;
+
+        [JsonProperty]
+        private string resourceName = string.Empty;
 
         [JsonProperty]
         private int id = 0;
@@ -60,7 +61,7 @@ namespace LabBenchStudios.Pdt.Model
 
         public string GetConfigTypeName()
         {
-            return this.name;
+            return this.typeName;
         }
 
         public string GetConfigTypeDisplayName()
@@ -83,6 +84,11 @@ namespace LabBenchStudios.Pdt.Model
             return this.id;
         }
 
+        public string GetResourceName()
+        {
+            return this.resourceName;
+        }
+
         public virtual bool IsTypeCategory()
         {
             return false;
@@ -90,7 +96,7 @@ namespace LabBenchStudios.Pdt.Model
 
         public void SetConfigTypeName(string name)
         {
-            this.name = name;
+            this.typeName = name;
         }
 
         public void SetConfigTypeDisplayName(string displayName)
@@ -113,15 +119,21 @@ namespace LabBenchStudios.Pdt.Model
             this.id = id;
         }
 
+        public void SetResourceName(string resourceName)
+        {
+            this.resourceName = resourceName;
+        }
+
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder(base.ToString());
 
-            sb.Append(",name=").Append(name);
-            sb.Append(",displayName=").Append(displayName);
-            sb.Append(",description=").Append(description);
-            sb.Append(",modelName=").Append(modelName);
-            sb.Append(",id=").Append(id);
+            sb.Append(",name=").Append(this.typeName);
+            sb.Append(",displayName=").Append(this.displayName);
+            sb.Append(",description=").Append(this.description);
+            sb.Append(",modelName=").Append(this.modelName);
+            sb.Append(",resourceName=").Append(this.resourceName);
+            sb.Append(",id=").Append(this.id);
 
             return sb.ToString();
         }

@@ -1,5 +1,5 @@
 {
-  "name": "heatingSystem",
+  "typeName": "heatingSystem",
   "version": "2024-11-18",
   "description": "Heating system category configuration.",
   "displayName": "Heating System Category",
@@ -9,18 +9,20 @@
   "maxId": 1999,
   "typeEntries": {
     "targetTemperature": {
-      "name": "targetTemperature",
+      "typeName": "targetTemperature",
       "description": "HVAC actuator type configuration.",
       "displayName": "HVAC",
-      "modelName": "thermostat",
+      "modelName": "targetTemperature",
+      "resourceName": "{productName}/{deviceName}/{typeName}",
       "dataContainerType": "LabBenchStudios.Pdt.Data.ActuatorData",
       "id": 1001
     },
     "targetHumidity": {
-      "name": "targetHumidity",
+      "typeName": "targetHumidity",
       "description": "Humidifier actuator type configuration.",
       "displayName": "Humidifier",
-      "modelName": "humidifier",
+      "modelName": "targetHumidity",
+      "resourceName": "{productName}/{deviceName}/{typeName}",
       "dataContainerType": "LabBenchStudios.Pdt.Data.ActuatorData",
       "id": 1002
     }

@@ -92,6 +92,10 @@ namespace LabBenchStudios.Pdt.Common
         public static readonly string DEVICE = "Device";
         public static readonly string SERVICE = "Service";
 
+        public static readonly string PRODUCE_NAME_KEY = "productName";
+        public static readonly string DEVICE_NAME_KEY = "deviceName";
+        public static readonly string TYPE_NAME_KEY = "typeName";
+
         public static readonly string CONSTRAINED_DEVICE = CONSTRAINED + DEVICE;
         public static readonly string EDGE_DEVICE = EDGE + DEVICE;
         public static readonly string GATEWAY_SERVICE = GATEWAY + SERVICE;

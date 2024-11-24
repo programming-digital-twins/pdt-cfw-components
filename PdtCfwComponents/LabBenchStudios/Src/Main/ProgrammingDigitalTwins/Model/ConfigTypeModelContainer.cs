@@ -57,20 +57,20 @@ namespace LabBenchStudios.Pdt.Model
 
         // public methods
 
-        public void AddTypeEntry(ConfigTypeModelEntry dataType)
+        public void AddTypeEntry(ConfigTypeModelEntry configType)
         {
-            if (dataType != null)
+            if (configType != null)
             {
-                this.typeEntries.Add(dataType.GetConfigTypeName(), dataType);
+                this.typeEntries.Add(configType.GetConfigTypeName(), configType);
             }
         }
 
-        public int GetDataTypeMinId()
+        public int GetConfigTypeMinId()
         {
             return this.minId;
         }
 
-        public int GetDataTypeMaxId()
+        public int GetConfigTypeMaxId()
         {
             return this.maxId;
         }
@@ -114,12 +114,12 @@ namespace LabBenchStudios.Pdt.Model
             return true;
         }
 
-        public void SetDataTypeMinId(int id)
+        public void SetConfigTypeMinId(int id)
         {
             this.minId = id;
         }
 
-        public void SetDataTypeMaxId(int id)
+        public void SetConfigTypeMaxId(int id)
         {
             this.maxId = id;
         }
