@@ -1,9 +1,9 @@
 {
-  "typeName": "heatingSystem",
+  "typeName": "thermostat",
   "version": "2024-11-18",
-  "description": "Heating system category configuration.",
+  "description": "Thermostat category configuration.",
   "displayName": "Heating System Category",
-  "modelName": "dtmi:LabBenchStudios:PDT:heatingSystem;1",
+  "modelName": "dtmi:LabBenchStudios:PDT:thermostat;1",
   "id": 1000,
   "minId": 1001,
   "maxId": 1999,
@@ -12,19 +12,19 @@
       "typeName": "targetTemperature",
       "description": "HVAC actuator type configuration.",
       "displayName": "HVAC",
-      "modelName": "dtmi:LabBenchStudios:PDT:targetTemperature;1",
+      "modelName": "targetTemperature",
       "resourceName": "{productName}/{groupdID}/{locationID}/{deviceID}/{typeName}",
       "dataContainerType": "LabBenchStudios.Pdt.Data.ActuatorData",
-      "id": 1001
+      "id": 1004
     },
     "targetHumidity": {
-      "typeName": "targetHumidity",
-      "description": "Humidifier actuator type configuration.",
-      "displayName": "Humidifier",
-      "modelName": "dtmi:LabBenchStudios:PDT:targetHumidity;1",
+      "typeName": "currentTemperature",
+      "description": "Temperature sensor type configuration.",
+      "displayName": "Temperatire",
+      "modelName": "currentTemperature",
       "resourceName": "{productName}/{groupdID}/{locationID}/{deviceID}/{typeName}",
-      "dataContainerType": "LabBenchStudios.Pdt.Data.ActuatorData",
-      "id": 1002
+      "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
+      "id": 1013
     }
   }
 }

@@ -48,18 +48,32 @@ namespace LabBenchStudios.Pdt.Model
         /// </summary>
         private Dictionary<string, ConfigTypeModelContext> configTypeModelMappingTable = null;
 
-        private bool useFullModelIDForMappingKey = false;
+        /// <summary>
+        /// This table maps all unique type ID's to their respective container name, also known
+        /// as the model ID (e.g., windTurbine, thermostat, etc.). This allows for simple lookups
+        /// of the parent container name when only the type ID is known.
+        /// </summary>
+        private Dictionary<int, string> typeIdToContainerNameMappingTable = null;
 
-        // necessary for JSON serialization / deserialization
+        private bool useGeneratedModelID = true;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public ConfigTypeModelManagerCache() : base()
         {
             this.configTypeContainerTable = new Dictionary<string, ConfigTypeModelContainer>();
             this.configTypeModelMappingTable = new Dictionary<string, ConfigTypeModelContext>();
+            this.typeIdToContainerNameMappingTable = new Dictionary<int, string>();
         }
 
 
         // public methods
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="categoryInfo"></param>
         public void AddConfigTypeContainerInfo(ConfigTypeModelContainer categoryInfo)
         {
             if (categoryInfo != null)
@@ -68,11 +82,20 @@ namespace LabBenchStudios.Pdt.Model
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public int GetConfigTypeContainerInfoCount()
         {
             return this.configTypeContainerTable.Count;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="containerName"></param>
+        /// <returns></returns>
         public ConfigTypeModelContainer GetConfigTypeContainer(string containerName)
         {
             if (containerName != null && containerName.Length > 0)
@@ -86,6 +109,52 @@ namespace LabBenchStudios.Pdt.Model
             return null;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="typeId"></param>
+        /// <returns></returns>
+        public ConfigTypeModelContainer GetConfigTypeContainerFromTypeId(int typeId)
+        {
+            if (this.typeIdToContainerNameMappingTable.ContainsKey(typeId)) {
+                string containerName = this.typeIdToContainerNameMappingTable[typeId];
+
+                return this.GetConfigTypeContainer(containerName);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="typeName"></param>
+        /// <returns></returns>
+        public ConfigTypeModelEntry GetConfigType(string typeName)
+        {
+            if (typeName != null && typeName.Length > 0) {
+                foreach (string containerName in this.configTypeContainerTable.Keys) {
+                    ConfigTypeModelContainer typeContainer = this.configTypeContainerTable[containerName];
+
+                    if (typeContainer != null) {
+                        ConfigTypeModelEntry typeEntry = typeContainer.GetConfigType(typeName);
+
+                        if (typeEntry != null) {
+                            return typeEntry;
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="containerName"></param>
+        /// <param name="typeName"></param>
+        /// <returns></returns>
         public ConfigTypeModelEntry GetConfigType(string containerName, string typeName)
         {
             if (typeName != null && typeName.Length > 0)
@@ -101,11 +170,16 @@ namespace LabBenchStudios.Pdt.Model
             return null;
         }
 
-        public ConfigTypeModelContext GetConfigTypeContextFromModelID(string modelID)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="modelName"></param>
+        /// <returns></returns>
+        public ConfigTypeModelContext GetConfigTypeContextFromModelName(string modelName)
         {
-            if (modelID != null && modelID.Length > 0) {
-                if (this.configTypeModelMappingTable.ContainsKey(modelID)) {
-                    return this.configTypeModelMappingTable[modelID];
+            if (! string.IsNullOrEmpty(modelName)) {
+                if (this.configTypeModelMappingTable.ContainsKey(modelName)) {
+                    return this.configTypeModelMappingTable[modelName];
                 }
             }
 
@@ -143,26 +217,41 @@ namespace LabBenchStudios.Pdt.Model
                             // add the container to the internal container cache
                             this.configTypeContainerTable.Add(typeName, typeContainer);
 
-                            // generate a model ID and add the each container AND entry to the internal mapping cache
-                            string modelID = typeName;
+                            string modelName = typeContainer.GetModelName();
 
-                            if (this.useFullModelIDForMappingKey) {
-                                modelID = ModelNameUtil.CreateModelID(typeName);
+                            if (string.IsNullOrEmpty(modelName)) {
+                                modelName = typeName;
+                                typeContainer.SetModelName(modelName);
                             }
 
-                            this.configTypeModelMappingTable.Add(modelID, typeContainer);
+                            // add the container to the model name mapping table
+                            this.configTypeModelMappingTable.Add(modelName, typeContainer);
 
                             List<ConfigTypeModelEntry> configTypeEntries = typeContainer.GetConfigTypeList();
 
                             foreach (ConfigTypeModelEntry entry in configTypeEntries) {
-                                typeName = entry.GetConfigTypeName();
-                                modelID = typeName;
+                                // set ref to parent container
+                                entry.SetConfigTypeContainerRef(typeContainer);
 
-                                if (this.useFullModelIDForMappingKey) {
-                                    modelID = ModelNameUtil.CreateModelID(typeName);
+                                typeName = entry.GetConfigTypeName();
+                                modelName = entry.GetModelName();
+
+                                // set the model ID - check the local flag to determine if:
+                                //  - a dynamically generated model ID should be used ModelNameUtil.CreateModelID()
+                                //  - that which is already set, and if empty, use the typeName instead
+                                if (this.useGeneratedModelID) {
+                                    modelName = ModelNameUtil.CreateModelID(typeName);
+                                    entry.SetModelName(modelName);
                                 }
 
-                                this.configTypeModelMappingTable.Add(modelID, entry);
+                                if (string.IsNullOrEmpty(modelName)) {
+                                    modelName = typeName;
+                                    entry.SetModelName(modelName);
+                                }
+
+                                // update the mapping tables
+                                this.configTypeModelMappingTable.Add(modelName, entry);
+                                this.typeIdToContainerNameMappingTable.Add(entry.GetId(), modelName);
                             }
                         }
                         catch (Exception e)
@@ -186,6 +275,10 @@ namespace LabBenchStudios.Pdt.Model
             return false;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();

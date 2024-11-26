@@ -33,23 +33,28 @@ namespace LabBenchStudios.Pdt.Model
 {
     public class ConfigTypeModelManager
     {
-
         private HashSet<string> configTypeFilePaths = new HashSet<string>();
 
         private ConfigTypeModelManagerCache configTypeMgrCache = null;
-
-        // necessary for JSON serialization / deserialization
-        public ConfigTypeModelManager() : this(ConfigConst.DEFAULT_CONFIG_TYPE_FILE_PATH)
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public ConfigTypeModelManager() : this(null)
         {
             // nothing to do
         }
 
-        public ConfigTypeModelManager(string typeConfigFilePath)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="configTypeFilePath"></param>
+        public ConfigTypeModelManager(string configTypeFilePath)
         {
             this.configTypeFilePaths = new HashSet<string>();
             this.configTypeMgrCache = new ConfigTypeModelManagerCache();
 
-            UpdateTypeConfigFilePaths(typeConfigFilePath);
+            UpdateConfigTypeFilePaths(configTypeFilePath);
         }
 
         // public methods
@@ -57,37 +62,37 @@ namespace LabBenchStudios.Pdt.Model
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="typeConfigFilePath"></param>
+        /// <param name="configTypeFilePath"></param>
         /// <returns></returns>
-        public bool UpdateTypeConfigFilePaths(string typeConfigFilePath)
+        public bool UpdateConfigTypeFilePaths(string configTypeFilePath)
         {
-            return UpdateTypeConfigFilePaths(typeConfigFilePath, true);
+            return UpdateConfigTypeFilePaths(configTypeFilePath, true);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="typeConfigFilePathList"></param>
+        /// <param name="configTypeFilePathSet"></param>
         /// <returns></returns>
-        public bool UpdateTypeConfigFilePaths(List<string> typeConfigFilePathList)
+        public bool UpdateConfigTypeFilePaths(HashSet<string> configTypeFilePathSet)
         {
             int counter = 0;
-            int typeConfigFileCount = 0;
+            int configTypeFileCount = 0;
 
-            if (typeConfigFilePathList != null && typeConfigFilePathList.Count > 0)
+            if (configTypeFilePathSet != null && configTypeFilePathSet.Count > 0)
             {
-                typeConfigFileCount = typeConfigFilePathList.Count;
+                configTypeFileCount = configTypeFilePathSet.Count;
 
-                foreach (string typeConfigFilePath in typeConfigFilePathList)
+                foreach (string configTypeFilePath in configTypeFilePathSet)
                 {
-                    if (UpdateTypeConfigFilePaths(typeConfigFilePath))
+                    if (UpdateConfigTypeFilePaths(configTypeFilePath))
                     {
                         counter++;
                     }
                 }
             }
 
-            return counter > 0 && typeConfigFileCount == counter ? true : false;
+            return counter > 0 && configTypeFileCount == counter ? true : false;
         }
 
         /// <summary>
@@ -96,17 +101,17 @@ namespace LabBenchStudios.Pdt.Model
         /// <param name="modelFilePath"></param>
         /// <param name="reloadModels"></param>
         /// <returns></returns>
-        public bool UpdateTypeConfigFilePaths(string modelFilePath, bool reloadModels)
+        public bool UpdateConfigTypeFilePaths(string modelFilePath, bool reloadModels)
         {
-            if (IsTypeConfigFilePathValid(modelFilePath))
+            if (IsConfigTypeFilePathValid(modelFilePath))
             {
                 this.configTypeFilePaths.Add(modelFilePath);
 
                 if (reloadModels)
                 {
-                    if (!BuildTypeConfigCache())
+                    if (!BuildConfigTypeCache())
                     {
-                        Console.WriteLine("Failed to (re)load type config's. No config type model files provisioned. Check log output.");
+                        Console.WriteLine("Failed to (re)load config type's. No config type model files provisioned. Check log output.");
                     }
                 }
 
@@ -126,7 +131,7 @@ namespace LabBenchStudios.Pdt.Model
         /// 
         /// </summary>
         /// <returns></returns>
-        private bool BuildTypeConfigCache()
+        private bool BuildConfigTypeCache()
         {
             if (this.configTypeFilePaths.Count > 0)
             {
@@ -145,25 +150,25 @@ namespace LabBenchStudios.Pdt.Model
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="typeConfigFilePath"></param>
+        /// <param name="configTypeFilePath"></param>
         /// <returns></returns>
-        private bool IsTypeConfigFilePathValid(string typeConfigFilePath)
+        private bool IsConfigTypeFilePathValid(string configTypeFilePath)
         {
-            if (!string.IsNullOrEmpty(typeConfigFilePath)) {
-                if (!this.configTypeFilePaths.Contains(typeConfigFilePath)) {
-                    if (Directory.Exists(typeConfigFilePath)) {
-                        Console.WriteLine($"Updating type config file paths. New file path is good: {typeConfigFilePath}");
+            if (!string.IsNullOrEmpty(configTypeFilePath)) {
+                if (!this.configTypeFilePaths.Contains(configTypeFilePath)) {
+                    if (Directory.Exists(configTypeFilePath)) {
+                        Console.WriteLine($"Updating config type file paths. New file path is good: {configTypeFilePath}");
 
                         return true;
                     } else {
-                        Console.WriteLine($"Failed to update type config file paths. Requested model file path doesn't exist: {typeConfigFilePath}");
+                        Console.WriteLine($"Failed to update config type file paths. Requested model file path doesn't exist: {configTypeFilePath}");
                     }
                 } else {
-                    Console.WriteLine($"Failed to update type config file paths. File path already used and stored: {typeConfigFilePath}");
+                    Console.WriteLine($"Failed to update config type file paths. File path already used and stored: {configTypeFilePath}");
                 }
 
             } else {
-                Console.WriteLine($"Failed to update type config file paths. File path is null or empty: {typeConfigFilePath}");
+                Console.WriteLine($"Failed to update config type file paths. File path is null or empty: {configTypeFilePath}");
             }
 
             return false;

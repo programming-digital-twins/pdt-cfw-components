@@ -35,12 +35,13 @@ namespace LabBenchStudios.Pdt.Model
     [JsonObject(MemberSerialization.OptIn)]
     public class ConfigTypeModelEntry : ConfigTypeModelContext
     {
-        private ConfigTypeModelContainer configTypeCategory = null;
+        private ConfigTypeModelContainer configTypeContainer = null;
 
         [JsonProperty]
         private string dataContainerType = string.Empty;
 
         // necessary for JSON serialization / deserialization
+
         public ConfigTypeModelEntry() : base()
         {
             // nothing to do
@@ -58,9 +59,9 @@ namespace LabBenchStudios.Pdt.Model
                     IotDataContext dataContext = (IotDataContext)Activator.CreateInstance(t);
 
                     // TODO: fill in details
-                    if (this.configTypeCategory != null)
+                    if (this.configTypeContainer != null)
                     {
-                        dataContext.SetTypeCategoryID(this.configTypeCategory.GetId());
+                        dataContext.SetTypeCategoryID(this.configTypeContainer.GetId());
                     }
 
                     dataContext.SetTypeName(this.GetConfigTypeName());
@@ -80,6 +81,20 @@ namespace LabBenchStudios.Pdt.Model
         public string GetDataContainerTypeName()
         {
             return this.dataContainerType;
+        }
+
+        public int GetTypeCategoryId()
+        {
+            if (this.configTypeContainer != null) {
+                return this.configTypeContainer.GetId();
+            } else {
+                return ConfigConst.DEFAULT_TYPE_CATEGORY_ID;
+            }
+        }
+
+        public void SetConfigTypeContainerRef(ConfigTypeModelContainer containerRef)
+        {
+            this.configTypeContainer = containerRef;
         }
 
         public void SetDataContainerTypeName(string typeName)
