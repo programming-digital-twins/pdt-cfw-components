@@ -62,6 +62,72 @@ namespace LabBenchStudios.Pdt.Model
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="typeName"></param>
+        /// <returns></returns>
+        public ConfigTypeModelEntry GetConfigEntryByTypeName(string typeName)
+        {
+            ConfigTypeModelEntry modelEntry = this.configTypeMgrCache.GetConfigType(typeName);
+
+            if (modelEntry != null) {
+                Console.WriteLine($"Found config type entry using name: {typeName}");
+            } else {
+                Console.WriteLine($"No config type entry found in cache using name: {typeName}");
+            }
+
+            return modelEntry;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="modelId"></param>
+        /// <returns></returns>
+        public ConfigTypeModelEntry GetConfigEntryByModelId(int modelId)
+        {
+            ConfigTypeModelContext modelContext = this.configTypeMgrCache.GetConfigTypeContextFromModelId(modelId);
+
+            if (modelContext != null) {
+                if (!modelContext.IsTypeCategory()) {
+                    return (ConfigTypeModelEntry)modelContext;
+                } else {
+                    Console.WriteLine($"Model ID maps to a ConfigTypeModelContainer, not a ConfigTypeModelEntry. Ignoring: {modelId}");
+
+                    return null;
+                }
+            } else {
+                Console.WriteLine($"Model ID is not cached as a ConfigTypeModelContainer or ConfigTypeModelEntry. Ignoring: {modelId}");
+
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="modelName"></param>
+        /// <returns></returns>
+        public ConfigTypeModelEntry GetConfigEntryByModelName(string modelName)
+        {
+            ConfigTypeModelContext modelContext = this.configTypeMgrCache.GetConfigTypeContextFromModelName(modelName);
+
+            if (modelContext != null) {
+                if (!modelContext.IsTypeCategory()) {
+                    return (ConfigTypeModelEntry)modelContext;
+                } else {
+                    Console.WriteLine($"Model name maps to a ConfigTypeModelContainer, not a ConfigTypeModelEntry. Ignoring: {modelName}");
+
+                    return null;
+                }
+            } else {
+                Console.WriteLine($"Model name is not cached as a ConfigTypeModelContainer or ConfigTypeModelEntry. Ignoring: {modelName}");
+
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="configTypeFilePath"></param>
         /// <returns></returns>
         public bool UpdateConfigTypeFilePaths(string configTypeFilePath)

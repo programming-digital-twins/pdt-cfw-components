@@ -188,7 +188,13 @@ namespace LabBenchStudios.Pdt.Model
         }
 
         /// <summary>
+        /// These are the default controller types recognized by this framework.
+        /// They map to specific config type and DTDL JSON models that are
+        /// expected to be available to any dependent client application.
         /// 
+        /// For custom config type and DTDL JSON models, simply use the 'Custom'
+        /// enum as the controller, and specify a config type name and model ID
+        /// that matches its associated DTDL DTMI URI.
         /// </summary>
         public enum DtmiControllerEnum
         {
@@ -209,48 +215,13 @@ namespace LabBenchStudios.Pdt.Model
         /// 
         /// </summary>
         /// <param name="controllerID"></param>
+        /// <param name="deviceID"></param>
+        /// <param name="locationID"></param>
         /// <returns></returns>
-        public static string GetModelFileName(DtmiControllerEnum controllerID)
+        public static IotDataContext GenerateDataContext(
+            DtmiControllerEnum controllerID, string deviceID, string locationID)
         {
-            string modelFileName = BASE_IOT_MODEL_CONTEXT_DTDL_MODEL;
-
-            switch (controllerID)
-            {
-                case DtmiControllerEnum.Barometer:
-                    modelFileName = CONTROLLER_BAROMETER_DTDL_MODEL; break;
-
-                case DtmiControllerEnum.EdgeComputingDevice:
-                    modelFileName = CONTROLLER_EDGE_COMPUTE_DEVICE_DTDL_MODEL; break;
-
-                case DtmiControllerEnum.EnvironmentalSensors:
-                    modelFileName = COMPONENT_ENV_SENSORS_DTDL_MODEL; break;
-
-                case DtmiControllerEnum.FluidPump:
-                    modelFileName = CONTROLLER_FLUID_PUMP_DTDL_MODEL; break;
-
-                case DtmiControllerEnum.HeatingSystem:
-                    modelFileName = CONTEXT_HEATING_SYSTEM_DTDL_MODEL; break;
-
-                case DtmiControllerEnum.Humidifier:
-                    modelFileName = CONTROLLER_HUMIDIFIER_DTDL_MODEL; break;
-
-                case DtmiControllerEnum.Thermostat:
-                    modelFileName = CONTROLLER_THERMOSTAT_DTDL_MODEL; break;
-
-                case DtmiControllerEnum.InteriorRoom:
-                    modelFileName = CONTEXT_INTERIOR_ROOM_DTDL_MODEL; break;
-
-                case DtmiControllerEnum.WindTurbine:
-                    modelFileName = CONTROLLER_WIND_TURBINE_DTDL_MODEL; break;
-
-                case DtmiControllerEnum.ResidentialStructure:
-                    modelFileName = CONTEXT_RESIDENTIAL_STRUCTURE_DTDL_MODEL; break;
-
-                default:
-                    break;
-            }
-
-            return modelFileName;
+            return GenerateDataContext(controllerID, deviceID, locationID, null);
         }
 
         /// <summary>
@@ -261,7 +232,7 @@ namespace LabBenchStudios.Pdt.Model
         /// <param name="locationID"></param>
         /// <returns></returns>
         public static IotDataContext GenerateDataContext(
-            DtmiControllerEnum controllerID, string deviceID, string locationID)
+            DtmiControllerEnum controllerID, string deviceID, string locationID, string typeName)
         {
             IotDataContext dataContext = new IotDataContext(controllerID.ToString(), deviceID, locationID);
 
@@ -315,6 +286,19 @@ namespace LabBenchStudios.Pdt.Model
                 case DtmiControllerEnum.ResidentialStructure:
                     dataContext.SetTypeCategoryID(ConfigConst.STRUCTURE_TYPE_CATEGORY);
                     dataContext.SetTypeID(ConfigConst.STRUCTURE_TYPE);
+                    break;
+
+                case DtmiControllerEnum.Custom:
+                    if (string.IsNullOrEmpty(typeName)) {
+                        typeName = controllerID.ToString();
+                    }
+
+                    dataContext.SetName(typeName);
+                    dataContext.SetTypeName(typeName);
+
+                    // these will have to be updated by the caller
+                    dataContext.SetTypeCategoryID(ConfigConst.DEFAULT_TYPE_CATEGORY_ID);
+                    dataContext.SetTypeID(ConfigConst.DEFAULT_TYPE_ID);
                     break;
 
                 default:

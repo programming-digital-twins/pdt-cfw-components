@@ -42,6 +42,8 @@ namespace LabBenchStudios.Pdt.Model
      */
     public static class ModelParserUtil
     {
+        public const bool LOAD_PATH_FILES_SIMULTANEOUSLY = true;
+
         /// <summary>
         /// 
         /// </summary>
@@ -192,35 +194,43 @@ namespace LabBenchStudios.Pdt.Model
         /// can declare multiple DTEntityInfo's.
         /// </summary>
         /// <param name="modelFilePath"></param>
-        /// <returns>IReadOnlyDictionary<string, DTInterfaceInfo></returns>
-        public static IReadOnlyDictionary<string, DTInterfaceInfo> LoadAllDtdlInterfaces(string modelFilePath)
+        /// <returns>List<DtdlModelContainer></returns>
+        public static List<DtdlModelContainer> LoadAllDtdlInterfaces(string modelFilePath)
         {
-            IReadOnlyDictionary<Dtmi, DTEntityInfo> modelEntities = LoadAllDtdlModels(modelFilePath);
-            Dictionary<string, DTInterfaceInfo> modelInterfaces = null;
+            List<DtdlModelContainer> modelEntities = LoadDtdlModelsFromPath(modelFilePath);
+            //Dictionary<string, DTInterfaceInfo> modelInterfaces = null;
 
             if (modelEntities != null && modelEntities.Count > 0)
             {
-                modelInterfaces = new Dictionary<string, DTInterfaceInfo>();
+                //modelInterfaces = new Dictionary<string, DTInterfaceInfo>();
 
-                foreach (Dtmi dtmi in modelEntities.Keys)
-                {
-                    DTEntityInfo entityInfo = modelEntities[dtmi];
+                /**
+                int counter = 0;
 
-                    switch (entityInfo.EntityKind)
-                    {
-                        case DTEntityKind.Interface:
-                            modelInterfaces.Add(dtmi.AbsoluteUri, (DTInterfaceInfo) entityInfo);
-                            Console.WriteLine($" --> DTInterfaceInfo DTMI: {dtmi.AbsoluteUri}. Count: {modelInterfaces.Count}");
-                            break;
+                foreach (DtdlModelContainer modelContainer in modelEntities) {
+                    IReadOnlyDictionary<Dtmi, DTEntityInfo> modelEntity = modelContainer.GetEntityTable();
+
+                    foreach (Dtmi dtmi in modelEntity.Keys) {
+                        DTEntityInfo entityInfo = modelEntity[dtmi];
+
+                        switch (entityInfo.EntityKind) {
+                            case DTEntityKind.Interface:
+                                modelContainer.AddInterfaceRef(dtmi.AbsoluteUri, (DTInterfaceInfo)entityInfo);
+                                //modelInterfaces.Add(dtmi.AbsoluteUri, (DTInterfaceInfo)entityInfo);
+                                Console.WriteLine($" --> DTInterfaceInfo DTMI: {dtmi.AbsoluteUri}. Count: {++counter}");
+                                break;
+                        }
                     }
                 }
+                */
             }
             else
             {
                 Console.WriteLine($"Error generating DTDL model interfaces from file path {modelFilePath}. None found.");
             }
 
-            return modelInterfaces;
+            //return modelInterfaces;
+            return modelEntities;
         }
 
         /// <summary>
@@ -283,48 +293,182 @@ namespace LabBenchStudios.Pdt.Model
         /// model representation available.
         /// 
         /// Note that this does NOT distinguish between model files, as a single model file
+        /// can declare multiple DTEntityInfo's. This method does, however, look for a wide
+        /// range of files that simply contain the pattern '*.json' in the name.
+        /// </summary>
+        /// <param name="modelFilePath"></param>
+        /// <returns>List<DtdlModelContainer></returns>
+        public static List<DtdlModelContainer> LoadDtdlModelsFromPath(string modelFilePath)
+        {
+            return LoadDtdlModelEntities(modelFilePath, "*.json");
+        }
+
+
+        // private methods
+
+        /// <summary>
+        /// Loads all DTDL models from the given path into a read only dictionary indexed
+        /// by Dtmi, containing DTEntityInfo instances. This is the highest level generic
+        /// model representation available.
+        /// 
+        /// Note that this does NOT distinguish between model files, as a single model file
         /// can declare multiple DTEntityInfo's.
         /// </summary>
         /// <param name="modelFilePath"></param>
-        /// <returns>IReadOnlyDictionary<Dtmi, DTEntityInfo></returns>
-        public static IReadOnlyDictionary<Dtmi, DTEntityInfo> LoadAllDtdlModels(string modelFilePath)
+        /// <param name="filePattern"></param>
+        /// <returns>DtdlModelContainer</returns>
+        private static List<DtdlModelContainer> LoadDtdlModelEntities(string modelFilePath, string filePattern)
         {
-            IReadOnlyDictionary<Dtmi, DTEntityInfo> modelDictionary = null;
+            List<DtdlModelContainer> modelContainerList = new List<DtdlModelContainer>();
 
-            if (!string.IsNullOrEmpty(modelFilePath) && Directory.Exists(modelFilePath))
-            {
-                var modelJsonList = new List<string>();
-
-                var modelFileList =
-                    Directory.GetFiles(modelFilePath, ModelNameUtil.MODEL_FILE_NAME_PATTERN);
-
-                foreach (var modelFileName in modelFileList)
-                {
-                    string jsonData = ModelParserUtil.LoadDtdlFile(modelFileName);
-                    modelJsonList.Add(jsonData);
-
-                    Console.WriteLine($"Loaded DTDL JSON for model file: {modelFileName}");
-                }
+            // path has already been validated by caller but do so again to be sure
+            if (!string.IsNullOrEmpty(modelFilePath) && Directory.Exists(modelFilePath)) {
+                var modelFileList = Directory.GetFiles(modelFilePath, filePattern);
 
                 ModelParser modelParser = new();
 
-                modelDictionary = modelParser.Parse(modelJsonList);
+                // NOTE: The DTDL parser will fail if one DTDL depends upon another but
+                // is not loaded simultaneously. Checking the LOAD_PATH_FILES_SIMULTANEOUSLY
+                // flag allows the internal DTDL cache within the ModelParser to be loaded
+                // to avoid any errors thrown during single file parsing.
+                //
+                // While this incurs double parsing of each directory containing DTDL files,
+                // it allows for a simple mapping between DTMI URI's and their associated file
+                // names, which is useful for simple lookup procedures.
 
-                if (modelDictionary != null)
-                {
-                    Console.WriteLine($"Validated and loaded DTDL JSON from path: {modelFilePath}");
+                Console.WriteLine($"Loading all files from path: {modelFilePath}");
+
+                var modelJsonList = new List<string>();
+
+                foreach (var modelFileName in modelFileList) {
+                    string jsonData = ModelParserUtil.LoadDtdlFile(modelFileName);
+                    modelJsonList.Add(jsonData);
+
+                    Console.WriteLine($"  -> Loaded DTDL JSON for model file: {modelFileName}");
                 }
-                else
-                {
-                    Console.WriteLine($"Failed to load and validate DTDL JSON from path: {modelFilePath}");
+
+                IReadOnlyDictionary<Dtmi, DTEntityInfo> modelDictionary = modelParser.Parse(modelJsonList);
+
+                foreach (Dtmi dtmiEntry in modelDictionary.Keys) {
+                    DTEntityInfo entityInfo = modelDictionary[dtmiEntry];
+                    DtdlModelContainer modelContainer = new DtdlModelContainer(modelDictionary, modelFilePath, entityInfo.ToString());
+                    modelContainerList.Add(modelContainer);
+
+                    switch (entityInfo.EntityKind) {
+                        case DTEntityKind.Interface:
+                            string dtmiUri = dtmiEntry.AbsoluteUri;
+
+                            modelContainer.AddInterfaceRef(dtmiUri, (DTInterfaceInfo)entityInfo);
+
+                            // ugh... seems there's no way to get the source JSON from the ModelParser
+                            // via any public all - ideally via the DTMI URI
+                            //
+                            // may create a wrapper class for this purpose...
+
+                            foreach (string jsonData in modelJsonList) {
+                                if (jsonData.Contains(dtmiUri)) {
+                                    modelContainer.SetModelJsonData(jsonData);
+                                    break;
+                                }
+                            }
+
+                            Console.WriteLine($" --> DTInterfaceInfo DTMI: {dtmiUri}.");
+                            //Console.WriteLine($"   > JSON: {modelContainer.GetModelJsonData()}");
+                            break;
+                    }
                 }
+
+                Console.WriteLine($"Successfully parsed DTDL JSON for model entities.");
             }
-            else
+
+            return modelContainerList;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public class DtdlModelContainer
+        {
+            private IReadOnlyDictionary<Dtmi, DTEntityInfo> entityDictionary = null;
+
+            private Dictionary<string, DTInterfaceInfo> entityInterfaceMap = null;
+
+            private string modelJsonFile = null;
+
+            private string modelJsonData = null;
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="entityDictionary"></param>
+            /// <param name="modelJsonFile"></param>
+            /// <param name="modelJsonData"></param>
+            public DtdlModelContainer(
+                IReadOnlyDictionary<Dtmi, DTEntityInfo> entityDictionary,
+                string modelJsonFile,
+                string modelJsonData)
             {
-                Console.WriteLine($"Invalid file path {modelFilePath}. Dtdl models not loaded.");
+                this.entityDictionary = entityDictionary;
+                this.modelJsonFile = modelJsonFile;
+                this.modelJsonData = modelJsonData;
+
+                this.entityInterfaceMap = new Dictionary<string, DTInterfaceInfo>();
             }
 
-            return modelDictionary;
+            // public methods
+
+            public void AddInterfaceRef(string dtmiUri, DTInterfaceInfo dtmiInterfaceRef)
+            {
+                this.entityInterfaceMap.Add(dtmiUri, dtmiInterfaceRef);
+            }
+            
+            public HashSet<string> GetDtmiUriSet()
+            {
+                HashSet<string> dtmiUriSet = new HashSet<string>();
+
+                foreach (string key in this.entityInterfaceMap.Keys) {
+                    dtmiUriSet.Add(key);
+                }
+
+                return dtmiUriSet;
+            }
+
+            public DTInterfaceInfo GetDtdlInterface(string dtmiUri)
+            {
+                if (! string.IsNullOrEmpty(dtmiUri)) {
+                    if (this.entityInterfaceMap.ContainsKey(dtmiUri)) {
+                        return this.entityInterfaceMap[dtmiUri];
+                    }
+                }
+
+                return null;
+            }
+
+            public Dictionary<string, DTInterfaceInfo> GetEntityInterfaceMap()
+            {
+                return this.entityInterfaceMap;
+            }
+
+            public IReadOnlyDictionary<Dtmi, DTEntityInfo> GetEntityTable()
+            {
+                return this.entityDictionary;
+            }
+
+            public string GetModelJsonFile()
+            {
+                return this.modelJsonFile;
+            }
+
+            public string GetModelJsonData()
+            {
+                return this.modelJsonData;
+            }
+
+            public void SetModelJsonData(string jsonData)
+            {
+                this.modelJsonData = jsonData;
+            }
+
         }
 
     }

@@ -1,0 +1,51 @@
+{
+  "@id": "dtmi:LabBenchStudios:PDT:thermostat;1",
+  "@type": "Interface",
+  "@context": [
+    "dtmi:dtdl:context;3",
+    "dtmi:dtdl:extension:quantitativeTypes;1"
+  ],
+  "displayName": "Thermostat",
+  "contents": [
+    {
+      "@type": [ "Property", "Temperature" ],
+      "name": "targetTemperature",
+      "displayName": "Target Temperature in Celsuis",
+      "writable": true,
+      "schema": "float",
+      "unit": "degreeCelsius"
+    },
+    {
+      "@type": [ "Property", "Temperature" ],
+      "name": "minNominalTemperature",
+      "displayName": "Min Nominal temperature Setting in Celsuis",
+      "writable": true,
+      "schema": "float",
+      "unit": "degreeCelsius"
+    },
+    {
+      "@type": [ "Property", "Temperature" ],
+      "name": "maxNominalTemperature",
+      "displayName": "Max Nominal Temperature Setting in Celsuis",
+      "writable": true,
+      "schema": "float",
+      "unit": "degreeCelsius"
+    },
+    {
+      "@type": [ "Property", "Temperature" ],
+      "name": "minThresholdTemperature",
+      "displayName": "Min Threshold Temperature Setting in Celsuis",
+      "writable": true,
+      "schema": "float",
+      "unit": "degreeCelsius"
+    },
+    {
+      "@type": [ "Property", "Temperature" ],
+      "name": "maxThresholdTemperature",
+      "displayName": "Max Threshold Temperature Setting in Celsuis",
+      "writable": true,
+      "schema": "float",
+      "unit": "degreeCelsius"
+    }
+  ]
+}

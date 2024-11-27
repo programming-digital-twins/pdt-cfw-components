@@ -96,7 +96,9 @@ namespace LabBenchStudios.Pdt.Common
         private List<IDataContextEventListener> dataContextEventListenerList = null;
         private List<ISystemStatusEventListener> systemStatusEventListenerList = null;
 
+        private SystemModelManager systemModelManager = null;
         private DigitalTwinModelManager digitalTwinModelManager = null;
+        private ConfigTypeModelManager configTypeModelManager = null;
 
         private Dictionary<string, ConnectionStateData> connectedStateTable = null;
 
@@ -111,8 +113,14 @@ namespace LabBenchStudios.Pdt.Common
         /// </summary>
         private EventProcessor()
         {
-            this.digitalTwinModelManager = new DigitalTwinModelManager();
-            this.digitalTwinModelManager.SetSystemStatusEventListener(this);
+            this.systemModelManager = new SystemModelManager();
+            this.systemModelManager.SetSystemStatusEventListener(this);
+
+            this.digitalTwinModelManager = this.systemModelManager.GetDigitalTwinModelManager();
+            this.configTypeModelManager = this.systemModelManager.GetConfigTypeModelManager();
+
+            //this.digitalTwinModelManager = new DigitalTwinModelManager();
+            //this.digitalTwinModelManager.SetSystemStatusEventListener(this);
 
             this.dataContextEventListenerList = new List<IDataContextEventListener>();
             this.systemStatusEventListenerList = new List<ISystemStatusEventListener>();
@@ -184,9 +192,68 @@ namespace LabBenchStudios.Pdt.Common
         /// 
         /// </summary>
         /// <returns></returns>
+        public ConfigTypeModelManager GetConfigTypeModelManager()
+        {
+            return this.systemModelManager.GetConfigTypeModelManager();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public bool LoadConfigTypeMappingModels()
+        {
+            return this.LoadConfigTypeMappingModels(ConfigConst.DEFAULT_CONFIG_TYPE_FILE_PATH);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="modelFilePath"></param>
+        /// <returns></returns>
+        public bool LoadConfigTypeMappingModels(string modelFilePath)
+        {
+            // tell model manager to update its model file path (and [re]load models)
+            if (this.configTypeModelManager.UpdateConfigTypeFilePaths(modelFilePath)) {
+                // notify all interested listeners that (new) models have been (re) loaded
+                this.OnModelUpdateEvent();
+
+                return true;
+            }
+
+            Console.WriteLine($"Failed to (re)load config type mapping models from path {modelFilePath}");
+
+            return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="modelFilePathSet"></param>
+        /// <returns></returns>
+        public bool LoadConfigTypeMappingModels(HashSet<string> modelFilePathSet)
+        {
+            // tell model manager to update its model file path (and [re]load models)
+            if (this.configTypeModelManager.UpdateConfigTypeFilePaths(modelFilePathSet)) {
+                // notify all interested listeners that (new) models have been (re) loaded
+                this.OnModelUpdateEvent();
+
+                return true;
+            }
+
+            Console.WriteLine($"Failed to (re)load config type mapping models from path list {modelFilePathSet}");
+
+            return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public DigitalTwinModelManager GetDigitalTwinModelManager()
         {
-            return this.digitalTwinModelManager;
+            return this.systemModelManager.GetDigitalTwinModelManager();
+            //return this.digitalTwinModelManager;
         }
 
         /// <summary>
@@ -222,12 +289,12 @@ namespace LabBenchStudios.Pdt.Common
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="modelFilePathList"></param>
+        /// <param name="modelFilePathSet"></param>
         /// <returns></returns>
-        public bool LoadDigitalTwinModels(List<string> modelFilePathList)
+        public bool LoadDigitalTwinModels(HashSet<string> modelFilePathSet)
         {
             // tell model manager to update its model file path (and [re]load models)
-            if (this.digitalTwinModelManager.UpdateModelFilePaths(modelFilePathList))
+            if (this.digitalTwinModelManager.UpdateModelFilePaths(modelFilePathSet))
             {
                 // notify all interested listeners that (new) models have been (re) loaded
                 this.OnModelUpdateEvent();
@@ -235,7 +302,7 @@ namespace LabBenchStudios.Pdt.Common
                 return true;
             }
 
-            Console.WriteLine($"Failed to (re)load Digital Twin models from path list {modelFilePathList}");
+            Console.WriteLine($"Failed to (re)load Digital Twin models from path list {modelFilePathSet}");
 
             return false;
         }
@@ -588,7 +655,8 @@ namespace LabBenchStudios.Pdt.Common
             this.UpdateDataSyncKeyCache(data);
 
             // notify DT model manager of the data update
-            this.digitalTwinModelManager.HandleIncomingTelemetry(data);
+            this.systemModelManager.HandleIncomingTelemetry(data);
+            //this.digitalTwinModelManager.HandleIncomingTelemetry(data);
         }
 
         /// <summary>

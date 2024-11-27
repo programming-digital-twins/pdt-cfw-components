@@ -24,8 +24,7 @@
 
 using System;
 using System.Collections.Generic;
-
-using Newtonsoft.Json;
+using System.IO;
 
 using LabBenchStudios.Pdt.Data;
 using LabBenchStudios.Pdt.Common;
@@ -39,7 +38,6 @@ namespace LabBenchStudios.Pdt.Model
     /// Shared properties are derived from IotDataContext, which is also
     /// described in the base DTDML that all models extend.
     /// </summary>
-    [JsonObject(MemberSerialization.OptIn)]
     public class DigitalTwinModelManagerCache
     {
         // this contains all the DT model raw JSON data
@@ -167,6 +165,24 @@ namespace LabBenchStudios.Pdt.Model
         }
 
         /// <summary>
+        /// Returns the DTDL JSON for the given controller using the short-form controller
+        /// model name (e.g., thermostat).
+        /// </summary>
+        /// <param name="modelName"></param>
+        /// <returns></returns>
+        public string GetDigitalTwinModelJson(string modelName)
+        {
+            string dtmiUri = ModelNameUtil.CreateModelID(modelName);
+
+            if (this.digitalTwinDtdlJsonCache.ContainsKey(dtmiUri)) {
+                return this.digitalTwinDtdlJsonCache[dtmiUri];
+            } else {
+                Console.WriteLine($"No raw DTDL JSON available for DTMI URI {dtmiUri}");
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Returns the internally stored DT Model State instance using
         /// its model state key.
         /// </summary>
@@ -203,7 +219,33 @@ namespace LabBenchStudios.Pdt.Model
 
             return false;
         }
-        
+
+        ///
+        /// 
+        /// TODO: Create a map of config type names (same as the unique portion of the DTMI entry)
+        /// for each DTML file. These names will map to the config type model names to provide
+        /// a customizable mechanism for mapping newly created config type names and their
+        /// respective containers and type ID entries to their respective newly created
+        /// DTML file entries
+        /// 
+        /// This approach allows new assets to be created within the Digital Twin application
+        /// and mapped to an incoming telemetry stream using custom ID's and names using
+        /// that config type name, without relying upon a hard-coded controller type enum
+        /// entry (e.g., DtmiControllerEnum entry).
+        /// 
+        /// DtmiControllerEnum is still used within the asset, but simply set to 'Custom',
+        /// whilst the controllerTypeName will be set to the string-based name, which
+        /// serves as the key to connect the model config with the DTML file.
+        /// 
+        /// As a reminder, the model config serves to connect the type config name to
+        /// the telemetry stream when either the name or the type ID is in use. The model
+        /// config JSON is expected to be universally distributed to the edge environment
+        /// which generates the data set and the digital twin application. It is the glue
+        /// that binds the telemetry and twin - and provides the state synchronization
+        /// baseline for both ingress and egress data at the twin.
+        /// 
+        ///
+
         /// <summary>
         /// Attempts to load all digital twin JSON model files from the given
         /// path, using the known DTMI controller types (stored within the
@@ -219,57 +261,54 @@ namespace LabBenchStudios.Pdt.Model
         /// and re-assigned to existing model states, which use the contents
         /// of the JSON to generate their associative properties and parse
         /// incoming telemetry data.
+        /// 
+        /// NOTE: There's no way to know in advance how many, or if any, of the core
+        /// controller DTDL files will be present in the given model file path.
+        /// However, since this operation is not expected to be invoked often
+        /// (usually once per application execution), this method will attempt
+        /// to load all core DTDL files from the given path, along with any other
+        /// JSON files that don't match the core model file list.
+        /// 
+        /// The core DTDL file names are dynamically generated based on the
+        /// ModelNameUtil.DtmiControllerEnum types, and any found will be stored
+        /// in the result set returned to the caller, which will then ignore
+        /// those in the next file path to check for DTDL models.
+        /// 
+        /// If there are no DT model entry files in the given path, the caches
+        /// will remain as-is.
         /// </summary>
+        /// <param name="dtmiUri"></param>
         /// <param name="modelFilePath"></param>
         /// <returns></returns>
-        public bool LoadDigitalTwinJsonModels(string modelFilePath)
+        public bool LoadDigitalTwinJsonModels(string dtmiUri, string modelFilePath)
         {
             // update DTDL JSON cache
-            var dtmiControllerList =
-                (ModelNameUtil.DtmiControllerEnum[])Enum.GetValues(typeof(ModelNameUtil.DtmiControllerEnum));
-
-            foreach (ModelNameUtil.DtmiControllerEnum dtmiController in dtmiControllerList)
-            {
-                string dtmiUri = ModelNameUtil.CreateModelID(dtmiController);
-                string fileName = ModelNameUtil.GetModelFileName(dtmiController);
-
-                string dtdlJson = ModelParserUtil.LoadDtdlFile(modelFilePath, fileName);
-
-                Console.WriteLine($"  -> DTMI URI: {dtmiUri}. Loaded file: {fileName}");
-
-                if (! string.IsNullOrEmpty(dtdlJson))
-                {
-                    if (!this.digitalTwinDtdlJsonCache.ContainsKey(dtmiUri))
-                    {
-                        this.digitalTwinDtdlJsonCache.Add(dtmiUri, dtdlJson);
-                    }
-                    else
-                    {
-                        this.digitalTwinDtdlJsonCache[dtmiUri] = dtdlJson;
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"Failed to load DTDL models from file {fileName}");
-                }
-            }
+            /**
+            HashSet<string> loadedFileSet = null;
+            
+            loadedFileSet = this.LoadAndUpdateDigitalTwinModelDtdlEntries(dtmiUri, modelFilePath);
+            */
 
             // update model state cache
-            foreach (string key in this.digitalTwinStateCache.Keys)
-            {
-                DigitalTwinModelState modelState = this.digitalTwinStateCache[key];
-
-                if (modelState != null)
-                {
-                    Console.WriteLine($"Retrieved DT Model State {key} with ID {modelState.GetModelID()}");
-
-                    string rawJson = this.GetDigitalTwinModelJson(modelState.GetModelControllerID());
-
-                    modelState.SetModelJson(rawJson);
-                }
-            }
+            this.UpdateAllDigitalTwinModelStateEntries();
 
             return true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dtmiUri"></param>
+        /// <param name="dtdlJsonFile"></param>
+        /// <param name="dtdlJsonData"></param>
+        public void UpdateDigitalTwinJsonModelCache(string dtmiUri, string dtdlJsonFile, string dtdlJsonData)
+        {
+            if (!string.IsNullOrEmpty(dtmiUri) &&
+                !string.IsNullOrEmpty(dtdlJsonFile) &&
+                !string.IsNullOrEmpty(dtdlJsonData))
+            {
+                this.digitalTwinDtdlJsonCache.Add(dtmiUri, dtdlJsonData);
+            }
         }
 
         /// <summary>
@@ -456,6 +495,24 @@ namespace LabBenchStudios.Pdt.Model
                 if (entry.Value.Contains(dtModelState))
                 {
                     entry.Value.Remove(dtModelState);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void UpdateAllDigitalTwinModelStateEntries()
+        {
+            foreach (string key in this.digitalTwinStateCache.Keys) {
+                DigitalTwinModelState modelState = this.digitalTwinStateCache[key];
+
+                if (modelState != null) {
+                    Console.WriteLine($"Retrieved DT Model State {key} with ID {modelState.GetModelID()}");
+
+                    string rawJson = this.GetDigitalTwinModelJson(modelState.GetModelControllerID());
+
+                    modelState.SetModelJson(rawJson);
                 }
             }
         }

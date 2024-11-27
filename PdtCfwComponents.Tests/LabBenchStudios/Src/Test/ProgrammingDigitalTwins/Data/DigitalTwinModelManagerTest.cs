@@ -40,8 +40,9 @@ namespace LabBenchStudios.Pdt.Test.Data
         [SetUp]
         public void Setup()
         {
-            this.dtModelManager = new DigitalTwinModelManager(DTDL_TEST_MODEL_FILEPATH);
-            this.dtModelManager.BuildModelData();
+            this.dtModelManager = new DigitalTwinModelManager();
+            this.dtModelManager.UpdateModelFilePaths(DTDL_TEST_MODEL_FILEPATH);
+            //this.dtModelManager.BuildModelData();
         }
 
         [Test]

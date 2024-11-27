@@ -30,6 +30,7 @@ using DTDLParser.Models;
 
 using LabBenchStudios.Pdt.Common;
 using LabBenchStudios.Pdt.Data;
+using static LabBenchStudios.Pdt.Model.ModelParserUtil;
 
 namespace LabBenchStudios.Pdt.Model
 {
@@ -51,7 +52,11 @@ namespace LabBenchStudios.Pdt.Model
 
         // this contains all the DT model parsed instances
         // this is indexed by the DTDLParser DTMI absolute URI (string)
-        private IReadOnlyDictionary<string, DTInterfaceInfo> digitalTwinInterfaceCache;
+        private Dictionary<string, DTInterfaceInfo> digitalTwinInterfaceCache = null;
+
+        // for convenience, this maps a DTMI URI to the associated file it
+        // was loaded from
+        private Dictionary<string, string> digitalTwinModelToFileMap = null;
 
         // useful for passing event messages and debugging
         private ISystemStatusEventListener eventListener = null;
@@ -60,22 +65,11 @@ namespace LabBenchStudios.Pdt.Model
         /// Default constructor. Uses the default model file path specified
         /// in ModelNameUtil.
         /// </summary>
-        public DigitalTwinModelManager() : this(ConfigConst.DEFAULT_MODEL_FILE_PATH)
-        {
-            // nothing to do
-        }
-
-        /// <summary>
-        /// Constructor that accepts a model file path. If validated, it
-        /// will be used as the path from which to load models; else the
-        /// default model file path from ModelNameUtil will be used.
-        /// </summary>
-        /// <param name="modelFilePath"></param>
-        public DigitalTwinModelManager(string modelFilePath)
+        public DigitalTwinModelManager()
         {
             this.digitalTwinModelMgrCache = new DigitalTwinModelManagerCache();
-
-            this.UpdateModelFilePaths(modelFilePath);
+            this.digitalTwinInterfaceCache = new Dictionary<string, DTInterfaceInfo>();
+            this.digitalTwinModelToFileMap = new Dictionary<string, string>();
         }
 
         // public methods
@@ -89,11 +83,15 @@ namespace LabBenchStudios.Pdt.Model
         {
             if (this.modelFilePaths.Count > 0)
             {
+                // the initial call to LoadAndValidDtdlModelInterfaceData may be
+                // destructive to this.modelFilePaths, as it will remove any invalid
+                // DTDL files from the set
+                //
+                // this call will succeed as long as >= 1 DTDL interface is loaded
                 bool areInterfacesLoaded = this.LoadAndValidateDtdlModelInterfaceData();
-                bool areJsonFilesLoaded = this.LoadAndValidateDtdlModelJsonData();
 
                 // both should either succeed or fail
-                return (areInterfacesLoaded && areJsonFilesLoaded);
+                return (areInterfacesLoaded);
             }
             else
             {
@@ -239,12 +237,61 @@ namespace LabBenchStudios.Pdt.Model
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="deviceID"></param>
+        /// <param name="locationID"></param>
+        /// <param name="typeName"></param>
+        /// <param name="stateUpdateListener"></param>
+        /// <returns></returns>
+        public DigitalTwinModelState CreateModelState(
+            string deviceID,
+            string locationID,
+            string typeName,
+            IDataContextEventListener stateUpdateListener)
+        {
+            return this.CreateModelState(deviceID, locationID, false, typeName, stateUpdateListener);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="deviceID"></param>
+        /// <param name="locationID"></param>
+        /// <param name="useGuid"></param>
+        /// <param name="typeName"></param>
+        /// <param name="stateUpdateListener"></param>
+        /// <returns></returns>
+        public DigitalTwinModelState CreateModelState(
+            string deviceID,
+            string locationID,
+            bool useGuid,
+            string typeName,
+            IDataContextEventListener stateUpdateListener)
+        {
+            if (!string.IsNullOrEmpty(typeName)) {
+                ModelNameUtil.DtmiControllerEnum controllerID = ModelNameUtil.DtmiControllerEnum.Custom;
+
+                int typeCategoryID = ConfigConst.DEFAULT_TYPE_CATEGORY_ID;
+                int typeID = ConfigConst.DEFAULT_TYPE_ID;
+
+                var dtModelState = new DigitalTwinModelState(typeName, deviceID, locationID, typeCategoryID, typeID);
+
+                return this.ConfigureAndStoreModelState(dtModelState, controllerID, stateUpdateListener);
+            } else {
+                Console.Error.WriteLine($"Can't create model state. Type name invalid. Device ID: {deviceID}");
+
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Generates a new List<string> of DTMI absolute URI's when called.
         /// </summary>
         /// <returns></returns>
         public List<string> GetAllDtmiValues()
         {
-            if (digitalTwinInterfaceCache != null && digitalTwinInterfaceCache.Count > 0)
+            if (digitalTwinInterfaceCache.Count > 0)
             {
                 List<string> dtmiValues = new List<string>(digitalTwinInterfaceCache.Keys);
 
@@ -284,6 +331,17 @@ namespace LabBenchStudios.Pdt.Model
         public string GetDigitalTwinModelJson(ModelNameUtil.DtmiControllerEnum dtmiController)
         {
             return this.digitalTwinModelMgrCache.GetDigitalTwinModelJson(dtmiController);
+        }
+
+        /// <summary>
+        /// Returns the DTDL JSON for the given controller model name - short form.
+        /// That is, the abbreviated name for the controller model (e.g., thermostat).
+        /// </summary>
+        /// <param name="modelName"></param>
+        /// <returns></returns>
+        public string GetDigitalTwinModelJson(string modelName)
+        {
+            return this.digitalTwinModelMgrCache.GetDigitalTwinModelJson(modelName);
         }
 
         /// <summary>
@@ -466,18 +524,18 @@ namespace LabBenchStudios.Pdt.Model
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="modelFilePathList"></param>
+        /// <param name="modelFilePathSet"></param>
         /// <returns></returns>
-        public bool UpdateModelFilePaths(List<string> modelFilePathList)
+        public bool UpdateModelFilePaths(HashSet<string> modelFilePathSet)
         {
             int counter = 0;
             int modelFileCount = 0;
 
-            if (modelFilePathList != null && modelFilePathList.Count > 0)
+            if (modelFilePathSet != null && modelFilePathSet.Count > 0)
             {
-                modelFileCount = modelFilePathList.Count;
+                modelFileCount = modelFilePathSet.Count;
 
-                foreach (string modelFilePath in modelFilePathList)
+                foreach (string modelFilePath in modelFilePathSet)
                 {
                     if (this.UpdateModelFilePaths(modelFilePath))
                     {
@@ -640,55 +698,53 @@ namespace LabBenchStudios.Pdt.Model
         /// Unfortunately, this method results in each DTDL model being loaded twice
         /// Future optimizations will probably remove this redundancy.
         /// </summary>
-        private bool LoadAndValidateDtdlModelJsonData()
-        {
-            int files = this.modelFilePaths.Count;
-            int counter = 0;
-
-            foreach (string dtdlFilePath in this.modelFilePaths)
-            {
-                if (this.digitalTwinModelMgrCache.LoadDigitalTwinJsonModels(dtdlFilePath))
-                {
-                    Console.WriteLine($"Successfully loaded DTDL JSON data from path {dtdlFilePath}");
-                    counter++;
-                }
-                else
-                {
-                    Console.WriteLine($"Failed to load DTDL JSON data from path {dtdlFilePath}");
-                }
-            }
-
-            Console.WriteLine($"Loaded and validated DTDL model files: {counter} out of {files}");
-
-            return (counter > 0 ? true : false);
-        }
-
-        /// <summary>
-        /// Unfortunately, this method results in each DTDL model being loaded twice
-        /// Future optimizations will probably remove this redundancy.
-        /// </summary>
         private bool LoadAndValidateDtdlModelInterfaceData()
         {
             int records = this.modelFilePaths.Count;
             int counter = 0;
 
+            HashSet<string> invalidFileSet = new HashSet<string>();
+
             foreach (string dtdlFilePath in this.modelFilePaths)
             {
-                // update DTDL object cache
-                this.digitalTwinInterfaceCache = ModelParserUtil.LoadAllDtdlInterfaces(dtdlFilePath);
+                try {
+                    List<DtdlModelContainer> dtdlModelContainerList =
+                        ModelParserUtil.LoadDtdlModelsFromPath(dtdlFilePath);
 
-                if (this.digitalTwinInterfaceCache != null)
-                {
+                    Console.WriteLine($" ### Loaded {dtdlModelContainerList.Count} entries from file {dtdlFilePath}");
+
+                    foreach (DtdlModelContainer modelContainer in dtdlModelContainerList) {
+                        Dictionary<string, DTInterfaceInfo> interfaceMap = modelContainer.GetEntityInterfaceMap();
+                        Console.WriteLine($"Processing DTMI URI interface map. Count: {interfaceMap.Count}");
+
+                        foreach (string dtmiUri in interfaceMap.Keys) {
+                            Console.WriteLine($"Adding DTMI URI to cache: {dtmiUri}");
+                            this.digitalTwinInterfaceCache.Add(dtmiUri, interfaceMap[dtmiUri]);
+
+                            this.digitalTwinModelMgrCache.UpdateDigitalTwinJsonModelCache(
+                                dtmiUri, modelContainer.GetModelJsonFile(), modelContainer.GetModelJsonData());
+
+                            ++counter;
+                        }
+                    }
+
                     Console.WriteLine($"Successfully loaded DTDL model interfaces from path {dtdlFilePath}");
-                    counter++;
-                }
-                else
-                {
-                    Console.WriteLine($"Failed to load DTDL model interfaces from path {dtdlFilePath}");
+                } catch (Exception e) {
+                    invalidFileSet.Add(dtdlFilePath);
+
+                    Console.WriteLine($"Failed to load and process DTDL interfaces from {dtdlFilePath}. Exception: {e}.");
                 }
             }
 
-            Console.WriteLine($"Loaded and validated DTDL model interfaces: {counter} out of {records}");
+            Console.WriteLine($"Loaded and validated {counter} DTDL interfaces from {records} files.");
+
+            if (invalidFileSet.Count > 0) {
+                foreach (string invalidFile in invalidFileSet) {
+                    Console.WriteLine($"Removing invalid DTDL file from file cache: {invalidFile}.");
+
+                    this.modelFilePaths.Remove(invalidFile);
+                }
+            }
 
             this.hasSuccessfulDataLoad = (counter > 0 ? true : false);
 

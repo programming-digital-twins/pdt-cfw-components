@@ -30,6 +30,7 @@ using Newtonsoft.Json;
 
 using LabBenchStudios.Pdt.Common;
 using LabBenchStudios.Pdt.Data;
+using System.Diagnostics.Tracing;
 
 namespace LabBenchStudios.Pdt.Model
 {
@@ -61,7 +62,7 @@ namespace LabBenchStudios.Pdt.Model
         private Dictionary<string, DigitalTwinProperty> modelProperties;
         private Dictionary<string, DigitalTwinModelState> attachedComponents;
 
-        private ModelNameUtil.DtmiControllerEnum controllerID;
+        private ModelNameUtil.DtmiControllerEnum controllerID = ModelNameUtil.DtmiControllerEnum.Custom;
 
         private string modelJson = null;
 
@@ -80,7 +81,7 @@ namespace LabBenchStudios.Pdt.Model
                 ConfigConst.NOT_SET, ConfigConst.NOT_SET,
                 ConfigConst.DEFAULT_TYPE_CATEGORY_ID, ConfigConst.DEFAULT_TYPE_ID)
         {
-            InitState();
+            this.InitState();
         }
 
         /// <summary>
@@ -98,41 +99,41 @@ namespace LabBenchStudios.Pdt.Model
                 base.SetLocationID(dataSyncKey.GetLocationID());
             }
 
-            InitState();
+            this.InitState();
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="modelName"></param>
         /// <param name="deviceID"></param>
         /// <param name="locationID"></param>
         public DigitalTwinModelState(
-            string name, string deviceID, string locationID) :
+            string modelName, string deviceID, string locationID) :
             base(
-                name, deviceID,
+                modelName, deviceID,
                 ConfigConst.DEFAULT_TYPE_CATEGORY_ID, ConfigConst.DEFAULT_TYPE_ID)
         {
             base.SetLocationID(locationID);
 
-            InitState();
+            this.InitState();
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="modelName"></param>
         /// <param name="deviceID"></param>
         /// <param name="locationID"></param>
         /// <param name="typeCategoryID"></param>
         /// <param name="typeID"></param>
         public DigitalTwinModelState(
-            string name, string deviceID, string locationID, int typeCategoryID, int typeID) :
-            base(name, deviceID, typeCategoryID, typeID)
+            string modelName, string deviceID, string locationID, int typeCategoryID, int typeID) :
+            base(modelName, deviceID, typeCategoryID, typeID)
         {
             base.SetLocationID(locationID);
 
-            InitState();
+            this.InitState();
         }
 
         // public methods
@@ -191,11 +192,21 @@ namespace LabBenchStudios.Pdt.Model
         {
             this.prevDataSyncKeyStr = this.dataSyncKeyStr;
 
-            this.dataSyncKey =
-                new DigitalTwinDataSyncKey(
-                    this.GetModelControllerID().ToString(),
-                    base.GetDeviceID(),
-                    base.GetLocationID());
+            this.dataSyncKey = null;
+
+            if (this.controllerID == ModelNameUtil.DtmiControllerEnum.Custom) {
+                this.dataSyncKey =
+                    new DigitalTwinDataSyncKey(
+                        this.GetModelControllerName(),
+                        base.GetDeviceID(),
+                        base.GetLocationID());
+            } else {
+                this.dataSyncKey =
+                    new DigitalTwinDataSyncKey(
+                        this.GetModelControllerID().ToString(),
+                        base.GetDeviceID(),
+                        base.GetLocationID());
+            }
 
             this.dataSyncKeyStr = this.dataSyncKey.ToString();
 
@@ -221,7 +232,13 @@ namespace LabBenchStudios.Pdt.Model
             this.prevModelSyncKeyStr = this.modelSyncKeyStr;
 
             // both calls should generate the same Model ID (DTMI URI)
-            this.modelID = ModelNameUtil.CreateModelID(this.controllerID);
+            this.modelID = string.Empty;
+
+            if (this.controllerID == ModelNameUtil.DtmiControllerEnum.Custom) {
+                this.modelID = ModelNameUtil.CreateModelID(this.GetModelControllerName());
+            } else {
+                this.modelID = ModelNameUtil.CreateModelID(this.controllerID);
+            }
 
             this.modelSyncKey = new DigitalTwinModelSyncKey(this.modelID);
             this.modelSyncKeyStr = this.modelSyncKey.ToString();
@@ -461,6 +478,15 @@ namespace LabBenchStudios.Pdt.Model
         public ModelNameUtil.DtmiControllerEnum GetModelControllerID()
         {
             return this.controllerID;
+        }
+
+        /// <summary>
+        /// Simply delegates to the base class 'GetName()' method.
+        /// </summary>
+        /// <returns></returns>
+        public string GetModelControllerName()
+        {
+            return base.GetName();
         }
 
         /// <summary>

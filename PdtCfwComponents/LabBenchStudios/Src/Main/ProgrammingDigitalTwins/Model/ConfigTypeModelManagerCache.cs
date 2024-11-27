@@ -50,8 +50,8 @@ namespace LabBenchStudios.Pdt.Model
 
         /// <summary>
         /// This table maps all unique type ID's to their respective container name, also known
-        /// as the model ID (e.g., windTurbine, thermostat, etc.). This allows for simple lookups
-        /// of the parent container name when only the type ID is known.
+        /// as the model ID (e.g., the integer representing windTurbine, thermostat, etc.). This allows
+        /// for simple lookups of the parent container name when only the type ID is known.
         /// </summary>
         private Dictionary<int, string> typeIdToContainerNameMappingTable = null;
 
@@ -112,22 +112,6 @@ namespace LabBenchStudios.Pdt.Model
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="typeId"></param>
-        /// <returns></returns>
-        public ConfigTypeModelContainer GetConfigTypeContainerFromTypeId(int typeId)
-        {
-            if (this.typeIdToContainerNameMappingTable.ContainsKey(typeId)) {
-                string containerName = this.typeIdToContainerNameMappingTable[typeId];
-
-                return this.GetConfigTypeContainer(containerName);
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="typeName"></param>
         /// <returns></returns>
         public ConfigTypeModelEntry GetConfigType(string typeName)
@@ -165,6 +149,22 @@ namespace LabBenchStudios.Pdt.Model
 
                     return typeContainer.GetConfigType(typeName);
                 }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="modelId"></param>
+        /// <returns></returns>
+        public ConfigTypeModelContext GetConfigTypeContextFromModelId(int modelId)
+        {
+            if (this.typeIdToContainerNameMappingTable.ContainsKey(modelId)) {
+                string containerName = this.typeIdToContainerNameMappingTable[modelId];
+
+                return this.GetConfigTypeContainer(containerName);
             }
 
             return null;
