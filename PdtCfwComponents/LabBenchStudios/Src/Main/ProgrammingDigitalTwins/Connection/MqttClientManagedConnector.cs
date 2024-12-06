@@ -422,6 +422,24 @@ namespace LabBenchStudios.Pdt.Connection
                 // TODO 2: probably best to move this out of here and into EventProcessor
                 switch (categoryID)
                 {
+                    case ConfigConst.CUSTOM_ACTUATOR_CATEGORY:
+                        // it's ActuatorData - convert once more to get ActuatorData from payload
+                        ActuatorData customActuatorData = DataUtil.JsonToActuatorData(jsonData);
+
+                        // notify event manager, which will distribute to all listeners
+                        this.eventListener?.LogDebugMessage("NORMAL: Processing CUSTOM ACTUATOR ActuatorData: " + categoryID);
+                        this.eventListener?.OnMessagingSystemDataReceived(customActuatorData);
+                        break;
+
+                    case ConfigConst.CUSTOM_SENSOR_CATEGORY:
+                        // it's SensorData - convert once more to get SensorData from payload
+                        SensorData customSensorData = DataUtil.JsonToSensorData(jsonData);
+
+                        // notify event manager, which will distribute to all listeners
+                        this.eventListener?.LogDebugMessage("NORMAL: Processing CUSTOM SENSOR SensorData: " + categoryID);
+                        this.eventListener?.OnMessagingSystemDataReceived(customSensorData);
+                        break;
+
                     case ConfigConst.ENV_TYPE_CATEGORY:
                         // it's SensorData - convert once more to get SensorData from payload
                         SensorData envData = DataUtil.JsonToSensorData(jsonData);

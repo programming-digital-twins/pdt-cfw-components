@@ -203,6 +203,9 @@ namespace LabBenchStudios.Pdt.Common
         public const int DEFAULT_ACTUATOR_TYPE = DEFAULT_TYPE_ID;
         public const int DEFAULT_SENSOR_TYPE = DEFAULT_TYPE_ID;
 
+        public const int CUSTOM_ACTUATOR_CATEGORY = 400;
+        public const int CUSTOM_SENSOR_CATEGORY = 500;
+
         public const int ENV_TYPE_CATEGORY = 1000;
         public const int ENV_DEVICE_TYPE = ENV_TYPE_CATEGORY;
 
@@ -277,6 +280,8 @@ namespace LabBenchStudios.Pdt.Common
         public const int SYSTEM_MGMT_TYPE = 8000;
         public const int RESOURCE_MGMT_TYPE = 8001;
         public const int SYSTEM_CONN_STATE_TYPE = 8002;
+        public const int FILE_SYSTEM_TYPE = 8003;
+        public const int DATABASE_SYSTEM_TYPE = 8004;
 
         public const int SYSTEM_PERF_TYPE_CATEGORY = 9000;
         public const int SYSTEM_PERF_TYPE = SYSTEM_PERF_TYPE_CATEGORY;
