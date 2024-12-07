@@ -38,12 +38,11 @@ namespace LabBenchStudios.Pdt.Common
 		 * given parameters.
 		 * 
 		 * @param resource The resource container with load meta data / additional search criteria.
-		 * @param typeID The type ID of the data to retrieve.
-		 * @param startDate The start date (null if narrowing is not needed).
-		 * @param endDate The end date (null if narrowing is not needed).
+		 * @param startDate The start date.
+		 * @param endDate The end date.
 		 * @return List<ActuatorData> The data instance(s) associated with the lookup parameters.
 		 */
-        public List<ActuatorData> LoadActuatorData(ResourceNameContainer resource, int typeID, DateTime startDate, DateTime endDate);
+        public List<ActuatorData> LoadActuatorData(ResourceNameContainer resource, DateTime startDate, DateTime endDate);
 
         /**
 		 * Attempts to retrieve the named data instance from the persistence server.
@@ -51,8 +50,8 @@ namespace LabBenchStudios.Pdt.Common
 		 * given parameters.
 		 * 
 		 * @param resource The resource container with load meta data / additional search criteria.
-		 * @param startDate The start date (null if narrowing is not needed).
-		 * @param endDate The end date (null if narrowing is not needed).
+		 * @param startDate The start date.
+		 * @param endDate The end date.
 		 * @return List<ConnectionStateData> The data instance(s) associated with the lookup parameters.
 		 */
         public List<ConnectionStateData> LoadConnectionStateData(ResourceNameContainer resource, DateTime startDate, DateTime endDate);
@@ -63,12 +62,11 @@ namespace LabBenchStudios.Pdt.Common
 		 * given parameters.
 		 * 
 		 * @param resource The resource container with load meta data / additional search criteria.
-		 * @param typeID The type ID of the data to retrieve.
-		 * @param startDate The start date (null if narrowing is not needed).
-		 * @param endDate The end date (null if narrowing is not needed).
+		 * @param startDate The start date.
+		 * @param endDate The end date.
 		 * @return List<SensorData> The data instance(s) associated with the lookup parameters.
 		 */
-        public List<SensorData> LoadSensorData(ResourceNameContainer resource, int typeID, DateTime startDate, DateTime endDate);
+        public List<SensorData> LoadSensorData(ResourceNameContainer resource, DateTime startDate, DateTime endDate);
 
         /**
 		 * Attempts to retrieve the named data instance from the persistence server.
@@ -76,8 +74,8 @@ namespace LabBenchStudios.Pdt.Common
 		 * given parameters.
 		 * 
 		 * @param resource The resource container with load meta data / additional search criteria.
-		 * @param startDate The start date (null if narrowing is not needed).
-		 * @param endDate The end date (null if narrowing is not needed).
+		 * @param startDate The start date.
+		 * @param endDate The end date.
 		 * @return List<SystemPerformanceData> The data instance(s) associated with the lookup parameters.
 		 */
         public List<SystemPerformanceData> LoadSystemPerformanceData(ResourceNameContainer resource, DateTime startDate, DateTime endDate);

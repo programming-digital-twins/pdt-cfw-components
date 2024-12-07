@@ -62,7 +62,7 @@ namespace LabBenchStudios.Pdt.Connection
     /// a load request meet the parameters of that which is cached, no
     /// disk I/O will be incurred.
     /// </summary>
-    public class FilePersistenceConnector : IPersistenceConnector
+    public class FilePersistenceConnector : BasePersistenceConnector
     {
         // static consts
 
@@ -123,12 +123,31 @@ namespace LabBenchStudios.Pdt.Connection
 
         // public methods
 
-        public bool ConnectClient()
+
+
+        // protected
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        protected override int GetPersistenceSystemTypeID()
         {
-            if (!this.isPathInitialized) {
+            return ConfigConst.FILE_SYSTEM_TYPE;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        protected override bool HandleConnect()
+        {
+            if (!this.isPathInitialized)
+            {
                 this.InitStoragePath();
 
-                if (!this.isPathInitialized) {
+                if (!this.isPathInitialized)
+                {
                     Console.WriteLine($"Can't initialize file path: {this.primaryStoragePath}. File persistence is disabled.");
 
                     return false;
@@ -138,161 +157,124 @@ namespace LabBenchStudios.Pdt.Connection
             return true;
         }
 
-        public bool DisconnectClient()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        protected override bool HandleDisconnect()
         {
-            // todo: close any open files
-
-            this.isConnected = false;
-
             return true;
         }
 
-        public bool IsClientConnected()
-        {
-            return this.isConnected;
-        }
-
-        /**
-		 * Attempts to retrieve the named data instance from the persistence server.
-		 * Will return null if there's no data matching the given type with the
-		 * given parameters.
-		 * 
-		 * @param resource The resource container with load meta data / additional search criteria.
-		 * @param typeID The type ID of the data to retrieve.
-		 * @param startDate The start date (null if narrowing is not needed).
-		 * @param endDate The end date (null if narrowing is not needed).
-		 * @return List<ActuatorData> The data instance(s) associated with the lookup parameters.
-		 */
-        public List<ActuatorData> LoadActuatorData(ResourceNameContainer resource, int typeID, DateTime startDate, DateTime endDate)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <param name="duration"></param>
+        /// <returns></returns>
+        protected override List<ActuatorData> HandleLoadActuatorData(ResourceNameContainer resource, TimeDuration duration)
         {
             return null;
         }
 
-        /**
-		 * Attempts to retrieve the named data instance from the persistence server.
-		 * Will return null if there's no data matching the given type with the
-		 * given parameters.
-		 * 
-		 * @param resource The resource container with load meta data / additional search criteria.
-		 * @param startDate The start date (null if narrowing is not needed).
-		 * @param endDate The end date (null if narrowing is not needed).
-		 * @return List<ConnectionStateData> The data instance(s) associated with the lookup parameters.
-		 */
-        public List<ConnectionStateData> LoadConnectionStateData(ResourceNameContainer resource, DateTime startDate, DateTime endDate)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <param name="duration"></param>
+        /// <returns></returns>
+        protected override List<ConnectionStateData> HandleLoadConnectionStateData(ResourceNameContainer resource, TimeDuration duration)
         {
             return null;
         }
 
-        /**
-		 * Attempts to retrieve the named data instance from the persistence server.
-		 * Will return null if there's no data matching the given type with the
-		 * given parameters.
-		 * 
-		 * @param resource The resource container with load meta data / additional search criteria.
-		 * @param typeID The type ID of the data to retrieve.
-		 * @param startDate The start date (null if narrowing is not needed).
-		 * @param endDate The end date (null if narrowing is not needed).
-		 * @return List<SensorData> The data instance(s) associated with the lookup parameters.
-		 */
-        public List<SensorData> LoadSensorData(ResourceNameContainer resource, int typeID, DateTime startDate, DateTime endDate)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <param name="duration"></param>
+        /// <returns></returns>
+        protected override List<SensorData> HandleLoadSensorData(ResourceNameContainer resource, TimeDuration duration)
         {
             return null;
         }
 
-        /**
-		 * Attempts to retrieve the named data instance from the persistence server.
-		 * Will return null if there's no data matching the given type with the
-		 * given parameters.
-		 * 
-		 * @param resource The resource container with load meta data / additional search criteria.
-		 * @param startDate The start date (null if narrowing is not needed).
-		 * @param endDate The end date (null if narrowing is not needed).
-		 * @return List<SystemPerformanceData> The data instance(s) associated with the lookup parameters.
-		 */
-        public List<SystemPerformanceData> LoadSystemPerformanceData(ResourceNameContainer resource, DateTime startDate, DateTime endDate)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <param name="duration"></param>
+        /// <returns></returns>
+        protected override List<SystemPerformanceData> HandleLoadSystemPerformanceData(ResourceNameContainer resource, TimeDuration duration)
         {
             return null;
         }
 
-        /**
-		 * Attempts to write the source data instance to the persistence server.
-		 * 
-		 * @param resource The target resource name.
-		 * @param qos The intended target QoS.
-		 * @param data The data instance to store.
-		 * @return boolean True on success; false otherwise.
-		 */
-        public bool StoreData(ResourceNameContainer resource, int qos, ActuatorData data)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <param name="qos"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        protected override bool HandleStoreData(ResourceNameContainer resource, int qos, ActuatorData data)
         {
-            return false;
+            return true;
         }
 
-        /**
-		 * Attempts to write the source data instance to the persistence server.
-		 * 
-		 * @param resource The target resource name.
-		 * @param qos The intended target QoS.
-		 * @param data The data instance to store.
-		 * @return boolean True on success; false otherwise.
-		 */
-        public bool StoreData(ResourceNameContainer resource, int qos, ConnectionStateData data)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <param name="qos"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        protected override bool HandleStoreData(ResourceNameContainer resource, int qos, ConnectionStateData data)
         {
-            return false;
+            return true;
         }
 
-        /**
-		 * Attempts to write the source data instance to the persistence server.
-		 * 
-		 * @param resource The target resource name.
-		 * @param qos The intended target QoS.
-		 * @param data The data instance to store.
-		 * @return boolean True on success; false otherwise.
-		 */
-        public bool StoreData(ResourceNameContainer resource, int qos, SensorData data)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <param name="qos"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        protected override bool HandleStoreData(ResourceNameContainer resource, int qos, SensorData data)
         {
-            return false;
+            return true;
         }
 
-        /**
-		 * Attempts to write the source data instance to the persistence server.
-		 * 
-		 * @param resource The target resource name.
-		 * @param qos The intended target QoS.
-		 * @param data The data instance to store.
-		 * @return boolean True on success; false otherwise.
-		 */
-        public bool StoreData(ResourceNameContainer resource, int qos, SystemPerformanceData data)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <param name="qos"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        protected override bool HandleStoreData(ResourceNameContainer resource, int qos, SystemPerformanceData data)
         {
-            return false;
+            return true;
         }
-
-
-        // protected
-
 
 
         // private
 
-        private string CreateAbsFileName(IotDataContext data)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <returns></returns>
+        private string CreateAbsFileName(ResourceNameContainer resource)
         {
 
             return null;
         }
 
-        private ConnectionStateData GetConnectionStateCopy()
-        {
-            ConnectionStateData updatedConnStateData =
-                new ConnectionStateData(
-                    this.connStateData.GetName(),
-                    this.connStateData.GetDeviceID(),
-                    this.connStateData.GetHostName(),
-                    this.connStateData.GetHostPort());
-
-            updatedConnStateData.UpdateData(this.connStateData);
-
-            return updatedConnStateData;
-        }
-
+        /// <summary>
+        /// 
+        /// </summary>
         private void InitStoragePath()
         {
             // make sure the path exists

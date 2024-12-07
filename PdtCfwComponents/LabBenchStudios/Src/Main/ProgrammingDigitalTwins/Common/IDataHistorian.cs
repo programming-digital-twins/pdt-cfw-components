@@ -28,18 +28,45 @@ namespace LabBenchStudios.Pdt.Common
 {
     public interface IDataHistorian : IDataLoader
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public long GetTotalMemory();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public long GetMaxCacheSize();
 
-        public string FillSensorDataCache(string bucketName);
-
-        public string FillSensorDataCache(string bucketName, DateTime startDate, DateTime endDate);
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheName"></param>
+        /// <returns></returns>
         public bool IsCacheReplaying(string cacheName);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="listener"></param>
+        public void SetEventListener(IDataContextEventListener listener);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheName"></param>
+        /// <param name="speed"></param>
+        /// <param name="listener"></param>
+        /// <returns></returns>
         public string StartReplayCache(string cacheName, float speed, IDataContextEventListener listener);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheName"></param>
+        /// <returns></returns>
         public string StopReplayCache(string cacheName);
 
     }

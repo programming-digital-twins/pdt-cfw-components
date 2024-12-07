@@ -26,10 +26,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using LabBenchStudios.Pdt.Common;
 using LabBenchStudios.Pdt.Data;
 using LabBenchStudios.Pdt.Model;
 
-namespace LabBenchStudios.Pdt.Common
+namespace LabBenchStudios.Pdt.System
 {
     /**
      * This class handles the registration of various event listeners and
@@ -47,7 +48,7 @@ namespace LabBenchStudios.Pdt.Common
         private static string _GUID = null;
         private static bool _IS_TERMINATED = false;
 
-        private static System.Object _LOCK_OBJ = new System.Object();
+        private static Object _LOCK_OBJ = new Object();
 
         private static EventProcessor _INSTANCE = CreateInstance();
 
@@ -66,9 +67,9 @@ namespace LabBenchStudios.Pdt.Common
 
                 if (_INSTANCE == null)
                 {
-                    _GUID = System.Guid.NewGuid().ToString();
+                    _GUID = Guid.NewGuid().ToString();
 
-                    Console.WriteLine("EventProcess instance created.");
+                    Console.WriteLine("EventProcessor instance created.");
 
                     return new EventProcessor();
                 }
@@ -118,9 +119,6 @@ namespace LabBenchStudios.Pdt.Common
 
             this.digitalTwinModelManager = this.systemModelManager.GetDigitalTwinModelManager();
             this.configTypeModelManager = this.systemModelManager.GetConfigTypeModelManager();
-
-            //this.digitalTwinModelManager = new DigitalTwinModelManager();
-            //this.digitalTwinModelManager.SetSystemStatusEventListener(this);
 
             this.dataContextEventListenerList = new List<IDataContextEventListener>();
             this.systemStatusEventListenerList = new List<ISystemStatusEventListener>();
@@ -253,7 +251,6 @@ namespace LabBenchStudios.Pdt.Common
         public DigitalTwinModelManager GetDigitalTwinModelManager()
         {
             return this.systemModelManager.GetDigitalTwinModelManager();
-            //return this.digitalTwinModelManager;
         }
 
         /// <summary>
@@ -656,7 +653,6 @@ namespace LabBenchStudios.Pdt.Common
 
             // notify DT model manager of the data update
             this.systemModelManager.HandleIncomingTelemetry(data);
-            //this.digitalTwinModelManager.HandleIncomingTelemetry(data);
         }
 
         /// <summary>
