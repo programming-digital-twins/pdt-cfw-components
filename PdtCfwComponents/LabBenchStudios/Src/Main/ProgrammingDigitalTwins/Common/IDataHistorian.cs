@@ -26,7 +26,7 @@ using System;
 
 namespace LabBenchStudios.Pdt.Common
 {
-    public interface IDataHistorian
+    public interface IDataHistorian : IDataLoader
     {
         public long GetTotalMemory();
 
@@ -37,8 +37,6 @@ namespace LabBenchStudios.Pdt.Common
         public string FillSensorDataCache(string bucketName, DateTime startDate, DateTime endDate);
 
         public bool IsCacheReplaying(string cacheName);
-
-        public void SetDataLoader(IDataLoader dataLoader);
 
         public string StartReplayCache(string cacheName, float speed, IDataContextEventListener listener);
 

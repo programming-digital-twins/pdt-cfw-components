@@ -36,6 +36,8 @@ namespace LabBenchStudios.Pdt.Common
         public static readonly string UUID_NAME = "UUID";
         public static readonly string DEFAULT_HOST = "localhost";
 
+        public const string DEFAULT_FILE_STORAGE_PATH = "/tmp";
+
         public const string RELATIVE_MODEL_PATH_PREFIX = "../../../../Models/";
 
         public const string DEFAULT_CONFIG_TYPE_FILE_PATH = RELATIVE_MODEL_PATH_PREFIX + "Types/";

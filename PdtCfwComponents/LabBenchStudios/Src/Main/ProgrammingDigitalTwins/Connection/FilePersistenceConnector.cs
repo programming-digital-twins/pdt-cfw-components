@@ -66,7 +66,6 @@ namespace LabBenchStudios.Pdt.Connection
     {
         // static consts
 
-        public const string DEFAULT_FILE_STORAGE_PATH = "/tmp";
 
         // enum declaration
 
@@ -108,7 +107,7 @@ namespace LabBenchStudios.Pdt.Connection
         public FilePersistenceConnector(string storagePath, string productName, ISystemStatusEventListener eventListener)
         {
             if (string.IsNullOrEmpty(storagePath)) {
-                storagePath = DEFAULT_FILE_STORAGE_PATH;
+                storagePath = ConfigConst.DEFAULT_FILE_STORAGE_PATH;
             }
 
             this.primaryStoragePath = storagePath;
