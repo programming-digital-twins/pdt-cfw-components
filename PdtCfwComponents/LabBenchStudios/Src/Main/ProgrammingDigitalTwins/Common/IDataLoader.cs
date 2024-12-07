@@ -38,8 +38,8 @@ namespace LabBenchStudios.Pdt.Common
 		 * given parameters.
 		 * 
 		 * @param resource The resource container with load meta data / additional search criteria.
-		 * @param startDate The start date.
-		 * @param endDate The end date.
+		 * @param startDate The start timeStamp.
+		 * @param endDate The end timeStamp.
 		 * @return List<ActuatorData> The data instance(s) associated with the lookup parameters.
 		 */
         public List<ActuatorData> LoadActuatorData(ResourceNameContainer resource, DateTime startDate, DateTime endDate);
@@ -50,8 +50,8 @@ namespace LabBenchStudios.Pdt.Common
 		 * given parameters.
 		 * 
 		 * @param resource The resource container with load meta data / additional search criteria.
-		 * @param startDate The start date.
-		 * @param endDate The end date.
+		 * @param startDate The start timeStamp.
+		 * @param endDate The end timeStamp.
 		 * @return List<ConnectionStateData> The data instance(s) associated with the lookup parameters.
 		 */
         public List<ConnectionStateData> LoadConnectionStateData(ResourceNameContainer resource, DateTime startDate, DateTime endDate);
@@ -62,8 +62,8 @@ namespace LabBenchStudios.Pdt.Common
 		 * given parameters.
 		 * 
 		 * @param resource The resource container with load meta data / additional search criteria.
-		 * @param startDate The start date.
-		 * @param endDate The end date.
+		 * @param startDate The start timeStamp.
+		 * @param endDate The end timeStamp.
 		 * @return List<SensorData> The data instance(s) associated with the lookup parameters.
 		 */
         public List<SensorData> LoadSensorData(ResourceNameContainer resource, DateTime startDate, DateTime endDate);
@@ -74,8 +74,8 @@ namespace LabBenchStudios.Pdt.Common
 		 * given parameters.
 		 * 
 		 * @param resource The resource container with load meta data / additional search criteria.
-		 * @param startDate The start date.
-		 * @param endDate The end date.
+		 * @param startDate The start timeStamp.
+		 * @param endDate The end timeStamp.
 		 * @return List<SystemPerformanceData> The data instance(s) associated with the lookup parameters.
 		 */
         public List<SystemPerformanceData> LoadSystemPerformanceData(ResourceNameContainer resource, DateTime startDate, DateTime endDate);

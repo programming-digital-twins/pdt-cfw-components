@@ -149,8 +149,8 @@ namespace LabBenchStudios.Pdt.Connection
 		 * given parameters.
 		 * 
 		 * @param resource The resource container with load meta data / additional search criteria.
-		 * @param startDate The start date. This will be validated by the TimeDuration class.
-		 * @param endDate The end date. This will be validated by the TimeDuration class.
+		 * @param startDate The start timeStamp. This will be validated by the TimeDuration class.
+		 * @param endDate The end timeStamp. This will be validated by the TimeDuration class.
 		 * the current time is used.
 		 * @return List<ActuatorData> The data instance(s) associated with the lookup parameters.
 		 */
@@ -169,8 +169,8 @@ namespace LabBenchStudios.Pdt.Connection
 		 * given parameters.
 		 * 
 		 * @param resource The resource container with load meta data / additional search criteria.
-		 * @param startDate The start date. This will be validated by the TimeDuration class.
-		 * @param endDate The end date. This will be validated by the TimeDuration class.
+		 * @param startDate The start timeStamp. This will be validated by the TimeDuration class.
+		 * @param endDate The end timeStamp. This will be validated by the TimeDuration class.
 		 * @return List<ConnectionStateData> The data instance(s) associated with the lookup parameters.
 		 */
         public List<ConnectionStateData> LoadConnectionStateData(ResourceNameContainer resource, DateTime startDate, DateTime endDate)
@@ -188,8 +188,8 @@ namespace LabBenchStudios.Pdt.Connection
 		 * given parameters.
 		 * 
 		 * @param resource The resource container with load meta data / additional search criteria.
-		 * @param startDate The start date. This will be validated by the TimeDuration class.
-		 * @param endDate The end date. This will be validated by the TimeDuration class.
+		 * @param startDate The start timeStamp. This will be validated by the TimeDuration class.
+		 * @param endDate The end timeStamp. This will be validated by the TimeDuration class.
 		 * @return List<SensorData> The data instance(s) associated with the lookup parameters.
 		 */
         public List<SensorData> LoadSensorData(ResourceNameContainer resource, DateTime startDate, DateTime endDate)
@@ -207,8 +207,8 @@ namespace LabBenchStudios.Pdt.Connection
 		 * given parameters.
 		 * 
 		 * @param resource The resource container with load meta data / additional search criteria.
-		 * @param startDate The start date. This will be validated by the TimeDuration class.
-		 * @param endDate The end date. This will be validated by the TimeDuration class.
+		 * @param startDate The start timeStamp. This will be validated by the TimeDuration class.
+		 * @param endDate The end timeStamp. This will be validated by the TimeDuration class.
 		 * @return List<SystemPerformanceData> The data instance(s) associated with the lookup parameters.
 		 */
         public List<SystemPerformanceData> LoadSystemPerformanceData(ResourceNameContainer resource, DateTime startDate, DateTime endDate)

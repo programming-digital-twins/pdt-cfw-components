@@ -60,7 +60,6 @@ namespace LabBenchStudios.Pdt.System
     public class SystemDataHistorianManager : IDataHistorian
     {
         private bool initializeBackingFileStore = true;
-        private string backingFilePath = ConfigConst.DEFAULT_FILE_STORAGE_PATH;
 
         private int maxItemsPerType = ConfigConst.DEFAULT_MAX_CACHED_ITEMS;
         private long maxCacheSize = ConfigConst.DEFAULT_MAX_CACHE_SIZE_IN_MB;
@@ -109,13 +108,13 @@ namespace LabBenchStudios.Pdt.System
                 this.maxCacheSize = maxCacheSize;
             }
 
-            actuatorDataCache = new Dictionary<string, List<ActuatorData>>(this.maxItemsPerType);
-            sensorDataCache = new Dictionary<string, List<SensorData>>(this.maxItemsPerType);
-            sysPerfDataCache = new Dictionary<string, List<SystemPerformanceData>>(this.maxItemsPerType);
+            this.actuatorDataCache = new Dictionary<string, List<ActuatorData>>(this.maxItemsPerType);
+            this.sensorDataCache = new Dictionary<string, List<SensorData>>(this.maxItemsPerType);
+            this.sysPerfDataCache = new Dictionary<string, List<SystemPerformanceData>>(this.maxItemsPerType);
 
-            totalHeapMemory = GC.GetTotalMemory(false);
+            this.totalHeapMemory = GC.GetTotalMemory(false);
 
-            if (initializeBackingFileStore)
+            if (this.initializeBackingFileStore)
             {
                 InitFileStorage();
             }
@@ -129,7 +128,7 @@ namespace LabBenchStudios.Pdt.System
         /// <returns></returns>
         public long GetTotalMemory()
         {
-            return totalHeapMemory;
+            return this.totalHeapMemory;
         }
 
         /// <summary>
@@ -167,22 +166,22 @@ namespace LabBenchStudios.Pdt.System
         {
             string cacheName = ConfigConst.SENSOR_DATA_PERSISTENCE_NAME;
 
-            if (sensorDataCache.ContainsKey(cacheName))
+            if (this.sensorDataCache.ContainsKey(cacheName))
             {
-                sensorDataCache.Remove(cacheName);
+                this.sensorDataCache.Remove(cacheName);
             }
 
-            if (persistenceConnector != null)
+            if (this.persistenceConnector != null)
             {
                 ResourceNameContainer resource = new ResourceNameContainer();
                 resource.PersistenceName = bucketName;
 
                 List<SensorData> sensorDataList =
-                    persistenceConnector.LoadSensorData(resource, startDate, endDate);
+                    this.persistenceConnector.LoadSensorData(resource, startDate, endDate);
 
                 if (sensorDataList != null && sensorDataList.Count > 0)
                 {
-                    sensorDataCache.Add(cacheName, sensorDataList);
+                    this.sensorDataCache.Add(cacheName, sensorDataList);
                 }
             }
 
@@ -207,16 +206,16 @@ namespace LabBenchStudios.Pdt.System
 		 * given parameters.
 		 * 
 		 * @param resource The resource container with load meta data / additional search criteria.
-		 * @param startDate The start date (null if narrowing is not needed).
-		 * @param endDate The end date (null if narrowing is not needed).
+		 * @param startDate The start timeStamp (null if narrowing is not needed).
+		 * @param endDate The end timeStamp (null if narrowing is not needed).
 		 * @return List<ActuatorData> The data instance(s) associated with the lookup parameters.
 		 */
         public List<ActuatorData> LoadActuatorData(ResourceNameContainer resource, DateTime startDate, DateTime endDate)
         {
-            if (persistenceConnector != null)
+            if (this.persistenceConnector != null)
             {
                 Console.WriteLine($"Loading actuator data. Start: {startDate}. End: {endDate}.");
-                return persistenceConnector.LoadActuatorData(resource, startDate, endDate);
+                return this.persistenceConnector.LoadActuatorData(resource, startDate, endDate);
             } else
             {
                 Console.WriteLine($"No persistence connector. Can't load actuator data. Start: {startDate}. End: {endDate}.");
@@ -230,16 +229,16 @@ namespace LabBenchStudios.Pdt.System
 		 * given parameters.
 		 * 
 		 * @param resource The resource container with load meta data / additional search criteria.
-		 * @param startDate The start date (null if narrowing is not needed).
-		 * @param endDate The end date (null if narrowing is not needed).
+		 * @param startDate The start timeStamp (null if narrowing is not needed).
+		 * @param endDate The end timeStamp (null if narrowing is not needed).
 		 * @return List<ConnectionStateData> The data instance(s) associated with the lookup parameters.
 		 */
         public List<ConnectionStateData> LoadConnectionStateData(ResourceNameContainer resource, DateTime startDate, DateTime endDate)
         {
-            if (persistenceConnector != null)
+            if (this.persistenceConnector != null)
             {
                 Console.WriteLine($"Loading connection state data. Start: {startDate}. End: {endDate}.");
-                return persistenceConnector.LoadConnectionStateData(resource, startDate, endDate);
+                return this.persistenceConnector.LoadConnectionStateData(resource, startDate, endDate);
             } else
             {
                 Console.WriteLine($"No persistence connector. Can't load connection state data. Start: {startDate}. End: {endDate}.");
@@ -253,16 +252,16 @@ namespace LabBenchStudios.Pdt.System
 		 * given parameters.
 		 * 
 		 * @param resource The resource container with load meta data / additional search criteria.
-		 * @param startDate The start date (null if narrowing is not needed).
-		 * @param endDate The end date (null if narrowing is not needed).
+		 * @param startDate The start timeStamp (null if narrowing is not needed).
+		 * @param endDate The end timeStamp (null if narrowing is not needed).
 		 * @return List<SensorData> The data instance(s) associated with the lookup parameters.
 		 */
         public List<SensorData> LoadSensorData(ResourceNameContainer resource, DateTime startDate, DateTime endDate)
         {
-            if (persistenceConnector != null)
+            if (this.persistenceConnector != null)
             {
                 Console.WriteLine($"Loading sensor data. Start: {startDate}. End: {endDate}.");
-                return persistenceConnector.LoadSensorData(resource, startDate, endDate);
+                return this.persistenceConnector.LoadSensorData(resource, startDate, endDate);
             } else
             {
                 Console.WriteLine($"No persistence connector. Can't load sensor data. Start: {startDate}. End: {endDate}.");
@@ -276,16 +275,16 @@ namespace LabBenchStudios.Pdt.System
 		 * given parameters.
 		 * 
 		 * @param resource The resource container with load meta data / additional search criteria.
-		 * @param startDate The start date (null if narrowing is not needed).
-		 * @param endDate The end date (null if narrowing is not needed).
+		 * @param startDate The start timeStamp (null if narrowing is not needed).
+		 * @param endDate The end timeStamp (null if narrowing is not needed).
 		 * @return List<SystemPerformanceData> The data instance(s) associated with the lookup parameters.
 		 */
         public List<SystemPerformanceData> LoadSystemPerformanceData(ResourceNameContainer resource, DateTime startDate, DateTime endDate)
         {
-            if (persistenceConnector != null)
+            if (this.persistenceConnector != null)
             {
                 Console.WriteLine($"Loading system performance data. Start: {startDate}. End: {endDate}.");
-                return persistenceConnector.LoadSystemPerformanceData(resource, startDate, endDate);
+                return this.persistenceConnector.LoadSystemPerformanceData(resource, startDate, endDate);
             } else
             {
                 Console.WriteLine($"No persistence connector. Can't load system performance data. Start: {startDate}. End: {endDate}.");
@@ -301,7 +300,7 @@ namespace LabBenchStudios.Pdt.System
         {
             if (listener != null)
             {
-                eventListener = listener;
+                this.eventListener = listener;
             }
         }
 
@@ -310,9 +309,9 @@ namespace LabBenchStudios.Pdt.System
         /// </summary>
         /// <param name="cacheName"></param>
         /// <param name="speed"></param>
-        /// <param name="listener"></param>
+        /// <param name="restart"></param>
         /// <returns></returns>
-        public string StartReplayCache(string cacheName, float speed, IDataContextEventListener listener)
+        public string StartReplayCache(string cacheName, float speed, bool restart)
         {
             // TODO: implement this
 
@@ -339,7 +338,7 @@ namespace LabBenchStudios.Pdt.System
         /// </summary>
         private void InitFileStorage()
         {
-            persistenceConnector = new FilePersistenceConnector();
+            this.persistenceConnector = new FilePersistenceConnector();
         }
     }
 }

@@ -1,0 +1,177 @@
+/**
+ * MIT License
+ * 
+ * Copyright (c) 2024 Andrew D. King
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+using Newtonsoft.Json;
+using System;
+
+///
+///
+///
+///
+namespace LabBenchStudios.Pdt.Data
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    [JsonObject(MemberSerialization.OptIn)]
+    public class DataCacheEntryContainer
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        private DateTime timeStamp = DateTime.UtcNow;
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        private ActuatorData actuatorData = null;
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        private ConnectionStateData connStateData = null;
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        private MessageData messageData = null;
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        private SensorData sensorData = null;
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        private SystemPerformanceData sysPerfData = null;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public DataCacheEntryContainer() : base()
+        {
+        }
+
+
+        // public methods
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public DateTime GetTimeStamp()
+        {
+            return timeStamp;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public ActuatorData GetActuatorData()
+        {
+            return actuatorData;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public ConnectionStateData GetConnectionStateData()
+        {
+            return connStateData;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public MessageData GetMessageData()
+        {
+            return messageData;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public SensorData GetSensorData()
+        {
+            return sensorData;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public SystemPerformanceData GetSystemPerformanceData()
+        {
+            return sysPerfData;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="timeStamp"></param>
+        public void SetTimeStamp(DateTime timeStamp)
+        {
+            this.timeStamp = timeStamp;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        public void SetActuatorData(ActuatorData data)
+        {
+            this.actuatorData = data;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        public void SetConnectionStateData(ConnectionStateData data)
+        {
+            this.connStateData = data;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        public void SetMessageData(MessageData data)
+        {
+            this.messageData = data;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        public void SetSensorData(SensorData data)
+        {
+            this.sensorData = data;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        public void SetSystemPerformanceData(SystemPerformanceData data)
+        {
+            this.sysPerfData = data;
+        }
+
+    }
+}
