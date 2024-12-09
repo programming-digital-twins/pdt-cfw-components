@@ -22,9 +22,8 @@
  * SOFTWARE.
  */
 
-
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 
 using LabBenchStudios.Pdt.Data;
 
@@ -32,52 +31,64 @@ namespace LabBenchStudios.Pdt.Common
 {
     public interface IDataLoader
     {
-        /**
-		 * Attempts to retrieve the named data instance from the persistence server.
-		 * Will return null if there's no data matching the given type with the
-		 * given parameters.
-		 * 
-		 * @param resource The resource container with load meta data / additional search criteria.
-		 * @param startDate The start timeStamp.
-		 * @param endDate The end timeStamp.
-		 * @return List<ActuatorData> The data instance(s) associated with the lookup parameters.
-		 */
+        /// <summary>
+		/// Attempts to retrieve the named data instance from the persistence server.
+        /// Will return null if there's no data matching the given type with the
+		/// given parameters.
+        /// 
+        /// </summary>
+		/// <param name="resource"> The resource container with load meta data / additional search criteria.</param>
+		/// <param name="startDate"> The start timeStamp.</param>
+		/// <param name="endDate"> The end timeStamp.</param>
+		/// <returns type="List<DataCacheEntryContainer>">The data instance(s) associated with the lookup parameters.</returns>
+		public List<DataCacheEntryContainer> LoadDataCache(string cacheName);
+
+        /// <summary>
+		/// Attempts to retrieve the named data instance from the persistence server.
+        /// Will return null if there's no data matching the given type with the
+		/// given parameters.
+        /// 
+        /// </summary>
+		/// <param name="resource"> The resource container with load meta data / additional search criteria.</param>
+		/// <param name="startDate"> The start timeStamp.</param>
+		/// <param name="endDate"> The end timeStamp.</param>
+		/// <returns type="List<ActuatorData>">The data instance(s) associated with the lookup parameters.</returns>
         public List<ActuatorData> LoadActuatorData(ResourceNameContainer resource, DateTime startDate, DateTime endDate);
 
-        /**
-		 * Attempts to retrieve the named data instance from the persistence server.
-		 * Will return null if there's no data matching the given type with the
-		 * given parameters.
-		 * 
-		 * @param resource The resource container with load meta data / additional search criteria.
-		 * @param startDate The start timeStamp.
-		 * @param endDate The end timeStamp.
-		 * @return List<ConnectionStateData> The data instance(s) associated with the lookup parameters.
-		 */
+        /// <summary>
+		/// Attempts to retrieve the named data instance from the persistence server.
+        /// Will return null if there's no data matching the given type with the
+		/// given parameters.
+        /// 
+        /// </summary>
+		/// <param name="resource"> The resource container with load meta data / additional search criteria.</param>
+		/// <param name="startDate"> The start timeStamp.</param>
+		/// <param name="endDate"> The end timeStamp.</param>
+		/// <returns type="List<ConnectionStateData>">The data instance(s) associated with the lookup parameters.</returns>
         public List<ConnectionStateData> LoadConnectionStateData(ResourceNameContainer resource, DateTime startDate, DateTime endDate);
 
-        /**
-		 * Attempts to retrieve the named data instance from the persistence server.
-		 * Will return null if there's no data matching the given type with the
-		 * given parameters.
-		 * 
-		 * @param resource The resource container with load meta data / additional search criteria.
-		 * @param startDate The start timeStamp.
-		 * @param endDate The end timeStamp.
-		 * @return List<SensorData> The data instance(s) associated with the lookup parameters.
-		 */
+        /// <summary>
+		/// Attempts to retrieve the named data instance from the persistence server.
+        /// Will return null if there's no data matching the given type with the
+		/// given parameters.
+        /// 
+        /// </summary>
+		/// <param name="resource"> The resource container with load meta data / additional search criteria.</param>
+		/// <param name="startDate"> The start timeStamp.</param>
+		/// <param name="endDate"> The end timeStamp.</param>
+		/// <returns type="List<SensorData>">The data instance(s) associated with the lookup parameters.</returns>
         public List<SensorData> LoadSensorData(ResourceNameContainer resource, DateTime startDate, DateTime endDate);
 
-        /**
-		 * Attempts to retrieve the named data instance from the persistence server.
-		 * Will return null if there's no data matching the given type with the
-		 * given parameters.
-		 * 
-		 * @param resource The resource container with load meta data / additional search criteria.
-		 * @param startDate The start timeStamp.
-		 * @param endDate The end timeStamp.
-		 * @return List<SystemPerformanceData> The data instance(s) associated with the lookup parameters.
-		 */
+        /// <summary>
+		/// Attempts to retrieve the named data instance from the persistence server.
+        /// Will return null if there's no data matching the given type with the
+		/// given parameters.
+        /// 
+        /// </summary>
+		/// <param name="resource"> The resource container with load meta data / additional search criteria.</param>
+		/// <param name="startDate"> The start timeStamp.</param>
+		/// <param name="endDate"> The end timeStamp.</param>
+		/// <returns type="List<SystemPerformanceData>">The data instance(s) associated with the lookup parameters.</returns>
         public List<SystemPerformanceData> LoadSystemPerformanceData(ResourceNameContainer resource, DateTime startDate, DateTime endDate);
 
     }

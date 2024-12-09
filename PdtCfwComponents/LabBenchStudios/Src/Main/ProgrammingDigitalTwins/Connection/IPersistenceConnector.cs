@@ -34,7 +34,7 @@ namespace LabBenchStudios.Pdt.Connection
 	 * Interface that defines the contract to a data store.
 	 * 
 	 */
-    public interface IPersistenceConnector : IDataLoader
+    public interface IPersistenceConnector : IDataLoader, IDataStorer
     {
 		/**
 		 * Connects to the persistence server.
@@ -49,46 +49,6 @@ namespace LabBenchStudios.Pdt.Connection
 		 * @return boolean True on success; false otherwise.
 		 */
 		public Boolean DisconnectClient();
-
-        /**
-		 * Attempts to write the source data instance to the persistence server.
-		 * 
-		 * @param resource The target resource name.
-		 * @param qos The intended target QoS.
-		 * @param data The data instance to store.
-		 * @return boolean True on success; false otherwise.
-		 */
-        public bool StoreData(ResourceNameContainer resource, int qos, ActuatorData data);
-
-        /**
-		 * Attempts to write the source data instance to the persistence server.
-		 * 
-		 * @param resource The target resource name.
-		 * @param qos The intended target QoS.
-		 * @param data The data instance to store.
-		 * @return boolean True on success; false otherwise.
-		 */
-        public bool StoreData(ResourceNameContainer resource, int qos, ConnectionStateData data);
-
-        /**
-		 * Attempts to write the source data instance to the persistence server.
-		 * 
-		 * @param resource The target resource name.
-		 * @param qos The intended target QoS.
-		 * @param data The data instance to store.
-		 * @return boolean True on success; false otherwise.
-		 */
-        public bool StoreData(ResourceNameContainer resource, int qos, SensorData data);
-
-        /**
-		 * Attempts to write the source data instance to the persistence server.
-		 * 
-		 * @param resource The target resource name.
-		 * @param qos The intended target QoS.
-		 * @param data The data instance to store.
-		 * @return boolean True on success; false otherwise.
-		 */
-        public bool StoreData(ResourceNameContainer resource, int qos, SystemPerformanceData data);
 
 	}
 }

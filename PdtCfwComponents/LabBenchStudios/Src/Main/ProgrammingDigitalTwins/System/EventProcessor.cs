@@ -100,6 +100,7 @@ namespace LabBenchStudios.Pdt.System
         private SystemModelManager systemModelManager = null;
         private DigitalTwinModelManager digitalTwinModelManager = null;
         private ConfigTypeModelManager configTypeModelManager = null;
+        private SystemDataHistorianManager systemDataHistorianManager = null;
 
         private Dictionary<string, ConnectionStateData> connectedStateTable = null;
 
@@ -119,6 +120,9 @@ namespace LabBenchStudios.Pdt.System
 
             this.digitalTwinModelManager = this.systemModelManager.GetDigitalTwinModelManager();
             this.configTypeModelManager = this.systemModelManager.GetConfigTypeModelManager();
+
+            // TODO: need a way to set user-specific file path for the historian
+            this.systemDataHistorianManager = new SystemDataHistorianManager(this);
 
             this.dataContextEventListenerList = new List<IDataContextEventListener>();
             this.systemStatusEventListenerList = new List<ISystemStatusEventListener>();

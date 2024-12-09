@@ -67,16 +67,9 @@ namespace LabBenchStudios.Pdt.Connection
 
         // private member vars
 
-        private int maxUniqueDevicesLoadCount = 10;
-        private int maxHoursPerDeviceLoadCount = 24;
-
-        private string primaryStoragePath = null;
         private string productName = ConfigConst.PRODUCT_NAME;
 
-        private bool isEncoded = false;
-        private bool isPathInitialized = false;
         private bool isConnected = false;
-        private bool areIncomingMessagesPaused = false;
 
         private IDataContextEventListener eventListener = null;
 
@@ -143,6 +136,26 @@ namespace LabBenchStudios.Pdt.Connection
             return this.isConnected;
         }
 
+        /// <summary>
+		/// Attempts to retrieve the named data instance from the persistence server.
+        /// Will return null if there's no data matching the given type with the
+		/// given parameters.
+        /// 
+        /// </summary>
+		/// <param name="resource"> The resource container with load meta data / additional search criteria.</param>
+		/// <param name="startDate"> The start timeStamp.</param>
+		/// <param name="endDate"> The end timeStamp.</param>
+		/// <returns type="List<DataCacheEntryContainer>">The data instance(s) associated with the lookup parameters.</returns>
+		public List<DataCacheEntryContainer> LoadDataCache(string cacheName)
+        {
+            if (! string.IsNullOrWhiteSpace(cacheName))
+            {
+                return this.HandleLoadDataCache(cacheName);
+            }
+
+            return null;
+        }
+
         /**
 		 * Attempts to retrieve the named data instance from the persistence server.
 		 * Will return null if there's no data matching the given type with the
@@ -177,7 +190,7 @@ namespace LabBenchStudios.Pdt.Connection
         {
             TimeDuration duration = new TimeDuration(startDate, endDate);
 
-            Console.WriteLine($"Attempting to load connection state data. Start: {duration.GetStartTime()}. End: {duration.GetEndTime()}.");
+            Console.WriteLine($"Attempting to load connection replayState data. Start: {duration.GetStartTime()}. End: {duration.GetEndTime()}.");
 
             return this.HandleLoadConnectionStateData(resource, duration);
         }
@@ -237,6 +250,28 @@ namespace LabBenchStudios.Pdt.Connection
 
                 this.eventListener?.HandleConnectionStateData(GetConnectionStateCopy());
             }
+        }
+
+        /// <summary>
+		/// Attempts to write the source data instance to the persistence server.
+        /// </summary>
+        /// <param name="cacheName"></param>
+        /// <param name="cache"></param>
+        /// <returns type="int">On success, returns the total bytes stored. If no bytes
+        /// are written and no errors, returns 0. If errored, returns -1.</returns>
+        public int StoreDataCache(string cacheName, List<DataCacheEntryContainer> cache)
+        {
+            if (!string.IsNullOrWhiteSpace(cacheName))
+            {
+                if (cache != null && cache.Count > 0)
+                {
+                    return this.HandleStoreDataCache(cacheName, cache);
+                }
+            }
+
+            Console.WriteLine($"No cache data to write to cache name {cacheName}. Ignoring store request.");
+
+            return 0;
         }
 
         /**
@@ -386,6 +421,13 @@ namespace LabBenchStudios.Pdt.Connection
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="cacheName"></param>
+        /// <returns></returns>
+        protected abstract List<DataCacheEntryContainer> HandleLoadDataCache(string cacheName);
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="resource"></param>
         /// <param name="duration"></param>
         /// <returns></returns>
@@ -414,6 +456,14 @@ namespace LabBenchStudios.Pdt.Connection
         /// <param name="duration"></param>
         /// <returns></returns>
         protected abstract List<SystemPerformanceData> HandleLoadSystemPerformanceData(ResourceNameContainer resource, TimeDuration duration);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheName"></param>
+        /// <param name="cache"></param>
+        /// <returns></returns>
+        protected abstract int HandleStoreDataCache(string cacheName, List<DataCacheEntryContainer> dataCache);
 
         /// <summary>
         /// 

@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using LabBenchStudios.Pdt.Common;
+using LabBenchStudios.Pdt.Connection;
 using LabBenchStudios.Pdt.Data;
 
 namespace LabBenchStudios.Pdt.System
@@ -56,28 +57,26 @@ namespace LabBenchStudios.Pdt.System
     ///   - Max of 10 unique devices (simulators) in cache at any given time
     ///   - Estimated memory requirements for operation of the internal cache: ~168 MB
     /// </summary>
-    public class DataHistorianCache
+    public class DataHistorianCache : IDataHistorianCache
     {
         // static
-
-        public enum HistorianCacheState
-        {
-            Initialized,
-            Started,
-            Stopped,
-            Paused,
-            Uninitialized
-        }
 
 
         // private
 
-        private string cacheName = ConfigConst.NOT_SET;
+        private string cacheName = "DefaultDataHistorianCache";
 
-        private HistorianCacheState state;
-        private int curIndex = 0;
+        private DataHistorianState.DataHistorianReplayState replayState;
+        private DataHistorianState.DataHistorianReplayDirection replayDirection;
+
+        private int curCacheIndex = 0;
+        private int cacheIndexIncrement = 1;
+        private int newCacheEntryCount = 0;
 
         private List<DataCacheEntryContainer> historianCache = null;
+
+        private IDataLoader dataLoader = null;
+        private IDataStorer dataStorer = null;
 
         /// <summary>
         /// 
@@ -93,10 +92,7 @@ namespace LabBenchStudios.Pdt.System
         /// <param name="cacheName"></param>
         public DataHistorianCache(string cacheName) : base()
         {
-            if (!string.IsNullOrWhiteSpace(cacheName))
-            {
-                this.cacheName = cacheName;
-            }
+            this.SetCacheName(cacheName);
 
             this.historianCache = new List<DataCacheEntryContainer>();
         }
@@ -109,21 +105,51 @@ namespace LabBenchStudios.Pdt.System
         /// <param name="cacheEntry"></param>
         public void AddCacheItem(DataCacheEntryContainer cacheEntry)
         {
-            if (cacheEntry != null)
-            {
-                this.historianCache.Add(cacheEntry);
-            }
+            this.AddCacheItem(cacheEntry, false);
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="cacheEntry"></param>
+        /// <param name="ignoreEntryCount"></param>
+        public void AddCacheItem(DataCacheEntryContainer cacheEntry, bool ignoreEntryCount)
+        {
+            if (cacheEntry != null)
+            {
+                this.historianCache.Add(cacheEntry);
+
+                if (!ignoreEntryCount)
+                {
+                    this.newCacheEntryCount++;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheEntries"></param>
         public void AddCacheItems(List<DataCacheEntryContainer> cacheEntries)
+        {
+            this.AddCacheItems(cacheEntries, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheEntries"></param>
+        /// <param name="ignoreEntryCount"></param>
+        public void AddCacheItems(List<DataCacheEntryContainer> cacheEntries, bool ignoreEntryCount)
         {
             if (cacheEntries != null && cacheEntries.Count > 0)
             {
                 this.historianCache.AddRange(cacheEntries);
+
+                if (!ignoreEntryCount)
+                {
+                    this.newCacheEntryCount += cacheEntries.Count;
+                }
             }
         }
 
@@ -133,6 +159,8 @@ namespace LabBenchStudios.Pdt.System
         /// <returns></returns>
         public bool ClearCache()
         {
+            Console.WriteLine($"Clearing all cached entries from cache {this.cacheName}.");
+
             this.historianCache.Clear();
 
             return true;
@@ -160,9 +188,18 @@ namespace LabBenchStudios.Pdt.System
         /// 
         /// </summary>
         /// <returns></returns>
-        public HistorianCacheState GetCacheState()
+        public DataHistorianState.DataHistorianReplayState GetCacheReplayState()
         {
-            return this.state;
+            return this.replayState;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public DataHistorianState.DataHistorianReplayDirection GetCacheReplayDirection()
+        {
+            return this.replayDirection;
         }
 
         /// <summary>
@@ -173,7 +210,7 @@ namespace LabBenchStudios.Pdt.System
         {
             if (this.GetCacheSize() > 0)
             {
-                return this.historianCache[this.curIndex];
+                return this.historianCache[this.curCacheIndex];
             } else
             {
                 return null;
@@ -188,14 +225,17 @@ namespace LabBenchStudios.Pdt.System
         {
             if (this.GetCacheSize() > 0)
             {
-                if (++this.curIndex >= this.historianCache.Count)
+                this.curCacheIndex += this.cacheIndexIncrement;
+
+                if (this.curCacheIndex >= this.historianCache.Count ||
+                    this.curCacheIndex < 0)
                 {
-                    this.curIndex = 0;
+                    this.curCacheIndex = 0;
 
                     return null;
                 }
 
-                return this.historianCache[this.curIndex];
+                return this.historianCache[this.curCacheIndex];
             } else
             {
                 return null;
@@ -210,18 +250,177 @@ namespace LabBenchStudios.Pdt.System
         {
             if (this.GetCacheSize() > 0)
             {
-                if (--this.curIndex < 0)
+                this.curCacheIndex += this.cacheIndexIncrement;
+
+                if (this.curCacheIndex < 0 ||
+                    this.curCacheIndex >= this.historianCache.Count)
                 {
-                    this.curIndex = 0;
+                    this.curCacheIndex = 0;
 
                     return null;
                 }
 
-                return this.historianCache[this.curIndex];
+                return this.historianCache[this.curCacheIndex];
             } else
             {
                 return null;
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public bool HasCachedEntries()
+        {
+            return (this.historianCache.Count > 0);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public bool LoadDataCache()
+        {
+            return this.LoadDataCache(true);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="storeNewEntries"></param>
+        /// <returns></returns>
+        public bool LoadDataCache(bool storeNewEntries)
+        {
+            this.SetCacheState(DataHistorianState.DataHistorianReplayState.Stop);
+            this.SetCacheAccessDirection(this.replayDirection);
+
+            if (storeNewEntries)
+            {
+                this.StoreDataCache();
+            }
+
+            if (this.dataLoader != null)
+            {
+                this.ClearCache();
+
+                this.historianCache = this.dataLoader.LoadDataCache(this.cacheName);
+
+                if (this.historianCache != null)
+                {
+                    if (this.historianCache.Count > 0)
+                    {
+                        Console.WriteLine($"Successfully loaded {this.historianCache.Count} items from cache {this.cacheName}.");
+                    } else
+                    {
+                        Console.WriteLine($"Warning - no cached items for {this.cacheName} loaded from persistence layer.");
+                    }
+                } else
+                {
+                    Console.WriteLine($"Error - failed to load cache {this.cacheName} from persistence layer.");
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public bool StoreDataCache()
+        {
+            this.SetCacheState(DataHistorianState.DataHistorianReplayState.Stop);
+            this.SetCacheAccessDirection(this.replayDirection);
+
+            if (this.dataStorer != null)
+            {
+                int resultCode = this.dataStorer.StoreDataCache(this.cacheName, this.historianCache);
+
+                if (resultCode > 0)
+                {
+                    Console.WriteLine($"Successfully stored {resultCode} items to cache {this.cacheName}.");
+
+                    this.newCacheEntryCount = 0;
+                } else if (resultCode == 0)
+                {
+                    Console.WriteLine($"Warning - no cached items from {this.cacheName} stored to persistence layer.");
+                } else
+                {
+                    Console.WriteLine($"Error - failed to store cache {this.cacheName} to persistence layer.");
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="loader"></param>
+        public void SetDataLoader(IDataLoader loader)
+        {
+            if (loader != null)
+            {
+                Console.WriteLine("Setting data loader...");
+                this.dataLoader = loader;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="storer"></param>
+        public void SetDataStorer(IDataStorer storer)
+        {
+            if (storer != null)
+            {
+                Console.WriteLine("Setting data storer...");
+                this.dataStorer = storer;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        public void SetCacheName(string name)
+        {
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                this.cacheName = name;
+            }
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="direction"></param>
+        public void SetCacheAccessDirection(
+            DataHistorianState.DataHistorianReplayDirection direction)
+        {
+            this.replayDirection = direction;
+
+            switch (this.replayDirection)
+            {
+                case DataHistorianState.DataHistorianReplayDirection.Forward:
+                    this.cacheIndexIncrement = 1;
+                    break;
+
+                case DataHistorianState.DataHistorianReplayDirection.Reverse:
+                    this.cacheIndexIncrement = -1;
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="state"></param>
+        public void SetCacheState(
+            DataHistorianState.DataHistorianReplayState state)
+        {
+            this.replayState = state;
         }
 
     }

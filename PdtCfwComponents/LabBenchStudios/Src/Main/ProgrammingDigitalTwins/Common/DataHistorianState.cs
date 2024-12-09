@@ -26,46 +26,30 @@ using System;
 
 namespace LabBenchStudios.Pdt.Common
 {
-    public interface IDataHistorian
+    /// <summary>
+    /// 
+    /// </summary>
+    public class DataHistorianState
     {
         /// <summary>
         /// 
         /// </summary>
-        /// <returns></returns>
-        public long GetMaxCacheSize();
+        public enum DataHistorianReplayDirection
+        {
+            Forward,
+            Reverse
+        }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <returns></returns>
-        public long GetTotalMemory();
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="cacheName"></param>
-        /// <returns></returns>
-        public bool IsCacheReplaying(string cacheName);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="listener"></param>
-        public void SetEventListener(ISystemStatusEventListener listener);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="cacheName"></param>
-        /// <param name="direction"></param>
-        public void SetReplayDirection(string cacheName, DataHistorianState.DataHistorianReplayDirection direction);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="cacheName"></param>
-        /// <param name="state"></param>
-        public void SetReplayState(string cacheName, DataHistorianState.DataHistorianReplayState state);
+        public enum DataHistorianReplayState
+        {
+            Start,
+            Stop,
+            Pause
+        }
 
     }
+
 }

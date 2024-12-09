@@ -22,8 +22,9 @@
  * SOFTWARE.
  */
 
-using Newtonsoft.Json;
 using System;
+
+using Newtonsoft.Json;
 
 ///
 ///
@@ -71,7 +72,7 @@ namespace LabBenchStudios.Pdt.Data
         /// <returns></returns>
         public DateTime GetTimeStamp()
         {
-            return timeStamp;
+            return this.timeStamp;
         }
 
         /// <summary>
@@ -80,7 +81,7 @@ namespace LabBenchStudios.Pdt.Data
         /// <returns></returns>
         public ActuatorData GetActuatorData()
         {
-            return actuatorData;
+            return this.actuatorData;
         }
 
         /// <summary>
@@ -89,7 +90,7 @@ namespace LabBenchStudios.Pdt.Data
         /// <returns></returns>
         public ConnectionStateData GetConnectionStateData()
         {
-            return connStateData;
+            return this.connStateData;
         }
 
         /// <summary>
@@ -98,7 +99,7 @@ namespace LabBenchStudios.Pdt.Data
         /// <returns></returns>
         public MessageData GetMessageData()
         {
-            return messageData;
+            return this.messageData;
         }
 
         /// <summary>
@@ -107,7 +108,7 @@ namespace LabBenchStudios.Pdt.Data
         /// <returns></returns>
         public SensorData GetSensorData()
         {
-            return sensorData;
+            return this.sensorData;
         }
 
         /// <summary>
@@ -116,7 +117,52 @@ namespace LabBenchStudios.Pdt.Data
         /// <returns></returns>
         public SystemPerformanceData GetSystemPerformanceData()
         {
-            return sysPerfData;
+            return this.sysPerfData;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public bool HasActuatorData()
+        {
+            return this.actuatorData != null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public bool HasConnectionStateData()
+        {
+            return this.connStateData != null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public bool HasMessageData()
+        {
+            return this.messageData != null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public bool HasSensorData()
+        {
+            return this.sensorData != null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public bool HasSystemPerformanceData()
+        {
+            return this.sysPerfData != null;
         }
 
         /// <summary>

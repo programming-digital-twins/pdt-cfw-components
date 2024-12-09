@@ -38,15 +38,21 @@ namespace LabBenchStudios.Pdt.Connection
     /// and from the filesystem.
     /// 
     /// File structures are as follows:
-    /// {primaryStoragePath}/{productName}/dataStore/{deviceID}/{dataType}/{DayAndYear}.json
-    ///   -- or --
-    /// {primaryStoragePath}/{productName}/dataStore/{deviceID}/{dataType}/{DayAndYear}.bin
     /// 
-    /// For example:
-    /// /mnt/pdt/dataStore/edgedevice001/ActuatorData/2022-10-29.json
-    /// /mnt/pdt/dataStore/edgedevice001/SensorData/2022-10-29.json
-    /// /mnt/pdt/dataStore/edgedevice001/SystemPerformanceData/2022-10-29.json
+    /// Example 1 (sensor data):
+    ///   {primaryStoragePath}/{productName}/dataStore/{deviceID}/{dataType}/{DayAndYear}.json
+    ///     -- or --
+    ///   {primaryStoragePath}/{productName}/dataStore/{deviceID}/{dataType}/{DayAndYear}.bin
     /// 
+    ///   Sample:
+    ///     /mnt/pdt/dataStore/edgedevice001/SensorData/2024Dec08.json
+    /// 
+    /// Example 2 (data cache, which can be comprised of actuator data, sensor data, etc.):
+    ///   {primaryStoragePath/{productName}/dataCache/{cacheName}_{DayAndYear}.json
+    ///   
+    ///   Sample:
+    ///     /mnt/pdt/dataCache/SimulatedTrainingExercise01_2024Dec08.json
+    ///     
     /// To avoid an over-abundance of I/O operations on any given file and
     /// the filesystem in general, storage requests will be queued and then
     /// written to the data store at the rate of approx. once per minute.
@@ -66,6 +72,7 @@ namespace LabBenchStudios.Pdt.Connection
     {
         // static consts
 
+        public const string DATE_TIME_FORMAT = "ddMMMyyyy";
 
         // enum declaration
 
@@ -88,6 +95,9 @@ namespace LabBenchStudios.Pdt.Connection
         private string primaryStoragePath = null;
         private string productName = ConfigConst.PRODUCT_NAME;
 
+        private string dataStorePathPrefix = null;
+        private string dataCachePathPrefix = null;
+
         private bool isEncoded = false;
         private bool isPathInitialized = false;
         private bool isConnected = false;
@@ -99,20 +109,44 @@ namespace LabBenchStudios.Pdt.Connection
 
         // constructors
 
+        /// <summary>
+        /// The system user's default temp path will be used.
+        /// </summary>
         public FilePersistenceConnector() : this(null, ConfigConst.PRODUCT_NAME, null)
         {
             // nothing to do
         }
 
+        /// <summary>
+        /// If storagePath is invalid, the system user's default temp path will be used.
+        /// </summary>
+        /// <param name="storagePath"></param>
+        public FilePersistenceConnector(string storagePath) : this(storagePath, ConfigConst.PRODUCT_NAME, null)
+        {
+            // nothing to do
+        }
+
+        /// <summary>
+        /// If storagePath is invalid, the system user's default temp path will be used.
+        /// </summary>
+        /// <param name="storagePath"></param>
+        /// <param name="productName"></param>
+        /// <param name="eventListener"></param>
         public FilePersistenceConnector(string storagePath, string productName, ISystemStatusEventListener eventListener)
         {
-            if (string.IsNullOrEmpty(storagePath)) {
-                storagePath = ConfigConst.DEFAULT_FILE_STORAGE_PATH;
+            // quick init of primary storage path
+            if (string.IsNullOrWhiteSpace(storagePath)) {
+                storagePath = Path.GetTempPath();
             }
 
             this.primaryStoragePath = storagePath;
+
+            this.InitStoragePaths();
+
+            // set the event listener (for system status events)
             this.eventListener = eventListener;
 
+            // create the initial conn state message and send to listener (if non-null)
             this.connStateData = new ConnectionStateData();
             this.connStateData.SetTypeCategoryID(ConfigConst.SYSTEM_TYPE_CATEGORY);
             this.connStateData.SetTypeID(ConfigConst.FILE_SYSTEM_TYPE);
@@ -120,6 +154,7 @@ namespace LabBenchStudios.Pdt.Connection
             this.connStateData.SetMessage($"Default file persistence connector initialized.");
             this.eventListener?.OnMessagingSystemStatusUpdate(GetConnectionStateCopy());
         }
+
 
         // public methods
 
@@ -144,7 +179,7 @@ namespace LabBenchStudios.Pdt.Connection
         {
             if (!this.isPathInitialized)
             {
-                this.InitStoragePath();
+                this.InitStoragePaths();
 
                 if (!this.isPathInitialized)
                 {
@@ -169,11 +204,51 @@ namespace LabBenchStudios.Pdt.Connection
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="cacheName"></param>
+        /// <returns></returns>
+        protected override List<DataCacheEntryContainer> HandleLoadDataCache(string cacheName)
+        {
+            string fileName = this.CreateAbsFileName(cacheName);
+            int bytesRead = 0;
+
+            Console.WriteLine($"Loading data cache {cacheName} from location {fileName}.");
+
+            try
+            {
+                StreamReader reader = new StreamReader(fileName);
+                string jsonData = reader.ReadToEnd();
+
+                bytesRead = jsonData.Length;
+
+                List<DataCacheEntryContainer> dataCache = DataUtil.JsonToDataCacheEntryList(jsonData);
+
+                if (dataCache != null && dataCache.Count > 0)
+                {
+                    Console.WriteLine($"Successfully loaded data cache {cacheName} from location {fileName}. Total bytes: {bytesRead}.");
+                } else
+                {
+                    Console.WriteLine($"No data loaded for data cache {cacheName} from location {fileName}.");
+                }
+
+                return dataCache;
+
+            } catch (Exception e)
+            {
+                Console.WriteLine($"Failed to read data cache {cacheName} from file {fileName}. Error: {e.Message}");
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="resource"></param>
         /// <param name="duration"></param>
         /// <returns></returns>
         protected override List<ActuatorData> HandleLoadActuatorData(ResourceNameContainer resource, TimeDuration duration)
         {
+            Console.WriteLine("HandleLoadActuatorData not yet implemented.");
             return null;
         }
 
@@ -185,6 +260,7 @@ namespace LabBenchStudios.Pdt.Connection
         /// <returns></returns>
         protected override List<ConnectionStateData> HandleLoadConnectionStateData(ResourceNameContainer resource, TimeDuration duration)
         {
+            Console.WriteLine("HandleLoadConnectionStateData not yet implemented.");
             return null;
         }
 
@@ -196,6 +272,7 @@ namespace LabBenchStudios.Pdt.Connection
         /// <returns></returns>
         protected override List<SensorData> HandleLoadSensorData(ResourceNameContainer resource, TimeDuration duration)
         {
+            Console.WriteLine("HandleLoadSensorData not yet implemented.");
             return null;
         }
 
@@ -207,7 +284,46 @@ namespace LabBenchStudios.Pdt.Connection
         /// <returns></returns>
         protected override List<SystemPerformanceData> HandleLoadSystemPerformanceData(ResourceNameContainer resource, TimeDuration duration)
         {
+            Console.WriteLine("HandleLoadSystemPerformanceData not yet implemented.");
             return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheName"></param>
+        /// <param name="cache"></param>
+        /// <returns></returns>
+        protected override int HandleStoreDataCache(string cacheName, List<DataCacheEntryContainer> dataCache)
+        {
+            string fileName = this.CreateAbsFileName(cacheName);
+            string jsonData = DataUtil.DataCacheEntryListToJson(dataCache);
+            int bytesWritten = 0;
+
+            Console.WriteLine($"Storing {jsonData.Length} bytes to data cache {cacheName} at location {fileName}.");
+
+            try
+            {
+                StreamWriter writer = new StreamWriter(fileName);
+                writer.Write(jsonData);
+
+                bytesWritten = jsonData.Length;
+
+                if (bytesWritten > 0)
+                {
+                    Console.WriteLine($"Successfully stored data cache {cacheName} to location {fileName}. Total bytes: {bytesWritten}.");
+                } else
+                {
+                    Console.WriteLine($"No data stored for data cache {cacheName} to location {fileName}.");
+                }
+            } catch (Exception e)
+            {
+                bytesWritten = -1;
+
+                Console.WriteLine($"Failed to write data cache {cacheName} to file {fileName}. Error: {e.Message}");
+            }
+
+            return bytesWritten;
         }
 
         /// <summary>
@@ -219,6 +335,7 @@ namespace LabBenchStudios.Pdt.Connection
         /// <returns></returns>
         protected override bool HandleStoreData(ResourceNameContainer resource, int qos, ActuatorData data)
         {
+            Console.WriteLine("HandleStoreData for ActuatorData not yet implemented.");
             return true;
         }
 
@@ -231,6 +348,7 @@ namespace LabBenchStudios.Pdt.Connection
         /// <returns></returns>
         protected override bool HandleStoreData(ResourceNameContainer resource, int qos, ConnectionStateData data)
         {
+            Console.WriteLine("HandleStoreData for ConnectionStateData not yet implemented.");
             return true;
         }
 
@@ -243,6 +361,7 @@ namespace LabBenchStudios.Pdt.Connection
         /// <returns></returns>
         protected override bool HandleStoreData(ResourceNameContainer resource, int qos, SensorData data)
         {
+            Console.WriteLine("HandleStoreData for SensorData not yet implemented.");
             return true;
         }
 
@@ -255,6 +374,7 @@ namespace LabBenchStudios.Pdt.Connection
         /// <returns></returns>
         protected override bool HandleStoreData(ResourceNameContainer resource, int qos, SystemPerformanceData data)
         {
+            Console.WriteLine("HandleStoreData for SystemPerformanceData not yet implemented.");
             return true;
         }
 
@@ -268,34 +388,131 @@ namespace LabBenchStudios.Pdt.Connection
         /// <returns></returns>
         private string CreateAbsFileName(ResourceNameContainer resource)
         {
+            string deviceID = resource.DeviceName;
+            string dataType = ConfigConst.NOT_SET;
 
-            return null;
+            if (resource.IsActuationResource)
+            {
+                dataType = nameof(ActuatorData);
+            } else if (resource.IsConnStateResource)
+            {
+                dataType = nameof(ConnectionStateData);
+            } else if (resource.IsSensingResource)
+            {
+                dataType = nameof(SensorData);
+            } else if (resource.IsSystemResource)
+            {
+                dataType = nameof(SystemPerformanceData);
+            }
+
+            string fileName = DateTime.UtcNow.ToString(DATE_TIME_FORMAT);
+            string absFileName = Path.Combine(this.dataStorePathPrefix, deviceID, dataType, fileName);
+
+            return absFileName;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        private void InitStoragePath()
+        /// <param name="cacheName"></param>
+        /// <returns></returns>
+        private string CreateAbsFileName(string cacheName)
+        {
+            return this.CreateAbsFileName(cacheName, true);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheName"></param>
+        /// <param name="useDate"></param>
+        /// <returns></returns>
+        private string CreateAbsFileName(string cacheName, bool useDate)
+        {
+            string fileName = cacheName;
+
+            if (useDate)
+            {
+                fileName = fileName + "_" + DateTime.UtcNow.ToString(DATE_TIME_FORMAT);
+            }
+
+            string absFileName = Path.Combine(this.dataCachePathPrefix, cacheName, fileName);
+
+            return absFileName;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void InitStoragePaths()
+        {
+            // init primary path
+            Console.WriteLine($"File persistence - using primary storage path: {this.primaryStoragePath}");
+
+            this.isPathInitialized = this.InitStoragePath(this.primaryStoragePath);
+
+            if (this.isPathInitialized)
+            {
+                Console.WriteLine($"Initialized primary data path {this.primaryStoragePath}");
+            } else
+            {
+                Console.WriteLine($"Failed to initialize primary data path {this.primaryStoragePath}");
+            }
+
+            // init data cache and data store paths (sub-dirs of primary path)
+            this.dataCachePathPrefix = Path.Combine(this.primaryStoragePath, ConfigConst.DATA_CACHE_NAME);
+            this.dataStorePathPrefix = Path.Combine(this.primaryStoragePath, ConfigConst.DATA_STORE_NAME);
+
+            // init data historian cache path
+            if (this.InitStoragePath(this.dataCachePathPrefix))
+            {
+                Console.WriteLine($"Initialized data historian cache path {this.dataCachePathPrefix}");
+            } else
+            {
+                Console.WriteLine($"Failed to initialize data historian cache path {this.dataCachePathPrefix}");
+            }
+
+            // init data store path
+            if (this.InitStoragePath(this.dataStorePathPrefix))
+            {
+                Console.WriteLine($"Initialized data store path {this.dataStorePathPrefix}");
+            } else
+            {
+                Console.WriteLine($"Failed to initialize data store path {this.dataStorePathPrefix}");
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        private bool InitStoragePath(string path)
         {
             // make sure the path exists
-            if (!Directory.Exists(this.primaryStoragePath)) {
+            if (!Directory.Exists(path))
+            {
                 // path doesn't exist - try to create it
-                try {
-                    DirectoryInfo dirInfo = Directory.CreateDirectory(this.primaryStoragePath);
-                    this.isPathInitialized = true;
+                try
+                {
+                    DirectoryInfo dirInfo = Directory.CreateDirectory(path);
 
-                    Console.WriteLine($"File persistence - primary path created: {this.primaryStoragePath}. Info: {dirInfo}");
-                } catch (Exception e) {
-                    this.isPathInitialized = false;
-                    Console.WriteLine($"Failed to create storage path {this.primaryStoragePath}. Error: {e.Message}");
+                    Console.WriteLine($"File persistence - path created: {path}. Info: {dirInfo}");
+                } catch (Exception e)
+                {
+                    Console.WriteLine($"Failed to create storage path {path}. Error: {e.Message}");
+
+                    return false;
                 }
-            } else {
+            } else
+            {
                 // path already exists - try to access it
-                string pathInfo = Directory.GetDirectoryRoot(this.primaryStoragePath);
-                this.isPathInitialized = true;
+                string pathInfo = Directory.GetDirectoryRoot(path);
 
-                Console.WriteLine($"File persistence - primary path exists: {this.primaryStoragePath}. Info: {pathInfo}");
+                Console.WriteLine($"File persistence - path exists: {path}. Info: {pathInfo}");
             }
+
+            return true;
         }
 
     }

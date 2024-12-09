@@ -66,11 +66,9 @@ namespace LabBenchStudios.Pdt.System
 
         private long totalHeapMemory = 0L;
 
-        private IDictionary<string, List<ActuatorData>> actuatorDataCache = null;
-        private IDictionary<string, List<SensorData>> sensorDataCache = null;
-        private IDictionary<string, List<SystemPerformanceData>> sysPerfDataCache = null;
+        private Dictionary<string, IDataHistorianCache> dataCacheTable = null;
 
-        private IDataContextEventListener eventListener = null;
+        private ISystemStatusEventListener eventListener = null;
 
         private IPersistenceConnector persistenceConnector = null;
 
@@ -88,15 +86,40 @@ namespace LabBenchStudios.Pdt.System
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="listener"></param>
+        public SystemDataHistorianManager(ISystemStatusEventListener listener) :
+            this(null, listener,
+                 ConfigConst.DEFAULT_MAX_CACHED_ITEMS,
+                 ConfigConst.DEFAULT_MAX_CACHE_SIZE_IN_MB)
+        {
+            // nothing to do - delegates to other constructor
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="listener"></param>
+        public SystemDataHistorianManager(string filePath, ISystemStatusEventListener listener) :
+            this(filePath, listener,
+                 ConfigConst.DEFAULT_MAX_CACHED_ITEMS,
+                 ConfigConst.DEFAULT_MAX_CACHE_SIZE_IN_MB)
+        {
+            // nothing to do - delegates to other constructor
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="filePath"></param>
         /// <param name="listener"></param>
         /// <param name="maxItemsPerType"></param>
         /// <param name="maxCacheSize"></param>
         public SystemDataHistorianManager(
-            string filePath, IDataContextEventListener listener,
+            string filePath, ISystemStatusEventListener listener,
             int maxItemsPerType, long maxCacheSize) : base()
         {
-            SetEventListener(listener);
+            this.SetEventListener(listener);
 
             if (maxItemsPerType > 0 && maxItemsPerType <= ConfigConst.DEFAULT_MAX_CACHED_ITEMS)
             {
@@ -108,15 +131,13 @@ namespace LabBenchStudios.Pdt.System
                 this.maxCacheSize = maxCacheSize;
             }
 
-            this.actuatorDataCache = new Dictionary<string, List<ActuatorData>>(this.maxItemsPerType);
-            this.sensorDataCache = new Dictionary<string, List<SensorData>>(this.maxItemsPerType);
-            this.sysPerfDataCache = new Dictionary<string, List<SystemPerformanceData>>(this.maxItemsPerType);
+            this.dataCacheTable = new Dictionary<string, IDataHistorianCache>();
 
             this.totalHeapMemory = GC.GetTotalMemory(false);
 
             if (this.initializeBackingFileStore)
             {
-                InitFileStorage();
+                this.InitFileStorage();
             }
         }
 
@@ -143,54 +164,6 @@ namespace LabBenchStudios.Pdt.System
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="bucketName"></param>
-        /// <returns></returns>
-        public string FillSensorDataCache(string bucketName)
-        {
-            DateTime startDate = DateTime.Now;
-            startDate.AddDays(-1);
-
-            DateTime endDate = DateTime.Now;
-
-            return FillSensorDataCache(bucketName, startDate, endDate);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="bucketName"></param>
-        /// <param name="startDate"></param>
-        /// <param name="endDate"></param>
-        /// <returns></returns>
-        public string FillSensorDataCache(string bucketName, DateTime startDate, DateTime endDate)
-        {
-            string cacheName = ConfigConst.SENSOR_DATA_PERSISTENCE_NAME;
-
-            if (this.sensorDataCache.ContainsKey(cacheName))
-            {
-                this.sensorDataCache.Remove(cacheName);
-            }
-
-            if (this.persistenceConnector != null)
-            {
-                ResourceNameContainer resource = new ResourceNameContainer();
-                resource.PersistenceName = bucketName;
-
-                List<SensorData> sensorDataList =
-                    this.persistenceConnector.LoadSensorData(resource, startDate, endDate);
-
-                if (sensorDataList != null && sensorDataList.Count > 0)
-                {
-                    this.sensorDataCache.Add(cacheName, sensorDataList);
-                }
-            }
-
-            return cacheName;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="cacheName"></param>
         /// <returns></returns>
         public bool IsCacheReplaying(string cacheName)
@@ -198,6 +171,51 @@ namespace LabBenchStudios.Pdt.System
             // TODO: implement this
 
             return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheName"></param>
+        /// <param name="loadIfNotCached"></param>
+        /// <returns></returns>
+        public IDataHistorianCache GetDataHistorianCache(string cacheName)
+        {
+            return this.GetDataHistorianCache(cacheName, true);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheName"></param>
+        /// <param name="loadIfNotCached"></param>
+        /// <returns></returns>
+        public IDataHistorianCache GetDataHistorianCache(string cacheName, bool loadIfNotCached)
+        {
+            if (!string.IsNullOrWhiteSpace(cacheName))
+            {
+                if (this.dataCacheTable.ContainsKey(cacheName))
+                {
+                    Console.WriteLine($"Retrieving historian cache from internal table for cache name {cacheName}.");
+
+                    return this.dataCacheTable[cacheName];
+                } else
+                {
+                    if (loadIfNotCached)
+                    {
+                        Console.WriteLine($"Attempting to load historian cache for cache name {cacheName}.");
+
+                        return this.LoadDataHistorianCache(cacheName);
+                    }
+                }
+            } else
+            {
+                Console.WriteLine("No cache name specified to get data historian cache. Ignoring request.");
+            }
+
+            Console.WriteLine($"Data historian cache not loaded for cache {cacheName}.");
+
+            return null;
         }
 
         /**
@@ -237,11 +255,11 @@ namespace LabBenchStudios.Pdt.System
         {
             if (this.persistenceConnector != null)
             {
-                Console.WriteLine($"Loading connection state data. Start: {startDate}. End: {endDate}.");
+                Console.WriteLine($"Loading connection replayState data. Start: {startDate}. End: {endDate}.");
                 return this.persistenceConnector.LoadConnectionStateData(resource, startDate, endDate);
             } else
             {
-                Console.WriteLine($"No persistence connector. Can't load connection state data. Start: {startDate}. End: {endDate}.");
+                Console.WriteLine($"No persistence connector. Can't load connection replayState data. Start: {startDate}. End: {endDate}.");
                 return null;
             }
         }
@@ -296,7 +314,7 @@ namespace LabBenchStudios.Pdt.System
         /// 
         /// </summary>
         /// <param name="listener"></param>
-        public void SetEventListener(IDataContextEventListener listener)
+        public void SetEventListener(ISystemStatusEventListener listener)
         {
             if (listener != null)
             {
@@ -307,11 +325,60 @@ namespace LabBenchStudios.Pdt.System
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="persistenceConnector"></param>
+        public void SetPersistenceConnector(IPersistenceConnector persistenceConnector)
+        {
+            if (persistenceConnector != null)
+            {
+                if (this.persistenceConnector != null)
+                {
+                    this.persistenceConnector.DisconnectClient();
+                }
+
+                this.persistenceConnector = persistenceConnector;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheName"></param>
+        /// <param name="direction"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public void SetReplayDirection(string cacheName, DataHistorianState.DataHistorianReplayDirection direction)
+        {
+            IDataHistorianCache dataCache = this.GetDataHistorianCache(cacheName);
+
+            if (dataCache != null)
+            {
+                dataCache.SetCacheAccessDirection(direction);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheName"></param>
+        /// <param name="state"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public void SetReplayState(string cacheName, DataHistorianState.DataHistorianReplayState state)
+        {
+            IDataHistorianCache dataCache = this.GetDataHistorianCache(cacheName);
+
+            if (dataCache != null)
+            {
+                dataCache.SetCacheState(state);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="cacheName"></param>
         /// <param name="speed"></param>
         /// <param name="restart"></param>
         /// <returns></returns>
-        public string StartReplayCache(string cacheName, float speed, bool restart)
+        public string StartReplayCache(string cacheName, DataHistorianState.DataHistorianReplayDirection direction, float speed, bool restart)
         {
             // TODO: implement this
 
@@ -340,5 +407,37 @@ namespace LabBenchStudios.Pdt.System
         {
             this.persistenceConnector = new FilePersistenceConnector();
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheName"></param>
+        /// <returns></returns>
+        private IDataHistorianCache LoadDataHistorianCache(string cacheName)
+        {
+            if (this.persistenceConnector != null)
+            {
+                List<DataCacheEntryContainer> dataCacheContent = this.persistenceConnector.LoadDataCache(cacheName);
+
+                DataHistorianCache dataCache = new DataHistorianCache(cacheName);
+                dataCache.AddCacheItems(dataCacheContent, true);
+
+                if (dataCache != null)
+                {
+                    Console.WriteLine($"Successfully loaded data cache {cacheName} with {dataCache.GetCacheSize()} items.");
+
+                    this.dataCacheTable.Add(cacheName, dataCache);
+
+                    return dataCache;
+                }
+            } else
+            {
+                Console.WriteLine($"Warning - no persistence connector initialized. Can't load cache {cacheName}.");
+            }
+
+            return null;
+        }
+
     }
+
 }
