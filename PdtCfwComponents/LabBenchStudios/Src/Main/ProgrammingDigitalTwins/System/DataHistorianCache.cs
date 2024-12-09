@@ -73,7 +73,11 @@ namespace LabBenchStudios.Pdt.System
         private int cacheIndexIncrement = 1;
         private int newCacheEntryCount = 0;
 
+        private long delayTimeMillis = 0L;
+
         private List<DataCacheEntryContainer> historianCache = null;
+
+        private DataCacheEntryContainer curCacheEntry = null;
 
         private IDataLoader dataLoader = null;
         private IDataStorer dataStorer = null;
@@ -208,13 +212,16 @@ namespace LabBenchStudios.Pdt.System
         /// <returns></returns>
         public DataCacheEntryContainer GetCurrentEntry()
         {
-            if (this.GetCacheSize() > 0)
-            {
-                return this.historianCache[this.curCacheIndex];
-            } else
-            {
-                return null;
-            }
+            return this.curCacheEntry;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public long GetDelayTimeMillis()
+        {
+            return this.delayTimeMillis;
         }
 
         /// <summary>
@@ -235,32 +242,9 @@ namespace LabBenchStudios.Pdt.System
                     return null;
                 }
 
-                return this.historianCache[this.curCacheIndex];
-            } else
-            {
-                return null;
-            }
-        }
+                this.curCacheEntry = this.historianCache[this.curCacheIndex];
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public DataCacheEntryContainer GetPreviousEntry()
-        {
-            if (this.GetCacheSize() > 0)
-            {
-                this.curCacheIndex += this.cacheIndexIncrement;
-
-                if (this.curCacheIndex < 0 ||
-                    this.curCacheIndex >= this.historianCache.Count)
-                {
-                    this.curCacheIndex = 0;
-
-                    return null;
-                }
-
-                return this.historianCache[this.curCacheIndex];
+                return this.curCacheEntry;
             } else
             {
                 return null;
@@ -322,6 +306,16 @@ namespace LabBenchStudios.Pdt.System
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void ResetCache()
+        {
+            this.SetCacheState(DataHistorianState.DataHistorianReplayState.Stop);
+            this.newCacheEntryCount = 0;
+            this.curCacheIndex = 0;
         }
 
         /// <summary>

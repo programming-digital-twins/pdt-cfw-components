@@ -26,33 +26,79 @@ using System;
 
 namespace LabBenchStudios.Pdt.Common
 {
-    public interface IDataHistorian
+    public interface IDataHistorianPlayer
     {
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="cacheName"></param>
         /// <returns></returns>
-        public IDataHistorianPlayer GetDataHistorianPlayer(string cacheName);
+        public long GetCacheSize();
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public long GetMaxCacheSize();
+        public string GetCacheName();
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public long GetTotalMemory();
+        public float GetPlaybackDelayFactor();
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="cacheName"></param>
         /// <returns></returns>
-        public bool IsCacheReplaying(string cacheName);
+        public DataHistorianState.DataHistorianReplayDirection GetReplayDirection();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public DataHistorianState.DataHistorianReplayState GetReplayState();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public bool HasValidCache();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public bool IsPlaying();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public bool Play();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public bool Pause();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public bool Reset();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public bool Stop();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="delayFactor"></param>
+        public void SetPlaybackDelayFactor(float delayFactor);
 
         /// <summary>
         /// 
@@ -63,9 +109,8 @@ namespace LabBenchStudios.Pdt.Common
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="cacheName"></param>
         /// <param name="direction"></param>
-        public void SetReplayDirection(string cacheName, DataHistorianState.DataHistorianReplayDirection direction);
+        public void SetReplayDirection(DataHistorianState.DataHistorianReplayDirection direction);
 
     }
 }

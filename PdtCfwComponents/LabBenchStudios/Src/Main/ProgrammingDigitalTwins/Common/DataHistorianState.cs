@@ -37,7 +37,8 @@ namespace LabBenchStudios.Pdt.Common
         public enum DataHistorianReplayDirection
         {
             Forward,
-            Reverse
+            Reverse,
+            Uninitialized
         }
 
         /// <summary>
@@ -45,9 +46,10 @@ namespace LabBenchStudios.Pdt.Common
         /// </summary>
         public enum DataHistorianReplayState
         {
-            Start,
+            Play,
+            Pause,
             Stop,
-            Pause
+            Uninitialized
         }
 
     }

@@ -63,13 +63,13 @@ namespace LabBenchStudios.Pdt.Common
         /// 
         /// </summary>
         /// <returns></returns>
-        public DataCacheEntryContainer GetNextEntry();
+        public long GetDelayTimeMillis();
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public DataCacheEntryContainer GetPreviousEntry();
+        public DataCacheEntryContainer GetNextEntry();
 
         /// <summary>
         /// 
@@ -89,6 +89,11 @@ namespace LabBenchStudios.Pdt.Common
         /// <param name="storeNewEntries"></param>
         /// <returns></returns>
         public bool LoadDataCache(bool storeNewEntries);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void ResetCache();
 
         /// <summary>
         /// 

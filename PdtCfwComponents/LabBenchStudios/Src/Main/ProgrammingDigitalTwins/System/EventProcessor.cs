@@ -203,6 +203,24 @@ namespace LabBenchStudios.Pdt.System
         /// 
         /// </summary>
         /// <returns></returns>
+        public DigitalTwinModelManager GetDigitalTwinModelManager()
+        {
+            return this.systemModelManager.GetDigitalTwinModelManager();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public IDataHistorian GetDataHistorianManager()
+        {
+            return this.systemDataHistorianManager;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public bool LoadConfigTypeMappingModels()
         {
             return this.LoadConfigTypeMappingModels(ConfigConst.DEFAULT_CONFIG_TYPE_FILE_PATH);
@@ -246,15 +264,6 @@ namespace LabBenchStudios.Pdt.System
             Console.WriteLine($"Failed to (re)load config type mapping models from path list {modelFilePathSet}");
 
             return false;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public DigitalTwinModelManager GetDigitalTwinModelManager()
-        {
-            return this.systemModelManager.GetDigitalTwinModelManager();
         }
 
         /// <summary>

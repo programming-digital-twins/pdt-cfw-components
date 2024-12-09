@@ -66,7 +66,7 @@ namespace LabBenchStudios.Pdt.System
 
         private long totalHeapMemory = 0L;
 
-        private Dictionary<string, IDataHistorianCache> dataCacheTable = null;
+        private Dictionary<string, IDataHistorianPlayer> dataCachePlayerTable = null;
 
         private ISystemStatusEventListener eventListener = null;
 
@@ -131,7 +131,7 @@ namespace LabBenchStudios.Pdt.System
                 this.maxCacheSize = maxCacheSize;
             }
 
-            this.dataCacheTable = new Dictionary<string, IDataHistorianCache>();
+            this.dataCachePlayerTable = new Dictionary<string, IDataHistorianPlayer>();
 
             this.totalHeapMemory = GC.GetTotalMemory(false);
 
@@ -179,9 +179,9 @@ namespace LabBenchStudios.Pdt.System
         /// <param name="cacheName"></param>
         /// <param name="loadIfNotCached"></param>
         /// <returns></returns>
-        public IDataHistorianCache GetDataHistorianCache(string cacheName)
+        public IDataHistorianPlayer GetDataHistorianPlayer(string cacheName)
         {
-            return this.GetDataHistorianCache(cacheName, true);
+            return this.GetDataHistorianPlayer(cacheName, true);
         }
 
         /// <summary>
@@ -190,22 +190,29 @@ namespace LabBenchStudios.Pdt.System
         /// <param name="cacheName"></param>
         /// <param name="loadIfNotCached"></param>
         /// <returns></returns>
-        public IDataHistorianCache GetDataHistorianCache(string cacheName, bool loadIfNotCached)
+        public IDataHistorianPlayer GetDataHistorianPlayer(string cacheName, bool loadIfNotCached)
         {
             if (!string.IsNullOrWhiteSpace(cacheName))
             {
-                if (this.dataCacheTable.ContainsKey(cacheName))
+                if (this.dataCachePlayerTable.ContainsKey(cacheName))
                 {
                     Console.WriteLine($"Retrieving historian cache from internal table for cache name {cacheName}.");
 
-                    return this.dataCacheTable[cacheName];
+                    return this.dataCachePlayerTable[cacheName];
                 } else
                 {
                     if (loadIfNotCached)
                     {
                         Console.WriteLine($"Attempting to load historian cache for cache name {cacheName}.");
 
-                        return this.LoadDataHistorianCache(cacheName);
+                        IDataHistorianCache dataCache = this.LoadDataHistorianCache(cacheName);
+                        IDataHistorianPlayer dataCachePlayer = new DataHistorianPlayer(dataCache);
+
+                        dataCachePlayer.SetEventListener(this.eventListener);
+
+                        this.dataCachePlayerTable.Add(cacheName, dataCachePlayer);
+
+                        return dataCachePlayer;
                     }
                 }
             } else
@@ -232,11 +239,11 @@ namespace LabBenchStudios.Pdt.System
         {
             if (this.persistenceConnector != null)
             {
-                Console.WriteLine($"Loading actuator data. Start: {startDate}. End: {endDate}.");
+                Console.WriteLine($"Loading actuator data. Play: {startDate}. End: {endDate}.");
                 return this.persistenceConnector.LoadActuatorData(resource, startDate, endDate);
             } else
             {
-                Console.WriteLine($"No persistence connector. Can't load actuator data. Start: {startDate}. End: {endDate}.");
+                Console.WriteLine($"No persistence connector. Can't load actuator data. Play: {startDate}. End: {endDate}.");
                 return null;
             }
         }
@@ -255,11 +262,11 @@ namespace LabBenchStudios.Pdt.System
         {
             if (this.persistenceConnector != null)
             {
-                Console.WriteLine($"Loading connection replayState data. Start: {startDate}. End: {endDate}.");
+                Console.WriteLine($"Loading connection replayState data. Play: {startDate}. End: {endDate}.");
                 return this.persistenceConnector.LoadConnectionStateData(resource, startDate, endDate);
             } else
             {
-                Console.WriteLine($"No persistence connector. Can't load connection replayState data. Start: {startDate}. End: {endDate}.");
+                Console.WriteLine($"No persistence connector. Can't load connection replayState data. Play: {startDate}. End: {endDate}.");
                 return null;
             }
         }
@@ -278,11 +285,11 @@ namespace LabBenchStudios.Pdt.System
         {
             if (this.persistenceConnector != null)
             {
-                Console.WriteLine($"Loading sensor data. Start: {startDate}. End: {endDate}.");
+                Console.WriteLine($"Loading sensor data. Play: {startDate}. End: {endDate}.");
                 return this.persistenceConnector.LoadSensorData(resource, startDate, endDate);
             } else
             {
-                Console.WriteLine($"No persistence connector. Can't load sensor data. Start: {startDate}. End: {endDate}.");
+                Console.WriteLine($"No persistence connector. Can't load sensor data. Play: {startDate}. End: {endDate}.");
                 return null;
             }
         }
@@ -301,11 +308,11 @@ namespace LabBenchStudios.Pdt.System
         {
             if (this.persistenceConnector != null)
             {
-                Console.WriteLine($"Loading system performance data. Start: {startDate}. End: {endDate}.");
+                Console.WriteLine($"Loading system performance data. Play: {startDate}. End: {endDate}.");
                 return this.persistenceConnector.LoadSystemPerformanceData(resource, startDate, endDate);
             } else
             {
-                Console.WriteLine($"No persistence connector. Can't load system performance data. Start: {startDate}. End: {endDate}.");
+                Console.WriteLine($"No persistence connector. Can't load system performance data. Play: {startDate}. End: {endDate}.");
                 return null;
             }
         }
@@ -347,54 +354,12 @@ namespace LabBenchStudios.Pdt.System
         /// <exception cref="NotImplementedException"></exception>
         public void SetReplayDirection(string cacheName, DataHistorianState.DataHistorianReplayDirection direction)
         {
-            IDataHistorianCache dataCache = this.GetDataHistorianCache(cacheName);
+            IDataHistorianPlayer cachePlayer = this.GetDataHistorianPlayer(cacheName);
 
-            if (dataCache != null)
+            if (cachePlayer != null)
             {
-                dataCache.SetCacheAccessDirection(direction);
+                cachePlayer.SetReplayDirection(direction);
             }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="cacheName"></param>
-        /// <param name="state"></param>
-        /// <exception cref="NotImplementedException"></exception>
-        public void SetReplayState(string cacheName, DataHistorianState.DataHistorianReplayState state)
-        {
-            IDataHistorianCache dataCache = this.GetDataHistorianCache(cacheName);
-
-            if (dataCache != null)
-            {
-                dataCache.SetCacheState(state);
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="cacheName"></param>
-        /// <param name="speed"></param>
-        /// <param name="restart"></param>
-        /// <returns></returns>
-        public string StartReplayCache(string cacheName, DataHistorianState.DataHistorianReplayDirection direction, float speed, bool restart)
-        {
-            // TODO: implement this
-
-            return cacheName;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="cacheName"></param>
-        /// <returns></returns>
-        public string StopReplayCache(string cacheName)
-        {
-            // TODO: implement this
-
-            return cacheName;
         }
 
 
@@ -425,8 +390,6 @@ namespace LabBenchStudios.Pdt.System
                 if (dataCache != null)
                 {
                     Console.WriteLine($"Successfully loaded data cache {cacheName} with {dataCache.GetCacheSize()} items.");
-
-                    this.dataCacheTable.Add(cacheName, dataCache);
 
                     return dataCache;
                 }

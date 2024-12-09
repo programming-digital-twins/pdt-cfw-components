@@ -33,7 +33,7 @@ using Newtonsoft.Json;
 namespace LabBenchStudios.Pdt.Data
 {
     /// <summary>
-    /// 
+    /// All time represented in UTC.
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
     public class DataCacheEntryContainer
@@ -142,6 +142,32 @@ namespace LabBenchStudios.Pdt.Data
         /// 
         /// </summary>
         /// <returns></returns>
+        public double GetElapsedEpochMillis()
+        {
+            return TimeSpan.FromTicks(this.timeStamp.Ticks).TotalMilliseconds;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public double GetElapsedEpochMillisDelta(DataCacheEntryContainer cacheEntry)
+        {
+            if (cacheEntry != null)
+            {
+                double current = this.GetElapsedEpochMillis();
+                double comparator = cacheEntry.GetElapsedEpochMillis();
+
+                return (Math.Abs(current - comparator));
+            }
+
+            return 0d;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public bool HasMessageData()
         {
             return this.messageData != null;
@@ -171,7 +197,7 @@ namespace LabBenchStudios.Pdt.Data
         /// <param name="timeStamp"></param>
         public void SetTimeStamp(DateTime timeStamp)
         {
-            this.timeStamp = timeStamp;
+            this.timeStamp = timeStamp.ToUniversalTime();
         }
 
         /// <summary>
@@ -180,7 +206,12 @@ namespace LabBenchStudios.Pdt.Data
         /// <param name="data"></param>
         public void SetActuatorData(ActuatorData data)
         {
-            this.actuatorData = data;
+            if (data != null)
+            {
+                this.actuatorData = data;
+
+                this.SetTimeStamp(this.GenerateUtcTime(data.GetTimeStamp()));
+            }
         }
 
         /// <summary>
@@ -189,7 +220,12 @@ namespace LabBenchStudios.Pdt.Data
         /// <param name="data"></param>
         public void SetConnectionStateData(ConnectionStateData data)
         {
-            this.connStateData = data;
+            if (data != null)
+            {
+                this.connStateData = data;
+
+                this.SetTimeStamp(this.GenerateUtcTime(data.GetTimeStamp()));
+            }
         }
 
         /// <summary>
@@ -198,7 +234,12 @@ namespace LabBenchStudios.Pdt.Data
         /// <param name="data"></param>
         public void SetMessageData(MessageData data)
         {
-            this.messageData = data;
+            if (data != null)
+            {
+                this.messageData = data;
+
+                this.SetTimeStamp(this.GenerateUtcTime(data.GetTimeStamp()));
+            }
         }
 
         /// <summary>
@@ -207,7 +248,12 @@ namespace LabBenchStudios.Pdt.Data
         /// <param name="data"></param>
         public void SetSensorData(SensorData data)
         {
-            this.sensorData = data;
+            if (data != null)
+            {
+                this.sensorData = data;
+
+                this.SetTimeStamp(this.GenerateUtcTime(data.GetTimeStamp()));
+            }
         }
         
         /// <summary>
@@ -216,8 +262,27 @@ namespace LabBenchStudios.Pdt.Data
         /// <param name="data"></param>
         public void SetSystemPerformanceData(SystemPerformanceData data)
         {
-            this.sysPerfData = data;
+            if (data != null)
+            {
+                this.sysPerfData = data;
+
+                this.SetTimeStamp(this.GenerateUtcTime(data.GetTimeStamp()));
+            }
+        }
+
+
+        // private methods
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="timeStamp"></param>
+        /// <returns></returns>
+        private DateTime GenerateUtcTime(string timeStamp)
+        {
+            return DateTime.Parse(this.actuatorData.GetTimeStamp()).ToUniversalTime();
         }
 
     }
+
 }

@@ -171,7 +171,7 @@ namespace LabBenchStudios.Pdt.Connection
         {
             TimeDuration duration = new TimeDuration(startDate, endDate);
 
-            Console.WriteLine($"Attempting to load actuator data. Start: {duration.GetStartTime()}. End: {duration.GetEndTime()}.");
+            Console.WriteLine($"Attempting to load actuator data. Play: {duration.GetStartTime()}. End: {duration.GetEndTime()}.");
 
             return this.HandleLoadActuatorData(resource, duration);
         }
@@ -190,7 +190,7 @@ namespace LabBenchStudios.Pdt.Connection
         {
             TimeDuration duration = new TimeDuration(startDate, endDate);
 
-            Console.WriteLine($"Attempting to load connection replayState data. Start: {duration.GetStartTime()}. End: {duration.GetEndTime()}.");
+            Console.WriteLine($"Attempting to load connection replayState data. Play: {duration.GetStartTime()}. End: {duration.GetEndTime()}.");
 
             return this.HandleLoadConnectionStateData(resource, duration);
         }
@@ -209,7 +209,7 @@ namespace LabBenchStudios.Pdt.Connection
         {
             TimeDuration duration = new TimeDuration(startDate, endDate);
 
-            Console.WriteLine($"Attempting to load sensor data. Start: {duration.GetStartTime()}. End: {duration.GetEndTime()}.");
+            Console.WriteLine($"Attempting to load sensor data. Play: {duration.GetStartTime()}. End: {duration.GetEndTime()}.");
 
             return this.HandleLoadSensorData(resource, duration);
         }
@@ -228,7 +228,7 @@ namespace LabBenchStudios.Pdt.Connection
         {
             TimeDuration duration = new TimeDuration(startDate, endDate);
 
-            Console.WriteLine($"Attempting to load system performance data. Start: {duration.GetStartTime()}. End: {duration.GetEndTime()}.");
+            Console.WriteLine($"Attempting to load system performance data. Play: {duration.GetStartTime()}. End: {duration.GetEndTime()}.");
 
             return this.HandleLoadSystemPerformanceData(resource, duration);
         }
