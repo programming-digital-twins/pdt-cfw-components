@@ -64,7 +64,7 @@ namespace LabBenchStudios.Pdt.System
 
         // private
 
-        private string cacheName = "DefaultDataHistorianCache";
+        private string cacheName = null;
 
         private DataHistorianState.DataHistorianReplayState replayState;
         private DataHistorianState.DataHistorianReplayDirection replayDirection;
@@ -96,6 +96,11 @@ namespace LabBenchStudios.Pdt.System
         /// <param name="cacheName"></param>
         public DataHistorianCache(string cacheName) : base()
         {
+            if (string.IsNullOrWhiteSpace(cacheName))
+            {
+                cacheName = "DefaultDataHistorianCache";
+            }
+
             this.SetCacheName(cacheName);
 
             this.historianCache = new List<DataCacheEntryContainer>();

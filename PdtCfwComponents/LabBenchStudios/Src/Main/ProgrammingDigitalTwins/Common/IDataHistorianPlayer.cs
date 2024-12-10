@@ -26,7 +26,7 @@ using System;
 
 namespace LabBenchStudios.Pdt.Common
 {
-    public interface IDataHistorianPlayer
+    public interface IDataHistorianPlayer : IDataContextEventListener
     {
         /// <summary>
         /// 
@@ -68,6 +68,31 @@ namespace LabBenchStudios.Pdt.Common
         /// 
         /// </summary>
         /// <returns></returns>
+        public bool IsCacheFillingEnabled();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public bool IsPlaybackEnabled();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="enabled"></param>
+        public void SetCacheFillingEnabledFlag(bool enabled);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="enabled"></param>
+        /// <returns></returns>
+        public void SetPlaybackEnabledFlag(bool enabled);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public bool IsPlaying();
 
         /// <summary>
@@ -87,6 +112,13 @@ namespace LabBenchStudios.Pdt.Common
         /// </summary>
         /// <returns></returns>
         public bool Reset();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="clearCache"></param>
+        /// <returns></returns>
+        public bool Reset(bool clearCache);
 
         /// <summary>
         /// 
@@ -111,6 +143,12 @@ namespace LabBenchStudios.Pdt.Common
         /// </summary>
         /// <param name="direction"></param>
         public void SetReplayDirection(DataHistorianState.DataHistorianReplayDirection direction);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public bool StoreHistorianCache();
 
     }
 }

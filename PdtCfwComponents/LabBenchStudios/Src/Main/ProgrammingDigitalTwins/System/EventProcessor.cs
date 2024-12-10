@@ -344,6 +344,30 @@ namespace LabBenchStudios.Pdt.System
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="listener"></param>
+        public void UnregisterListener(IDataContextEventListener listener)
+        {
+            if (listener != null)
+            {
+                this.dataContextEventListenerList.Remove(listener);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="listener"></param>
+        public void UnregisterListener(ISystemStatusEventListener listener)
+        {
+            if (listener != null)
+            {
+                this.systemStatusEventListenerList.Remove(listener);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="cmdProcessor"></param>
         public void SetRemoteCommandProcessor(IRemoteStateProcessor cmdProcessor)
         {

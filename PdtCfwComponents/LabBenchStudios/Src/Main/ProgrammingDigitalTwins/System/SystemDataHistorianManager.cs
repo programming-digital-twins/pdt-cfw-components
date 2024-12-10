@@ -177,7 +177,6 @@ namespace LabBenchStudios.Pdt.System
         /// 
         /// </summary>
         /// <param name="cacheName"></param>
-        /// <param name="loadIfNotCached"></param>
         /// <returns></returns>
         public IDataHistorianPlayer GetDataHistorianPlayer(string cacheName)
         {
@@ -188,9 +187,9 @@ namespace LabBenchStudios.Pdt.System
         /// 
         /// </summary>
         /// <param name="cacheName"></param>
-        /// <param name="loadIfNotCached"></param>
+        /// <param name="loadIfStored"></param>
         /// <returns></returns>
-        public IDataHistorianPlayer GetDataHistorianPlayer(string cacheName, bool loadIfNotCached)
+        public IDataHistorianPlayer GetDataHistorianPlayer(string cacheName, bool loadIfStored)
         {
             if (!string.IsNullOrWhiteSpace(cacheName))
             {
@@ -201,16 +200,24 @@ namespace LabBenchStudios.Pdt.System
                     return this.dataCachePlayerTable[cacheName];
                 } else
                 {
-                    if (loadIfNotCached)
+                    if (loadIfStored)
                     {
                         Console.WriteLine($"Attempting to load historian cache for cache name {cacheName}.");
 
+                        // create a new (or load an existing) backing cache
                         IDataHistorianCache dataCache = this.LoadDataHistorianCache(cacheName);
+
+                        // create the historian player with the new (or loaded) data cache
                         IDataHistorianPlayer dataCachePlayer = new DataHistorianPlayer(dataCache);
 
+                        // set the listener for the player - this will allow notifications from the player
                         dataCachePlayer.SetEventListener(this.eventListener);
 
+                        // add the player to the internal table
                         this.dataCachePlayerTable.Add(cacheName, dataCachePlayer);
+
+                        // register the player for incoming events (from EventProcessor)
+                        EventProcessor.GetInstance().RegisterListener(dataCachePlayer);
 
                         return dataCachePlayer;
                     }
@@ -223,6 +230,32 @@ namespace LabBenchStudios.Pdt.System
             Console.WriteLine($"Data historian cache not loaded for cache {cacheName}.");
 
             return null;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheName"></param>
+        public void ResetAndRemoveDataHistorian(string cacheName)
+        {
+            if (!string.IsNullOrWhiteSpace(cacheName))
+            {
+                if (this.dataCachePlayerTable.ContainsKey(cacheName))
+                {
+                    Console.WriteLine($"Retrieving historian cache from internal table for cache name {cacheName}.");
+
+                    IDataHistorianPlayer dataCachePlayer = this.dataCachePlayerTable[cacheName];
+
+                    dataCachePlayer.Reset();
+
+                    EventProcessor.GetInstance().UnregisterListener(dataCachePlayer);
+
+                    this.dataCachePlayerTable.Remove(cacheName);
+                } else
+                {
+                    Console.WriteLine($"No data cache player with name {cacheName} registered. Ignoring.");
+                }
+            }
         }
 
         /**
