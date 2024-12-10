@@ -42,6 +42,9 @@ namespace LabBenchStudios.Pdt.Model
 
         // necessary for JSON serialization / deserialization
 
+        /// <summary>
+        /// 
+        /// </summary>
         public ConfigTypeModelEntry() : base()
         {
             // nothing to do
@@ -49,6 +52,10 @@ namespace LabBenchStudios.Pdt.Model
 
         // public methods
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public IotDataContext CreateDataContainer()
         {
             if (this.dataContainerType != null && this.dataContainerType != string.Empty)
@@ -78,11 +85,19 @@ namespace LabBenchStudios.Pdt.Model
             return null;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public string GetDataContainerTypeName()
         {
             return this.dataContainerType;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public int GetTypeCategoryId()
         {
             if (this.configTypeContainer != null) {
@@ -92,11 +107,19 @@ namespace LabBenchStudios.Pdt.Model
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="containerRef"></param>
         public void SetConfigTypeContainerRef(ConfigTypeModelContainer containerRef)
         {
             this.configTypeContainer = containerRef;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="typeName"></param>
         public void SetDataContainerTypeName(string typeName)
         {
             if (typeName != null) {
@@ -104,6 +127,10 @@ namespace LabBenchStudios.Pdt.Model
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder(base.ToString());

@@ -48,7 +48,7 @@ namespace LabBenchStudios.Pdt.Model
 
         // this is the DTMI for the model (e.g., dtmi:LabBenchStudios.Pdt.{modelName};1)
         private string modelID = ModelNameUtil.IOT_MODEL_CONTEXT_MODEL_ID;
-        private string modelGUID = System.Guid.NewGuid().ToString();
+        private string modelGUID = Guid.NewGuid().ToString();
 
         private DigitalTwinModelSyncKey modelSyncKey = null;
         private DigitalTwinDataSyncKey dataSyncKey = null;

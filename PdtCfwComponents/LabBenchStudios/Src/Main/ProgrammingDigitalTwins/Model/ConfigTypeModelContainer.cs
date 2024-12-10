@@ -49,6 +49,10 @@ namespace LabBenchStudios.Pdt.Model
         private Dictionary<string, ConfigTypeModelEntry> typeEntries = new Dictionary<string, ConfigTypeModelEntry>();
 
         // necessary for JSON serialization / deserialization
+
+        /// <summary>
+        /// 
+        /// </summary>
         public ConfigTypeModelContainer() : base()
         {
             // nothing to do
@@ -57,6 +61,10 @@ namespace LabBenchStudios.Pdt.Model
 
         // public methods
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="configType"></param>
         public void AddTypeEntry(ConfigTypeModelEntry configType)
         {
             if (configType != null)
@@ -65,21 +73,38 @@ namespace LabBenchStudios.Pdt.Model
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public int GetConfigTypeMinId()
         {
             return this.minId;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public int GetConfigTypeMaxId()
         {
             return this.maxId;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public int GetConfigTypeInfoCount()
         {
             return this.typeEntries.Count;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="typeName"></param>
+        /// <returns></returns>
         public ConfigTypeModelEntry GetConfigType(string typeName)
         {
             if (typeName != null && typeName.Length > 0)
@@ -93,6 +118,10 @@ namespace LabBenchStudios.Pdt.Model
             return null;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public List<ConfigTypeModelEntry> GetConfigTypeList()
         {
             List<ConfigTypeModelEntry> configTypeEntries = new List<ConfigTypeModelEntry>();
@@ -104,43 +133,66 @@ namespace LabBenchStudios.Pdt.Model
             return configTypeEntries;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public string GetVersion()
         {
             return this.version;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override bool IsTypeCategory()
         {
             return true;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
         public void SetConfigTypeMinId(int id)
         {
             this.minId = id;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
         public void SetConfigTypeMaxId(int id)
         {
             this.maxId = id;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="version"></param>
         public void SetVersion(string version)
         {
             this.version = version;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder(base.ToString());
 
-            sb.Append(base.ToString());
             sb.Append(",version=").Append(this.version);
             sb.Append(",minId=").Append(this.minId);
             sb.Append(",maxId=").Append(this.maxId);
 
             foreach (string key in this.typeEntries.Keys)
             {
-                sb.Append('\n').Append(this.typeEntries[key]);
+                sb.Append(',').Append(this.typeEntries[key]);
             }
 
             return sb.ToString();

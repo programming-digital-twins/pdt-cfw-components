@@ -400,7 +400,7 @@ namespace LabBenchStudios.Pdt.Model
 
             if (useGuid)
             {
-                sb.Append(':').Append(System.Guid.NewGuid().ToString());
+                sb.Append(':').Append(Guid.NewGuid().ToString());
             }
             else
             {
@@ -448,7 +448,7 @@ namespace LabBenchStudios.Pdt.Model
 
             if (useGuid)
             {
-                sb.Append('_').Append(System.Guid.NewGuid().ToString());
+                sb.Append('_').Append(Guid.NewGuid().ToString());
             }
             else
             {

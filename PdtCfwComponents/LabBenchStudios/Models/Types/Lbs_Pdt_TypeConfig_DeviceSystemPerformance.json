@@ -8,6 +8,14 @@
     "id": 9000,
     "minId": 9001,
     "maxId": 9999,
+    "modelConstraints": {
+      "enableConstraints": true,
+      "enableDutyCycle": true,
+      "dutyCycleSeconds": "60.0",
+      "minDutyCycle": "0.0",
+      "maxDutyCycle": "100.0",
+      "optimalDutyCycle": "80.0"
+    },
     "typeEntries": {
       "cpuUtil": {
         "typeName": "cpuUtil",
@@ -16,7 +24,14 @@
         "modelName": "cpuUtil",
         "resourceName": "{productName}/{groupdID}/{locationID}/{deviceID}/{typeName}",
         "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
-        "id": 9001
+        "id": 9001,
+        "modelConstraints": {
+          "enableConstraints": true,
+          "enableDutyCycle": false,
+          "minReading": "0.0",
+          "maxReading": "0.0",
+          "optimalReading": "0.0"
+        }
       },
       "diskUtil": {
         "typeName": "diskUtil",
@@ -25,7 +40,14 @@
         "modelName": "diskUtil",
         "resourceName": "{productName}/{groupdID}/{locationID}/{deviceID}/{typeName}",
         "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
-        "id": 9003
+        "id": 9003,
+        "modelConstraints": {
+          "enableConstraints": true,
+          "enableDutyCycle": false,
+          "minReading": "0.0",
+          "maxReading": "0.0",
+          "optimalReading": "0.0"
+        }
       },
       "memUtil": {
         "typeName": "memUtil",
@@ -34,7 +56,14 @@
         "modelName": "memUtil",
         "resourceName": "{productName}/{groupdID}/{locationID}/{deviceID}/{typeName}",
         "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
-        "id": 9002
+        "id": 9002,
+        "modelConstraints": {
+          "enableConstraints": true,
+          "enableDutyCycle": false,
+          "minReading": "0.0",
+          "maxReading": "0.0",
+          "optimalReading": "0.0"
+        }
       }
     }
   }

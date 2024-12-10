@@ -7,6 +7,14 @@
   "id": 1000,
   "minId": 1001,
   "maxId": 1999,
+  "modelConstraints": {
+    "enableConstraints": true,
+    "enableDutyCycle": true,
+    "dutyCycleSeconds": "60.0",
+    "minDutyCycle": "0.0",
+    "maxDutyCycle": "90.0",
+    "optimalDutyCycle": "50.0"
+  },
   "typeEntries": {
     "relativeHumidity": {
       "typeName": "relativeHumidity",
@@ -15,7 +23,14 @@
       "modelName": "dtmi:LabBenchStudios:PDT:relativeHumidityData;1",
       "resourceName": "{productName}/{groupdID}/{locationID}/{deviceID}/{typeName}",
       "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
-      "id": 1010
+      "id": 1010,
+      "modelConstraints": {
+        "enableConstraints": true,
+        "enableDutyCycle": false,
+        "minReading": "0.0",
+        "maxReading": "0.0",
+        "optimalReading": "0.0"
+      }
     },
     "barometricPressure": {
       "typeName": "barometricPressure",
@@ -24,7 +39,14 @@
       "modelName": "dtmi:LabBenchStudios:PDT:barometricPressureData;1",
       "resourceName": "{productName}/{groupdID}/{locationID}/{deviceID}/{typeName}",
       "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
-      "id": 1011
+      "id": 1011,
+      "modelConstraints": {
+        "enableConstraints": true,
+        "enableDutyCycle": false,
+        "minReading": "0.0",
+        "maxReading": "0.0",
+        "optimalReading": "0.0"
+      }
     },
     "temperature": {
       "typeName": "temperature",
@@ -33,7 +55,14 @@
       "modelName": "dtmi:LabBenchStudios:PDT:temperatureData;1",
       "resourceName": "{productName}/{groupdID}/{locationID}/{deviceID}/{typeName}",
       "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
-      "id": 1012
+      "id": 1012,
+      "modelConstraints": {
+        "enableConstraints": true,
+        "enableDutyCycle": false,
+        "minReading": "0.0",
+        "maxReading": "0.0",
+        "optimalReading": "0.0"
+      }
     }
   }
 }

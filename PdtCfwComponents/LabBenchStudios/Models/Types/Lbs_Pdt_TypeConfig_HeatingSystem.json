@@ -15,7 +15,11 @@
       "modelName": "dtmi:LabBenchStudios:PDT:targetTemperature;1",
       "resourceName": "{productName}/{groupdID}/{locationID}/{deviceID}/{typeName}",
       "dataContainerType": "LabBenchStudios.Pdt.Data.ActuatorData",
-      "id": 1001
+      "id": 1001,
+      "modelConstraints": {
+        "enableConstraints": false,
+        "enableDutyCycle": false
+      }
     },
     "targetHumidity": {
       "typeName": "targetHumidity",
@@ -24,7 +28,11 @@
       "modelName": "dtmi:LabBenchStudios:PDT:targetHumidity;1",
       "resourceName": "{productName}/{groupdID}/{locationID}/{deviceID}/{typeName}",
       "dataContainerType": "LabBenchStudios.Pdt.Data.ActuatorData",
-      "id": 1002
+      "id": 1002,
+      "modelConstraints": {
+        "enableConstraints": false,
+        "enableDutyCycle": false
+      }
     }
   }
 }

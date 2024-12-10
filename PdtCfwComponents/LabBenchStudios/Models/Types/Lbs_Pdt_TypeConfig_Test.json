@@ -1,0 +1,44 @@
+{
+  "version": "",
+  "minId": 1000,
+  "maxId": 1999,
+  "typeEntries": {
+    "temp": {
+      "dataContainerType": "",
+      "typeName": "temp",
+      "displayName": "Temperature.",
+      "description": "This is the temperature.",
+      "modelName": "temperature",
+      "resourceName": "PDT/device001/temperature",
+      "id": 1001,
+      "modelConstraints": {
+        "enableConstraints": false,
+        "enableDutyCycle": false,
+        "dutyCycleSeconds": 0.0,
+        "minDutyCycle": 0.0,
+        "maxDutyCycle": 100.0,
+        "optimalDutyCycle": 50.0,
+        "minReading": 0.0,
+        "maxReading": 100.0,
+        "optimalReading": 50.0
+      }
+    }
+  },
+  "typeName": "foobar",
+  "displayName": "Foobar.",
+  "description": "This is the foobar.",
+  "modelName": "foobar",
+  "resourceName": "PDT/device001/foobar",
+  "id": 0,
+  "modelConstraints": {
+    "enableConstraints": false,
+    "enableDutyCycle": false,
+    "dutyCycleSeconds": 0.0,
+    "minDutyCycle": 0.0,
+    "maxDutyCycle": 100.0,
+    "optimalDutyCycle": 50.0,
+    "minReading": 0.0,
+    "maxReading": 100.0,
+    "optimalReading": 50.0
+  }
+}

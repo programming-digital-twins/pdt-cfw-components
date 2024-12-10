@@ -15,16 +15,27 @@
       "modelName": "targetTemperature",
       "resourceName": "{productName}/{groupdID}/{locationID}/{deviceID}/{typeName}",
       "dataContainerType": "LabBenchStudios.Pdt.Data.ActuatorData",
-      "id": 1004
+      "id": 1004,
+      "modelConstraints": {
+        "enableConstraints": false,
+        "enableDutyCycle": false
+      }
     },
     "targetHumidity": {
       "typeName": "currentTemperature",
       "description": "Temperature sensor type configuration.",
-      "displayName": "Temperatire",
+      "displayName": "Temperature",
       "modelName": "currentTemperature",
       "resourceName": "{productName}/{groupdID}/{locationID}/{deviceID}/{typeName}",
       "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
-      "id": 1013
+      "id": 1013,
+      "modelConstraints": {
+        "enableConstraints": true,
+        "enableDutyCycle": false,
+        "minReading": "0.0",
+        "maxReading": "0.0",
+        "optimalReading": "0.0"
+      }
     }
   }
 }

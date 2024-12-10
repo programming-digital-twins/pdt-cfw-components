@@ -8,6 +8,14 @@
     "id": 4300,
     "minId": 4301,
     "maxId": 4399,
+    "modelConstraints": {
+      "enableConstraints": true,
+      "enableDutyCycle": true,
+      "dutyCycleSeconds": "60.0",
+      "minDutyCycle": "0.0",
+      "maxDutyCycle": "80.0",
+      "optimalDutyCycle": "60.0"
+    },
     "typeEntries": {
       "windTurbineBrakeSystemActuator": {
         "typeName": "windTurbineBrakeSystemActuator",
@@ -16,7 +24,11 @@
         "modelName": "runWindTurbine",
         "resourceName": "{productName}/{groupdID}/{locationID}/{deviceID}/{typeName}",
         "dataContainerType": "LabBenchStudios.Pdt.Data.ActuatorData",
-        "id": 4320
+        "id": 4320,
+        "modelConstraints": {
+          "enableConstraints": false,
+          "enableDutyCycle": false
+        }
       },
       "windTurbinePowerOutput": {
         "typeName": "windTurbinePowerOutput",
@@ -25,7 +37,14 @@
         "modelName": "outputPower",
         "resourceName": "{productName}/{groupdID}/{locationID}/{deviceID}/{typeName}",
         "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
-        "id": 4301
+        "id": 4301,
+        "modelConstraints": {
+          "enableConstraints": true,
+          "enableDutyCycle": false,
+          "minReading": "0.0",
+          "maxReading": "0.0",
+          "optimalReading": "0.0"
+        }
       },
       "windTurbineGeneratorTemperature": {
         "typeName": "windTurbineGeneratorTemperature",
@@ -34,7 +53,14 @@
         "modelName": "generatorTemperature",
         "resourceName": "{productName}/{groupdID}/{locationID}/{deviceID}/{typeName}",
         "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
-        "id": 4302
+        "id": 4302,
+        "modelConstraints": {
+          "enableConstraints": true,
+          "enableDutyCycle": false,
+          "minReading": "0.0",
+          "maxReading": "0.0",
+          "optimalReading": "0.0"
+        }
       },
       "windTurbineRotationalSpeed": {
         "typeName": "windTurbineRotationalSpeed",
@@ -43,7 +69,14 @@
         "modelName": "currentRevolutionPerMinute",
         "resourceName": "{productName}/{groupdID}/{locationID}/{deviceID}/{typeName}",
         "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
-        "id": 4303
+        "id": 4303,
+        "modelConstraints": {
+          "enableConstraints": true,
+          "enableDutyCycle": false,
+          "minReading": "0.0",
+          "maxReading": "0.0",
+          "optimalReading": "0.0"
+        }
       },
       "windTurbineAirSpeed": {
         "typeName": "windTurbineAirSpeed",
@@ -52,7 +85,14 @@
         "modelName": "airSpeed",
         "resourceName": "{productName}/{groupdID}/{locationID}/{deviceID}/{typeName}",
         "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
-        "id": 4304
+        "id": 4304,
+        "modelConstraints": {
+          "enableConstraints": true,
+          "enableDutyCycle": false,
+          "minReading": "0.0",
+          "maxReading": "0.0",
+          "optimalReading": "0.0"
+        }
       }
     }
   }
