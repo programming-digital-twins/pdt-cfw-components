@@ -296,7 +296,7 @@ namespace LabBenchStudios.Pdt.Connection
         /// <returns></returns>
         protected override int HandleStoreDataCache(string cacheName, List<DataCacheEntryContainer> dataCache)
         {
-            string fileName = this.CreateAbsFileName(cacheName);
+            string fileName = this.CreateAbsFileName(cacheName, true, true);
             string jsonData = DataUtil.DataCacheEntryListToJson(dataCache);
             int bytesWritten = 0;
 
@@ -406,7 +406,7 @@ namespace LabBenchStudios.Pdt.Connection
             }
 
             string fileName = DateTime.UtcNow.ToString(DATE_TIME_FORMAT);
-            string absFileName = Path.Combine(this.dataStorePathPrefix, deviceID, dataType, fileName);
+            string absFileName = Path.GetFullPath(Path.Combine(this.dataStorePathPrefix, deviceID, dataType, fileName));
 
             return absFileName;
         }
@@ -418,7 +418,7 @@ namespace LabBenchStudios.Pdt.Connection
         /// <returns></returns>
         private string CreateAbsFileName(string cacheName)
         {
-            return this.CreateAbsFileName(cacheName, true);
+            return this.CreateAbsFileName(cacheName, false, true);
         }
 
         /// <summary>
@@ -429,6 +429,18 @@ namespace LabBenchStudios.Pdt.Connection
         /// <returns></returns>
         private string CreateAbsFileName(string cacheName, bool useDate)
         {
+            return this.CreateAbsFileName(cacheName, useDate, true);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheName"></param>
+        /// <param name="useDate"></param>
+        /// <param name="useJsonExt"></param>
+        /// <returns></returns>
+        private string CreateAbsFileName(string cacheName, bool useDate, bool useJsonExt)
+        {
             string fileName = cacheName;
 
             if (useDate)
@@ -436,7 +448,12 @@ namespace LabBenchStudios.Pdt.Connection
                 fileName = fileName + "_" + DateTime.UtcNow.ToString(DATE_TIME_FORMAT);
             }
 
-            string absFileName = Path.Combine(this.dataCachePathPrefix, cacheName, fileName);
+            if (useJsonExt)
+            {
+                fileName = fileName + ConfigConst.JSON_EXT;
+            }
+
+            string absFileName = Path.GetFullPath(Path.Combine(this.dataCachePathPrefix, cacheName, fileName));
 
             return absFileName;
         }

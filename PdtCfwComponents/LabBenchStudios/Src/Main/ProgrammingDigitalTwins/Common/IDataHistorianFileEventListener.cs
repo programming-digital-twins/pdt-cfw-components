@@ -1,3 +1,8 @@
+
+
+using System;
+
+
 /**
  * MIT License
  * 
@@ -21,89 +26,73 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-using System;
-using System.Collections.Generic;
-
 namespace LabBenchStudios.Pdt.Common
 {
-    public interface IDataHistorian
+    public interface IDataHistorianFileEventListener
     {
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="pathName"></param>
+        /// <param name="fileName"></param>
         /// <returns></returns>
-        public string CreateCacheName();
+        bool DeleteDataHistorianCache(string pathName, string fileName);
 
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="pathName"></param>
+        /// <param name="fileName"></param>
         /// <returns></returns>
-        public IDataHistorianPlayer CreateDataHistorianPlayer();
+        IDataHistorianCache LoadDataHistorianCache(string pathName, string fileName);
 
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="pathName"></param>
+        /// <param name="fileName"></param>
         /// <returns></returns>
-        public List<string> GetLoadableCacheList();
+        IDataHistorianCache StoreDataHistorianCache(string pathName, string fileName);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <returns></returns>
-        public List<string> GetLoadedCacheNames();
+        /// <param name="fileName"></param>
+        void OnFileSelected(string fileName);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <returns></returns>
-        public string GetFilePath();
+        /// <param name="pathName"></param>
+        void OnPathSelected(string pathName);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="cacheName"></param>
-        /// <returns></returns>
-        public IDataHistorianPlayer GetDataHistorianPlayer(string cacheName);
+        /// <param name="targetName"></param>
+        /// <param name="msg"></param>
+        /// <param name="e"></param>
+        void OnSelectionError(string targetName, string msg, Exception e);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <returns></returns>
-        public long GetMaxCacheSize();
+        /// <param name="fileName"></param>
+        /// <param name="bytes"></param>
+        bool OnFileLoaded(string fileName, int bytes);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <returns></returns>
-        public long GetTotalMemory();
+        /// <param name="fileName"></param>
+        /// <param name="bytes"></param>
+        bool OnFileSaved(string fileName, int bytes);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="cacheName"></param>
-        /// <returns></returns>
-        public bool IsCacheReplaying(string cacheName);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="listener"></param>
-        public void SetEventListener(ISystemStatusEventListener listener);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="filePath"></param>
-        /// <returns></returns>
-        public bool SetFilePath(string filePath);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="cacheName"></param>
-        /// <param name="direction"></param>
-        public void SetReplayDirection(string cacheName, DataHistorianState.DataHistorianReplayDirection direction);
+        /// <param name="fileName"></param>
+        bool OnFileDeleted(string fileName);
 
     }
 }

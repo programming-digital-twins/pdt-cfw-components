@@ -22,41 +22,31 @@
  * SOFTWARE.
  */
 
-using LabBenchStudios.Pdt.Data;
+using LabBenchStudios.Pdt.Common;
+using LabBenchStudios.Pdt.Connection;
+using LabBenchStudios.Pdt.Historian;
 
-namespace LabBenchStudios.Pdt.Common
+namespace LabBenchStudios.Pdt.Test.Historian
 {
-    public interface IDataContextEventListener
+    public class DataHistorianManagerTest
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="data"></param>
-        void HandleActuatorData(ActuatorData data);
+        private IDataHistorian dataHistorian = null;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="data"></param>
-        void HandleConnectionStateData(ConnectionStateData data);
+        [SetUp]
+        public void Setup()
+        {
+            this.dataHistorian = new DataHistorianManager();
+        }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="data"></param>
-        void HandleMessageData(MessageData data);
+        [TearDown]
+        public void Teardown()
+        {
+        }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="data"></param>
-        void HandleSensorData(SensorData data);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="data"></param>
-        void HandleSystemPerformanceData(SystemPerformanceData data);
-
+        [Test]
+        public void CreateDataHistorianPlayer()
+        {
+            this.dataHistorian.CreateDataHistorianPlayer();
+        }
     }
 }

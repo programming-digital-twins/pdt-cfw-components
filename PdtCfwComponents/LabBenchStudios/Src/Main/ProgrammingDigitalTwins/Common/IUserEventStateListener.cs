@@ -26,37 +26,12 @@ using LabBenchStudios.Pdt.Data;
 
 namespace LabBenchStudios.Pdt.Common
 {
-    public interface IDataContextEventListener
+    public interface IUserEventStateListener
     {
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="data"></param>
-        void HandleActuatorData(ActuatorData data);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="data"></param>
-        void HandleConnectionStateData(ConnectionStateData data);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="data"></param>
-        void HandleMessageData(MessageData data);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="data"></param>
-        void HandleSensorData(SensorData data);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="data"></param>
-        void HandleSystemPerformanceData(SystemPerformanceData data);
-
+        /// <param name="eventType"></param>
+        void HandleUserEventState(UserEventState.EventType eventType);
     }
 }

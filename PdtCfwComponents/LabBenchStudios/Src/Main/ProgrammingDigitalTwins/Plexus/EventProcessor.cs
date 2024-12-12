@@ -28,9 +28,10 @@ using System.Linq;
 
 using LabBenchStudios.Pdt.Common;
 using LabBenchStudios.Pdt.Data;
+using LabBenchStudios.Pdt.Historian;
 using LabBenchStudios.Pdt.Model;
 
-namespace LabBenchStudios.Pdt.System
+namespace LabBenchStudios.Pdt.Plexus
 {
     /**
      * This class handles the registration of various event listeners and
@@ -96,11 +97,12 @@ namespace LabBenchStudios.Pdt.System
 
         private List<IDataContextEventListener> dataContextEventListenerList = null;
         private List<ISystemStatusEventListener> systemStatusEventListenerList = null;
+        private List<IUserEventStateListener> userEventStateListenerList = null;
 
         private SystemModelManager systemModelManager = null;
         private DigitalTwinModelManager digitalTwinModelManager = null;
         private ConfigTypeModelManager configTypeModelManager = null;
-        private SystemDataHistorianManager systemDataHistorianManager = null;
+        private DataHistorianManager systemDataHistorianManager = null;
 
         private Dictionary<string, ConnectionStateData> connectedStateTable = null;
 
@@ -122,10 +124,11 @@ namespace LabBenchStudios.Pdt.System
             this.configTypeModelManager = this.systemModelManager.GetConfigTypeModelManager();
 
             // TODO: need a way to set user-specific file path for the historian
-            this.systemDataHistorianManager = new SystemDataHistorianManager(this);
+            this.systemDataHistorianManager = new DataHistorianManager(this);
 
             this.dataContextEventListenerList = new List<IDataContextEventListener>();
             this.systemStatusEventListenerList = new List<ISystemStatusEventListener>();
+            this.userEventStateListenerList = new List<IUserEventStateListener>();
 
             this.connectedStateTable = new Dictionary<string, ConnectionStateData>();
 
@@ -153,6 +156,7 @@ namespace LabBenchStudios.Pdt.System
         {
             this.dataContextEventListenerList.Clear();
             this.systemStatusEventListenerList.Clear();
+            this.userEventStateListenerList.Clear();
         }
 
         /// <summary>
@@ -345,6 +349,18 @@ namespace LabBenchStudios.Pdt.System
         /// 
         /// </summary>
         /// <param name="listener"></param>
+        public void RegisterListener(IUserEventStateListener listener)
+        {
+            if (listener != null)
+            {
+                this.userEventStateListenerList.Add(listener);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="listener"></param>
         public void UnregisterListener(IDataContextEventListener listener)
         {
             if (listener != null)
@@ -362,6 +378,18 @@ namespace LabBenchStudios.Pdt.System
             if (listener != null)
             {
                 this.systemStatusEventListenerList.Remove(listener);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="listener"></param>
+        public void UnregisterListener(IUserEventStateListener listener)
+        {
+            if (listener != null)
+            {
+                this.userEventStateListenerList.Remove(listener);
             }
         }
 
@@ -431,6 +459,18 @@ namespace LabBenchStudios.Pdt.System
                         listener.LogErrorMessage(message, ex);
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="eventType"></param>
+        public void OnUserEventStateReceived(UserEventState.EventType eventType)
+        {
+            foreach (var listener in this.userEventStateListenerList)
+            {
+                listener.HandleUserEventState(eventType);
             }
         }
 

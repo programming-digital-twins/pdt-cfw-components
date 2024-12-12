@@ -37,6 +37,7 @@ namespace LabBenchStudios.Pdt.Common
         public static readonly string DEFAULT_HOST = "localhost";
 
         public const string DEFAULT_FILE_STORAGE_PATH = "/tmp";
+        public const string JSON_EXT = ".json";
 
         public const string RELATIVE_MODEL_PATH_PREFIX = "../../../../Models/";
 
@@ -44,7 +45,7 @@ namespace LabBenchStudios.Pdt.Common
         public const string DEFAULT_MODEL_FILE_PATH = RELATIVE_MODEL_PATH_PREFIX + "Dtdl/";
 
         public const string MODEL_FILE_NAME_PREFIX = "Lbs_Pdt_";
-        public const string MODEL_FILE_NAME_SUFFIX = "*.json";
+        public const string MODEL_FILE_NAME_SUFFIX = "*" + JSON_EXT;
 
         public const string CONFIG_TYPE_FILE_NAME_PREFIX = MODEL_FILE_NAME_PREFIX + "TypeConfig";
         public const string CONFIG_TYPE_FILE_NAME_PATTERN = CONFIG_TYPE_FILE_NAME_PREFIX + MODEL_FILE_NAME_SUFFIX;
@@ -94,7 +95,7 @@ namespace LabBenchStudios.Pdt.Common
         public static readonly string DEVICE = "Device";
         public static readonly string SERVICE = "Service";
 
-        public static readonly string PRODUCE_NAME_KEY = "productName";
+        public static readonly string PRODUCT_NAME_KEY = "productName";
         public static readonly string DEVICE_NAME_KEY = "deviceName";
         public static readonly string TYPE_NAME_KEY = "typeName";
 

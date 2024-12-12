@@ -22,41 +22,25 @@
  * SOFTWARE.
  */
 
-using LabBenchStudios.Pdt.Data;
+using System;
 
 namespace LabBenchStudios.Pdt.Common
 {
-    public interface IDataContextEventListener
+    /// <summary>
+    /// 
+    /// </summary>
+    public class UserEventState
     {
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="data"></param>
-        void HandleActuatorData(ActuatorData data);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="data"></param>
-        void HandleConnectionStateData(ConnectionStateData data);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="data"></param>
-        void HandleMessageData(MessageData data);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="data"></param>
-        void HandleSensorData(SensorData data);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="data"></param>
-        void HandleSystemPerformanceData(SystemPerformanceData data);
+        public enum EventType
+        {
+            CloseOpenDialogs,
+            FreezePlayer,
+            UnfreezePlayer
+        }
 
     }
+
 }

@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
-using System.Threading.Tasks;
 
 using LabBenchStudios.Pdt.Common;
-using LabBenchStudios.Pdt.Connection;
 using LabBenchStudios.Pdt.Data;
 
-namespace LabBenchStudios.Pdt.System
+namespace LabBenchStudios.Pdt.Historian
 {
     /// <summary>
     /// This class is responsible for managing the playback of a
@@ -46,7 +43,9 @@ namespace LabBenchStudios.Pdt.System
         {
             this.InitHistorianCache(new DataHistorianCache(cacheName));
 
-            this.Reset();
+            this.playerName = cacheName;
+
+            //this.Reset();
         }
 
         /// <summary>
@@ -56,9 +55,11 @@ namespace LabBenchStudios.Pdt.System
         {
             this.InitHistorianCache(historianCache);
 
-            this.Reset();
+            this.playerName = historianCache.GetCacheName();
+
+            //this.Reset();
         }
-        
+
 
         // public methods
 
@@ -109,18 +110,9 @@ namespace LabBenchStudios.Pdt.System
         /// 
         /// </summary>
         /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
         public string GetCacheName()
         {
-            if (this.HasValidCache())
-            {
-                return this.historianCache.GetCacheName();
-            } else
-            {
-                Console.WriteLine("Data historian player instance has no valid backing cache. Ignoring.");
-            }
-
-            return null;
+            return this.historianCache.GetCacheName();
         }
 
         /// <summary>
@@ -256,6 +248,15 @@ namespace LabBenchStudios.Pdt.System
 
                 this.historianCache.AddCacheItem(cacheEntry);
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="eventType"></param>
+        public void HandleUserEventState(UserEventState.EventType eventType)
+        {
+            // nothing to do (for now)
         }
 
         /// <summary>
@@ -423,7 +424,7 @@ namespace LabBenchStudios.Pdt.System
                 Console.WriteLine("Data historian player instance has no valid backing cache. Ignoring.");
             }
 
-            this.InitializePlayer();
+            //this.InitializePlayer();
 
             return true;
         }
@@ -547,7 +548,7 @@ namespace LabBenchStudios.Pdt.System
         /// <summary>
         /// 
         /// </summary>
-        private void ActivatePlayer()
+        private void RunPlayer()
         {
             while (this.enablePlaybackLoopOnStart)
             {
@@ -561,12 +562,20 @@ namespace LabBenchStudios.Pdt.System
                             break;
 
                         default:
-                            // todo: determine if an artificial delay is warranted here
                             break;
                     }
+
                 } catch (Exception e)
                 {
                     Console.WriteLine($"Handled exception. Could be a planned thread interruption to change state: {this.playerName}. Exception: {e.Message}");
+                }
+
+                try
+                {
+                    Thread.Sleep(500);
+                } catch (Exception e)
+                {
+                    // ignore
                 }
             }
         }
@@ -650,7 +659,7 @@ namespace LabBenchStudios.Pdt.System
             {
                 Console.WriteLine($"Creating playback thread: {this.playerName}.");
 
-                ThreadStart ts = new ThreadStart(this.ActivatePlayer);
+                ThreadStart ts = new ThreadStart(this.RunPlayer);
 
                 this.playbackThread = new Thread(ts);
                 this.playbackThread.IsBackground = true;
@@ -672,7 +681,7 @@ namespace LabBenchStudios.Pdt.System
             }
 
             this.historianCache = historianCache;
-            this.playerName = this.historianCache.GetCacheName() + "_Player";
+            this.playerName = this.historianCache.GetCacheName();
         }
 
     }

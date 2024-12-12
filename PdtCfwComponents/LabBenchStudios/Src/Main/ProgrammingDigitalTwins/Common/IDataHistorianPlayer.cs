@@ -26,7 +26,7 @@ using System;
 
 namespace LabBenchStudios.Pdt.Common
 {
-    public interface IDataHistorianPlayer : IDataContextEventListener
+    public interface IDataHistorianPlayer : IDataContextEventListener, IUserEventStateListener
     {
         /// <summary>
         /// 

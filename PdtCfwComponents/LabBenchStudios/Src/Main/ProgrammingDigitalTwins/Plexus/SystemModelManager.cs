@@ -25,13 +25,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using DTDLParser.Models;
+
 using LabBenchStudios.Pdt.Common;
 using LabBenchStudios.Pdt.Data;
 using LabBenchStudios.Pdt.Model;
 
-namespace LabBenchStudios.Pdt.System
+namespace LabBenchStudios.Pdt.Plexus
 {
     /// <summary>
     /// This class serves as both factory and manager for created objects
@@ -64,11 +63,11 @@ namespace LabBenchStudios.Pdt.System
         /// </summary>
         public SystemModelManager() : base()
         {
-            digitalTwinModelManager = new DigitalTwinModelManager();
-            configTypeModelManager = new ConfigTypeModelManager();
+            this.digitalTwinModelManager = new DigitalTwinModelManager();
+            this.configTypeModelManager = new ConfigTypeModelManager();
 
-            digitalTwinModelPathSet = new HashSet<string>();
-            configTypeModelPathSet = new HashSet<string>();
+            this.digitalTwinModelPathSet = new HashSet<string>();
+            this.configTypeModelPathSet = new HashSet<string>();
         }
 
         // public methods
@@ -83,7 +82,7 @@ namespace LabBenchStudios.Pdt.System
             {
                 if (Directory.Exists(path))
                 {
-                    configTypeModelPathSet.Add(path);
+                    this.configTypeModelPathSet.Add(path);
                 }
             }
         }
@@ -98,7 +97,7 @@ namespace LabBenchStudios.Pdt.System
             {
                 if (Directory.Exists(path))
                 {
-                    digitalTwinModelPathSet.Add(path);
+                    this.digitalTwinModelPathSet.Add(path);
                 }
             }
         }
@@ -111,24 +110,24 @@ namespace LabBenchStudios.Pdt.System
         {
             bool success = false;
 
-            success = digitalTwinModelManager.UpdateModelFilePaths(digitalTwinModelPathSet);
+            success = this.digitalTwinModelManager.UpdateModelFilePaths(digitalTwinModelPathSet);
 
             if (success)
             {
-                Console.WriteLine($"Successfully (re)built all digital twin models from existing file paths. DTMI URI's: {digitalTwinModelManager.GetAllDtmiValues()}");
+                Console.WriteLine($"Successfully (re)built all digital twin models from existing file paths. DTMI URI's: {this.digitalTwinModelManager.GetAllDtmiValues()}");
             } else
             {
-                Console.WriteLine($"Failed to (re)build all digital twin models from existing file paths. Cached DTMI URI's: {digitalTwinModelManager.GetAllDtmiValues()}");
+                Console.WriteLine($"Failed to (re)build all digital twin models from existing file paths. Cached DTMI URI's: {this.digitalTwinModelManager.GetAllDtmiValues()}");
             }
 
-            success = configTypeModelManager.UpdateConfigTypeFilePaths(configTypeModelPathSet);
+            success = this.configTypeModelManager.UpdateConfigTypeFilePaths(configTypeModelPathSet);
 
             if (success)
             {
-                Console.WriteLine($"Successfully (re)built all digital twin models from existing file paths. DTMI URI's: {configTypeModelManager}");
+                Console.WriteLine($"Successfully (re)built all digital twin models from existing file paths. DTMI URI's: {this.configTypeModelManager}");
             } else
             {
-                Console.WriteLine($"Failed to (re)build all digital twin models from existing file paths. Cached DTMI URI's: {configTypeModelManager}");
+                Console.WriteLine($"Failed to (re)build all digital twin models from existing file paths. Cached DTMI URI's: {this.configTypeModelManager}");
             }
 
             return success;
@@ -170,7 +169,7 @@ namespace LabBenchStudios.Pdt.System
         /// <returns></returns>
         public DigitalTwinModelManager GetDigitalTwinModelManager()
         {
-            return digitalTwinModelManager;
+            return this.digitalTwinModelManager;
         }
 
         /// <summary>
@@ -179,7 +178,7 @@ namespace LabBenchStudios.Pdt.System
         /// <returns></returns>
         public ConfigTypeModelManager GetConfigTypeModelManager()
         {
-            return configTypeModelManager;
+            return this.configTypeModelManager;
         }
 
         /// <summary>
@@ -189,7 +188,7 @@ namespace LabBenchStudios.Pdt.System
         /// <returns></returns>
         public bool HandleIncomingTelemetry(IotDataContext data)
         {
-            return digitalTwinModelManager.HandleIncomingTelemetry(data);
+            return this.digitalTwinModelManager.HandleIncomingTelemetry(data);
         }
 
         /// <summary>
@@ -198,7 +197,7 @@ namespace LabBenchStudios.Pdt.System
         /// <param name="data"></param>
         public void HandleActuatorData(ActuatorData data)
         {
-            digitalTwinModelManager.HandleActuatorData(data);
+            this.digitalTwinModelManager.HandleActuatorData(data);
         }
 
         /// <summary>
@@ -207,7 +206,7 @@ namespace LabBenchStudios.Pdt.System
         /// <param name="data"></param>
         public void HandleConnectionStateData(ConnectionStateData data)
         {
-            digitalTwinModelManager.HandleConnectionStateData(data);
+            this.digitalTwinModelManager.HandleConnectionStateData(data);
         }
 
         /// <summary>
@@ -216,7 +215,7 @@ namespace LabBenchStudios.Pdt.System
         /// <param name="data"></param>
         public void HandleMessageData(MessageData data)
         {
-            digitalTwinModelManager.HandleMessageData(data);
+            this.digitalTwinModelManager.HandleMessageData(data);
         }
 
         /// <summary>
@@ -225,7 +224,7 @@ namespace LabBenchStudios.Pdt.System
         /// <param name="data"></param>
         public void HandleSensorData(SensorData data)
         {
-            digitalTwinModelManager.HandleSensorData(data);
+            this.digitalTwinModelManager.HandleSensorData(data);
         }
 
         /// <summary>
@@ -234,7 +233,7 @@ namespace LabBenchStudios.Pdt.System
         /// <param name="data"></param>
         public void HandleSystemPerformanceData(SystemPerformanceData data)
         {
-            digitalTwinModelManager.HandleSystemPerformanceData(data);
+            this.digitalTwinModelManager.HandleSystemPerformanceData(data);
         }
 
         /// <summary>
@@ -246,8 +245,8 @@ namespace LabBenchStudios.Pdt.System
             //  1) load config type mapping models
             //  2) load digital twin models
             //  3) sync the model maps
-            configTypeModelManager.UpdateConfigTypeFilePaths(configTypeModelPathSet);
-            digitalTwinModelManager.UpdateModelFilePaths(digitalTwinModelPathSet);
+            this.configTypeModelManager.UpdateConfigTypeFilePaths(configTypeModelPathSet);
+            this.digitalTwinModelManager.UpdateModelFilePaths(digitalTwinModelPathSet);
         }
 
         /// <summary>
@@ -258,9 +257,9 @@ namespace LabBenchStudios.Pdt.System
         {
             if (listener != null)
             {
-                eventListener = listener;
+                this.eventListener = listener;
 
-                digitalTwinModelManager.SetSystemStatusEventListener(listener);
+                this.digitalTwinModelManager.SetSystemStatusEventListener(listener);
                 //this.configTypeModelManager.SetSystemStatusEventListener(listener);
             }
         }
@@ -272,7 +271,7 @@ namespace LabBenchStudios.Pdt.System
         /// <returns></returns>
         public bool UpdateRemoteSystemState(IotDataContext dataContext)
         {
-            return digitalTwinModelManager.UpdateRemoteSystemState(dataContext);
+            return this.digitalTwinModelManager.UpdateRemoteSystemState(dataContext);
         }
 
         // private methods

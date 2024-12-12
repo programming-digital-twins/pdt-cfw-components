@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 using LabBenchStudios.Pdt.Common;
-using LabBenchStudios.Pdt.Connection;
 using LabBenchStudios.Pdt.Data;
 
-namespace LabBenchStudios.Pdt.System
+namespace LabBenchStudios.Pdt.Historian
 {
     /// <summary>
     /// This class is responsible for managing all locally accessible historical
@@ -61,6 +58,7 @@ namespace LabBenchStudios.Pdt.System
     {
         // static
 
+        public static readonly string DEFAULT_CACHE_NAME = ConfigConst.PRODUCT_NAME + "_DataHistorianCache";
 
         // private
 
@@ -75,7 +73,7 @@ namespace LabBenchStudios.Pdt.System
 
         private long delayTimeMillis = 0L;
 
-        private List<DataCacheEntryContainer> historianCache = null;
+        private List<DataCacheEntryContainer> dataEntryCache = null;
 
         private DataCacheEntryContainer curCacheEntry = null;
 
@@ -98,12 +96,12 @@ namespace LabBenchStudios.Pdt.System
         {
             if (string.IsNullOrWhiteSpace(cacheName))
             {
-                cacheName = "DefaultDataHistorianCache";
+                cacheName = DEFAULT_CACHE_NAME;
             }
 
-            this.SetCacheName(cacheName);
+            this.InitDataEntryCache();
 
-            this.historianCache = new List<DataCacheEntryContainer>();
+            this.SetCacheName(cacheName);
         }
 
         // public methods
@@ -126,7 +124,7 @@ namespace LabBenchStudios.Pdt.System
         {
             if (cacheEntry != null)
             {
-                this.historianCache.Add(cacheEntry);
+                this.dataEntryCache.Add(cacheEntry);
 
                 if (!ignoreEntryCount)
                 {
@@ -153,7 +151,7 @@ namespace LabBenchStudios.Pdt.System
         {
             if (cacheEntries != null && cacheEntries.Count > 0)
             {
-                this.historianCache.AddRange(cacheEntries);
+                this.dataEntryCache.AddRange(cacheEntries);
 
                 if (!ignoreEntryCount)
                 {
@@ -170,7 +168,7 @@ namespace LabBenchStudios.Pdt.System
         {
             Console.WriteLine($"Clearing all cached entries from cache {this.cacheName}.");
 
-            this.historianCache.Clear();
+            this.dataEntryCache.Clear();
 
             return true;
         }
@@ -190,7 +188,7 @@ namespace LabBenchStudios.Pdt.System
         /// <returns></returns>
         public int GetCacheSize()
         {
-            return this.historianCache.Count;
+            return this.dataEntryCache.Count;
         }
 
         /// <summary>
@@ -239,7 +237,7 @@ namespace LabBenchStudios.Pdt.System
             {
                 this.curCacheIndex += this.cacheIndexIncrement;
 
-                if (this.curCacheIndex >= this.historianCache.Count ||
+                if (this.curCacheIndex >= this.dataEntryCache.Count ||
                     this.curCacheIndex < 0)
                 {
                     this.curCacheIndex = 0;
@@ -247,7 +245,7 @@ namespace LabBenchStudios.Pdt.System
                     return null;
                 }
 
-                this.curCacheEntry = this.historianCache[this.curCacheIndex];
+                this.curCacheEntry = this.dataEntryCache[this.curCacheIndex];
 
                 return this.curCacheEntry;
             } else
@@ -262,7 +260,7 @@ namespace LabBenchStudios.Pdt.System
         /// <returns></returns>
         public bool HasCachedEntries()
         {
-            return (this.historianCache.Count > 0);
+            return (this.GetCacheSize() > 0);
         }
 
         /// <summary>
@@ -293,13 +291,18 @@ namespace LabBenchStudios.Pdt.System
             {
                 this.ClearCache();
 
-                this.historianCache = this.dataLoader.LoadDataCache(this.cacheName);
+                this.dataEntryCache = this.dataLoader.LoadDataCache(this.cacheName);
 
-                if (this.historianCache != null)
+                if (this.dataEntryCache == null)
                 {
-                    if (this.historianCache.Count > 0)
+                    this.InitDataEntryCache();
+                }
+
+                if (this.dataEntryCache != null)
+                {
+                    if (this.dataEntryCache.Count > 0)
                     {
-                        Console.WriteLine($"Successfully loaded {this.historianCache.Count} items from cache {this.cacheName}.");
+                        Console.WriteLine($"Successfully loaded {this.dataEntryCache.Count} items from cache {this.cacheName}.");
                     } else
                     {
                         Console.WriteLine($"Warning - no cached items for {this.cacheName} loaded from persistence layer.");
@@ -334,7 +337,7 @@ namespace LabBenchStudios.Pdt.System
 
             if (this.dataStorer != null)
             {
-                int resultCode = this.dataStorer.StoreDataCache(this.cacheName, this.historianCache);
+                int resultCode = this.dataStorer.StoreDataCache(this.cacheName, this.dataEntryCache);
 
                 if (resultCode > 0)
                 {
@@ -387,6 +390,14 @@ namespace LabBenchStudios.Pdt.System
         {
             if (!string.IsNullOrWhiteSpace(name))
             {
+                try
+                {
+                    name = name.Trim(ConfigConst.JSON_EXT.ToCharArray());
+                } catch (Exception e)
+                {
+                    // ignore
+                }
+
                 this.cacheName = name;
             }
         }
@@ -420,6 +431,17 @@ namespace LabBenchStudios.Pdt.System
             DataHistorianState.DataHistorianReplayState state)
         {
             this.replayState = state;
+        }
+
+
+        // private methods
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        private void InitDataEntryCache()
+        {
+            this.dataEntryCache = new List<DataCacheEntryContainer>();
         }
 
     }

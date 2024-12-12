@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-
+using System.IO;
+using System.Text;
+using System.Text.RegularExpressions;
 using LabBenchStudios.Pdt.Common;
 using LabBenchStudios.Pdt.Connection;
 using LabBenchStudios.Pdt.Data;
+using LabBenchStudios.Pdt.Plexus;
 
-namespace LabBenchStudios.Pdt.System
+namespace LabBenchStudios.Pdt.Historian
 {
     /// <summary>
     /// This class is responsible for managing all locally accessible historical
@@ -57,9 +58,11 @@ namespace LabBenchStudios.Pdt.System
     ///   - Max of 10 unique devices (simulators) in cache at any given time
     ///   - Estimated memory requirements for operation of the internal cache: ~168 MB
     /// </summary>
-    public class SystemDataHistorianManager : IDataHistorian
+    public class DataHistorianManager : IDataHistorian
     {
-        private bool initializeBackingFileStore = true;
+        private string pathName = "/tmp";
+
+        private bool initializeBackingFileStore = false;
 
         private int maxItemsPerType = ConfigConst.DEFAULT_MAX_CACHED_ITEMS;
         private long maxCacheSize = ConfigConst.DEFAULT_MAX_CACHE_SIZE_IN_MB;
@@ -75,7 +78,7 @@ namespace LabBenchStudios.Pdt.System
         /// <summary>
         /// 
         /// </summary>
-        public SystemDataHistorianManager() :
+        public DataHistorianManager() :
             this(null, null,
                  ConfigConst.DEFAULT_MAX_CACHED_ITEMS,
                  ConfigConst.DEFAULT_MAX_CACHE_SIZE_IN_MB)
@@ -87,7 +90,7 @@ namespace LabBenchStudios.Pdt.System
         /// 
         /// </summary>
         /// <param name="listener"></param>
-        public SystemDataHistorianManager(ISystemStatusEventListener listener) :
+        public DataHistorianManager(ISystemStatusEventListener listener) :
             this(null, listener,
                  ConfigConst.DEFAULT_MAX_CACHED_ITEMS,
                  ConfigConst.DEFAULT_MAX_CACHE_SIZE_IN_MB)
@@ -100,7 +103,7 @@ namespace LabBenchStudios.Pdt.System
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="listener"></param>
-        public SystemDataHistorianManager(string filePath, ISystemStatusEventListener listener) :
+        public DataHistorianManager(string filePath, ISystemStatusEventListener listener) :
             this(filePath, listener,
                  ConfigConst.DEFAULT_MAX_CACHED_ITEMS,
                  ConfigConst.DEFAULT_MAX_CACHE_SIZE_IN_MB)
@@ -115,7 +118,7 @@ namespace LabBenchStudios.Pdt.System
         /// <param name="listener"></param>
         /// <param name="maxItemsPerType"></param>
         /// <param name="maxCacheSize"></param>
-        public SystemDataHistorianManager(
+        public DataHistorianManager(
             string filePath, ISystemStatusEventListener listener,
             int maxItemsPerType, long maxCacheSize) : base()
         {
@@ -135,13 +138,44 @@ namespace LabBenchStudios.Pdt.System
 
             this.totalHeapMemory = GC.GetTotalMemory(false);
 
-            if (this.initializeBackingFileStore)
-            {
-                this.InitFileStorage();
-            }
+            this.SetFilePath(filePath);
         }
 
         // public methods
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string CreateCacheName()
+        {
+            byte[] guidBytes = Guid.NewGuid().ToByteArray();
+            string base64Guid = Convert.ToBase64String(guidBytes);
+            string shortGuid = Regex.Replace(base64Guid, "[/+=]", "");
+
+            StringBuilder builder = new StringBuilder(DataHistorianCache.DEFAULT_CACHE_NAME);
+            builder.Append("_");
+            builder.Append(shortGuid);
+
+            string cacheName = builder.ToString();
+
+            Console.WriteLine($"Created data historian cache name: {cacheName}");
+
+            return cacheName;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public IDataHistorianPlayer CreateDataHistorianPlayer()
+        {
+            string cacheName = this.CreateCacheName();
+
+            Console.WriteLine($"Created data historian player name: {cacheName}");
+
+            return this.GetDataHistorianPlayer(cacheName, false);
+        }
 
         /// <summary>
         /// 
@@ -187,37 +221,47 @@ namespace LabBenchStudios.Pdt.System
         /// 
         /// </summary>
         /// <param name="cacheName"></param>
-        /// <param name="loadIfStored"></param>
+        /// <param name="loadFromPersistence"></param>
         /// <returns></returns>
-        public IDataHistorianPlayer GetDataHistorianPlayer(string cacheName, bool loadIfStored)
+        public IDataHistorianPlayer GetDataHistorianPlayer(string cacheName, bool loadFromPersistence)
         {
             if (!string.IsNullOrWhiteSpace(cacheName))
             {
                 if (this.dataCachePlayerTable.ContainsKey(cacheName))
                 {
-                    Console.WriteLine($"Retrieving historian cache from internal table for cache name {cacheName}.");
+                    Console.WriteLine($"Retrieving historian cache from internal table: {cacheName}.");
 
                     return this.dataCachePlayerTable[cacheName];
                 } else
                 {
-                    if (loadIfStored)
+                    Console.WriteLine($"Historian cache not yet stored internally. Loading / creating: {cacheName}.");
+
+                    if (loadFromPersistence)
                     {
-                        Console.WriteLine($"Attempting to load historian cache for cache name {cacheName}.");
+                        Console.WriteLine($"Attempting to load historian cache from persistence layer: {cacheName}.");
 
                         // create a new (or load an existing) backing cache
                         IDataHistorianCache dataCache = this.LoadDataHistorianCache(cacheName);
 
+                        if (dataCache == null)
+                        {
+                            Console.WriteLine($"DANGER: No historian cache! Name: {cacheName}");
+                        }
+
                         // create the historian player with the new (or loaded) data cache
                         IDataHistorianPlayer dataCachePlayer = new DataHistorianPlayer(dataCache);
 
-                        // set the listener for the player - this will allow notifications from the player
-                        dataCachePlayer.SetEventListener(this.eventListener);
+                        this.InitHistorianPlayer(dataCachePlayer);
 
-                        // add the player to the internal table
-                        this.dataCachePlayerTable.Add(cacheName, dataCachePlayer);
+                        return dataCachePlayer;
+                    } else
+                    {
+                        Console.WriteLine($"Attempting to create historian cache: {cacheName}.");
 
-                        // register the player for incoming events (from EventProcessor)
-                        EventProcessor.GetInstance().RegisterListener(dataCachePlayer);
+                        // create the historian player with a new backing cache
+                        IDataHistorianPlayer dataCachePlayer = new DataHistorianPlayer(cacheName);
+
+                        this.InitHistorianPlayer(dataCachePlayer);
 
                         return dataCachePlayer;
                     }
@@ -235,6 +279,33 @@ namespace LabBenchStudios.Pdt.System
         /// <summary>
         /// 
         /// </summary>
+        /// <returns></returns>
+        public List<string> GetLoadableCacheList()
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetLoadedCacheNames()
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string GetFilePath()
+        {
+            return this.pathName;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="cacheName"></param>
         public void ResetAndRemoveDataHistorian(string cacheName)
         {
@@ -248,7 +319,8 @@ namespace LabBenchStudios.Pdt.System
 
                     dataCachePlayer.Reset();
 
-                    EventProcessor.GetInstance().UnregisterListener(dataCachePlayer);
+                    EventProcessor.GetInstance().UnregisterListener((IDataContextEventListener) dataCachePlayer);
+                    EventProcessor.GetInstance().UnregisterListener((IUserEventStateListener) dataCachePlayer);
 
                     this.dataCachePlayerTable.Remove(cacheName);
                 } else
@@ -365,6 +437,66 @@ namespace LabBenchStudios.Pdt.System
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public bool SetFilePath(string filePath)
+        {
+            if (! string.IsNullOrEmpty(filePath))
+            {
+                if (filePath.Equals(".") || filePath.Equals("..") || filePath.Contains("..."))
+                {
+                    Console.WriteLine($"Invalid file path {filePath}. Ignoring.");
+
+                    return false;
+                }
+            }
+
+            if (string.IsNullOrEmpty(filePath) && this.persistenceConnector != null)
+            {
+                Console.WriteLine("New file path is invalid - null or empty. Ignoring.");
+
+                return false;
+            }
+
+            if (this.pathName != filePath || this.persistenceConnector == null)
+            {
+                try
+                {
+                    if (!string.IsNullOrWhiteSpace(filePath))
+                    {
+                        if (Directory.Exists(filePath))
+                        {
+                            this.pathName = filePath;
+                        } else
+                        {
+                            Console.WriteLine($"Path {filePath} doesn't exist. Using default: {this.pathName}");
+                        }
+                    } else
+                    {
+                        Console.WriteLine($"No path specified. Using default: {this.pathName}");
+                    }
+                } catch (Exception e)
+                {
+                    Console.WriteLine($"Failed to validate path {filePath}. Using default: {this.pathName}");
+                }
+
+                if (this.initializeBackingFileStore)
+                {
+                    this.InitPersistenceLayer();
+                }
+
+                return true;
+            } else
+            {
+                Console.WriteLine($"Set file path failed - new file path is the same is current: {this.pathName}");
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="persistenceConnector"></param>
         public void SetPersistenceConnector(IPersistenceConnector persistenceConnector)
         {
@@ -376,6 +508,7 @@ namespace LabBenchStudios.Pdt.System
                 }
 
                 this.persistenceConnector = persistenceConnector;
+                this.persistenceConnector.ConnectClient();
             }
         }
 
@@ -401,9 +534,29 @@ namespace LabBenchStudios.Pdt.System
         /// <summary>
         /// 
         /// </summary>
-        private void InitFileStorage()
+        /// <param name="historianPlayer"></param>
+        private void InitHistorianPlayer(IDataHistorianPlayer historianPlayer)
         {
-            this.persistenceConnector = new FilePersistenceConnector();
+            // set the listener for the player - this will allow notifications from the player
+            historianPlayer.SetEventListener(this.eventListener);
+
+            // add the player to the internal table
+            this.dataCachePlayerTable.Add(historianPlayer.GetCacheName(), historianPlayer);
+
+            // register the player for incoming events (from EventProcessor)
+            EventProcessor.GetInstance().RegisterListener((IDataContextEventListener) historianPlayer);
+
+            // register the player for incoming events (from EventProcessor)
+            EventProcessor.GetInstance().RegisterListener((IUserEventStateListener) historianPlayer);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filePath"></param>
+        private void InitPersistenceLayer()
+        {
+            this.SetPersistenceConnector(new FilePersistenceConnector(this.pathName));
         }
 
         /// <summary>
@@ -413,19 +566,26 @@ namespace LabBenchStudios.Pdt.System
         /// <returns></returns>
         private IDataHistorianCache LoadDataHistorianCache(string cacheName)
         {
+            if (this.persistenceConnector == null)
+            {
+                this.InitPersistenceLayer();
+            }
+
             if (this.persistenceConnector != null)
             {
-                List<DataCacheEntryContainer> dataCacheContent = this.persistenceConnector.LoadDataCache(cacheName);
-
                 DataHistorianCache dataCache = new DataHistorianCache(cacheName);
-                dataCache.AddCacheItems(dataCacheContent, true);
+                dataCache.SetDataLoader(this.persistenceConnector);
+                dataCache.SetDataStorer(this.persistenceConnector);
 
-                if (dataCache != null)
+                if (dataCache.LoadDataCache())
                 {
                     Console.WriteLine($"Successfully loaded data cache {cacheName} with {dataCache.GetCacheSize()} items.");
-
-                    return dataCache;
+                } else
+                {
+                    Console.WriteLine($"Successully created data cache {cacheName}. Cache is currently empty.");
                 }
+
+                return dataCache;
             } else
             {
                 Console.WriteLine($"Warning - no persistence connector initialized. Can't load cache {cacheName}.");
