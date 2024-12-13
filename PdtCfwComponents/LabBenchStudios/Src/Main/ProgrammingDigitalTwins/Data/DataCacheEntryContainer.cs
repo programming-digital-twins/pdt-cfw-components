@@ -280,7 +280,7 @@ namespace LabBenchStudios.Pdt.Data
         /// <returns></returns>
         private DateTime GenerateUtcTime(string timeStamp)
         {
-            return DateTime.Parse(this.actuatorData.GetTimeStamp()).ToUniversalTime();
+            return DateTime.Parse(timeStamp).ToUniversalTime();
         }
 
     }

@@ -27,8 +27,7 @@
 		<PackageReference Include="System.Memory" Version="4.6.0" />
 		<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.0" />
 		<PackageReference Include="System.Text.Json" Version="9.0.0" />
-		<PackageReference Include="System.Threading.Tasks.Extensions" Version="4.6.0" />
-	</ItemGroup>
+		<PackageReference Include="System.Threading.Tasks.Extensions" Version="4.6.0" />	</ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\PdtCfwComponents\PdtCfwComponents.csproj" />

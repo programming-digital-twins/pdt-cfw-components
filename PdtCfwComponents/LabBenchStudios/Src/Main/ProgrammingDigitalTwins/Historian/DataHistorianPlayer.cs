@@ -88,6 +88,15 @@ namespace LabBenchStudios.Pdt.Historian
 
             return DataHistorianState.DataHistorianReplayDirection.Uninitialized;
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string GetCacheFileName()
+        {
+            return this.historianCache.GetStorageFileName();
+        }
 
         /// <summary>
         /// 
@@ -301,6 +310,17 @@ namespace LabBenchStudios.Pdt.Historian
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public bool Clear()
+        {
+            this.historianCache.SetCacheState(DataHistorianState.DataHistorianReplayState.Pause);
+
+            return this.historianCache.ClearCache();
         }
 
         /// <summary>
@@ -533,7 +553,9 @@ namespace LabBenchStudios.Pdt.Historian
             {
                 Console.WriteLine($"Storing cache for player: {this.playerName}. Items in cache: {this.historianCache.GetCacheSize()}");
 
-                return this.historianCache.StoreDataCache();
+                bool success = this.historianCache.StoreDataCache();
+
+                return success;
             } else
             {
                 Console.WriteLine($"No valid cache to store for player: {this.playerName}.");

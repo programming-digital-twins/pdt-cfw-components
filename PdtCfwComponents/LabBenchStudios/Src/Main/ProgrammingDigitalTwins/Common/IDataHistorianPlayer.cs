@@ -32,6 +32,12 @@ namespace LabBenchStudios.Pdt.Common
         /// 
         /// </summary>
         /// <returns></returns>
+        public string GetCacheFileName();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public long GetCacheSize();
 
         /// <summary>
@@ -94,6 +100,12 @@ namespace LabBenchStudios.Pdt.Common
         /// </summary>
         /// <returns></returns>
         public bool IsPlaying();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public bool Clear();
 
         /// <summary>
         /// 

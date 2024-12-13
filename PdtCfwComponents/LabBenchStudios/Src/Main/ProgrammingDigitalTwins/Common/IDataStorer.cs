@@ -32,6 +32,21 @@ namespace LabBenchStudios.Pdt.Common
     public interface IDataStorer
     {
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheName"></param>
+        /// <returns></returns>
+        public string CreateCacheFileName(string cacheName);
+
+        /// <summary>
+		/// Attempts to write the source data instance to the persistence server.
+        /// </summary>
+        /// <param name="historianCache"></param>
+        /// <returns type="int">On success, returns the total bytes stored. If no bytes
+        /// are written and no errors, returns 0. If errored, returns -1.</returns>
+        public int StoreDataCache(IDataHistorianCache historianCache);
+
+        /// <summary>
 		/// Attempts to write the source data instance to the persistence server.
         /// </summary>
         /// <param name="cacheName"></param>
@@ -40,12 +55,12 @@ namespace LabBenchStudios.Pdt.Common
         /// are written and no errors, returns 0. If errored, returns -1.</returns>
         public int StoreDataCache(string cacheName, List<DataCacheEntryContainer> cache);
 
-		/// <summary>
-		/// Attempts to write the source data instance to the persistence server.
-		/// </summary>
-		/// <param name="resource">The target resource name.</param>
-		/// <param name="qos">The intended target QoS.</param>
-		/// <param name="data">The data instance to store.</param>
+        /// <summary>
+        /// Attempts to write the source data instance to the persistence server.
+        /// </summary>
+        /// <param name="resource">The target resource name.</param>
+        /// <param name="qos">The intended target QoS.</param>
+        /// <param name="data">The data instance to store.</param>
         /// <returns type="bool">True on success; false otherwise.</returns>
         public bool StoreData(ResourceNameContainer resource, int qos, ActuatorData data);
 

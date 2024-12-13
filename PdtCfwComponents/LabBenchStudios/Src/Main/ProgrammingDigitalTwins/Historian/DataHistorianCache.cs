@@ -63,6 +63,7 @@ namespace LabBenchStudios.Pdt.Historian
         // private
 
         private string cacheName = null;
+        private string cacheFileName = null;
 
         private DataHistorianState.DataHistorianReplayState replayState;
         private DataHistorianState.DataHistorianReplayDirection replayDirection;
@@ -177,6 +178,15 @@ namespace LabBenchStudios.Pdt.Historian
         /// 
         /// </summary>
         /// <returns></returns>
+        public List<DataCacheEntryContainer> GetCacheEntries()
+        {
+            return this.dataEntryCache;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public string GetCacheName()
         {
             return this.cacheName;
@@ -252,6 +262,15 @@ namespace LabBenchStudios.Pdt.Historian
             {
                 return null;
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string GetStorageFileName()
+        {
+            return this.cacheFileName;
         }
 
         /// <summary>
@@ -337,7 +356,7 @@ namespace LabBenchStudios.Pdt.Historian
 
             if (this.dataStorer != null)
             {
-                int resultCode = this.dataStorer.StoreDataCache(this.cacheName, this.dataEntryCache);
+                int resultCode = this.dataStorer.StoreDataCache(this);
 
                 if (resultCode > 0)
                 {
@@ -379,6 +398,8 @@ namespace LabBenchStudios.Pdt.Historian
             {
                 Console.WriteLine("Setting data storer...");
                 this.dataStorer = storer;
+
+                this.cacheFileName = this.dataStorer.CreateCacheFileName(this.cacheName);
             }
         }
 

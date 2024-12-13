@@ -206,6 +206,16 @@ namespace LabBenchStudios.Pdt.Connection
         /// </summary>
         /// <param name="cacheName"></param>
         /// <returns></returns>
+        protected override string HandleCreateCacheFileName(string cacheName)
+        {
+            return this.CreateAbsFileName(cacheName);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheName"></param>
+        /// <returns></returns>
         protected override List<DataCacheEntryContainer> HandleLoadDataCache(string cacheName)
         {
             string fileName = this.CreateAbsFileName(cacheName);
@@ -285,6 +295,7 @@ namespace LabBenchStudios.Pdt.Connection
         protected override List<SystemPerformanceData> HandleLoadSystemPerformanceData(ResourceNameContainer resource, TimeDuration duration)
         {
             Console.WriteLine("HandleLoadSystemPerformanceData not yet implemented.");
+
             return null;
         }
 
@@ -292,38 +303,28 @@ namespace LabBenchStudios.Pdt.Connection
         /// 
         /// </summary>
         /// <param name="cacheName"></param>
-        /// <param name="cache"></param>
+        /// <param name="dataCache"></param>
         /// <returns></returns>
         protected override int HandleStoreDataCache(string cacheName, List<DataCacheEntryContainer> dataCache)
         {
             string fileName = this.CreateAbsFileName(cacheName, true, true);
-            string jsonData = DataUtil.DataCacheEntryListToJson(dataCache);
-            int bytesWritten = 0;
 
-            Console.WriteLine($"Storing {jsonData.Length} bytes to data cache {cacheName} at location {fileName}.");
+            return this.HandleStoreDataCache(cacheName, fileName, dataCache);
+        }
 
-            try
-            {
-                StreamWriter writer = new StreamWriter(fileName);
-                writer.Write(jsonData);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="historianCache"></param>
+        /// <returns></returns>
+        protected override int HandleStoreDataCache(IDataHistorianCache historianCache)
+        {
+            string cacheName = historianCache.GetCacheName();
+            string fileName = historianCache.GetStorageFileName();
 
-                bytesWritten = jsonData.Length;
+            List<DataCacheEntryContainer> dataCache = historianCache.GetCacheEntries();
 
-                if (bytesWritten > 0)
-                {
-                    Console.WriteLine($"Successfully stored data cache {cacheName} to location {fileName}. Total bytes: {bytesWritten}.");
-                } else
-                {
-                    Console.WriteLine($"No data stored for data cache {cacheName} to location {fileName}.");
-                }
-            } catch (Exception e)
-            {
-                bytesWritten = -1;
-
-                Console.WriteLine($"Failed to write data cache {cacheName} to file {fileName}. Error: {e.Message}");
-            }
-
-            return bytesWritten;
+            return this.HandleStoreDataCache(cacheName, fileName, dataCache);
         }
 
         /// <summary>
@@ -456,6 +457,44 @@ namespace LabBenchStudios.Pdt.Connection
             string absFileName = Path.GetFullPath(Path.Combine(this.dataCachePathPrefix, cacheName, fileName));
 
             return absFileName;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheName"></param>
+        /// <param name="cacheFileName"></param>
+        /// <param name="dataCache"></param>
+        /// <returns></returns>
+        private int HandleStoreDataCache(string cacheName, string fileName, List<DataCacheEntryContainer> dataCache)
+        {
+            string jsonData = DataUtil.DataCacheEntryListToJson(dataCache);
+            int bytesWritten = 0;
+
+            Console.WriteLine($"Storing {jsonData.Length} bytes to data cache {cacheName} at location {fileName}.");
+
+            try
+            {
+                StreamWriter writer = new StreamWriter(fileName);
+                writer.Write(jsonData);
+
+                bytesWritten = jsonData.Length;
+
+                if (bytesWritten > 0)
+                {
+                    Console.WriteLine($"Successfully stored data cache {cacheName} to location {fileName}. Total bytes: {bytesWritten}.");
+                } else
+                {
+                    Console.WriteLine($"No data stored for data cache {cacheName} to location {fileName}.");
+                }
+            } catch (Exception e)
+            {
+                bytesWritten = -1;
+
+                Console.WriteLine($"Failed to write data cache {cacheName} to file {fileName}. Error: {e.Message}");
+            }
+
+            return bytesWritten;
         }
 
         /// <summary>

@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Remoting.Messaging;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 using LabBenchStudios.Pdt.Common;
@@ -134,6 +135,17 @@ namespace LabBenchStudios.Pdt.Connection
         public bool IsClientConnected()
         {
             return this.isConnected;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheName"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public string CreateCacheFileName(string cacheName)
+        {
+            return this.HandleCreateCacheFileName(cacheName);
         }
 
         /// <summary>
@@ -250,6 +262,39 @@ namespace LabBenchStudios.Pdt.Connection
 
                 this.eventListener?.HandleConnectionStateData(GetConnectionStateCopy());
             }
+        }
+
+        /// <summary>
+		/// Attempts to write the source data instance to the persistence server.
+        /// </summary>
+        /// <param name="historianCache"></param>
+        /// <returns type="int">On success, returns the total bytes stored. If no bytes
+        /// are written and no errors, returns 0. If errored, returns -1.</returns>
+        public int StoreDataCache(IDataHistorianCache historianCache)
+        {
+            if (historianCache != null)
+            {
+                string cacheName = historianCache.GetCacheName();
+                string fileName  = historianCache.GetStorageFileName();
+
+                List<DataCacheEntryContainer> cacheEntries = historianCache.GetCacheEntries();
+
+                if (cacheEntries.Count > 0)
+                {
+                    if (string.IsNullOrWhiteSpace(fileName))
+                    {
+                        return this.HandleStoreDataCache(cacheName, cacheEntries);
+                    } else
+                    {
+                        return this.HandleStoreDataCache(historianCache);
+                    }
+                } else
+                {
+                    Console.WriteLine($"No cache data to write to cache name {cacheName}. Ignoring store request.");
+                }
+            }
+
+            return 0;
         }
 
         /// <summary>
@@ -423,6 +468,13 @@ namespace LabBenchStudios.Pdt.Connection
         /// </summary>
         /// <param name="cacheName"></param>
         /// <returns></returns>
+        protected abstract string HandleCreateCacheFileName(string cacheName);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheName"></param>
+        /// <returns></returns>
         protected abstract List<DataCacheEntryContainer> HandleLoadDataCache(string cacheName);
 
         /// <summary>
@@ -464,6 +516,14 @@ namespace LabBenchStudios.Pdt.Connection
         /// <param name="cache"></param>
         /// <returns></returns>
         protected abstract int HandleStoreDataCache(string cacheName, List<DataCacheEntryContainer> dataCache);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheName"></param>
+        /// <param name="cache"></param>
+        /// <returns></returns>
+        protected abstract int HandleStoreDataCache(IDataHistorianCache historianCache);
 
         /// <summary>
         /// 

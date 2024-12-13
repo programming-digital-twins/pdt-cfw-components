@@ -33,6 +33,12 @@ namespace LabBenchStudios.Pdt.Common
         /// 
         /// </summary>
         /// <returns></returns>
+        public List<DataCacheEntryContainer> GetCacheEntries();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public string GetCacheName();
 
         /// <summary>
@@ -70,6 +76,12 @@ namespace LabBenchStudios.Pdt.Common
         /// </summary>
         /// <returns></returns>
         public DataCacheEntryContainer GetNextEntry();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string GetStorageFileName();
 
         /// <summary>
         /// 
