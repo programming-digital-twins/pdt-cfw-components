@@ -22,8 +22,6 @@
  * SOFTWARE.
  */
 
-using System;
-
 namespace LabBenchStudios.Pdt.Common
 {
     /// <summary>

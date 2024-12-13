@@ -25,10 +25,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
 
 using LabBenchStudios.Pdt.Common;
 using LabBenchStudios.Pdt.Data;
+using LabBenchStudios.Pdt.Util;
 
 namespace LabBenchStudios.Pdt.Connection
 {
@@ -72,7 +72,6 @@ namespace LabBenchStudios.Pdt.Connection
     {
         // static consts
 
-        public const string DATE_TIME_FORMAT = "ddMMMyyyy";
 
         // enum declaration
 
@@ -156,11 +155,7 @@ namespace LabBenchStudios.Pdt.Connection
         }
 
 
-        // public methods
-
-
-
-        // protected
+        // protected methods
 
         /// <summary>
         /// 
@@ -208,7 +203,25 @@ namespace LabBenchStudios.Pdt.Connection
         /// <returns></returns>
         protected override string HandleCreateCacheFileName(string cacheName)
         {
-            return this.CreateAbsFileName(cacheName);
+            return FileUtil.CreateAbsFileName(cacheName, this.dataCachePathPrefix);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        protected override string HandleGetDataCacheUri()
+        {
+            return this.dataCachePathPrefix;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        protected override string HandleGetDataStoreUri()
+        {
+            return this.dataStorePathPrefix;
         }
 
         /// <summary>
@@ -218,7 +231,7 @@ namespace LabBenchStudios.Pdt.Connection
         /// <returns></returns>
         protected override List<DataCacheEntryContainer> HandleLoadDataCache(string cacheName)
         {
-            string fileName = this.CreateAbsFileName(cacheName);
+            string fileName = FileUtil.CreateAbsFileName(cacheName, this.dataCachePathPrefix);
             int bytesRead = 0;
 
             Console.WriteLine($"Loading data cache {cacheName} from location {fileName}.");
@@ -307,7 +320,7 @@ namespace LabBenchStudios.Pdt.Connection
         /// <returns></returns>
         protected override int HandleStoreDataCache(string cacheName, List<DataCacheEntryContainer> dataCache)
         {
-            string fileName = this.CreateAbsFileName(cacheName, true, true);
+            string fileName = FileUtil.CreateAbsFileName(cacheName, this.dataStorePathPrefix, true, true);
 
             return this.HandleStoreDataCache(cacheName, fileName, dataCache);
         }
@@ -381,83 +394,6 @@ namespace LabBenchStudios.Pdt.Connection
 
 
         // private
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="resource"></param>
-        /// <returns></returns>
-        private string CreateAbsFileName(ResourceNameContainer resource)
-        {
-            string deviceID = resource.DeviceName;
-            string dataType = ConfigConst.NOT_SET;
-
-            if (resource.IsActuationResource)
-            {
-                dataType = nameof(ActuatorData);
-            } else if (resource.IsConnStateResource)
-            {
-                dataType = nameof(ConnectionStateData);
-            } else if (resource.IsSensingResource)
-            {
-                dataType = nameof(SensorData);
-            } else if (resource.IsSystemResource)
-            {
-                dataType = nameof(SystemPerformanceData);
-            }
-
-            string fileName = DateTime.UtcNow.ToString(DATE_TIME_FORMAT);
-            string absFileName = Path.GetFullPath(Path.Combine(this.dataStorePathPrefix, deviceID, dataType, fileName));
-
-            return absFileName;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="cacheName"></param>
-        /// <returns></returns>
-        private string CreateAbsFileName(string cacheName)
-        {
-            return this.CreateAbsFileName(cacheName, false, true);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="cacheName"></param>
-        /// <param name="useDate"></param>
-        /// <returns></returns>
-        private string CreateAbsFileName(string cacheName, bool useDate)
-        {
-            return this.CreateAbsFileName(cacheName, useDate, true);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="cacheName"></param>
-        /// <param name="useDate"></param>
-        /// <param name="useJsonExt"></param>
-        /// <returns></returns>
-        private string CreateAbsFileName(string cacheName, bool useDate, bool useJsonExt)
-        {
-            string fileName = cacheName;
-
-            if (useDate)
-            {
-                fileName = fileName + "_" + DateTime.UtcNow.ToString(DATE_TIME_FORMAT);
-            }
-
-            if (useJsonExt)
-            {
-                fileName = fileName + ConfigConst.JSON_EXT;
-            }
-
-            string absFileName = Path.GetFullPath(Path.Combine(this.dataCachePathPrefix, cacheName, fileName));
-
-            return absFileName;
-        }
 
         /// <summary>
         /// 

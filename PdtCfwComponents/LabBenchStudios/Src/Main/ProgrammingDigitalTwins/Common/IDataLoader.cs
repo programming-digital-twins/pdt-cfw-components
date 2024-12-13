@@ -29,7 +29,7 @@ using LabBenchStudios.Pdt.Data;
 
 namespace LabBenchStudios.Pdt.Common
 {
-    public interface IDataLoader
+    public interface IDataLoader : IDataManager
     {
         /// <summary>
 		/// Attempts to retrieve the named data instance from the persistence server.

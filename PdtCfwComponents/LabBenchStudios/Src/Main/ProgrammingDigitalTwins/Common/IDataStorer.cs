@@ -29,15 +29,8 @@ using LabBenchStudios.Pdt.Data;
 
 namespace LabBenchStudios.Pdt.Common
 {
-    public interface IDataStorer
+    public interface IDataStorer : IDataManager
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="cacheName"></param>
-        /// <returns></returns>
-        public string CreateCacheFileName(string cacheName);
-
         /// <summary>
 		/// Attempts to write the source data instance to the persistence server.
         /// </summary>

@@ -22,33 +22,28 @@
  * SOFTWARE.
  */
 
-using System;
-
 namespace LabBenchStudios.Pdt.Common
 {
-    public class DateUtil
+    public interface IDataManager
     {
-        /**
-         * Convert the ISO 8601 timestamp string into milliseconds.
-         * 
-         * @param timeStampStr
-         * @return long
-         */
-        public static long ConvertIso8601TimeStampToMillis(string timeStampStr)
-        {
-            DateTime dt = DateTime.Parse(timeStampStr);
-            DateTimeOffset dto = new DateTimeOffset(dt);
-            long millis = dto.ToUnixTimeMilliseconds();
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheName"></param>
+        /// <returns></returns>
+        public string CreateCacheFileName(string cacheName);
 
-            return millis;
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string GetDataCacheUri();
 
-        public static long ConvertDateTimeToMillis(DateTime dt)
-        {
-            DateTimeOffset dto = new DateTimeOffset(dt);
-
-            return dto.ToUnixTimeMilliseconds();
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string GetDataStoreUri();
 
     }
 }

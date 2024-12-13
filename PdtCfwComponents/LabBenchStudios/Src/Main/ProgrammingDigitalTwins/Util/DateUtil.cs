@@ -22,23 +22,33 @@
  * SOFTWARE.
  */
 
-namespace LabBenchStudios.Pdt.Common
+using System;
+
+namespace LabBenchStudios.Pdt.Util
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public class UserEventState
+    public class DateUtil
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        public enum EventType
+        /**
+         * Convert the ISO 8601 timestamp string into milliseconds.
+         * 
+         * @param timeStampStr
+         * @return long
+         */
+        public static long ConvertIso8601TimeStampToMillis(string timeStampStr)
         {
-            CloseOpenDialogs,
-            FreezePlayer,
-            UnfreezePlayer
+            DateTime dt = DateTime.Parse(timeStampStr);
+            DateTimeOffset dto = new DateTimeOffset(dt);
+            long millis = dto.ToUnixTimeMilliseconds();
+
+            return millis;
+        }
+
+        public static long ConvertDateTimeToMillis(DateTime dt)
+        {
+            DateTimeOffset dto = new DateTimeOffset(dt);
+
+            return dto.ToUnixTimeMilliseconds();
         }
 
     }
-
 }

@@ -24,14 +24,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Runtime.Remoting.Messaging;
-using System.Security.Cryptography;
-using System.Threading.Tasks;
 
 using LabBenchStudios.Pdt.Common;
 using LabBenchStudios.Pdt.Data;
 
+using LabBenchStudios.Pdt.Util;
 namespace LabBenchStudios.Pdt.Connection
 {
     /// <summary>
@@ -146,6 +143,24 @@ namespace LabBenchStudios.Pdt.Connection
         public string CreateCacheFileName(string cacheName)
         {
             return this.HandleCreateCacheFileName(cacheName);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string GetDataCacheUri()
+        {
+            return this.HandleGetDataCacheUri();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string GetDataStoreUri()
+        {
+            return this.HandleGetDataStoreUri();
         }
 
         /// <summary>
@@ -469,6 +484,18 @@ namespace LabBenchStudios.Pdt.Connection
         /// <param name="cacheName"></param>
         /// <returns></returns>
         protected abstract string HandleCreateCacheFileName(string cacheName);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        protected abstract string HandleGetDataCacheUri();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        protected abstract string HandleGetDataStoreUri();
 
         /// <summary>
         /// 

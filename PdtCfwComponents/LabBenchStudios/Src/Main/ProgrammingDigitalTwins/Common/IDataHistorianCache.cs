@@ -87,6 +87,12 @@ namespace LabBenchStudios.Pdt.Common
         /// 
         /// </summary>
         /// <returns></returns>
+        public string GetStorageResourceUri();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public bool HasCachedEntries();
 
         /// <summary>

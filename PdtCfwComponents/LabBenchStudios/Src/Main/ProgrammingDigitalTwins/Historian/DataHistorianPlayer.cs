@@ -4,6 +4,7 @@ using System.Threading;
 
 using LabBenchStudios.Pdt.Common;
 using LabBenchStudios.Pdt.Data;
+using LabBenchStudios.Pdt.Util;
 
 namespace LabBenchStudios.Pdt.Historian
 {
@@ -96,6 +97,15 @@ namespace LabBenchStudios.Pdt.Historian
         public string GetCacheFileName()
         {
             return this.historianCache.GetStorageFileName();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string GetCacheStorageUri()
+        {
+            return this.historianCache.GetStorageResourceUri();
         }
 
         /// <summary>
@@ -490,6 +500,30 @@ namespace LabBenchStudios.Pdt.Historian
         public void SetCacheFillingEnabledFlag(bool enabled)
         {
             this.cacheFillingEnabled = enabled;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataLoader"></param>
+        public void SetDataLoader(IDataLoader dataLoader)
+        {
+            if (dataLoader != null)
+            {
+                this.historianCache.SetDataLoader(dataLoader);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataStorer"></param>
+        public void SetDataStorer(IDataStorer dataStorer)
+        {
+            if (dataStorer != null)
+            {
+                this.historianCache.SetDataStorer(dataStorer);
+            }
         }
 
         /// <summary>

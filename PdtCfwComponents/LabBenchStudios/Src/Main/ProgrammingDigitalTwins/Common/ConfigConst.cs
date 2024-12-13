@@ -47,6 +47,8 @@ namespace LabBenchStudios.Pdt.Common
         public const string MODEL_FILE_NAME_PREFIX = "Lbs_Pdt_";
         public const string MODEL_FILE_NAME_SUFFIX = "*" + JSON_EXT;
 
+        public const string FILE_DATE_TIME_FORMAT = "ddMMMyyyy";
+
         public const string CONFIG_TYPE_FILE_NAME_PREFIX = MODEL_FILE_NAME_PREFIX + "TypeConfig";
         public const string CONFIG_TYPE_FILE_NAME_PATTERN = CONFIG_TYPE_FILE_NAME_PREFIX + MODEL_FILE_NAME_SUFFIX;
         public const string MODEL_FILE_NAME_PATTERN = MODEL_FILE_NAME_PREFIX + MODEL_FILE_NAME_SUFFIX;

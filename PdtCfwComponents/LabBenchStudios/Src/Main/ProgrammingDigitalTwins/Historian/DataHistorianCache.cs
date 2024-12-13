@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using LabBenchStudios.Pdt.Common;
 using LabBenchStudios.Pdt.Data;
+using LabBenchStudios.Pdt.Util;
 
 namespace LabBenchStudios.Pdt.Historian
 {
@@ -271,6 +272,20 @@ namespace LabBenchStudios.Pdt.Historian
         public string GetStorageFileName()
         {
             return this.cacheFileName;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string GetStorageResourceUri()
+        {
+            if (this.dataStorer != null)
+            {
+                return this.dataStorer.GetDataStoreUri();
+            }
+
+            return null;
         }
 
         /// <summary>

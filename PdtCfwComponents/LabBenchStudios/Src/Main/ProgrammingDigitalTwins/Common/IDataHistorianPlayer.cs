@@ -22,8 +22,6 @@
  * SOFTWARE.
  */
 
-using System;
-
 namespace LabBenchStudios.Pdt.Common
 {
     public interface IDataHistorianPlayer : IDataContextEventListener, IUserEventStateListener
@@ -33,6 +31,12 @@ namespace LabBenchStudios.Pdt.Common
         /// </summary>
         /// <returns></returns>
         public string GetCacheFileName();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string GetCacheStorageUri();
 
         /// <summary>
         /// 
@@ -87,6 +91,18 @@ namespace LabBenchStudios.Pdt.Common
         /// </summary>
         /// <param name="enabled"></param>
         public void SetCacheFillingEnabledFlag(bool enabled);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataLoader"></param>
+        public void SetDataLoader(IDataLoader dataLoader);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataStorer"></param>
+        public void SetDataStorer(IDataStorer dataStorer);
 
         /// <summary>
         /// 

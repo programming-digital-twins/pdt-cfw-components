@@ -24,7 +24,7 @@
 
 using System;
 
-namespace LabBenchStudios.Pdt.Common
+namespace LabBenchStudios.Pdt.Util
 {
     /// <summary>
     /// Simple wrapper class around two DateTime objects:
