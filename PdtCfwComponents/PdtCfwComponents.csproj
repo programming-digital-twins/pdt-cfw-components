@@ -58,7 +58,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="LabBenchStudios\Models\Types\Test\" />
+		<Folder Include="LabBenchStudios\Models\Types\Test\" />
 	</ItemGroup>
 
 </Project>
