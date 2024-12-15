@@ -54,6 +54,12 @@ namespace LabBenchStudios.Pdt.Common
         /// 
         /// </summary>
         /// <returns></returns>
+        public string GetDisplayName();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public float GetPlaybackDelayFactor();
 
         /// <summary>
@@ -103,6 +109,12 @@ namespace LabBenchStudios.Pdt.Common
         /// </summary>
         /// <param name="dataStorer"></param>
         public void SetDataStorer(IDataStorer dataStorer);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="displayName"></param>
+        public void SetDisplayName(string displayName);
 
         /// <summary>
         /// 

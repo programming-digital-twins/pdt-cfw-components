@@ -29,6 +29,7 @@ namespace LabBenchStudios.Pdt.Historian
         private Thread playbackThread = null;
 
         private string playerName = ConfigConst.NOT_SET;
+        private string displayName = ConfigConst.NOT_SET;
 
         private bool cacheFillingEnabled = false;
         private bool playbackEnabled = false;
@@ -44,7 +45,7 @@ namespace LabBenchStudios.Pdt.Historian
         {
             this.InitHistorianCache(new DataHistorianCache(cacheName));
 
-            this.playerName = cacheName;
+            this.InitPlayerProperties();
 
             //this.Reset();
         }
@@ -56,14 +57,14 @@ namespace LabBenchStudios.Pdt.Historian
         {
             this.InitHistorianCache(historianCache);
 
-            this.playerName = historianCache.GetCacheName();
+            this.InitPlayerProperties();
 
             //this.Reset();
         }
 
 
         // public methods
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -132,6 +133,15 @@ namespace LabBenchStudios.Pdt.Historian
         public string GetCacheName()
         {
             return this.historianCache.GetCacheName();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string GetDisplayName()
+        {
+            return this.displayName;
         }
 
         /// <summary>
@@ -529,6 +539,21 @@ namespace LabBenchStudios.Pdt.Historian
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="displayName"></param>
+        public void SetDisplayName(string displayName)
+        {
+            if (!string.IsNullOrWhiteSpace(displayName))
+            {
+                this.displayName = displayName;
+            } else
+            {
+                Console.WriteLine("Invalid display name. Ignoring set request.");
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="enabled"></param>
         /// <returns></returns>
         public void SetPlaybackEnabledFlag(bool enabled)
@@ -738,6 +763,16 @@ namespace LabBenchStudios.Pdt.Historian
 
             this.historianCache = historianCache;
             this.playerName = this.historianCache.GetCacheName();
+            this.displayName = this.playerName;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void InitPlayerProperties()
+        {
+            this.playerName = this.historianCache.GetCacheName();
+            this.displayName = this.playerName;
         }
 
     }

@@ -10,7 +10,7 @@
   "contents": [
     {
       "@type": [ "Property", "RelativeHumidity" ],
-      "name": "targetHumidity",
+      "name": "targetZoneHumidity",
       "writable": true,
       "schema": "float",
       "unit": "percent"

@@ -39,6 +39,11 @@ namespace LabBenchStudios.Pdt.Common
         public const string DEFAULT_FILE_STORAGE_PATH = "/tmp";
         public const string JSON_EXT = ".json";
 
+        public static readonly string TEST_MODEL_FILE_PATH =
+            "../../../../PdtCfwComponents/LabBenchStudios/Models/";
+        public static readonly string TEST_DIGITAL_TWIN_MODEL_FILE_PATH = TEST_MODEL_FILE_PATH + "Dtdl/";
+        public static readonly string TEST_CONFIG_TYPE_MODEL_FILE_PATH = TEST_MODEL_FILE_PATH + "Types/";
+
         public const string RELATIVE_MODEL_PATH_PREFIX = "../../../../Models/";
 
         public const string DEFAULT_CONFIG_TYPE_FILE_PATH = RELATIVE_MODEL_PATH_PREFIX + "Types/";
@@ -101,8 +106,8 @@ namespace LabBenchStudios.Pdt.Common
         public static readonly string DEVICE_NAME_KEY = "deviceName";
         public static readonly string TYPE_NAME_KEY = "typeName";
 
-        public static readonly string DATA_STORE_NAME = "dataStore";
-        public static readonly string DATA_CACHE_NAME = "dataCache";
+        public static readonly string DATA_STORE_NAME = "objectStore";
+        public static readonly string DATA_CACHE_NAME = "historianCache";
 
         public static readonly string CONSTRAINED_DEVICE = CONSTRAINED + DEVICE;
         public static readonly string EDGE_DEVICE = EDGE + DEVICE;

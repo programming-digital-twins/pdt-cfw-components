@@ -41,7 +41,7 @@ namespace LabBenchStudios.Pdt.Test.Data
         [Test]
         public void LoadDataTypeConfigJsonFile()
         {
-            string pathName = "../../../../PdtCfwComponents/LabBenchStudios/Models/Types/";
+            string pathName = ConfigConst.TEST_CONFIG_TYPE_MODEL_FILE_PATH;
             string fileName = "Lbs_Pdt_TypeConfig_EnvironmentalSensors.json";
 
             try

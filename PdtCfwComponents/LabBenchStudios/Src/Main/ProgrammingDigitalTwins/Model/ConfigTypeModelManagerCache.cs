@@ -204,28 +204,43 @@ namespace LabBenchStudios.Pdt.Model
             {
                 if (Directory.Exists(modelFilePath))
                 {
-                    string[] typeConfigFiles = Directory.GetFiles(modelFilePath);
+                    string[] typeConfigFiles = Directory.GetFiles(modelFilePath, ConfigConst.MODEL_FILE_NAME_SUFFIX);
 
                     foreach (string typeConfigFile in typeConfigFiles)
                     {
+                        Console.WriteLine($"Attempting to load config type model: {typeConfigFile}");
+
                         try
                         {
                             ConfigTypeModelContainer typeContainer = ConfigTypeModelUtil.JsonFileToDataTypeCategoryInfo(typeConfigFile);
 
-                            string typeName = typeContainer.GetConfigTypeName();
+                            string containerTypeName = typeContainer.GetConfigTypeName();
 
                             // add the container to the internal container cache
-                            this.configTypeContainerTable.Add(typeName, typeContainer);
+                            if (this.configTypeContainerTable.ContainsKey(containerTypeName))
+                            {
+                                Console.WriteLine($"Container config type name already loaded: {containerTypeName}. Replacing old with new.");
+                                this.configTypeContainerTable.Remove(containerTypeName);
+                            }
 
-                            string modelName = typeContainer.GetModelName();
+                            this.configTypeContainerTable.Add(containerTypeName, typeContainer);
 
-                            if (string.IsNullOrEmpty(modelName)) {
-                                modelName = typeName;
-                                typeContainer.SetModelName(modelName);
+                            string containerModelName = typeContainer.GetModelName();
+
+                            if (string.IsNullOrEmpty(containerModelName)) {
+                                containerModelName = containerTypeName;
+                                typeContainer.SetModelName(containerModelName);
+                            }
+
+                            // add the container to the internal container cache
+                            if (this.configTypeModelMappingTable.ContainsKey(containerModelName))
+                            {
+                                Console.WriteLine($"Config type model already loaded: {containerModelName}. Replacing old with new.");
+                                this.configTypeModelMappingTable.Remove(containerModelName);
                             }
 
                             // add the container to the model name mapping table
-                            this.configTypeModelMappingTable.Add(modelName, typeContainer);
+                            this.configTypeModelMappingTable.Add(containerModelName, typeContainer);
 
                             List<ConfigTypeModelEntry> configTypeEntries = typeContainer.GetConfigTypeList();
 
@@ -233,34 +248,53 @@ namespace LabBenchStudios.Pdt.Model
                                 // set ref to parent container
                                 entry.SetConfigTypeContainerRef(typeContainer);
 
-                                typeName = entry.GetConfigTypeName();
-                                modelName = entry.GetModelName();
+                                string entryTypeName = entry.GetConfigTypeName();
+                                string entryModelName = entry.GetModelName();
 
                                 // set the model ID - check the local flag to determine if:
                                 //  - a dynamically generated model ID should be used ModelNameUtil.CreateModelID()
                                 //  - that which is already set, and if empty, use the typeName instead
                                 if (this.useGeneratedModelID) {
-                                    modelName = ModelNameUtil.CreateModelID(typeName);
-                                    entry.SetModelName(modelName);
+                                    entryModelName = ModelNameUtil.CreateModelID(entryTypeName);
+                                    entry.SetModelName(entryModelName);
                                 }
 
-                                if (string.IsNullOrEmpty(modelName)) {
-                                    modelName = typeName;
-                                    entry.SetModelName(modelName);
+                                if (string.IsNullOrEmpty(entryModelName)) {
+                                    entryModelName = entryTypeName;
+                                    entry.SetModelName(entryModelName);
                                 }
 
                                 // update the mapping tables
-                                this.configTypeModelMappingTable.Add(modelName, entry);
-                                this.typeIdToContainerNameMappingTable.Add(entry.GetId(), modelName);
+
+                                // add the type to the internal container cache
+                                if (this.configTypeModelMappingTable.ContainsKey(entryModelName))
+                                {
+                                    Console.WriteLine($"Entry config type name already loaded: {entryModelName}. Replacing old with new.");
+                                    this.configTypeModelMappingTable.Remove(entryModelName);
+                                }
+
+                                this.configTypeModelMappingTable.Add(entryModelName, entry);
+
+                                // add the type ID to the internal container cache
+                                if (this.typeIdToContainerNameMappingTable.ContainsKey(entry.GetId()))
+                                {
+                                    Console.WriteLine($"Entry config type ID name already loaded: {entry.GetId()}. Replacing old with new.");
+                                    this.typeIdToContainerNameMappingTable.Remove(entry.GetId());
+                                }
+
+                                this.typeIdToContainerNameMappingTable.Add(entry.GetId(), entryModelName);
+
                             }
                         }
                         catch (Exception e)
                         {
-                            Console.WriteLine($"Failed to load type config JSON model from file {modelFilePath}. Exception: {e}");
+                            Console.WriteLine($"Failed to load type config JSON model from file {modelFilePath}. Message: {e.Message}. Stack: {e.StackTrace}");
                         }
                     }
 
                     Console.WriteLine($"Loaded {typeConfigFiles.Length} type config JSON model files from path {modelFilePath}.");
+
+                    return true;
                 }
                 else
                 {

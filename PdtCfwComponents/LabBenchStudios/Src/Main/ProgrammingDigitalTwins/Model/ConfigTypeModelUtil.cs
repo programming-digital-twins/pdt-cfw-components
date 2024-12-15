@@ -32,6 +32,7 @@ using Newtonsoft.Json.Serialization;
 
 using LabBenchStudios.Pdt.Common;
 using System.IO;
+using System.Security.Cryptography;
 
 namespace LabBenchStudios.Pdt.Model
 {
@@ -149,27 +150,37 @@ namespace LabBenchStudios.Pdt.Model
         {
             ConfigTypeModelContainer data = null;
 
-            if (data != null && filePath != null)
+            try
             {
-                if (File.Exists(filePath))
+                if (Directory.Exists(filePath))
                 {
-                    string jsonData = null;
+                    // 'file' is a directory
+                    Console.WriteLine($"{filePath} is a directory. Ignoring.");
 
-                    using (StreamReader reader = new(filePath))
+                    return null;
+                } else if (File.Exists(filePath))
+                {
+                    if (File.Exists(filePath))
                     {
-                        jsonData = reader.ReadToEnd();
-                    }
+                        string jsonData = null;
 
-                    data = JsonToDataTypeCategoryInfo(jsonData);
-                }
-                else
+                        using (StreamReader reader = new(filePath))
+                        {
+                            jsonData = reader.ReadToEnd();
+                        }
+
+                        data = JsonToDataTypeCategoryInfo(jsonData);
+                    } else
+                    {
+                        Console.WriteLine($"Failed to write JSON data to filesystem. File path non-existent: {filePath}");
+                    }
+                } else
                 {
-                    Console.WriteLine($"Failed to write JSON data to filesystem. File path non-existent: {filePath}");
+                    Console.WriteLine($"Path is not a valid file: {filePath}. Ignoring.");
                 }
-            }
-            else
+            } catch (Exception e)
             {
-                Console.WriteLine("JSON data and / or file path are null / empty. Ignoring.");
+                Console.WriteLine($"Failed to convert JSON to type ConfigTypeModelContainer: {filePath}. Exception: {e.StackTrace}");
             }
 
             return data;

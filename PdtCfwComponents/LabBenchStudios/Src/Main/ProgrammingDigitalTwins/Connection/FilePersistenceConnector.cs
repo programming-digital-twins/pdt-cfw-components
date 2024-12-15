@@ -94,8 +94,8 @@ namespace LabBenchStudios.Pdt.Connection
         private string primaryStoragePath = null;
         private string productName = ConfigConst.PRODUCT_NAME;
 
-        private string dataStorePathPrefix = null;
-        private string dataCachePathPrefix = null;
+        private string objectStorePath = null;
+        private string historianCachePath = null;
 
         private bool isEncoded = false;
         private bool isPathInitialized = false;
@@ -203,7 +203,7 @@ namespace LabBenchStudios.Pdt.Connection
         /// <returns></returns>
         protected override string HandleCreateCacheFileName(string cacheName)
         {
-            return FileUtil.CreateAbsFileName(cacheName, this.dataCachePathPrefix);
+            return FileUtil.CreateAbsHistorianCacheFileName(cacheName, this.historianCachePath);
         }
 
         /// <summary>
@@ -212,7 +212,7 @@ namespace LabBenchStudios.Pdt.Connection
         /// <returns></returns>
         protected override string HandleGetDataCacheUri()
         {
-            return this.dataCachePathPrefix;
+            return this.historianCachePath;
         }
 
         /// <summary>
@@ -221,7 +221,7 @@ namespace LabBenchStudios.Pdt.Connection
         /// <returns></returns>
         protected override string HandleGetDataStoreUri()
         {
-            return this.dataStorePathPrefix;
+            return this.objectStorePath;
         }
 
         /// <summary>
@@ -231,7 +231,7 @@ namespace LabBenchStudios.Pdt.Connection
         /// <returns></returns>
         protected override List<DataCacheEntryContainer> HandleLoadDataCache(string cacheName)
         {
-            string fileName = FileUtil.CreateAbsFileName(cacheName, this.dataCachePathPrefix);
+            string fileName = FileUtil.CreateAbsHistorianCacheFileName(cacheName, this.historianCachePath);
             int bytesRead = 0;
 
             Console.WriteLine($"Loading data cache {cacheName} from location {fileName}.");
@@ -320,7 +320,7 @@ namespace LabBenchStudios.Pdt.Connection
         /// <returns></returns>
         protected override int HandleStoreDataCache(string cacheName, List<DataCacheEntryContainer> dataCache)
         {
-            string fileName = FileUtil.CreateAbsFileName(cacheName, this.dataStorePathPrefix, true, true);
+            string fileName = FileUtil.CreateAbsHistorianCacheFileName(cacheName, this.historianCachePath, true, true);
 
             return this.HandleStoreDataCache(cacheName, fileName, dataCache);
         }
@@ -439,72 +439,15 @@ namespace LabBenchStudios.Pdt.Connection
         private void InitStoragePaths()
         {
             // init primary path
-            Console.WriteLine($"File persistence - using primary storage path: {this.primaryStoragePath}");
+            Console.WriteLine($"Initializing primary historian cache path...");
+            this.historianCachePath = FileUtil.CreateAbsHistorianCachePath(this.primaryStoragePath);
+            Console.WriteLine($"Historian cache path: {this.historianCachePath}");
 
-            this.isPathInitialized = this.InitStoragePath(this.primaryStoragePath);
+            Console.WriteLine($"Initializing primary data (object) store path...");
+            this.objectStorePath = FileUtil.CreateAbsObjectStorePath(this.primaryStoragePath);
+            Console.WriteLine($"Object store path: {this.objectStorePath}");
 
-            if (this.isPathInitialized)
-            {
-                Console.WriteLine($"Initialized primary data path {this.primaryStoragePath}");
-            } else
-            {
-                Console.WriteLine($"Failed to initialize primary data path {this.primaryStoragePath}");
-            }
-
-            // init data cache and data store paths (sub-dirs of primary path)
-            this.dataCachePathPrefix = Path.Combine(this.primaryStoragePath, ConfigConst.DATA_CACHE_NAME);
-            this.dataStorePathPrefix = Path.Combine(this.primaryStoragePath, ConfigConst.DATA_STORE_NAME);
-
-            // init data historian cache path
-            if (this.InitStoragePath(this.dataCachePathPrefix))
-            {
-                Console.WriteLine($"Initialized data historian cache path {this.dataCachePathPrefix}");
-            } else
-            {
-                Console.WriteLine($"Failed to initialize data historian cache path {this.dataCachePathPrefix}");
-            }
-
-            // init data store path
-            if (this.InitStoragePath(this.dataStorePathPrefix))
-            {
-                Console.WriteLine($"Initialized data store path {this.dataStorePathPrefix}");
-            } else
-            {
-                Console.WriteLine($"Failed to initialize data store path {this.dataStorePathPrefix}");
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        private bool InitStoragePath(string path)
-        {
-            // make sure the path exists
-            if (!Directory.Exists(path))
-            {
-                // path doesn't exist - try to create it
-                try
-                {
-                    DirectoryInfo dirInfo = Directory.CreateDirectory(path);
-
-                    Console.WriteLine($"File persistence - path created: {path}. Info: {dirInfo}");
-                } catch (Exception e)
-                {
-                    Console.WriteLine($"Failed to create storage path {path}. Error: {e.Message}");
-
-                    return false;
-                }
-            } else
-            {
-                // path already exists - try to access it
-                string pathInfo = Directory.GetDirectoryRoot(path);
-
-                Console.WriteLine($"File persistence - path exists: {path}. Info: {pathInfo}");
-            }
-
-            return true;
+            this.isPathInitialized = true;
         }
 
     }

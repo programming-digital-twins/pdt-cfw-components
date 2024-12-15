@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 
@@ -40,7 +41,7 @@ namespace LabBenchStudios.Pdt.Model
         /// <summary>
         /// 
         /// </summary>
-        public ConfigTypeModelManager() : this(null)
+        public ConfigTypeModelManager() : this(ConfigConst.TEST_CONFIG_TYPE_MODEL_FILE_PATH)
         {
             // nothing to do
         }
@@ -128,16 +129,6 @@ namespace LabBenchStudios.Pdt.Model
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="configTypeFilePath"></param>
-        /// <returns></returns>
-        public bool UpdateConfigTypeFilePaths(string configTypeFilePath)
-        {
-            return UpdateConfigTypeFilePaths(configTypeFilePath, true);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="configTypeFilePathSet"></param>
         /// <returns></returns>
         public bool UpdateConfigTypeFilePaths(HashSet<string> configTypeFilePathSet)
@@ -164,11 +155,26 @@ namespace LabBenchStudios.Pdt.Model
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="configTypeFilePath"></param>
+        /// <returns></returns>
+        public bool UpdateConfigTypeFilePaths(string configTypeFilePath)
+        {
+            return UpdateConfigTypeFilePaths(configTypeFilePath, true);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="modelFilePath"></param>
         /// <param name="reloadModels"></param>
         /// <returns></returns>
         public bool UpdateConfigTypeFilePaths(string modelFilePath, bool reloadModels)
         {
+            if (this.IsConfigTypeFilePathConfigured(modelFilePath))
+            {
+                Console.WriteLine($"Model config type path already configured. Re-testing access: {modelFilePath}");
+            }
+
             if (IsConfigTypeFilePathValid(modelFilePath))
             {
                 this.configTypeFilePaths.Add(modelFilePath);
@@ -186,7 +192,16 @@ namespace LabBenchStudios.Pdt.Model
 
             return false;
         }
-
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="modelFilePath"></param>
+        /// <returns></returns>
+        public bool IsConfigTypeFilePathConfigured(string modelFilePath)
+        {
+            return this.configTypeFilePaths.Contains(modelFilePath);
+        }
 
         // protected methods
 
@@ -220,21 +235,25 @@ namespace LabBenchStudios.Pdt.Model
         /// <returns></returns>
         private bool IsConfigTypeFilePathValid(string configTypeFilePath)
         {
-            if (!string.IsNullOrEmpty(configTypeFilePath)) {
-                if (!this.configTypeFilePaths.Contains(configTypeFilePath)) {
-                    if (Directory.Exists(configTypeFilePath)) {
+            try
+            {
+                if (!this.configTypeFilePaths.Contains(configTypeFilePath))
+                {
+                    if (Directory.Exists(configTypeFilePath))
+                    {
                         Console.WriteLine($"Updating config type file paths. New file path is good: {configTypeFilePath}");
 
                         return true;
-                    } else {
-                        Console.WriteLine($"Failed to update config type file paths. Requested model file path doesn't exist: {configTypeFilePath}");
+                    } else
+                    {
+                        Console.WriteLine($"Failed to update config type file paths. Requested model file path doesn't exist: {configTypeFilePath}. Stack: {System.Environment.StackTrace}");
                     }
-                } else {
+                } else
+                {
                     Console.WriteLine($"Failed to update config type file paths. File path already used and stored: {configTypeFilePath}");
                 }
-
-            } else {
-                Console.WriteLine($"Failed to update config type file paths. File path is null or empty: {configTypeFilePath}");
+            } catch (Exception e) {
+                Console.WriteLine($"Failed to update config type file paths. File path is null or empty: {configTypeFilePath}. Error: {e.Message}. Stack: {System.Environment.StackTrace}");
             }
 
             return false;

@@ -9,10 +9,10 @@
   "maxId": 1999,
   "typeEntries": {
     "targetTemperature": {
-      "typeName": "targetTemperature",
+      "typeName": "targetThermostatTemperature",
       "description": "HVAC actuator type configuration.",
       "displayName": "HVAC",
-      "modelName": "targetTemperature",
+      "modelName": "targetThermostatTemperature",
       "resourceName": "{productName}/{groupdID}/{locationID}/{deviceID}/{typeName}",
       "dataContainerType": "LabBenchStudios.Pdt.Data.ActuatorData",
       "id": 1004,
@@ -22,10 +22,10 @@
       }
     },
     "targetHumidity": {
-      "typeName": "currentTemperature",
+      "typeName": "currentThermostatTemperature",
       "description": "Temperature sensor type configuration.",
-      "displayName": "Temperature",
-      "modelName": "currentTemperature",
+      "displayName": "Current Temperature",
+      "modelName": "currentThermostatTemperature",
       "resourceName": "{productName}/{groupdID}/{locationID}/{deviceID}/{typeName}",
       "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
       "id": 1013,

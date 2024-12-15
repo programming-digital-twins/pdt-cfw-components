@@ -10,7 +10,7 @@
   "contents": [
     {
       "@type": [ "Property", "Temperature" ],
-      "name": "targetTemperature",
+      "name": "targetThermostatTemperature",
       "displayName": "Target Temperature in Celsuis",
       "writable": true,
       "schema": "float",

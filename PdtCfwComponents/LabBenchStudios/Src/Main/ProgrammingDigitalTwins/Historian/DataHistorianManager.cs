@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using LabBenchStudios.Pdt.Common;
@@ -174,7 +175,11 @@ namespace LabBenchStudios.Pdt.Historian
 
             Console.WriteLine($"Created data historian player name: {cacheName}");
 
-            return this.GetDataHistorianPlayer(cacheName, false);
+            IDataHistorianPlayer player = this.GetDataHistorianPlayer(cacheName, false);
+
+            Console.WriteLine($"Data historian player created. File URI: {player.GetCacheStorageUri()}. Cache: {player.GetCacheFileName()}");
+
+            return player;
         }
 
         /// <summary>
@@ -330,16 +335,16 @@ namespace LabBenchStudios.Pdt.Historian
             }
         }
 
-        /**
-		 * Attempts to retrieve the named data instance from the persistence server.
-		 * Will return null if there's no data matching the given type with the
-		 * given parameters.
-		 * 
-		 * @param resource The resource container with load meta data / additional search criteria.
-		 * @param startDate The start timeStamp (null if narrowing is not needed).
-		 * @param endDate The end timeStamp (null if narrowing is not needed).
-		 * @return List<ActuatorData> The data instance(s) associated with the lookup parameters.
-		 */
+
+        /// <summary>
+		/// Attempts to retrieve the named data instance from the persistence server.
+        /// Will return null if there's no data matching the given type with the
+		/// given parameters.
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
         public List<ActuatorData> LoadActuatorData(ResourceNameContainer resource, DateTime startDate, DateTime endDate)
         {
             if (this.persistenceConnector != null)
@@ -353,16 +358,15 @@ namespace LabBenchStudios.Pdt.Historian
             }
         }
 
-        /**
-		 * Attempts to retrieve the named data instance from the persistence server.
-		 * Will return null if there's no data matching the given type with the
-		 * given parameters.
-		 * 
-		 * @param resource The resource container with load meta data / additional search criteria.
-		 * @param startDate The start timeStamp (null if narrowing is not needed).
-		 * @param endDate The end timeStamp (null if narrowing is not needed).
-		 * @return List<ConnectionStateData> The data instance(s) associated with the lookup parameters.
-		 */
+        /// <summary>
+        /// Attempts to retrieve the named data instance from the persistence server.
+        /// Will return null if there's no data matching the given type with the
+        /// given parameters.
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
         public List<ConnectionStateData> LoadConnectionStateData(ResourceNameContainer resource, DateTime startDate, DateTime endDate)
         {
             if (this.persistenceConnector != null)
@@ -376,16 +380,15 @@ namespace LabBenchStudios.Pdt.Historian
             }
         }
 
-        /**
-		 * Attempts to retrieve the named data instance from the persistence server.
-		 * Will return null if there's no data matching the given type with the
-		 * given parameters.
-		 * 
-		 * @param resource The resource container with load meta data / additional search criteria.
-		 * @param startDate The start timeStamp (null if narrowing is not needed).
-		 * @param endDate The end timeStamp (null if narrowing is not needed).
-		 * @return List<SensorData> The data instance(s) associated with the lookup parameters.
-		 */
+        /// <summary>
+        /// Attempts to retrieve the named data instance from the persistence server.
+        /// Will return null if there's no data matching the given type with the
+        /// given parameters.
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
         public List<SensorData> LoadSensorData(ResourceNameContainer resource, DateTime startDate, DateTime endDate)
         {
             if (this.persistenceConnector != null)
@@ -399,16 +402,15 @@ namespace LabBenchStudios.Pdt.Historian
             }
         }
 
-        /**
-		 * Attempts to retrieve the named data instance from the persistence server.
-		 * Will return null if there's no data matching the given type with the
-		 * given parameters.
-		 * 
-		 * @param resource The resource container with load meta data / additional search criteria.
-		 * @param startDate The start timeStamp (null if narrowing is not needed).
-		 * @param endDate The end timeStamp (null if narrowing is not needed).
-		 * @return List<SystemPerformanceData> The data instance(s) associated with the lookup parameters.
-		 */
+        /// <summary>
+        /// Attempts to retrieve the named data instance from the persistence server.
+        /// Will return null if there's no data matching the given type with the
+        /// given parameters.
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
         public List<SystemPerformanceData> LoadSystemPerformanceData(ResourceNameContainer resource, DateTime startDate, DateTime endDate)
         {
             if (this.persistenceConnector != null)

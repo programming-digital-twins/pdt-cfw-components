@@ -40,12 +40,93 @@ namespace LabBenchStudios.Pdt.Util
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="pathPrefix"></param>
+        /// <returns></returns>
+        public static string CreateAbsHistorianCachePath(string pathPrefix)
+        {
+            return InitializeStoragePath(pathPrefix, ConfigConst.DATA_CACHE_NAME);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pathPrefix"></param>
+        /// <returns></returns>
+        public static string CreateAbsObjectStorePath(string pathPrefix)
+        {
+            return InitializeStoragePath(pathPrefix, ConfigConst.DATA_STORE_NAME);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pathPrefix"></param>
+        /// <param name="subPath"></param>
+        /// <returns></returns>
+        public static string InitializeStoragePath(string pathPrefix, string subPath)
+        {
+            if (string.IsNullOrEmpty(pathPrefix))
+            {
+                pathPrefix = ConfigConst.DEFAULT_FILE_STORAGE_PATH;
+
+                Console.WriteLine($"Invalid data store path prefix. Using default: {pathPrefix}");
+            }
+
+            string storagePath = null;
+
+            if (string.IsNullOrWhiteSpace(subPath))
+            {
+                storagePath = pathPrefix;
+            } else
+            {
+                storagePath = Path.Combine(pathPrefix, subPath);
+            }
+
+            storagePath = Path.GetFullPath(storagePath);
+
+            // make sure the path exists
+            if (!Directory.Exists(storagePath))
+            {
+                // path doesn't exist - try to create it
+                try
+                {
+                    DirectoryInfo dirInfo = Directory.CreateDirectory(storagePath);
+
+                    Console.WriteLine($"File persistence - path created: {storagePath}. Info: {dirInfo}");
+
+                    return storagePath;
+                } catch (Exception e)
+                {
+                    Console.WriteLine($"Failed to create storage path {storagePath}. Error: {e.Message}");
+                }
+            } else
+            {
+                // path already exists - try to access it
+                try
+                {
+                    string pathInfo = Directory.GetDirectoryRoot(storagePath);
+
+                    Console.WriteLine($"File persistence - path exists: {storagePath}. Info: {pathInfo}");
+
+                    return storagePath;
+                } catch (Exception e)
+                {
+                    Console.WriteLine($"Failed to access existing storage path {storagePath}. Error: {e.Message}");
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="resource"></param>
         /// <param name="pathPrefix"></param>
         /// <returns></returns>
-        public static string CreateAbsFileName(ResourceNameContainer resource, string pathPrefix)
+        public static string CreateAbsResourceFileName(ResourceNameContainer resource, string pathPrefix)
         {
-            return CreateAbsFileName(resource, pathPrefix, true);
+            return CreateAbsResourceFileName(resource, pathPrefix, true);
         }
 
         /// <summary>
@@ -55,7 +136,7 @@ namespace LabBenchStudios.Pdt.Util
         /// <param name="pathPrefix"></param>
         /// <param name="useDate"></param>
         /// <returns></returns>
-        public static string CreateAbsFileName(ResourceNameContainer resource, string pathPrefix, bool useDate)
+        public static string CreateAbsResourceFileName(ResourceNameContainer resource, string pathPrefix, bool useDate)
         {
             string deviceID = resource.DeviceName;
             string locationID = resource.DeviceLocation;
@@ -92,10 +173,12 @@ namespace LabBenchStudios.Pdt.Util
                 fileNameBuilder.Append(DateTime.UtcNow.ToString(ConfigConst.FILE_DATE_TIME_FORMAT));
             }
 
-            string absPath =
+            string absFileName =
                 Path.GetFullPath(Path.Combine(pathPrefix, locationID, deviceID, fileNameBuilder.ToString()));
 
-            return absPath;
+            Console.WriteLine($"Created resource absolute path name: {absFileName}");
+
+            return absFileName;
         }
 
         /// <summary>
@@ -104,9 +187,9 @@ namespace LabBenchStudios.Pdt.Util
         /// <param name="cacheName"></param>
         /// <param name="pathPrefix"></param>
         /// <returns></returns>
-        public static string CreateAbsFileName(string cacheName, string pathPrefix)
+        public static string CreateAbsHistorianCacheFileName(string cacheName, string pathPrefix)
         {
-            return CreateAbsFileName(cacheName, pathPrefix, false, true);
+            return CreateAbsHistorianCacheFileName(cacheName, pathPrefix, false, true);
         }
 
         /// <summary>
@@ -116,9 +199,9 @@ namespace LabBenchStudios.Pdt.Util
         /// <param name="pathPrefix"></param>
         /// <param name="useDate"></param>
         /// <returns></returns>
-        public static string CreateAbsFileName(string cacheName, string pathPrefix, bool useDate)
+        public static string CreateAbsHistorianCacheFileName(string cacheName, string pathPrefix, bool useDate)
         {
-            return CreateAbsFileName(cacheName, pathPrefix, useDate, true);
+            return CreateAbsHistorianCacheFileName(cacheName, pathPrefix, useDate, true);
         }
 
         /// <summary>
@@ -129,7 +212,7 @@ namespace LabBenchStudios.Pdt.Util
         /// <param name="useDate"></param>
         /// <param name="useJsonExt"></param>
         /// <returns></returns>
-        public static string CreateAbsFileName(string cacheName, string pathPrefix, bool useDate, bool useJsonExt)
+        public static string CreateAbsHistorianCacheFileName(string cacheName, string pathPrefix, bool useDate, bool useJsonExt)
         {
             string fileName = cacheName;
 
@@ -143,7 +226,9 @@ namespace LabBenchStudios.Pdt.Util
                 fileName = fileName + ConfigConst.JSON_EXT;
             }
 
-            string absFileName = Path.GetFullPath(Path.Combine(pathPrefix, cacheName, fileName));
+            string absFileName = Path.GetFullPath(Path.Combine(pathPrefix, fileName));
+
+            Console.WriteLine($"Created historian cache absolute path name: {absFileName}");
 
             return absFileName;
         }
@@ -168,38 +253,50 @@ namespace LabBenchStudios.Pdt.Util
         {
             if (!string.IsNullOrWhiteSpace(path))
             {
-                if (Directory.Exists(path))
+                try
                 {
-                    bool useSearchPattern = false;
+                    string absPath = Path.GetFullPath(path);
 
-                    if (!string.IsNullOrEmpty(ext))
+                    if (Directory.Exists(path))
                     {
-                        if (!ext.Contains("*"))
+                        bool useSearchPattern = false;
+
+                        if (!string.IsNullOrEmpty(ext))
                         {
-                            ext = "*" + ext;
+                            if (!ext.Contains("*"))
+                            {
+                                ext = "*" + ext;
+                            }
+
+                            useSearchPattern = true;
                         }
 
-                        useSearchPattern = true;
-                    }
-
-                    try
-                    {
-                        string[] fileNames = null;
-
-                        if (useSearchPattern)
+                        try
                         {
-                            fileNames = Directory.GetFiles(path, ext);
-                        } else
+                            string[] fileNames = null;
+
+                            if (useSearchPattern)
+                            {
+                                Console.WriteLine($"Getting file listing for path {path} with extension {ext}.");
+
+                                fileNames = Directory.GetFiles(path, ext);
+                            } else
+                            {
+                                Console.WriteLine($"Getting file listing for path {path}.");
+
+                                fileNames = Directory.GetFiles(path);
+                            }
+
+                            return fileNames;
+
+                        } catch (Exception e)
                         {
-                            fileNames = Directory.GetFiles(path);
+                            Console.WriteLine($"Failed to retrieve path listing for {path} with files ending in {ext}. Exception: {e.Message}");
                         }
-
-                        return fileNames;
-
-                    } catch (Exception e)
-                    {
-                        Console.WriteLine($"Failed to retrieve path listing for {path} with files ending in {ext}. Exception: {e.Message}");
                     }
+                } catch (Exception e)
+                {
+                    Console.WriteLine($"Failed to process path and get file listing for {path}. Exception: {e.Message}");
                 }
             }
 

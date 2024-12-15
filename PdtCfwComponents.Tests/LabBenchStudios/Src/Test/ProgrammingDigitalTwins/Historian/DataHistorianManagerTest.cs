@@ -25,6 +25,7 @@
 using LabBenchStudios.Pdt.Common;
 using LabBenchStudios.Pdt.Connection;
 using LabBenchStudios.Pdt.Historian;
+using System;
 
 namespace LabBenchStudios.Pdt.Test.Historian
 {
@@ -46,7 +47,11 @@ namespace LabBenchStudios.Pdt.Test.Historian
         [Test]
         public void CreateDataHistorianPlayer()
         {
-            this.dataHistorian.CreateDataHistorianPlayer();
+            IDataHistorianPlayer player = this.dataHistorian.CreateDataHistorianPlayer();
+
+            player.SetDisplayName("My Historian");
+
+            Console.WriteLine($"Player info. Name: {player.GetCacheName()}. File: {player.GetCacheFileName()}. Path: {player.GetCacheStorageUri()}. Display name: {player.GetDisplayName()}");
         }
     }
 }

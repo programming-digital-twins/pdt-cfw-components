@@ -32,8 +32,6 @@ namespace LabBenchStudios.Pdt.Test.Data
 {
     public class DigitalTwinModelManagerTest
     {
-        private static readonly string DTDL_TEST_MODEL_FILEPATH =
-            "../../../../PdtCfwComponents/LabBenchStudios/Models/Dtdl/";
 
         private DigitalTwinModelManager dtModelManager = null;
 
@@ -41,7 +39,7 @@ namespace LabBenchStudios.Pdt.Test.Data
         public void Setup()
         {
             this.dtModelManager = new DigitalTwinModelManager();
-            this.dtModelManager.UpdateModelFilePaths(DTDL_TEST_MODEL_FILEPATH);
+            this.dtModelManager.UpdateModelFilePaths(ConfigConst.TEST_DIGITAL_TWIN_MODEL_FILE_PATH);
             //this.dtModelManager.BuildModelData();
         }
 

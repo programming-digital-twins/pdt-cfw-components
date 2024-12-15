@@ -9,10 +9,10 @@
   "maxId": 1999,
   "typeEntries": {
     "targetTemperature": {
-      "typeName": "targetTemperature",
+      "typeName": "targetZoneTemperature",
       "description": "HVAC actuator type configuration.",
       "displayName": "HVAC",
-      "modelName": "dtmi:LabBenchStudios:PDT:targetTemperature;1",
+      "modelName": "dtmi:LabBenchStudios:PDT:targetZoneTemperature;1",
       "resourceName": "{productName}/{groupdID}/{locationID}/{deviceID}/{typeName}",
       "dataContainerType": "LabBenchStudios.Pdt.Data.ActuatorData",
       "id": 1001,
@@ -22,10 +22,10 @@
       }
     },
     "targetHumidity": {
-      "typeName": "targetHumidity",
+      "typeName": "targetZoneHumidity",
       "description": "Humidifier actuator type configuration.",
       "displayName": "Humidifier",
-      "modelName": "dtmi:LabBenchStudios:PDT:targetHumidity;1",
+      "modelName": "dtmi:LabBenchStudios:PDT:targetZoneHumidity;1",
       "resourceName": "{productName}/{groupdID}/{locationID}/{deviceID}/{typeName}",
       "dataContainerType": "LabBenchStudios.Pdt.Data.ActuatorData",
       "id": 1002,
