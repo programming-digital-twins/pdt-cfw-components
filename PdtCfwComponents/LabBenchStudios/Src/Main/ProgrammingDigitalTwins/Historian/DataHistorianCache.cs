@@ -78,6 +78,7 @@ namespace LabBenchStudios.Pdt.Historian
         private int cacheIndexIncrement = 1;
         private int newCacheEntryCount = 0;
 
+        private long cacheMemoryUsage = 0L;
         private long delayTimeMillis = 0L;
 
         private List<DataCacheEntryContainer> dataEntryCache = null;
@@ -123,6 +124,7 @@ namespace LabBenchStudios.Pdt.Historian
                 }
 
                 this.dataEntryCache.Add(cacheEntry);
+                this.cacheMemoryUsage += cacheEntry.GetApproxByteCount();
 
                 if (!ignoreEntryCount)
                 {
@@ -149,11 +151,9 @@ namespace LabBenchStudios.Pdt.Historian
         {
             if (cacheEntries != null && cacheEntries.Count > 0)
             {
-                this.dataEntryCache.AddRange(cacheEntries);
-
-                if (!ignoreEntryCount)
+                foreach (DataCacheEntryContainer cacheEntry in cacheEntries)
                 {
-                    this.newCacheEntryCount += cacheEntries.Count;
+                    this.AddCacheItem(cacheEntry, ignoreEntryCount);
                 }
             }
         }
@@ -196,6 +196,15 @@ namespace LabBenchStudios.Pdt.Historian
         public int GetCacheSize()
         {
             return this.dataEntryCache.Count;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public long GetCacheMemoryUsage()
+        {
+            return this.cacheMemoryUsage;
         }
 
         /// <summary>

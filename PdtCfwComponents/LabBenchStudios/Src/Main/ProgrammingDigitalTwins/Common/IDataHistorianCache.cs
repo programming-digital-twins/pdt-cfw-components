@@ -51,6 +51,12 @@ namespace LabBenchStudios.Pdt.Common
         /// 
         /// </summary>
         /// <returns></returns>
+        public long GetCacheMemoryUsage();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public DataHistorianState.DataHistorianReplayState GetCacheReplayState();
 
         /// <summary>

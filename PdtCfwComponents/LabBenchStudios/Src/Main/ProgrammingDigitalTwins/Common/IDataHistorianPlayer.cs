@@ -42,7 +42,13 @@ namespace LabBenchStudios.Pdt.Common
         /// 
         /// </summary>
         /// <returns></returns>
-        public long GetCacheSize();
+        public int GetCacheSize();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public long GetCacheMemoryUsage();
 
         /// <summary>
         /// 
@@ -97,6 +103,13 @@ namespace LabBenchStudios.Pdt.Common
         /// </summary>
         /// <param name="enabled"></param>
         public void SetCacheFillingEnabledFlag(bool enabled);
+
+        /// <summary>
+        /// If true, only data events (e.g., Actuator, Sensor, Performance).
+        /// Else, cache all events (incl. Connection and Message).
+        /// </summary>
+        /// <param name="enabled"></param>
+        public void SetCacheOnlyDataEventsFlag(bool enabled);
 
         /// <summary>
         /// 

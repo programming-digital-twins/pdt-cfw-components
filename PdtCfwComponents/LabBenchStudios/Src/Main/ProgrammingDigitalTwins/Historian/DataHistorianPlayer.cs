@@ -32,6 +32,8 @@ namespace LabBenchStudios.Pdt.Historian
         private string displayName = ConfigConst.NOT_SET;
 
         private bool cacheFillingEnabled = false;
+        private bool cacheOnlyDataEventsEnabled = false;
+
         private bool playbackEnabled = false;
         private bool enablePlaybackLoopOnStart = false;
         private float playbackDelayFactor = 0.0f;
@@ -126,11 +128,28 @@ namespace LabBenchStudios.Pdt.Historian
         /// 
         /// </summary>
         /// <returns></returns>
-        public long GetCacheSize()
+        public int GetCacheSize()
         {
             if (this.HasValidCache())
             {
                 return this.historianCache.GetCacheSize();
+            } else
+            {
+                Console.WriteLine("Data historian player instance has no valid backing cache. Ignoring.");
+            }
+
+            return 0;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public long GetCacheMemoryUsage()
+        {
+            if (this.HasValidCache())
+            {
+                return this.historianCache.GetCacheMemoryUsage();
             } else
             {
                 Console.WriteLine("Data historian player instance has no valid backing cache. Ignoring.");
@@ -213,12 +232,15 @@ namespace LabBenchStudios.Pdt.Historian
         /// <param name="data"></param>
         public void HandleConnectionStateData(ConnectionStateData data)
         {
-            if (data != null && this.cacheFillingEnabled)
+            if (!this.cacheOnlyDataEventsEnabled)
             {
-                DataCacheEntryContainer cacheEntry = new DataCacheEntryContainer();
-                cacheEntry.SetConnectionStateData(data);
+                if (data != null && this.cacheFillingEnabled)
+                {
+                    DataCacheEntryContainer cacheEntry = new DataCacheEntryContainer();
+                    cacheEntry.SetConnectionStateData(data);
 
-                this.historianCache.AddCacheItem(cacheEntry);
+                    this.historianCache.AddCacheItem(cacheEntry);
+                }
             }
         }
 
@@ -228,12 +250,15 @@ namespace LabBenchStudios.Pdt.Historian
         /// <param name="data"></param>
         public void HandleMessageData(MessageData data)
         {
-            if (data != null && this.cacheFillingEnabled)
+            if (!this.cacheOnlyDataEventsEnabled)
             {
-                DataCacheEntryContainer cacheEntry = new DataCacheEntryContainer();
-                cacheEntry.SetMessageData(data);
+                if (data != null && this.cacheFillingEnabled)
+                {
+                    DataCacheEntryContainer cacheEntry = new DataCacheEntryContainer();
+                    cacheEntry.SetMessageData(data);
 
-                this.historianCache.AddCacheItem(cacheEntry);
+                    this.historianCache.AddCacheItem(cacheEntry);
+                }
             }
         }
 
@@ -498,6 +523,16 @@ namespace LabBenchStudios.Pdt.Historian
         public void SetCacheFillingEnabledFlag(bool enabled)
         {
             this.cacheFillingEnabled = enabled;
+        }
+
+        /// <summary>
+        /// If true, only data events (e.g., Actuator, Sensor, Performance).
+        /// Else, cache all events (incl. Connection and Message).
+        /// </summary>
+        /// <param name="enabled"></param>
+        public void SetCacheOnlyDataEventsFlag(bool enabled)
+        {
+            this.cacheOnlyDataEventsEnabled = enabled;
         }
 
         /// <summary>
