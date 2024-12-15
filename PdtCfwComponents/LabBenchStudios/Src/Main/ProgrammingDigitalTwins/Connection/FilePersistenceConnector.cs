@@ -239,8 +239,7 @@ namespace LabBenchStudios.Pdt.Connection
 
             try
             {
-                StreamReader reader = new StreamReader(fileName);
-                string jsonData = reader.ReadToEnd();
+                string jsonData = File.ReadAllText(fileName);
 
                 bytesRead = jsonData.Length;
 
@@ -430,8 +429,7 @@ namespace LabBenchStudios.Pdt.Connection
                     File.Create(fileName).Close();
                 }
 
-                StreamWriter writer = new StreamWriter(fileName);
-                writer.Write(jsonData);
+                File.WriteAllText(fileName, jsonData);
 
                 bytesWritten = jsonData.Length;
 
