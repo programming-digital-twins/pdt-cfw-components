@@ -140,27 +140,27 @@ namespace LabBenchStudios.Pdt.Connection
         /// <param name="cacheName"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public string CreateCacheFileName(string cacheName)
+        public string CreateDataHistorianCacheFileName(string cacheName)
         {
-            return this.HandleCreateCacheFileName(cacheName);
+            return this.HandleCreateHistorianCacheFileName(cacheName);
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public string GetDataCacheUri()
+        public string GetDataHistorianCacheUri()
         {
-            return this.HandleGetDataCacheUri();
+            return this.HandleGetHistorianCacheUri();
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public string GetDataStoreUri()
+        public string GetDataObjectStoreUri()
         {
-            return this.HandleGetDataStoreUri();
+            return this.HandleGetObjectStoreUri();
         }
 
         /// <summary>
@@ -483,19 +483,19 @@ namespace LabBenchStudios.Pdt.Connection
         /// </summary>
         /// <param name="cacheName"></param>
         /// <returns></returns>
-        protected abstract string HandleCreateCacheFileName(string cacheName);
+        protected abstract string HandleCreateHistorianCacheFileName(string cacheName);
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        protected abstract string HandleGetDataCacheUri();
+        protected abstract string HandleGetHistorianCacheUri();
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        protected abstract string HandleGetDataStoreUri();
+        protected abstract string HandleGetObjectStoreUri();
 
         /// <summary>
         /// 

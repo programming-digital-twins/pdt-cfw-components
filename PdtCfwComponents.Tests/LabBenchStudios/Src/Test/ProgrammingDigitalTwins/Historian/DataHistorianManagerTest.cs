@@ -24,7 +24,9 @@
 
 using LabBenchStudios.Pdt.Common;
 using LabBenchStudios.Pdt.Connection;
+using LabBenchStudios.Pdt.Data;
 using LabBenchStudios.Pdt.Historian;
+using LabBenchStudios.Pdt.Plexus;
 using System;
 
 namespace LabBenchStudios.Pdt.Test.Historian
@@ -36,14 +38,14 @@ namespace LabBenchStudios.Pdt.Test.Historian
         [SetUp]
         public void Setup()
         {
-            this.dataHistorian = new DataHistorianManager();
         }
 
         [TearDown]
         public void Teardown()
         {
         }
-
+        
+        /*
         [Test]
         public void CreateDataHistorianPlayer()
         {
@@ -52,6 +54,46 @@ namespace LabBenchStudios.Pdt.Test.Historian
             player.SetDisplayName("My Historian");
 
             Console.WriteLine($"Player info. Name: {player.GetCacheName()}. File: {player.GetCacheFileName()}. Path: {player.GetCacheStorageUri()}. Display name: {player.GetDisplayName()}");
+        }
+        */
+
+        [Test]
+        public void CreatePlayerAndStoreSampleData()
+        {
+            //IDataHistorianPlayer player = this.dataHistorian.CreateDataHistorianPlayer();
+            
+            IDataHistorianPlayer player = EventProcessor.GetInstance().GetDataHistorianPlayer();
+
+            player.SetDisplayName("My Historian");
+
+            Console.WriteLine($"Player info. Name: {player.GetCacheName()}. File: {player.GetCacheFileName()}. Path: {player.GetCacheStorageUri()}. Display name: {player.GetDisplayName()}");
+
+            FilePersistenceConnector filePersistenceConnector = new FilePersistenceConnector();
+            player.SetDataStorer(filePersistenceConnector);
+
+            SensorData sensorData = new SensorData();
+            sensorData.SetValue(21.0f);
+            player.HandleSensorData(sensorData);
+
+            sensorData = new SensorData();
+            sensorData.SetValue(25.0f);
+            player.HandleSensorData(sensorData);
+
+            sensorData = new SensorData();
+            sensorData.SetValue(27.0f);
+            player.HandleSensorData(sensorData);
+
+            sensorData = new SensorData();
+            sensorData.SetValue(15.0f);
+            player.HandleSensorData(sensorData);
+
+            sensorData = new SensorData();
+            sensorData.SetValue(18.0f);
+            player.HandleSensorData(sensorData);
+
+            bool success = player.StoreHistorianCache();
+
+            Console.WriteLine($"Stored cache to file: Success = {success}. File = {player.GetCacheFileName()}");
         }
     }
 }

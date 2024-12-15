@@ -33,12 +33,6 @@ namespace LabBenchStudios.Pdt.Common
         /// 
         /// </summary>
         /// <returns></returns>
-        public string CreateCacheName();
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         public IDataHistorianPlayer CreateDataHistorianPlayer();
 
         /// <summary>

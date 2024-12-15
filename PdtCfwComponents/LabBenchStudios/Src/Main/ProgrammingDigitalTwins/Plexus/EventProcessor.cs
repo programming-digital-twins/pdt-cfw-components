@@ -102,7 +102,8 @@ namespace LabBenchStudios.Pdt.Plexus
         private SystemModelManager systemModelManager = null;
         private DigitalTwinModelManager digitalTwinModelManager = null;
         private ConfigTypeModelManager configTypeModelManager = null;
-        private DataHistorianManager systemDataHistorianManager = null;
+
+        private IDataHistorian dataHistorianManager = null;
 
         private Dictionary<string, ConnectionStateData> connectedStateTable = null;
 
@@ -124,7 +125,7 @@ namespace LabBenchStudios.Pdt.Plexus
             this.configTypeModelManager = this.systemModelManager.GetConfigTypeModelManager();
 
             // TODO: need a way to set user-specific file path for the historian
-            this.systemDataHistorianManager = new DataHistorianManager(this);
+            this.dataHistorianManager = new DataHistorianManager(this);
 
             this.dataContextEventListenerList = new List<IDataContextEventListener>();
             this.systemStatusEventListenerList = new List<ISystemStatusEventListener>();
@@ -218,7 +219,27 @@ namespace LabBenchStudios.Pdt.Plexus
         /// <returns></returns>
         public IDataHistorian GetDataHistorianManager()
         {
-            return this.systemDataHistorianManager;
+            return this.dataHistorianManager;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheName"></param>
+        /// <returns></returns>
+        public IDataHistorianPlayer GetDataHistorianPlayer()
+        {
+            return this.dataHistorianManager.CreateDataHistorianPlayer();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheName"></param>
+        /// <returns></returns>
+        public IDataHistorianPlayer GetDataHistorianPlayer(string cacheName)
+        {
+            return this.dataHistorianManager.GetDataHistorianPlayer(cacheName);
         }
 
         /// <summary>

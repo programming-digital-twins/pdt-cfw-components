@@ -29,6 +29,7 @@ using System.IO;
 using LabBenchStudios.Pdt.Common;
 using LabBenchStudios.Pdt.Data;
 using LabBenchStudios.Pdt.Util;
+using MQTTnet.Server;
 
 namespace LabBenchStudios.Pdt.Connection
 {
@@ -201,7 +202,7 @@ namespace LabBenchStudios.Pdt.Connection
         /// </summary>
         /// <param name="cacheName"></param>
         /// <returns></returns>
-        protected override string HandleCreateCacheFileName(string cacheName)
+        protected override string HandleCreateHistorianCacheFileName(string cacheName)
         {
             return FileUtil.CreateAbsHistorianCacheFileName(cacheName, this.historianCachePath);
         }
@@ -210,7 +211,7 @@ namespace LabBenchStudios.Pdt.Connection
         /// 
         /// </summary>
         /// <returns></returns>
-        protected override string HandleGetDataCacheUri()
+        protected override string HandleGetHistorianCacheUri()
         {
             return this.historianCachePath;
         }
@@ -219,7 +220,7 @@ namespace LabBenchStudios.Pdt.Connection
         /// 
         /// </summary>
         /// <returns></returns>
-        protected override string HandleGetDataStoreUri()
+        protected override string HandleGetObjectStoreUri()
         {
             return this.objectStorePath;
         }
@@ -399,10 +400,23 @@ namespace LabBenchStudios.Pdt.Connection
         /// 
         /// </summary>
         /// <param name="cacheName"></param>
-        /// <param name="cacheFileName"></param>
+        /// <param name="fileName"></param>
         /// <param name="dataCache"></param>
         /// <returns></returns>
         private int HandleStoreDataCache(string cacheName, string fileName, List<DataCacheEntryContainer> dataCache)
+        {
+            return this.HandleStoreDataCache(cacheName, fileName, dataCache, true);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheName"></param>
+        /// <param name="fileName"></param>
+        /// <param name="dataCache"></param>
+        /// <param name="overwrite"></param>
+        /// <returns></returns>
+        private int HandleStoreDataCache(string cacheName, string fileName, List<DataCacheEntryContainer> dataCache, bool overwrite)
         {
             string jsonData = DataUtil.DataCacheEntryListToJson(dataCache);
             int bytesWritten = 0;
@@ -411,6 +425,11 @@ namespace LabBenchStudios.Pdt.Connection
 
             try
             {
+                if (overwrite)
+                {
+                    File.Create(fileName).Close();
+                }
+
                 StreamWriter writer = new StreamWriter(fileName);
                 writer.Write(jsonData);
 

@@ -107,7 +107,7 @@ namespace LabBenchStudios.Pdt.Common
         public static readonly string TYPE_NAME_KEY = "typeName";
 
         public static readonly string DATA_STORE_NAME = "objectStore";
-        public static readonly string DATA_CACHE_NAME = "historianCache";
+        public static readonly string HISTORIAN_CACHE_NAME = "historianCache";
 
         public static readonly string CONSTRAINED_DEVICE = CONSTRAINED + DEVICE;
         public static readonly string EDGE_DEVICE = EDGE + DEVICE;

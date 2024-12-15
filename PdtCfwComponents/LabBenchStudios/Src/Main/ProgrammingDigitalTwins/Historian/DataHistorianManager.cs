@@ -70,7 +70,7 @@ namespace LabBenchStudios.Pdt.Historian
 
         private long totalHeapMemory = 0L;
 
-        private Dictionary<string, IDataHistorianPlayer> dataCachePlayerTable = null;
+        private Dictionary<string, IDataHistorianPlayer> dataHistorianPlayerTable = null;
 
         private ISystemStatusEventListener eventListener = null;
 
@@ -79,10 +79,7 @@ namespace LabBenchStudios.Pdt.Historian
         /// <summary>
         /// 
         /// </summary>
-        public DataHistorianManager() :
-            this(null, null,
-                 ConfigConst.DEFAULT_MAX_CACHED_ITEMS,
-                 ConfigConst.DEFAULT_MAX_CACHE_SIZE_IN_MB)
+        public DataHistorianManager() : this(null)
         {
             // nothing to do - delegates to other constructor
         }
@@ -91,56 +88,17 @@ namespace LabBenchStudios.Pdt.Historian
         /// 
         /// </summary>
         /// <param name="listener"></param>
-        public DataHistorianManager(ISystemStatusEventListener listener) :
-            this(null, listener,
-                 ConfigConst.DEFAULT_MAX_CACHED_ITEMS,
-                 ConfigConst.DEFAULT_MAX_CACHE_SIZE_IN_MB)
-        {
-            // nothing to do - delegates to other constructor
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="filePath"></param>
-        /// <param name="listener"></param>
-        public DataHistorianManager(string filePath, ISystemStatusEventListener listener) :
-            this(filePath, listener,
-                 ConfigConst.DEFAULT_MAX_CACHED_ITEMS,
-                 ConfigConst.DEFAULT_MAX_CACHE_SIZE_IN_MB)
-        {
-            // nothing to do - delegates to other constructor
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="filePath"></param>
-        /// <param name="listener"></param>
-        /// <param name="maxItemsPerType"></param>
-        /// <param name="maxCacheSize"></param>
-        public DataHistorianManager(
-            string filePath, ISystemStatusEventListener listener,
-            int maxItemsPerType, long maxCacheSize) : base()
+        public DataHistorianManager(ISystemStatusEventListener listener)
         {
             this.SetEventListener(listener);
 
-            if (maxItemsPerType > 0 && maxItemsPerType <= ConfigConst.DEFAULT_MAX_CACHED_ITEMS)
-            {
-                this.maxItemsPerType = maxItemsPerType;
-            }
-
-            if (maxCacheSize > 0L && maxCacheSize <= ConfigConst.DEFAULT_MAX_CACHE_SIZE_IN_MB)
-            {
-                this.maxCacheSize = maxCacheSize;
-            }
-
-            this.dataCachePlayerTable = new Dictionary<string, IDataHistorianPlayer>();
+            this.dataHistorianPlayerTable = new Dictionary<string, IDataHistorianPlayer>();
 
             this.totalHeapMemory = GC.GetTotalMemory(false);
 
-            this.SetFilePath(filePath);
+            this.InitPersistenceLayer();
         }
+
 
         // public methods
 
@@ -148,38 +106,23 @@ namespace LabBenchStudios.Pdt.Historian
         /// 
         /// </summary>
         /// <returns></returns>
-        public string CreateCacheName()
-        {
-            byte[] guidBytes = Guid.NewGuid().ToByteArray();
-            string base64Guid = Convert.ToBase64String(guidBytes);
-            string shortGuid = Regex.Replace(base64Guid, "[/+=]", "");
-
-            StringBuilder builder = new StringBuilder(DataHistorianCache.DEFAULT_CACHE_NAME);
-            builder.Append("_");
-            builder.Append(shortGuid);
-
-            string cacheName = builder.ToString();
-
-            Console.WriteLine($"Created data historian cache name: {cacheName}");
-
-            return cacheName;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         public IDataHistorianPlayer CreateDataHistorianPlayer()
         {
-            string cacheName = this.CreateCacheName();
+            Console.WriteLine("\n\n=====\nCreating data historian player...\n");
 
-            Console.WriteLine($"Created data historian player name: {cacheName}");
+            // create the historian player with a new backing cache
+            IDataHistorianPlayer historianPlayer = new DataHistorianPlayer();
 
-            IDataHistorianPlayer player = this.GetDataHistorianPlayer(cacheName, false);
+            Console.WriteLine($"Created data historian player: {historianPlayer.GetCacheName()}");
 
-            Console.WriteLine($"Data historian player created. File URI: {player.GetCacheStorageUri()}. Cache: {player.GetCacheFileName()}");
+            this.InitHistorianPlayer(historianPlayer);
 
-            return player;
+            //IDataHistorianPlayer historianPlayer = this.GetDataHistorianPlayer(cacheName, false);
+
+            Console.WriteLine($"Data historian player created. File URI: {historianPlayer.GetCacheStorageUri()}. Cache: {historianPlayer.GetCacheFileName()}");
+            Console.WriteLine("\n=====\n\n");
+
+            return historianPlayer;
         }
 
         /// <summary>
@@ -234,11 +177,11 @@ namespace LabBenchStudios.Pdt.Historian
             {
                 IDataHistorianPlayer historianPlayer = null;
 
-                if (this.dataCachePlayerTable.ContainsKey(cacheName))
+                if (this.dataHistorianPlayerTable.ContainsKey(cacheName))
                 {
                     Console.WriteLine($"Retrieving historian cache from internal table: {cacheName}.");
 
-                    historianPlayer = this.dataCachePlayerTable[cacheName];
+                    historianPlayer = this.dataHistorianPlayerTable[cacheName];
                 } else
                 {
                     Console.WriteLine($"Historian cache not yet stored internally. Loading / creating: {cacheName}.");
@@ -316,18 +259,18 @@ namespace LabBenchStudios.Pdt.Historian
         {
             if (!string.IsNullOrWhiteSpace(cacheName))
             {
-                if (this.dataCachePlayerTable.ContainsKey(cacheName))
+                if (this.dataHistorianPlayerTable.ContainsKey(cacheName))
                 {
                     Console.WriteLine($"Retrieving historian cache from internal table for cache name {cacheName}.");
 
-                    IDataHistorianPlayer dataCachePlayer = this.dataCachePlayerTable[cacheName];
+                    IDataHistorianPlayer dataHistorianPlayer = this.dataHistorianPlayerTable[cacheName];
 
-                    dataCachePlayer.Reset();
+                    dataHistorianPlayer.Reset();
 
-                    EventProcessor.GetInstance().UnregisterListener((IDataContextEventListener) dataCachePlayer);
-                    EventProcessor.GetInstance().UnregisterListener((IUserEventStateListener) dataCachePlayer);
+                    EventProcessor.GetInstance().UnregisterListener((IDataContextEventListener) dataHistorianPlayer);
+                    EventProcessor.GetInstance().UnregisterListener((IUserEventStateListener) dataHistorianPlayer);
 
-                    this.dataCachePlayerTable.Remove(cacheName);
+                    this.dataHistorianPlayerTable.Remove(cacheName);
                 } else
                 {
                     Console.WriteLine($"No data cache player with name {cacheName} registered. Ignoring.");
@@ -544,12 +487,24 @@ namespace LabBenchStudios.Pdt.Historian
         /// <param name="historianPlayer"></param>
         private void InitHistorianPlayer(IDataHistorianPlayer historianPlayer)
         {
+            this.InitHistorianPlayer(historianPlayer, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="historianPlayer"></param>
+        private void InitHistorianPlayer(IDataHistorianPlayer historianPlayer, bool registerForEvents)
+        {
+            // by default, enable cache filling
+            historianPlayer.SetCacheFillingEnabledFlag(true);
+
             // set the listener for the player - this will allow notifications from the player
             historianPlayer.SetEventListener(this.eventListener);
 
             // add the player to the internal table
-            if (! this.dataCachePlayerTable.ContainsKey(historianPlayer.GetCacheName())) {
-                this.dataCachePlayerTable.Add(historianPlayer.GetCacheName(), historianPlayer);
+            if (! this.dataHistorianPlayerTable.ContainsKey(historianPlayer.GetCacheName())) {
+                this.dataHistorianPlayerTable.Add(historianPlayer.GetCacheName(), historianPlayer);
             }
 
             // set the persistence layer
@@ -557,11 +512,14 @@ namespace LabBenchStudios.Pdt.Historian
             historianPlayer.SetDataLoader(this.persistenceConnector);
             historianPlayer.SetDataStorer(this.persistenceConnector);
 
-            // register the player for incoming events (from EventProcessor)
-            EventProcessor.GetInstance().RegisterListener((IDataContextEventListener) historianPlayer);
+            if (registerForEvents)
+            {
+                // register the player for incoming events (from EventProcessor)
+                EventProcessor.GetInstance().RegisterListener((IDataContextEventListener) historianPlayer);
 
-            // register the player for incoming events (from EventProcessor)
-            EventProcessor.GetInstance().RegisterListener((IUserEventStateListener) historianPlayer);
+                // register the player for incoming events (from EventProcessor)
+                EventProcessor.GetInstance().RegisterListener((IUserEventStateListener) historianPlayer);
+            }
         }
 
         /// <summary>
@@ -580,6 +538,7 @@ namespace LabBenchStudios.Pdt.Historian
         /// <returns></returns>
         private IDataHistorianCache LoadDataHistorianCache(string cacheName)
         {
+            /*
             if (this.persistenceConnector == null)
             {
                 this.InitPersistenceLayer();
@@ -607,6 +566,7 @@ namespace LabBenchStudios.Pdt.Historian
             {
                 Console.WriteLine($"Warning - no persistence connector initialized. Can't load cache {cacheName}.");
             }
+            */
 
             return null;
         }

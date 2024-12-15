@@ -40,10 +40,23 @@ namespace LabBenchStudios.Pdt.Historian
         /// <summary>
         /// 
         /// </summary>
+        public DataHistorianPlayer()
+        {
+            this.historianCache = new DataHistorianCache();
+
+            this.InitPlayerProperties();
+
+            //this.Reset();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="cacheName"></param>
         public DataHistorianPlayer(string cacheName)
         {
-            this.InitHistorianCache(new DataHistorianCache(cacheName));
+            this.historianCache = new DataHistorianCache();
+            this.historianCache.SetCacheName(cacheName);
 
             this.InitPlayerProperties();
 
@@ -55,7 +68,7 @@ namespace LabBenchStudios.Pdt.Historian
         /// </summary>
         public DataHistorianPlayer(IDataHistorianCache historianCache)
         {
-            this.InitHistorianCache(historianCache);
+            this.historianCache = historianCache;
 
             this.InitPlayerProperties();
 
@@ -190,11 +203,6 @@ namespace LabBenchStudios.Pdt.Historian
                 DataCacheEntryContainer cacheEntry = new DataCacheEntryContainer();
                 cacheEntry.SetActuatorData(data);
 
-                if (! this.HasValidCache())
-                {
-                    this.InitHistorianCache(null);
-                }
-
                 this.historianCache.AddCacheItem(cacheEntry);
             }
         }
@@ -209,11 +217,6 @@ namespace LabBenchStudios.Pdt.Historian
             {
                 DataCacheEntryContainer cacheEntry = new DataCacheEntryContainer();
                 cacheEntry.SetConnectionStateData(data);
-
-                if (!this.HasValidCache())
-                {
-                    this.InitHistorianCache(null);
-                }
 
                 this.historianCache.AddCacheItem(cacheEntry);
             }
@@ -230,11 +233,6 @@ namespace LabBenchStudios.Pdt.Historian
                 DataCacheEntryContainer cacheEntry = new DataCacheEntryContainer();
                 cacheEntry.SetMessageData(data);
 
-                if (!this.HasValidCache())
-                {
-                    this.InitHistorianCache(null);
-                }
-
                 this.historianCache.AddCacheItem(cacheEntry);
             }
         }
@@ -250,11 +248,6 @@ namespace LabBenchStudios.Pdt.Historian
                 DataCacheEntryContainer cacheEntry = new DataCacheEntryContainer();
                 cacheEntry.SetSensorData(data);
 
-                if (!this.HasValidCache())
-                {
-                    this.InitHistorianCache(null);
-                }
-
                 this.historianCache.AddCacheItem(cacheEntry);
             }
         }
@@ -269,11 +262,6 @@ namespace LabBenchStudios.Pdt.Historian
             {
                 DataCacheEntryContainer cacheEntry = new DataCacheEntryContainer();
                 cacheEntry.SetSystemPerformanceData(data);
-
-                if (!this.HasValidCache())
-                {
-                    this.InitHistorianCache(null);
-                }
 
                 this.historianCache.AddCacheItem(cacheEntry);
             }
@@ -748,22 +736,6 @@ namespace LabBenchStudios.Pdt.Historian
             }
 
             this.enablePlaybackLoopOnStart = true;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="historianCache"></param>
-        private void InitHistorianCache(IDataHistorianCache historianCache)
-        {
-            if (historianCache == null)
-            {
-                historianCache = new DataHistorianCache();
-            }
-
-            this.historianCache = historianCache;
-            this.playerName = this.historianCache.GetCacheName();
-            this.displayName = this.playerName;
         }
 
         /// <summary>

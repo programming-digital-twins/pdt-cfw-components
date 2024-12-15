@@ -40,11 +40,24 @@ namespace LabBenchStudios.Pdt.Util
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="cacheName"></param>
+        /// <returns></returns>
+        public static string CreateDataHistorianFile(string cacheName)
+        {
+            string historianPath = CreateAbsHistorianCachePath(ConfigConst.DEFAULT_FILE_STORAGE_PATH);
+            string historianFile = CreateAbsHistorianCacheFileName(cacheName, historianPath);
+
+            return historianFile;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="pathPrefix"></param>
         /// <returns></returns>
         public static string CreateAbsHistorianCachePath(string pathPrefix)
         {
-            return InitializeStoragePath(pathPrefix, ConfigConst.DATA_CACHE_NAME);
+            return InitializeStoragePath(pathPrefix, ConfigConst.HISTORIAN_CACHE_NAME);
         }
 
         /// <summary>
@@ -173,10 +186,18 @@ namespace LabBenchStudios.Pdt.Util
                 fileNameBuilder.Append(DateTime.UtcNow.ToString(ConfigConst.FILE_DATE_TIME_FORMAT));
             }
 
-            string absFileName =
-                Path.GetFullPath(Path.Combine(pathPrefix, locationID, deviceID, fileNameBuilder.ToString()));
+            string absFileName = null;
 
-            Console.WriteLine($"Created resource absolute path name: {absFileName}");
+            try
+            {
+                absFileName =
+                    Path.GetFullPath(Path.Combine(pathPrefix, locationID, deviceID, fileNameBuilder.ToString()));
+
+                Console.WriteLine($"Created resource absolute path name: {absFileName}");
+            } catch (Exception e)
+            {
+                Console.WriteLine($"Failed to create resource absolute path name: {absFileName}. Exception: {e.Message}");
+            }
 
             return absFileName;
         }
@@ -226,9 +247,17 @@ namespace LabBenchStudios.Pdt.Util
                 fileName = fileName + ConfigConst.JSON_EXT;
             }
 
-            string absFileName = Path.GetFullPath(Path.Combine(pathPrefix, fileName));
+            string absFileName = null;
 
-            Console.WriteLine($"Created historian cache absolute path name: {absFileName}");
+            try
+            {
+                absFileName = Path.GetFullPath(Path.Combine(pathPrefix, fileName));
+
+                Console.WriteLine($"Created historian cache absolute path name: {absFileName}");
+            } catch (Exception e)
+            {
+                Console.WriteLine($"Failed to create historian cache absolute path name: {absFileName}. Exception: {e.Message}");
+            }
 
             return absFileName;
         }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.IO;
+using System.Text.RegularExpressions;
+using System.Text;
 using LabBenchStudios.Pdt.Common;
 using LabBenchStudios.Pdt.Data;
 using LabBenchStudios.Pdt.Util;
@@ -63,8 +65,11 @@ namespace LabBenchStudios.Pdt.Historian
 
         // private
 
+        private bool enableDebugLog = true;
+
         private string cacheName = null;
         private string cacheFileName = null;
+        private string cacheFilePath = null;
 
         private DataHistorianState.DataHistorianReplayState replayState;
         private DataHistorianState.DataHistorianReplayDirection replayDirection;
@@ -85,25 +90,11 @@ namespace LabBenchStudios.Pdt.Historian
         /// <summary>
         /// 
         /// </summary>
-        public DataHistorianCache() : this(null)
+        public DataHistorianCache() : base()
         {
-            // nothing to do - delegates to other constructor
-        }
+            this.dataEntryCache = new List<DataCacheEntryContainer>();
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="cacheName"></param>
-        public DataHistorianCache(string cacheName) : base()
-        {
-            if (string.IsNullOrWhiteSpace(cacheName))
-            {
-                cacheName = DEFAULT_CACHE_NAME;
-            }
-
-            this.InitDataEntryCache();
-
-            this.SetCacheName(cacheName);
+            this.SetCacheName(CreateCacheName());
         }
 
         // public methods
@@ -126,6 +117,11 @@ namespace LabBenchStudios.Pdt.Historian
         {
             if (cacheEntry != null)
             {
+                if (this.enableDebugLog)
+                {
+                    Console.WriteLine($"Adding cache entry: {cacheEntry.GetTimeStamp()}");
+                }
+
                 this.dataEntryCache.Add(cacheEntry);
 
                 if (!ignoreEntryCount)
@@ -280,12 +276,7 @@ namespace LabBenchStudios.Pdt.Historian
         /// <returns></returns>
         public string GetStorageResourceUri()
         {
-            if (this.dataStorer != null)
-            {
-                return this.dataStorer.GetDataStoreUri();
-            }
-
-            return null;
+            return this.cacheFilePath;
         }
 
         /// <summary>
@@ -329,7 +320,7 @@ namespace LabBenchStudios.Pdt.Historian
 
                 if (this.dataEntryCache == null)
                 {
-                    this.InitDataEntryCache();
+                    this.InitCacheProperties();
                 }
 
                 if (this.dataEntryCache != null)
@@ -356,6 +347,7 @@ namespace LabBenchStudios.Pdt.Historian
         public void ResetCache()
         {
             this.SetCacheState(DataHistorianState.DataHistorianReplayState.Stop);
+
             this.newCacheEntryCount = 0;
             this.curCacheIndex = 0;
         }
@@ -366,8 +358,8 @@ namespace LabBenchStudios.Pdt.Historian
         /// <returns></returns>
         public bool StoreDataCache()
         {
-            this.SetCacheState(DataHistorianState.DataHistorianReplayState.Stop);
-            this.SetCacheAccessDirection(this.replayDirection);
+            //this.SetCacheState(DataHistorianState.DataHistorianReplayState.Stop);
+            //this.SetCacheAccessDirection(this.replayDirection);
 
             if (this.dataStorer != null)
             {
@@ -377,7 +369,7 @@ namespace LabBenchStudios.Pdt.Historian
                 {
                     Console.WriteLine($"Successfully stored {resultCode} items to cache {this.cacheName}.");
 
-                    this.newCacheEntryCount = 0;
+                    //this.newCacheEntryCount = 0;
                 } else if (resultCode == 0)
                 {
                     Console.WriteLine($"Warning - no cached items from {this.cacheName} stored to persistence layer.");
@@ -385,9 +377,11 @@ namespace LabBenchStudios.Pdt.Historian
                 {
                     Console.WriteLine($"Error - failed to store cache {this.cacheName} to persistence layer.");
                 }
+
+                return true;
             }
 
-            return true;
+            return false;
         }
 
         /// <summary>
@@ -398,8 +392,9 @@ namespace LabBenchStudios.Pdt.Historian
         {
             if (loader != null)
             {
-                Console.WriteLine("Setting data loader...");
                 this.dataLoader = loader;
+
+                Console.WriteLine($"Setting data loader: {this.cacheFileName}");
             }
         }
 
@@ -411,10 +406,9 @@ namespace LabBenchStudios.Pdt.Historian
         {
             if (storer != null)
             {
-                Console.WriteLine("Setting data storer...");
                 this.dataStorer = storer;
 
-                this.cacheFileName = this.dataStorer.CreateCacheFileName(this.cacheName);
+                Console.WriteLine($"Setting data storer: {this.cacheFileName}");
             }
         }
 
@@ -435,6 +429,10 @@ namespace LabBenchStudios.Pdt.Historian
                 }
 
                 this.cacheName = name;
+
+                Console.WriteLine($"Setting historian cache name: {this.cacheName}");
+
+                this.InitCacheProperties();
             }
         }
         
@@ -471,13 +469,37 @@ namespace LabBenchStudios.Pdt.Historian
 
 
         // private methods
-        
+
         /// <summary>
         /// 
         /// </summary>
-        private void InitDataEntryCache()
+        /// <returns></returns>
+        private string CreateCacheName()
         {
-            this.dataEntryCache = new List<DataCacheEntryContainer>();
+            byte[] guidBytes = Guid.NewGuid().ToByteArray();
+            string base64Guid = Convert.ToBase64String(guidBytes);
+            string shortGuid = Regex.Replace(base64Guid, "[/+=]", "");
+
+            StringBuilder builder = new StringBuilder(DataHistorianCache.DEFAULT_CACHE_NAME);
+            builder.Append("_");
+            builder.Append(shortGuid);
+
+            string cacheName = builder.ToString();
+
+            Console.WriteLine($"Created data historian cache name: {cacheName}");
+
+            return cacheName;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void InitCacheProperties()
+        {
+            this.cacheFileName = FileUtil.CreateDataHistorianFile(this.cacheName);
+            this.cacheFilePath = Path.GetDirectoryName(this.cacheFileName);
+
+            Console.WriteLine($"Cache props: Name = {this.cacheName}; File = {this.cacheFileName}; Path = {this.cacheFilePath}");
         }
 
     }
