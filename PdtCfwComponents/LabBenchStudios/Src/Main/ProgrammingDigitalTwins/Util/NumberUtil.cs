@@ -41,10 +41,10 @@ namespace LabBenchStudios.Pdt.Util
         /// </summary>
         /// <param name="val"></param>
         /// <returns></returns>
-        public static string GetFormattedBytes(long val)
+        public static string GetFormattedBytes(double val)
         {
-            long absVal = Math.Abs(val);
-            double derivedVal = (double) absVal;
+            double absVal = Math.Abs(val);
+            double derivedVal = absVal;
             string magnitude = " KB";
 
             if (absVal < MB)

@@ -78,7 +78,7 @@ namespace LabBenchStudios.Pdt.Historian
         private int cacheIndexIncrement = 1;
         private int newCacheEntryCount = 0;
 
-        private long cacheMemoryUsage = 0L;
+        private double cacheMemoryUsage = 0.0d;
         private long delayTimeMillis = 0L;
 
         private List<DataCacheEntryContainer> dataEntryCache = null;
@@ -166,7 +166,10 @@ namespace LabBenchStudios.Pdt.Historian
         {
             Console.WriteLine($"Clearing all cached entries from cache {this.cacheName}.");
 
+            this.cacheMemoryUsage = 0;
             this.dataEntryCache.Clear();
+
+            this.ResetCache();
 
             return true;
         }
@@ -202,7 +205,7 @@ namespace LabBenchStudios.Pdt.Historian
         /// 
         /// </summary>
         /// <returns></returns>
-        public long GetCacheMemoryUsage()
+        public double GetCacheMemoryUsage()
         {
             return this.cacheMemoryUsage;
         }
@@ -355,7 +358,7 @@ namespace LabBenchStudios.Pdt.Historian
         /// </summary>
         public void ResetCache()
         {
-            this.SetCacheState(DataHistorianState.DataHistorianReplayState.Stop);
+            //this.SetCacheState(DataHistorianState.DataHistorianReplayState.Stop);
 
             this.newCacheEntryCount = 0;
             this.curCacheIndex = 0;

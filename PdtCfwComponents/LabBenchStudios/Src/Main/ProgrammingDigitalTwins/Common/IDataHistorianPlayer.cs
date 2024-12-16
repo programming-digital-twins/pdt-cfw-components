@@ -48,7 +48,7 @@ namespace LabBenchStudios.Pdt.Common
         /// 
         /// </summary>
         /// <returns></returns>
-        public long GetCacheMemoryUsage();
+        public double GetCacheMemoryUsage();
 
         /// <summary>
         /// 

@@ -59,15 +59,11 @@ namespace LabBenchStudios.Pdt.Data
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private bool enableByteCounting = true;
 
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        private int byteCount = 0;
-
         /// <summary>
         /// 
         /// </summary>
         public DataCacheEntryContainer() : base()
         {
-            this.byteCount += this.timeStamp.ToString().Length;
         }
 
 
@@ -79,7 +75,49 @@ namespace LabBenchStudios.Pdt.Data
         /// <returns></returns>
         public int GetApproxByteCount()
         {
-            return this.byteCount;
+            int byteCount = 0;
+
+            if (this.enableByteCounting)
+            {
+                if (this.HasActuatorData())
+                {
+                    string jsonData = DataUtil.ActuatorDataToJson(this.actuatorData);
+
+                    byteCount += jsonData.Length;
+                }
+
+                if (this.HasConnectionStateData())
+                {
+                    string jsonData = DataUtil.ConnectionStateDataToJson(this.connStateData);
+
+                    byteCount += jsonData.Length;
+                }
+
+                if (this.HasMessageData())
+                {
+                    string jsonData = DataUtil.MessageDataToJson(this.messageData);
+
+                    byteCount += jsonData.Length;
+                }
+
+                if (this.HasSensorData())
+                {
+                    string jsonData = DataUtil.SensorDataToJson(this.sensorData);
+
+                    byteCount += jsonData.Length;
+                }
+
+                if (this.HasSystemPerformanceData())
+                {
+                    string jsonData = DataUtil.SystemPerformanceDataToJson(this.sysPerfData);
+
+                    byteCount += jsonData.Length;
+                }
+
+                byteCount += this.GetTimeStamp().ToString().Length;
+            }
+
+            return byteCount;
         }
 
         /// <summary>
@@ -224,22 +262,10 @@ namespace LabBenchStudios.Pdt.Data
         {
             if (data != null)
             {
-                bool excludeByteCount = false;
-
-                if (this.actuatorData != null)
-                {
-                    excludeByteCount = true;
-                }
-
                 this.actuatorData = data;
 
                 this.SetTimeStamp(this.GenerateUtcTime(data.GetTimeStamp()));
 
-                if (this.enableByteCounting && !excludeByteCount)
-                {
-                    string jsonData = DataUtil.SystemPerformanceDataToJson(this.sysPerfData);
-                    this.byteCount += jsonData.Length;
-                }
             }
         }
 
@@ -251,22 +277,10 @@ namespace LabBenchStudios.Pdt.Data
         {
             if (data != null)
             {
-                bool excludeByteCount = false;
-
-                if (this.connStateData != null)
-                {
-                    excludeByteCount = true;
-                }
-
                 this.connStateData = data;
 
                 this.SetTimeStamp(this.GenerateUtcTime(data.GetTimeStamp()));
 
-                if (this.enableByteCounting && !excludeByteCount)
-                {
-                    string jsonData = DataUtil.ConnectionStateDataToJson(this.connStateData);
-                    this.byteCount += jsonData.Length;
-                }
             }
         }
 
@@ -278,22 +292,10 @@ namespace LabBenchStudios.Pdt.Data
         {
             if (data != null)
             {
-                bool excludeByteCount = false;
-
-                if (this.messageData != null)
-                {
-                    excludeByteCount = true;
-                }
-
                 this.messageData = data;
 
                 this.SetTimeStamp(this.GenerateUtcTime(data.GetTimeStamp()));
 
-                if (this.enableByteCounting && !excludeByteCount)
-                {
-                    string jsonData = DataUtil.MessageDataToJson(this.messageData);
-                    this.byteCount += jsonData.Length;
-                }
             }
         }
 
@@ -305,22 +307,10 @@ namespace LabBenchStudios.Pdt.Data
         {
             if (data != null)
             {
-                bool excludeByteCount = false;
-
-                if (this.sensorData != null)
-                {
-                    excludeByteCount = true;
-                }
-
                 this.sensorData = data;
 
                 this.SetTimeStamp(this.GenerateUtcTime(data.GetTimeStamp()));
 
-                if (this.enableByteCounting && !excludeByteCount)
-                {
-                    string jsonData = DataUtil.SensorDataToJson(this.sensorData);
-                    this.byteCount += jsonData.Length;
-                }
             }
         }
         
@@ -332,22 +322,10 @@ namespace LabBenchStudios.Pdt.Data
         {
             if (data != null)
             {
-                bool excludeByteCount = false;
-
-                if (this.sysPerfData != null)
-                {
-                    excludeByteCount = true;
-                }
-
                 this.sysPerfData = data;
 
                 this.SetTimeStamp(this.GenerateUtcTime(data.GetTimeStamp()));
 
-                if (this.enableByteCounting && !excludeByteCount)
-                {
-                    string jsonData = DataUtil.SystemPerformanceDataToJson(this.sysPerfData);
-                    this.byteCount += jsonData.Length;
-                }
             }
         }
 

@@ -145,7 +145,7 @@ namespace LabBenchStudios.Pdt.Historian
         /// 
         /// </summary>
         /// <returns></returns>
-        public long GetCacheMemoryUsage()
+        public double GetCacheMemoryUsage()
         {
             if (this.HasValidCache())
             {
@@ -351,8 +351,6 @@ namespace LabBenchStudios.Pdt.Historian
         /// <returns></returns>
         public bool Clear()
         {
-            this.historianCache.SetCacheState(DataHistorianState.DataHistorianReplayState.Pause);
-
             return this.historianCache.ClearCache();
         }
 
