@@ -35,8 +35,11 @@ namespace LabBenchStudios.Pdt.Common
         public enum EventType
         {
             CloseOpenDialogs,
-            FreezePlayer,
-            UnfreezePlayer
+            RestoreOpenDialogs,
+            DisableLiveDataProcessing,
+            EnableLiveDataProcessing,
+            DisableCachedDataProcessing,
+            EnableCachedDataProcessing
         }
 
     }

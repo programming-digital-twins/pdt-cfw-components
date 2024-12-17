@@ -324,6 +324,25 @@ namespace LabBenchStudios.Pdt.Historian
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pathName"></param>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public IDataHistorianPlayer LoadDataHistorianPlayer(string pathName, string fileName)
+        {
+            if (Directory.Exists(pathName))
+            {
+                if (File.Exists(fileName))
+                {
+
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Attempts to retrieve the named data instance from the persistence server.
         /// Will return null if there's no data matching the given type with the
         /// given parameters.
@@ -538,7 +557,6 @@ namespace LabBenchStudios.Pdt.Historian
         /// <returns></returns>
         private IDataHistorianCache LoadDataHistorianCache(string cacheName)
         {
-            /*
             if (this.persistenceConnector == null)
             {
                 this.InitPersistenceLayer();
@@ -566,7 +584,6 @@ namespace LabBenchStudios.Pdt.Historian
             {
                 Console.WriteLine($"Warning - no persistence connector initialized. Can't load cache {cacheName}.");
             }
-            */
 
             return null;
         }

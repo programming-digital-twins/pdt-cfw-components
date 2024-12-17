@@ -38,6 +38,13 @@ namespace LabBenchStudios.Pdt.Common
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public DataCacheEntryContainer GetCacheEntryAtIndex(int index);
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <returns></returns>
         public string GetCacheName();
 

@@ -79,7 +79,17 @@ namespace LabBenchStudios.Pdt.Historian
 
 
         // public methods
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public DataCacheEntryContainer GetCacheEntryAtIndex(int index)
+        {
+            return this.historianCache.GetCacheEntryAtIndex(index);
+        }
+
         /// <summary>
         /// 
         /// </summary>

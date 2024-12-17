@@ -331,7 +331,21 @@ namespace LabBenchStudios.Pdt.Util
 
             return null;
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public static string TrimFileExt(string fileName)
+        {
+            if (! string.IsNullOrWhiteSpace(fileName))
+            {
+                return Path.GetFileNameWithoutExtension(fileName);
+            }
 
+            return null;
+        }
     }
 
 }

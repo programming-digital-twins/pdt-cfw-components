@@ -105,6 +105,14 @@ namespace LabBenchStudios.Pdt.Util
             return this.endTime;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public double GetDeltaInSeconds()
+        {
+            return (this.endTime.Subtract(this.startTime).TotalSeconds);
+        }
 
         // private methods
         

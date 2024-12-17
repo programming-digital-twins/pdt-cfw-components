@@ -1,3 +1,7 @@
+
+
+using LabBenchStudios.Pdt.Data;
+
 /**
  * MIT License
  * 
@@ -35,14 +39,9 @@ namespace LabBenchStudios.Pdt.Common
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="index"></param>
         /// <returns></returns>
-        public string GetCacheStorageUri();
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public int GetCacheSize();
+        public DataCacheEntryContainer GetCacheEntryAtIndex(int index);
 
         /// <summary>
         /// 
@@ -55,6 +54,18 @@ namespace LabBenchStudios.Pdt.Common
         /// </summary>
         /// <returns></returns>
         public string GetCacheName();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public int GetCacheSize();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string GetCacheStorageUri();
 
         /// <summary>
         /// 
