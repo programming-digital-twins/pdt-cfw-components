@@ -70,7 +70,7 @@ namespace LabBenchStudios.Pdt.Common
         /// 
         /// </summary>
         /// <returns></returns>
-        public long GetTotalMemory();
+        public double GetTotalMemoryUsage();
 
         /// <summary>
         /// 

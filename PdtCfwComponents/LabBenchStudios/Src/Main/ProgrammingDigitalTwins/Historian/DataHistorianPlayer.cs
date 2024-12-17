@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.Threading;
 
@@ -34,7 +35,9 @@ namespace LabBenchStudios.Pdt.Historian
         private bool cacheFillingEnabled = false;
         private bool cacheOnlyDataEventsEnabled = false;
 
+        private bool playbackThreadInitialized = false;
         private bool playbackEnabled = false;
+        private bool playbackModeActive = false;
         private bool enablePlaybackLoopOnStart = false;
         private float playbackDelayFactor = 0.0f;
         private int maxJoinMillis = 500;
@@ -70,7 +73,13 @@ namespace LabBenchStudios.Pdt.Historian
         /// </summary>
         public DataHistorianPlayer(IDataHistorianCache historianCache)
         {
-            this.historianCache = historianCache;
+            if (historianCache != null)
+            {
+                this.historianCache = historianCache;
+            } else
+            {
+                this.historianCache = new DataHistorianCache();
+            }
 
             this.InitPlayerProperties();
 
@@ -110,7 +119,7 @@ namespace LabBenchStudios.Pdt.Historian
                 return this.historianCache.GetCacheReplayDirection();
             } else
             {
-                Console.WriteLine("Data historian player instance has no valid backing cache. Ignoring.");
+                Console.WriteLine($"Data historian player {this.playerName} has no valid backing cache. Ignoring.");
             }
 
             return DataHistorianState.DataHistorianReplayDirection.Uninitialized;
@@ -145,7 +154,7 @@ namespace LabBenchStudios.Pdt.Historian
                 return this.historianCache.GetCacheSize();
             } else
             {
-                Console.WriteLine("Data historian player instance has no valid backing cache. Ignoring.");
+                Console.WriteLine($"Data historian player {this.playerName} has no valid backing cache. Ignoring.");
             }
 
             return 0;
@@ -162,7 +171,7 @@ namespace LabBenchStudios.Pdt.Historian
                 return this.historianCache.GetCacheMemoryUsage();
             } else
             {
-                Console.WriteLine("Data historian player instance has no valid backing cache. Ignoring.");
+                Console.WriteLine($"Data historian player {this.playerName} has no valid backing cache. Ignoring.");
             }
 
             return 0;
@@ -206,7 +215,7 @@ namespace LabBenchStudios.Pdt.Historian
                 return this.historianCache.GetCacheReplayDirection();
             } else
             {
-                Console.WriteLine("Data historian player instance has no valid backing cache. Ignoring.");
+                Console.WriteLine($"Data historian player {this.playerName} has no valid backing cache. Ignoring.");
             }
 
             return DataHistorianState.DataHistorianReplayDirection.Uninitialized;
@@ -227,12 +236,15 @@ namespace LabBenchStudios.Pdt.Historian
         /// <param name="data"></param>
         public void HandleActuatorData(ActuatorData data)
         {
-            if (data != null && this.cacheFillingEnabled)
+            if (!this.playbackModeActive)
             {
-                DataCacheEntryContainer cacheEntry = new DataCacheEntryContainer();
-                cacheEntry.SetActuatorData(data);
+                if (data != null && this.cacheFillingEnabled)
+                {
+                    DataCacheEntryContainer cacheEntry = new DataCacheEntryContainer();
+                    cacheEntry.SetActuatorData(data);
 
-                this.historianCache.AddCacheItem(cacheEntry);
+                    this.historianCache.AddCacheItem(cacheEntry);
+                }
             }
         }
 
@@ -242,14 +254,17 @@ namespace LabBenchStudios.Pdt.Historian
         /// <param name="data"></param>
         public void HandleConnectionStateData(ConnectionStateData data)
         {
-            if (!this.cacheOnlyDataEventsEnabled)
+            if (!this.playbackModeActive)
             {
-                if (data != null && this.cacheFillingEnabled)
+                if (!this.cacheOnlyDataEventsEnabled)
                 {
-                    DataCacheEntryContainer cacheEntry = new DataCacheEntryContainer();
-                    cacheEntry.SetConnectionStateData(data);
+                    if (data != null && this.cacheFillingEnabled)
+                    {
+                        DataCacheEntryContainer cacheEntry = new DataCacheEntryContainer();
+                        cacheEntry.SetConnectionStateData(data);
 
-                    this.historianCache.AddCacheItem(cacheEntry);
+                        this.historianCache.AddCacheItem(cacheEntry);
+                    }
                 }
             }
         }
@@ -260,14 +275,17 @@ namespace LabBenchStudios.Pdt.Historian
         /// <param name="data"></param>
         public void HandleMessageData(MessageData data)
         {
-            if (!this.cacheOnlyDataEventsEnabled)
+            if (!this.playbackModeActive)
             {
-                if (data != null && this.cacheFillingEnabled)
+                if (!this.cacheOnlyDataEventsEnabled)
                 {
-                    DataCacheEntryContainer cacheEntry = new DataCacheEntryContainer();
-                    cacheEntry.SetMessageData(data);
+                    if (data != null && this.cacheFillingEnabled)
+                    {
+                        DataCacheEntryContainer cacheEntry = new DataCacheEntryContainer();
+                        cacheEntry.SetMessageData(data);
 
-                    this.historianCache.AddCacheItem(cacheEntry);
+                        this.historianCache.AddCacheItem(cacheEntry);
+                    }
                 }
             }
         }
@@ -278,12 +296,15 @@ namespace LabBenchStudios.Pdt.Historian
         /// <param name="data"></param>
         public void HandleSensorData(SensorData data)
         {
-            if (data != null && this.cacheFillingEnabled)
+            if (!this.playbackModeActive)
             {
-                DataCacheEntryContainer cacheEntry = new DataCacheEntryContainer();
-                cacheEntry.SetSensorData(data);
+                if (data != null && this.cacheFillingEnabled)
+                {
+                    DataCacheEntryContainer cacheEntry = new DataCacheEntryContainer();
+                    cacheEntry.SetSensorData(data);
 
-                this.historianCache.AddCacheItem(cacheEntry);
+                    this.historianCache.AddCacheItem(cacheEntry);
+                }
             }
         }
 
@@ -293,12 +314,15 @@ namespace LabBenchStudios.Pdt.Historian
         /// <param name="data"></param>
         public void HandleSystemPerformanceData(SystemPerformanceData data)
         {
-            if (data != null && this.cacheFillingEnabled)
+            if (!this.playbackModeActive)
             {
-                DataCacheEntryContainer cacheEntry = new DataCacheEntryContainer();
-                cacheEntry.SetSystemPerformanceData(data);
+                if (data != null && this.cacheFillingEnabled)
+                {
+                    DataCacheEntryContainer cacheEntry = new DataCacheEntryContainer();
+                    cacheEntry.SetSystemPerformanceData(data);
 
-                this.historianCache.AddCacheItem(cacheEntry);
+                    this.historianCache.AddCacheItem(cacheEntry);
+                }
             }
         }
 
@@ -308,7 +332,10 @@ namespace LabBenchStudios.Pdt.Historian
         /// <param name="eventType"></param>
         public void HandleUserEventState(UserEventState.EventType eventType)
         {
-            // nothing to do (for now)
+            if (!this.playbackModeActive)
+            {
+                // nothing to do for now
+            }
         }
 
         /// <summary>
@@ -349,7 +376,7 @@ namespace LabBenchStudios.Pdt.Historian
                 return (this.replayState == DataHistorianState.DataHistorianReplayState.Play);
             } else
             {
-                Console.WriteLine("Data historian player instance has no valid backing cache. Ignoring.");
+                Console.WriteLine($"Data historian player {this.playerName} has no valid backing cache. Ignoring.");
             }
 
             return false;
@@ -376,11 +403,17 @@ namespace LabBenchStudios.Pdt.Historian
             // handle the action
             if (this.HasValidCache() && this.playbackEnabled)
             {
+                this.playbackModeActive = true;
                 this.historianCache.SetCacheState(DataHistorianState.DataHistorianReplayState.Play);
                 this.replayState = this.historianCache.GetCacheReplayState();
 
                 try
                 {
+                    if (!this.playbackThreadInitialized)
+                    {
+                        this.CreatePlaybackThread();
+                    }
+
                     if (this.playbackThread != null)
                     {
                         // determine if thread is just initialized, or running but in a sleep state
@@ -391,7 +424,8 @@ namespace LabBenchStudios.Pdt.Historian
                             Console.WriteLine($"Play: Initialized thread started: {this.playerName}.");
                         } else
                         {
-                            this.playbackThread.Interrupt();
+                            Console.WriteLine($"Play: Initialized thread already started. Ignoring: {this.playerName}");
+                            //this.playbackThread.Interrupt();
                         }
                     }
 
@@ -407,7 +441,7 @@ namespace LabBenchStudios.Pdt.Historian
                 }
             } else
             {
-                Console.WriteLine("Data historian player instance has no valid backing cache. Ignoring.");
+                Console.WriteLine($"Data historian player {this.playerName} has no valid backing cache. Ignoring.");
             }
 
             return false;
@@ -434,7 +468,7 @@ namespace LabBenchStudios.Pdt.Historian
                 {
                     if (this.playbackThread != null)
                     {
-                        this.playbackThread.Interrupt();
+                        // nothing to do
                     }
                 } catch (ThreadInterruptedException t)
                 {
@@ -443,7 +477,7 @@ namespace LabBenchStudios.Pdt.Historian
                 return true;
             } else
             {
-                Console.WriteLine("Data historian player instance has no valid backing cache. Ignoring.");
+                Console.WriteLine($"Data historian player {this.playerName} has no valid backing cache. Ignoring.");
             }
 
             return false;
@@ -482,7 +516,7 @@ namespace LabBenchStudios.Pdt.Historian
                 this.replayState = this.historianCache.GetCacheReplayState();
             } else
             {
-                Console.WriteLine("Data historian player instance has no valid backing cache. Ignoring.");
+                Console.WriteLine($"Data historian player {this.playerName} has no valid backing cache. Ignoring.");
             }
 
             //this.InitializePlayer();
@@ -511,14 +545,21 @@ namespace LabBenchStudios.Pdt.Historian
                     {
                         this.playbackThread.Interrupt();
                     }
+
+                    if (this.playbackThreadInitialized)
+                    {
+                        this.DestroyPlaybackThread();
+                    }
                 } catch (ThreadInterruptedException t)
                 {
                 }
 
+                this.playbackModeActive = false;
+
                 return true;
             } else
             {
-                Console.WriteLine("Data historian player instance has no valid backing cache. Ignoring.");
+                Console.WriteLine($"Data historian player {this.playerName} has no valid backing cache. Ignoring.");
             }
 
             return false;
@@ -578,7 +619,7 @@ namespace LabBenchStudios.Pdt.Historian
                 this.displayName = displayName;
             } else
             {
-                Console.WriteLine("Invalid display name. Ignoring set request.");
+                Console.WriteLine($"Invalid display name for {this.playerName}. Ignoring set request.");
             }
         }
 
@@ -629,8 +670,29 @@ namespace LabBenchStudios.Pdt.Historian
                 this.historianCache.SetCacheAccessDirection(direction);
             } else
             {
-                Console.WriteLine("Data historian player instance has no valid backing cache. Ignoring.");
+                Console.WriteLine($"Data historian player {this.playerName} has no valid backing cache. Ignoring.");
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public bool LoadHistorianCache()
+        {
+            if (this.HasValidCache())
+            {
+                Console.WriteLine($"Loading cache for player: {this.playerName}. Name: {this.historianCache.GetCacheName()}");
+                
+                bool success = this.historianCache.LoadDataCache();
+
+                return success;
+            } else
+            {
+                Console.WriteLine($"No valid cache to load for player: {this.playerName}.");
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -669,11 +731,20 @@ namespace LabBenchStudios.Pdt.Historian
                     switch (this.replayState)
                     {
                         case DataHistorianState.DataHistorianReplayState.Play:
-                            this.HandlePlayState();
+                            this.HandleCachePlayback();
 
                             break;
 
                         default:
+                            try
+                            {
+                                // sleep about 1 second if state is not playing
+                                Thread.Sleep(1000);
+                            } catch (Exception e)
+                            {
+                                Console.WriteLine($"Playback thread interrupted. Cache Name: {this.GetCacheName()}");
+                            }
+
                             break;
                     }
 
@@ -681,21 +752,13 @@ namespace LabBenchStudios.Pdt.Historian
                 {
                     Console.WriteLine($"Handled exception. Could be a planned thread interruption to change state: {this.playerName}. Exception: {e.Message}");
                 }
-
-                try
-                {
-                    Thread.Sleep(500);
-                } catch (Exception e)
-                {
-                    // ignore
-                }
             }
         }
         
         /// <summary>
         /// 
         /// </summary>
-        private void HandlePlayState()
+        private void HandleCachePlayback()
         {
             if (this.HasValidCache())
             {
@@ -703,42 +766,60 @@ namespace LabBenchStudios.Pdt.Historian
                 DataCacheEntryContainer curCacheEntry = this.historianCache.GetCurrentEntry();
                 DataCacheEntryContainer nextCacheEntry = this.historianCache.GetNextEntry();
 
-                // calculate the time delay before processing the next cache entry
-                // and include any playback delay factor (if > 0)
-                double delayMillis = (long) nextCacheEntry.GetElapsedEpochMillisDelta(curCacheEntry);
-
-                if (this.playbackDelayFactor > 0)
+                // if current cache entry is set, calculate the time delay before the
+                // next cached entry should be processed; if it's null (not set), then
+                // process the next cached entry immediately
+                if (curCacheEntry != null)
                 {
-                    delayMillis = delayMillis * this.playbackDelayFactor;
+                    // calculate the time delay before processing the next cache entry
+                    // and include any playback delay factor (if > 0)
+                    double delayMillis = (long) nextCacheEntry.GetElapsedEpochMillisDelta(curCacheEntry);
+
+                    if (this.playbackDelayFactor > 0.0f)
+                    {
+                        delayMillis *= (double) this.playbackDelayFactor;
+                    }
+
+                    // granular pause for delayMillis
+                    Stopwatch stopwatch = Stopwatch.StartNew();
+
+                    while (true)
+                    {
+                        if (stopwatch.ElapsedMilliseconds >= delayMillis)
+                        {
+                            stopwatch.Stop();
+                            break;
+                        }
+                    }
+
+                    stopwatch = null;
                 }
 
-                // granular pause for delayMillis
-                Stopwatch stopwatch = Stopwatch.StartNew();
+                this.HandleNotifyEventListener(nextCacheEntry);
+            }
+        }
 
-                while (true)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheEntry"></param>
+        private void HandleNotifyEventListener(DataCacheEntryContainer cacheEntry)
+        {
+            // process the cache entry - send any stored data items to the event listener
+            if (this.eventListener != null)
+            {
+                if (cacheEntry.HasActuatorData())
                 {
-                    if (stopwatch.ElapsedMilliseconds >= delayMillis)
-                    {
-                        break;
-                    }
-                }
-
-                // process the cache entry - send any stored data items to the event listener
-                if (this.eventListener != null)
+                    this.eventListener.OnMessagingSystemDataReceived(cacheEntry.GetActuatorData());
+                } else if (cacheEntry.HasConnectionStateData())
                 {
-                    if (nextCacheEntry.HasActuatorData())
-                    {
-                        this.eventListener.OnMessagingSystemDataReceived(nextCacheEntry.GetActuatorData());
-                    } else if (nextCacheEntry.HasConnectionStateData())
-                    {
-                        this.eventListener.OnMessagingSystemDataReceived(nextCacheEntry.GetConnectionStateData());
-                    } else if (nextCacheEntry.HasSensorData())
-                    {
-                        this.eventListener.OnMessagingSystemDataReceived(nextCacheEntry.GetSensorData());
-                    } else if (nextCacheEntry.HasSystemPerformanceData())
-                    {
-                        this.eventListener.OnMessagingSystemDataReceived(nextCacheEntry.GetSystemPerformanceData());
-                    }
+                    this.eventListener.OnMessagingSystemDataReceived(cacheEntry.GetConnectionStateData());
+                } else if (cacheEntry.HasSensorData())
+                {
+                    this.eventListener.OnMessagingSystemDataReceived(cacheEntry.GetSensorData());
+                } else if (cacheEntry.HasSystemPerformanceData())
+                {
+                    this.eventListener.OnMessagingSystemDataReceived(cacheEntry.GetSystemPerformanceData());
                 }
             }
         }
@@ -746,10 +827,42 @@ namespace LabBenchStudios.Pdt.Historian
         /// <summary>
         /// 
         /// </summary>
-        private void InitializePlayer()
+        private void InitPlayerProperties()
+        {
+            this.playerName = this.historianCache.GetCacheName();
+            this.displayName = this.playerName;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void CreatePlaybackThread()
+        {
+            this.DestroyPlaybackThread();
+
+            if (this.playbackThread == null)
+            {
+                Console.WriteLine($"Creating playback thread: {this.playerName}.");
+
+                ThreadStart ts = new ThreadStart(this.RunPlayer);
+
+                this.playbackThread = new Thread(ts);
+                this.playbackThread.IsBackground = true;
+                this.playbackThread.Name = this.playerName;
+                this.enablePlaybackLoopOnStart = true;
+                this.playbackThreadInitialized = true;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void DestroyPlaybackThread()
         {
             if (this.playbackThread != null)
             {
+                Console.WriteLine($"Destroying playback thread: {this.playerName}");
+
                 try
                 {
                     this.enablePlaybackLoopOnStart = false;
@@ -764,30 +877,9 @@ namespace LabBenchStudios.Pdt.Historian
                 } finally
                 {
                     this.playbackThread = null;
+                    this.playbackThreadInitialized = false;
                 }
             }
-
-            if (this.playbackThread == null)
-            {
-                Console.WriteLine($"Creating playback thread: {this.playerName}.");
-
-                ThreadStart ts = new ThreadStart(this.RunPlayer);
-
-                this.playbackThread = new Thread(ts);
-                this.playbackThread.IsBackground = true;
-                this.playbackThread.Name = this.playerName;
-            }
-
-            this.enablePlaybackLoopOnStart = true;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private void InitPlayerProperties()
-        {
-            this.playerName = this.historianCache.GetCacheName();
-            this.displayName = this.playerName;
         }
 
     }

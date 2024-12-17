@@ -207,7 +207,6 @@ namespace LabBenchStudios.Pdt.Data
 
             jsonData = NormalizeData(jsonData);
 
-            //ActuatorData data = JsonConvert.DeserializeObject<ActuatorData>(jsonData);
             ActuatorData data = new ActuatorData();
             JsonConvert.PopulateObject(jsonData, data, new JsonSerializerSettings
             {
@@ -229,7 +228,6 @@ namespace LabBenchStudios.Pdt.Data
 
             jsonData = NormalizeData(jsonData);
 
-            //ConnectionStateData data = JsonConvert.DeserializeObject<ConnectionStateData>(jsonData);
             ConnectionStateData data = new ConnectionStateData();
             JsonConvert.PopulateObject(jsonData, data, new JsonSerializerSettings
             {
@@ -295,7 +293,6 @@ namespace LabBenchStudios.Pdt.Data
 
             jsonData = NormalizeData(jsonData);
 
-            //IotDataContext data = JsonConvert.DeserializeObject<IotDataContext>(jsonData);
             IotDataContext data = new IotDataContext();
             JsonConvert.PopulateObject(jsonData, data, new JsonSerializerSettings
             {
@@ -317,7 +314,6 @@ namespace LabBenchStudios.Pdt.Data
 
             jsonData = NormalizeData(jsonData);
 
-            //IotDataContextWithValues data = JsonConvert.DeserializeObject<IotDataContextWithValues>(jsonData);
             IotDataContextWithValues data = new IotDataContextWithValues();
             JsonConvert.PopulateObject(jsonData, data, new JsonSerializerSettings
             {
@@ -339,7 +335,6 @@ namespace LabBenchStudios.Pdt.Data
 
             jsonData = NormalizeData(jsonData);
 
-            //MessageData data = JsonConvert.DeserializeObject<MessageData>(jsonData);
             MessageData data = new MessageData();
             JsonConvert.PopulateObject(jsonData, data, new JsonSerializerSettings
             {
@@ -361,7 +356,6 @@ namespace LabBenchStudios.Pdt.Data
 
             jsonData = NormalizeData(jsonData);
 
-            //SensorData data = JsonConvert.DeserializeObject<SensorData>(jsonData);
             SensorData data = new SensorData();
             JsonConvert.PopulateObject(jsonData, data, new JsonSerializerSettings
             {
@@ -387,7 +381,6 @@ namespace LabBenchStudios.Pdt.Data
 
             jsonData = NormalizeData(jsonData);
 
-            //SystemPerformanceData data = JsonConvert.DeserializeObject<SystemPerformanceData>(jsonData);
             SystemPerformanceData data = new SystemPerformanceData();
             JsonConvert.PopulateObject(jsonData, data, new JsonSerializerSettings
             {

@@ -65,7 +65,7 @@ namespace LabBenchStudios.Pdt.Historian
 
         // private
 
-        private bool enableDebugLog = true;
+        private bool enableDebugLog = false;
 
         private string cacheName = null;
         private string cacheFileName = null;
@@ -176,10 +176,11 @@ namespace LabBenchStudios.Pdt.Historian
         {
             Console.WriteLine($"Clearing all cached entries from cache {this.cacheName}.");
 
-            this.cacheMemoryUsage = 0;
             this.dataEntryCache.Clear();
 
-            this.ResetCache();
+            this.cacheMemoryUsage = 0;
+            this.newCacheEntryCount = 0;
+            this.curCacheIndex = 0;
 
             return true;
         }
@@ -362,7 +363,7 @@ namespace LabBenchStudios.Pdt.Historian
                     return false;
                 } else
                 {
-                    this.dataEntryCache.AddRange(cacheList);
+                    this.AddCacheItems(cacheList);
                 }
 
                 if (this.HasCachedEntries())
@@ -386,8 +387,7 @@ namespace LabBenchStudios.Pdt.Historian
         {
             //this.SetCacheState(DataHistorianState.DataHistorianReplayState.Stop);
 
-            this.newCacheEntryCount = 0;
-            this.curCacheIndex = 0;
+            this.ClearCache();
         }
 
         /// <summary>

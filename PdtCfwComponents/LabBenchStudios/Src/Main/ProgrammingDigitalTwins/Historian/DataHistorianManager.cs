@@ -126,12 +126,20 @@ namespace LabBenchStudios.Pdt.Historian
         }
 
         /// <summary>
-        /// 
+        /// This is an expensive operation.
         /// </summary>
         /// <returns></returns>
-        public long GetTotalMemory()
+        public double GetTotalMemoryUsage()
         {
-            return this.totalHeapMemory;
+            double totalMemoryBytes = 0.0d;
+
+            foreach (var playerEntry in this.dataHistorianPlayerTable)
+            {
+                IDataHistorianPlayer player = playerEntry.Value;
+                totalMemoryBytes += player.GetCacheMemoryUsage();
+            }
+
+            return totalMemoryBytes;
         }
 
         /// <summary>
@@ -409,15 +417,15 @@ namespace LabBenchStudios.Pdt.Historian
             {
                 if (filePath.Equals(".") || filePath.Equals("..") || filePath.Contains("..."))
                 {
-                    Console.WriteLine("New file path is using invalid char's. Setting to default.");
                     filePath = ConfigConst.DEFAULT_FILE_STORAGE_PATH;
+                    Console.WriteLine($"New file path is using invalid char's. Setting to default: {filePath}");
                 }
             }
 
             if (string.IsNullOrEmpty(filePath) && this.persistenceConnector != null)
             {
-                Console.WriteLine("New file path is invalid - null or empty. Setting to default.");
                 filePath = ConfigConst.DEFAULT_FILE_STORAGE_PATH;
+                Console.WriteLine($"New file path is null or empty. Setting to default: {filePath}");
             }
 
             bool initPersistence = false;

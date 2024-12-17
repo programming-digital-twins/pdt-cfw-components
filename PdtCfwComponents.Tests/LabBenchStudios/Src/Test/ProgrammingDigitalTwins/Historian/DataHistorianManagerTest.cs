@@ -22,18 +22,21 @@
  * SOFTWARE.
  */
 
+using System;
+using System.Threading;
+
 using LabBenchStudios.Pdt.Common;
 using LabBenchStudios.Pdt.Connection;
 using LabBenchStudios.Pdt.Data;
 using LabBenchStudios.Pdt.Historian;
 using LabBenchStudios.Pdt.Plexus;
-using System;
 
 namespace LabBenchStudios.Pdt.Test.Historian
 {
     public class DataHistorianManagerTest
     {
         private IDataHistorian dataHistorian = null;
+        private string sampleCacheName = "PDT_DataHistorianCache_TEST";
 
         [SetUp]
         public void Setup()
@@ -44,29 +47,83 @@ namespace LabBenchStudios.Pdt.Test.Historian
         public void Teardown()
         {
         }
-        
-        /*
+
         [Test]
-        public void CreateDataHistorianPlayer()
+        public void RunPlaybackRoutine()
         {
-            IDataHistorianPlayer player = this.dataHistorian.CreateDataHistorianPlayer();
+            IDataHistorianPlayer player = EventProcessor.GetInstance().GetDataHistorianPlayer(this.sampleCacheName);
 
-            player.SetDisplayName("My Historian");
+            player.SetEventListener(new DefaultSystemStatusEventListener());
+            player.SetDisplayName("My Playback Historian");
 
-            Console.WriteLine($"Player info. Name: {player.GetCacheName()}. File: {player.GetCacheFileName()}. Path: {player.GetCacheStorageUri()}. Display name: {player.GetDisplayName()}");
+            // enable playback
+            player.SetPlaybackEnabledFlag(true);
+
+            // set to double time (delay factor of 0.5f - 1.0f is normal time)
+            player.SetPlaybackDelayFactor(0.5f);
+
+            this.WritePlayerInfoToConsole("Loaded cache from file", player);
+            this.WritePlayerInfoToConsole("Starting playback.", player);
+
+            player.Play();
+
+            try
+            {
+                // playback for ~30 seconds
+                Thread.Sleep(30000);
+            } catch (Exception ex)
+            {
+            }
+
+            this.WritePlayerInfoToConsole("Pausing playback.", player);
+
+            player.Pause();
+
+            try
+            {
+                // pause for ~30 seconds
+                Thread.Sleep(30000);
+            } catch (Exception ex)
+            {
+            }
+
+            this.WritePlayerInfoToConsole("Re-starting playback.", player);
+
+            player.Play();
+
+            try
+            {
+                // playback for ~30 seconds
+                Thread.Sleep(30000);
+            } catch (Exception ex)
+            {
+            }
+
+            this.WritePlayerInfoToConsole("Stopping playback.", player);
+
+            player.Stop();
         }
-        */
+
+        [Test]
+        public void LoadCachedHistorianData()
+        {
+            IDataHistorianPlayer player = EventProcessor.GetInstance().GetDataHistorianPlayer(this.sampleCacheName);
+
+            player.SetEventListener(new DefaultSystemStatusEventListener());
+            player.SetDisplayName("My Cached Historian");
+
+            this.WritePlayerInfoToConsole("Loaded cache from file", player);
+        }
 
         [Test]
         public void CreatePlayerAndStoreSampleData()
         {
-            //IDataHistorianPlayer player = this.dataHistorian.CreateDataHistorianPlayer();
-            
             IDataHistorianPlayer player = EventProcessor.GetInstance().GetDataHistorianPlayer();
 
-            player.SetDisplayName("My Historian");
+            player.SetEventListener(new DefaultSystemStatusEventListener());
+            player.SetDisplayName("My New Historian");
 
-            Console.WriteLine($"Player info. Name: {player.GetCacheName()}. File: {player.GetCacheFileName()}. Path: {player.GetCacheStorageUri()}. Display name: {player.GetDisplayName()}");
+            this.WritePlayerInfoToConsole(player);
 
             FilePersistenceConnector filePersistenceConnector = new FilePersistenceConnector();
             player.SetDataStorer(filePersistenceConnector);
@@ -93,7 +150,37 @@ namespace LabBenchStudios.Pdt.Test.Historian
 
             bool success = player.StoreHistorianCache();
 
-            Console.WriteLine($"Stored cache to file: Success = {success}. File = {player.GetCacheFileName()}");
+            this.WritePlayerInfoToConsole("Stored cache to file", player, success);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="player"></param>
+        private void WritePlayerInfoToConsole(IDataHistorianPlayer player)
+        {
+            this.WritePlayerInfoToConsole("Data historian player info.", player, true);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <param name="player"></param>
+        private void WritePlayerInfoToConsole(string msg, IDataHistorianPlayer player)
+        {
+            this.WritePlayerInfoToConsole(msg, player, true);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <param name="player"></param>
+        /// <param name="success"></param>
+        private void WritePlayerInfoToConsole(string msg, IDataHistorianPlayer player, bool success)
+        {
+            Console.WriteLine($"{msg}. Display Name: {player.GetDisplayName()}. Cache Name: {player.GetCacheName()}. Entries: {player.GetCacheSize()}. Memory: {player.GetCacheMemoryUsage()} bytes. File: {player.GetCacheFileName()}. Success = {success}");
         }
     }
 }

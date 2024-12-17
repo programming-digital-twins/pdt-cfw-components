@@ -212,6 +212,12 @@ namespace LabBenchStudios.Pdt.Common
         /// 
         /// </summary>
         /// <returns></returns>
+        public bool LoadHistorianCache();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public bool StoreHistorianCache();
 
     }

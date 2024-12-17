@@ -652,8 +652,7 @@ namespace LabBenchStudios.Pdt.Plexus
             }
             else
             {
-                Console.WriteLine(
-                    $"No composite remote command processor registered. Ignoring request: {resource}");
+                Console.WriteLine($"No composite remote command processor registered. Ignoring request: {resource}");
             }
 
             return false;
@@ -681,8 +680,7 @@ namespace LabBenchStudios.Pdt.Plexus
             }
             else
             {
-                Console.WriteLine(
-                    $"No composite remote command processor registered. Ignoring live data feed engagement request.");
+                Console.WriteLine($"No composite remote command processor registered. Ignoring live data feed engagement request.");
             }
         }
 
@@ -698,8 +696,7 @@ namespace LabBenchStudios.Pdt.Plexus
             }
             else
             {
-                Console.WriteLine(
-                    $"No composite remote command processor registered. Ignoring simulated data feed engagement request.");
+                Console.WriteLine($"No composite remote command processor registered. Ignoring simulated data feed engagement request.");
             }
         }
 
