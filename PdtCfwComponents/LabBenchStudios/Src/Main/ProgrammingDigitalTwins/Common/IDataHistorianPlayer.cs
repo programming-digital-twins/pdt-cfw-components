@@ -150,6 +150,12 @@ namespace LabBenchStudios.Pdt.Common
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="enabled"></param>
+        public void SetEnableThreadedPlaybackFlag(bool enabled);
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <returns></returns>
         public bool IsPlaying();
 
@@ -219,6 +225,12 @@ namespace LabBenchStudios.Pdt.Common
         /// </summary>
         /// <returns></returns>
         public bool StoreHistorianCache();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public double TriggerNextCachePlaybackEvent();
 
     }
 }

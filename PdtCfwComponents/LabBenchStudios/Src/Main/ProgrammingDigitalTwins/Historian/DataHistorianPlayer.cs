@@ -32,6 +32,7 @@ namespace LabBenchStudios.Pdt.Historian
         private string playerName = ConfigConst.NOT_SET;
         private string displayName = ConfigConst.NOT_SET;
 
+        private bool enableThreadedPlayback = false;
         private bool cacheFillingEnabled = false;
         private bool cacheOnlyDataEventsEnabled = false;
 
@@ -407,37 +408,40 @@ namespace LabBenchStudios.Pdt.Historian
                 this.historianCache.SetCacheState(DataHistorianState.DataHistorianReplayState.Play);
                 this.replayState = this.historianCache.GetCacheReplayState();
 
-                try
+                if (this.enableThreadedPlayback)
                 {
-                    if (!this.playbackThreadInitialized)
+                    try
                     {
-                        this.CreatePlaybackThread();
-                    }
-
-                    if (this.playbackThread != null)
-                    {
-                        // determine if thread is just initialized, or running but in a sleep state
-                        if (!this.playbackThread.IsAlive)
+                        if (!this.playbackThreadInitialized)
                         {
-                            this.playbackThread.Start();
-
-                            Console.WriteLine($"Play: Initialized thread started: {this.playerName}.");
-                        } else
-                        {
-                            Console.WriteLine($"Play: Initialized thread already started. Ignoring: {this.playerName}");
-                            //this.playbackThread.Interrupt();
+                            this.CreatePlaybackThread();
                         }
+
+                        if (this.playbackThread != null)
+                        {
+                            // determine if thread is just initialized, or running but in a sleep state
+                            if (!this.playbackThread.IsAlive)
+                            {
+                                this.playbackThread.Start();
+
+                                Console.WriteLine($"Play: Initialized thread started: {this.playerName}.");
+                            } else
+                            {
+                                Console.WriteLine($"Play: Initialized thread already started. Ignoring: {this.playerName}");
+                                //this.playbackThread.Interrupt();
+                            }
+                        }
+
+                        return true;
+                    } catch (ThreadInterruptedException t)
+                    {
+                        Console.WriteLine($"Play: Paused thread re-started: {this.playerName}.");
+
+                        return true;
+                    } catch (Exception e)
+                    {
+                        Console.WriteLine($"Failed to start thread: {this.playerName}. Exception: {e.Message}");
                     }
-
-                    return true;
-                } catch (ThreadInterruptedException t)
-                {
-                    Console.WriteLine($"Play: Paused thread re-started: {this.playerName}.");
-
-                    return true;
-                } catch (Exception e)
-                {
-                    Console.WriteLine($"Failed to start thread: {this.playerName}. Exception: {e.Message}");
                 }
             } else
             {
@@ -539,19 +543,22 @@ namespace LabBenchStudios.Pdt.Historian
                 this.historianCache.SetCacheState(DataHistorianState.DataHistorianReplayState.Stop);
                 this.replayState = this.historianCache.GetCacheReplayState();
 
-                try
+                if (this.enableThreadedPlayback)
                 {
-                    if (this.playbackThread != null)
+                    try
                     {
-                        this.playbackThread.Interrupt();
-                    }
+                        if (this.playbackThread != null)
+                        {
+                            this.playbackThread.Interrupt();
+                        }
 
-                    if (this.playbackThreadInitialized)
+                        if (this.playbackThreadInitialized)
+                        {
+                            this.DestroyPlaybackThread();
+                        }
+                    } catch (ThreadInterruptedException t)
                     {
-                        this.DestroyPlaybackThread();
                     }
-                } catch (ThreadInterruptedException t)
-                {
                 }
 
                 this.playbackModeActive = false;
@@ -621,6 +628,15 @@ namespace LabBenchStudios.Pdt.Historian
             {
                 Console.WriteLine($"Invalid display name for {this.playerName}. Ignoring set request.");
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="enabled"></param>
+        public void SetEnableThreadedPlaybackFlag(bool enabled)
+        {
+            this.enableThreadedPlayback = enabled;
         }
 
         /// <summary>
@@ -717,6 +733,17 @@ namespace LabBenchStudios.Pdt.Historian
         }
 
 
+        /// <summary>
+        /// This will return immediately with the milliseconds to wait before the
+        /// next time this method should be invoked. It's up to the caller to honor
+        /// the trigger rate.
+        /// </summary>
+        /// <returns>The milliseconds to wait until the next call to this method.</returns>
+        public double TriggerNextCachePlaybackEvent()
+        {
+            return this.HandleNextPlaybackCacheEvent(false);
+        }
+
         // private methods
 
         /// <summary>
@@ -731,7 +758,7 @@ namespace LabBenchStudios.Pdt.Historian
                     switch (this.replayState)
                     {
                         case DataHistorianState.DataHistorianReplayState.Play:
-                            this.HandleCachePlayback();
+                            this.HandleNextPlaybackCacheEvent(true);
 
                             break;
 
@@ -754,12 +781,16 @@ namespace LabBenchStudios.Pdt.Historian
                 }
             }
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
-        private void HandleCachePlayback()
+        /// <param name="blockCall"></param>
+        /// <returns></returns>
+        private double HandleNextPlaybackCacheEvent(bool blockCall)
         {
+            double delayMillis = 0.0d;
+
             if (this.HasValidCache())
             {
                 // get most recent cache entry and the next cache entry
@@ -773,37 +804,42 @@ namespace LabBenchStudios.Pdt.Historian
                 {
                     // calculate the time delay before processing the next cache entry
                     // and include any playback delay factor (if > 0)
-                    double delayMillis = (long) nextCacheEntry.GetElapsedEpochMillisDelta(curCacheEntry);
+                    delayMillis = (long) nextCacheEntry.GetElapsedEpochMillisDelta(curCacheEntry);
 
                     if (this.playbackDelayFactor > 0.0f)
                     {
                         delayMillis *= (double) this.playbackDelayFactor;
                     }
 
-                    // granular pause for delayMillis
-                    Stopwatch stopwatch = Stopwatch.StartNew();
-
-                    while (true)
+                    if (blockCall)
                     {
-                        if (stopwatch.ElapsedMilliseconds >= delayMillis)
-                        {
-                            stopwatch.Stop();
-                            break;
-                        }
-                    }
+                        // granular pause for delayMillis
+                        Stopwatch stopwatch = Stopwatch.StartNew();
 
-                    stopwatch = null;
+                        while (true)
+                        {
+                            if (stopwatch.ElapsedMilliseconds >= delayMillis)
+                            {
+                                stopwatch.Stop();
+                                break;
+                            }
+                        }
+
+                        stopwatch = null;
+                    }
                 }
 
-                this.HandleNotifyEventListener(nextCacheEntry);
+                this.HandlePlaybackCacheListenerNotification(nextCacheEntry);
             }
+
+            return delayMillis;
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="cacheEntry"></param>
-        private void HandleNotifyEventListener(DataCacheEntryContainer cacheEntry)
+        private void HandlePlaybackCacheListenerNotification(DataCacheEntryContainer cacheEntry)
         {
             // process the cache entry - send any stored data items to the event listener
             if (this.eventListener != null)

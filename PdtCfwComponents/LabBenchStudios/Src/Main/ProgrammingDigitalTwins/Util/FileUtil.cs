@@ -23,6 +23,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using LabBenchStudios.Pdt.Common;
@@ -267,18 +268,19 @@ namespace LabBenchStudios.Pdt.Util
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static string[] GetFileListing(string path)
+        public static List<string> GetFileListing(string path)
         {
-            return GetFileListing(path, null);
+            return GetFileListing(path, null, false);
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="path"></param>
-        /// <param name="ext"></param>
+        /// <param name="searchPattern"></param>
+        /// <param name="includePath"></param>
         /// <returns></returns>
-        public static string[] GetFileListing(string path, string ext)
+        public static List<string> GetFileListing(string path, string searchPattern, bool includePath)
         {
             if (!string.IsNullOrWhiteSpace(path))
             {
@@ -290,11 +292,11 @@ namespace LabBenchStudios.Pdt.Util
                     {
                         bool useSearchPattern = false;
 
-                        if (!string.IsNullOrEmpty(ext))
+                        if (!string.IsNullOrEmpty(searchPattern))
                         {
-                            if (!ext.Contains("*"))
+                            if (!searchPattern.Contains("*"))
                             {
-                                ext = "*" + ext;
+                                searchPattern = "*" + searchPattern;
                             }
 
                             useSearchPattern = true;
@@ -306,9 +308,9 @@ namespace LabBenchStudios.Pdt.Util
 
                             if (useSearchPattern)
                             {
-                                Console.WriteLine($"Getting file listing for path {path} with extension {ext}.");
+                                Console.WriteLine($"Getting file listing for path {path} with extension {searchPattern}.");
 
-                                fileNames = Directory.GetFiles(path, ext);
+                                fileNames = Directory.GetFiles(path, searchPattern);
                             } else
                             {
                                 Console.WriteLine($"Getting file listing for path {path}.");
@@ -316,11 +318,24 @@ namespace LabBenchStudios.Pdt.Util
                                 fileNames = Directory.GetFiles(path);
                             }
 
-                            return fileNames;
+                            List<string> fileList = new List<string>();
+
+                            foreach (string file in fileNames)
+                            {
+                                if (includePath)
+                                {
+                                    fileList.Add(file);
+                                } else
+                                {
+                                    fileList.Add(Path.GetFileName(file));
+                                }
+                            }
+
+                            return fileList;
 
                         } catch (Exception e)
                         {
-                            Console.WriteLine($"Failed to retrieve path listing for {path} with files ending in {ext}. Exception: {e.Message}");
+                            Console.WriteLine($"Failed to retrieve path listing for {path} with files ending in {searchPattern}. Exception: {e.Message}");
                         }
                     }
                 } catch (Exception e)
@@ -331,7 +346,29 @@ namespace LabBenchStudios.Pdt.Util
 
             return null;
         }
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fileList"></param>
+        /// <returns></returns>
+        public static string GetStringifiedFileListing(List<string> fileList)
+        {
+            if (fileList != null && fileList.Count > 0)
+            {
+                StringBuilder builder = new StringBuilder();
+
+                foreach (string file in fileList)
+                {
+                    builder.Append('\t').Append(file).Append('\n');
+                }
+
+                return builder.ToString();
+            }
+
+            return "";
+        }
+
         /// <summary>
         /// 
         /// </summary>

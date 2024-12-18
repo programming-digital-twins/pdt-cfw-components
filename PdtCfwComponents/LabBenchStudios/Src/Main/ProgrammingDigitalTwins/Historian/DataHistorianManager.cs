@@ -61,7 +61,7 @@ namespace LabBenchStudios.Pdt.Historian
     /// </summary>
     public class DataHistorianManager : IDataHistorian
     {
-        private string pathName = ConfigConst.DEFAULT_FILE_STORAGE_PATH;
+        private string rootPathName = ConfigConst.DEFAULT_FILE_STORAGE_PATH;
 
         private bool initializeBackingFileStore = true;
 
@@ -254,9 +254,24 @@ namespace LabBenchStudios.Pdt.Historian
         /// 
         /// </summary>
         /// <returns></returns>
-        public string GetFilePath()
+        public string GetCacheFilePath()
         {
-            return this.pathName;
+            if (this.persistenceConnector != null)
+            {
+                return this.persistenceConnector.GetDataHistorianCacheUri();
+            } else
+            {
+                return this.rootPathName;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string GetRootFilePath()
+        {
+            return this.rootPathName;
         }
 
         /// <summary>
@@ -409,32 +424,32 @@ namespace LabBenchStudios.Pdt.Historian
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="filePath"></param>
+        /// <param name="rootFilePath"></param>
         /// <returns></returns>
-        public bool SetFilePath(string filePath)
+        public bool SetRootFilePath(string rootFilePath)
         {
-            if (! string.IsNullOrEmpty(filePath))
+            if (! string.IsNullOrEmpty(rootFilePath))
             {
-                if (filePath.Equals(".") || filePath.Equals("..") || filePath.Contains("..."))
+                if (rootFilePath.Equals(".") || rootFilePath.Equals("..") || rootFilePath.Contains("..."))
                 {
-                    filePath = ConfigConst.DEFAULT_FILE_STORAGE_PATH;
-                    Console.WriteLine($"New file path is using invalid char's. Setting to default: {filePath}");
+                    rootFilePath = ConfigConst.DEFAULT_FILE_STORAGE_PATH;
+                    Console.WriteLine($"New file path is using invalid char's. Setting to default: {rootFilePath}");
                 }
             }
 
-            if (string.IsNullOrEmpty(filePath) && this.persistenceConnector != null)
+            if (string.IsNullOrEmpty(rootFilePath) && this.persistenceConnector != null)
             {
-                filePath = ConfigConst.DEFAULT_FILE_STORAGE_PATH;
-                Console.WriteLine($"New file path is null or empty. Setting to default: {filePath}");
+                rootFilePath = ConfigConst.DEFAULT_FILE_STORAGE_PATH;
+                Console.WriteLine($"New file path is null or empty. Setting to default: {rootFilePath}");
             }
 
             bool initPersistence = false;
 
-            if (this.pathName.Equals(filePath) && this.persistenceConnector == null) {
+            if (this.rootPathName.Equals(rootFilePath) && this.persistenceConnector == null) {
                 initPersistence = true;
             }
             
-            if (! this.pathName.Equals(filePath))
+            if (! this.rootPathName.Equals(rootFilePath))
             {
                 initPersistence = true;
             }
@@ -442,22 +457,22 @@ namespace LabBenchStudios.Pdt.Historian
             // validate file path
             try
             {
-                if (!string.IsNullOrWhiteSpace(filePath))
+                if (!string.IsNullOrWhiteSpace(rootFilePath))
                 {
-                    if (Directory.Exists(filePath))
+                    if (Directory.Exists(rootFilePath))
                     {
-                        this.pathName = filePath;
+                        this.rootPathName = rootFilePath;
                     } else
                     {
-                        Console.WriteLine($"Path {filePath} doesn't exist. Using default: {this.pathName}");
+                        Console.WriteLine($"Path {rootFilePath} doesn't exist. Using default: {this.rootPathName}");
                     }
                 } else
                 {
-                    Console.WriteLine($"No path specified. Using default: {this.pathName}");
+                    Console.WriteLine($"No path specified. Using default: {this.rootPathName}");
                 }
             } catch (Exception e)
             {
-                Console.WriteLine($"Failed to validate path {filePath}. Using default: {this.pathName}");
+                Console.WriteLine($"Failed to validate path {rootFilePath}. Using default: {this.rootPathName}");
             }
 
             // check if we need to init (or re-init) persistence layer
@@ -555,7 +570,7 @@ namespace LabBenchStudios.Pdt.Historian
         /// <param name="filePath"></param>
         private void InitPersistenceLayer()
         {
-            this.SetPersistenceConnector(new FilePersistenceConnector(this.pathName));
+            this.SetPersistenceConnector(new FilePersistenceConnector(this.rootPathName));
         }
 
         /// <summary>

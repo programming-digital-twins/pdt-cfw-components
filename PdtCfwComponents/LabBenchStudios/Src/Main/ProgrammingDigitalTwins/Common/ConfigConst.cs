@@ -29,20 +29,20 @@ namespace LabBenchStudios.Pdt.Common
 {
     public static class ConfigConst
     {
-        public static readonly char RESOURCE_SEPARATOR = '/';
-        public static readonly char RESOURCE_SUBTYPE_SEPARATOR = '-';
+        public const char RESOURCE_SEPARATOR = '/';
+        public const char RESOURCE_SUBTYPE_SEPARATOR = '-';
 
-        public static readonly string NOT_SET = "Not-Set";
-        public static readonly string UUID_NAME = "UUID";
-        public static readonly string DEFAULT_HOST = "localhost";
+        public const string NOT_SET = "Not-Set";
+        public const string UUID_NAME = "UUID";
+        public const string DEFAULT_HOST = "localhost";
 
         public const string DEFAULT_FILE_STORAGE_PATH = "/tmp";
         public const string JSON_EXT = ".json";
 
-        public static readonly string TEST_MODEL_FILE_PATH =
+        public const string TEST_MODEL_FILE_PATH =
             "../../../../PdtCfwComponents/LabBenchStudios/Models/";
-        public static readonly string TEST_DIGITAL_TWIN_MODEL_FILE_PATH = TEST_MODEL_FILE_PATH + "Dtdl/";
-        public static readonly string TEST_CONFIG_TYPE_MODEL_FILE_PATH = TEST_MODEL_FILE_PATH + "Types/";
+        public const string TEST_DIGITAL_TWIN_MODEL_FILE_PATH = TEST_MODEL_FILE_PATH + "Dtdl/";
+        public const string TEST_CONFIG_TYPE_MODEL_FILE_PATH = TEST_MODEL_FILE_PATH + "Types/";
 
         public const string RELATIVE_MODEL_PATH_PREFIX = "../../../../Models/";
 
@@ -92,124 +92,124 @@ namespace LabBenchStudios.Pdt.Common
         public const int DEFAULT_STREAM_FRAME_HEIGHT = 1080;
         public const int DEFAULT_MIN_MOTION_PIXELS_DIFF = 12000;
         public const int DEFAULT_MAX_CACHED_FRAMES = 10;
-        public static readonly string DEFAULT_STREAM_PROTOCOL = "rtsp";
+        public const string DEFAULT_STREAM_PROTOCOL = "rtsp";
 
-        public static readonly string PRODUCT_NAME = "PDT";
-        public static readonly string CLOUD = "Cloud";
-        public static readonly string GATEWAY = "Gateway";
-        public static readonly string CONSTRAINED = "Constrained";
-        public static readonly string EDGE = "Edge";
-        public static readonly string DEVICE = "Device";
-        public static readonly string SERVICE = "Service";
+        public const string PRODUCT_NAME = "PDT";
+        public const string CLOUD = "Cloud";
+        public const string GATEWAY = "Gateway";
+        public const string CONSTRAINED = "Constrained";
+        public const string EDGE = "Edge";
+        public const string DEVICE = "Device";
+        public const string SERVICE = "Service";
 
-        public static readonly string PRODUCT_NAME_KEY = "productName";
-        public static readonly string DEVICE_NAME_KEY = "deviceName";
-        public static readonly string TYPE_NAME_KEY = "typeName";
+        public const string PRODUCT_NAME_KEY = "productName";
+        public const string DEVICE_NAME_KEY = "deviceName";
+        public const string TYPE_NAME_KEY = "typeName";
 
-        public static readonly string DATA_STORE_NAME = "objectStore";
-        public static readonly string HISTORIAN_CACHE_NAME = "historianCache";
+        public const string DATA_STORE_NAME = "objectStore";
+        public const string HISTORIAN_CACHE_NAME = "historianCache";
 
-        public static readonly string CONSTRAINED_DEVICE = CONSTRAINED + DEVICE;
-        public static readonly string EDGE_DEVICE = EDGE + DEVICE;
-        public static readonly string GATEWAY_SERVICE = GATEWAY + SERVICE;
-        public static readonly string CLOUD_SERVICE = CLOUD + SERVICE;
+        public const string CONSTRAINED_DEVICE = CONSTRAINED + DEVICE;
+        public const string EDGE_DEVICE = EDGE + DEVICE;
+        public const string GATEWAY_SERVICE = GATEWAY + SERVICE;
+        public const string CLOUD_SERVICE = CLOUD + SERVICE;
 
         //////////
         // Property Names
         //
 
-        public static readonly string NAME_PROP = "name";
-        public static readonly string DEVICE_ID_PROP = "deviceID";
-        public static readonly string TYPE_CATEGORY_ID_PROP = "typeCategoryID";
-        public static readonly string TYPE_ID_PROP = "typeID";
-        public static readonly string TYPE_NAME_PROP = "typeName";
-        public static readonly string TIMESTAMP_PROP = "timeStamp";
-        public static readonly string HAS_ERROR_PROP = "hasError";
-        public static readonly string STATUS_CODE_PROP = "statusCode";
-        public static readonly string LOCATION_ID_PROP = "locationID";
-        public static readonly string LATITUDE_PROP = "latitude";
-        public static readonly string LONGITUDE_PROP = "longitude";
-        public static readonly string ELEVATION_PROP = "elevation";
+        public const string NAME_PROP = "name";
+        public const string DEVICE_ID_PROP = "deviceID";
+        public const string TYPE_CATEGORY_ID_PROP = "typeCategoryID";
+        public const string TYPE_ID_PROP = "typeID";
+        public const string TYPE_NAME_PROP = "typeName";
+        public const string TIMESTAMP_PROP = "timeStamp";
+        public const string HAS_ERROR_PROP = "hasError";
+        public const string STATUS_CODE_PROP = "statusCode";
+        public const string LOCATION_ID_PROP = "locationID";
+        public const string LATITUDE_PROP = "latitude";
+        public const string LONGITUDE_PROP = "longitude";
+        public const string ELEVATION_PROP = "elevation";
 
-        public static readonly string COMMAND_PROP = "command";
-        public static readonly string COMMAND_NAME_PROP = "commandName";
-        public static readonly string STATE_DATA_PROP = "stateData";
-        public static readonly string IS_RESPONSE_PROP = "isResponse";
-        public static readonly string IS_INTERNAL_MSG_PROP = "isInternalMsg";
+        public const string COMMAND_PROP = "command";
+        public const string COMMAND_NAME_PROP = "commandName";
+        public const string STATE_DATA_PROP = "stateData";
+        public const string IS_RESPONSE_PROP = "isResponse";
+        public const string IS_INTERNAL_MSG_PROP = "isInternalMsg";
 
-        public static readonly string MODEL_ID_PROP = "modelID";
+        public const string MODEL_ID_PROP = "modelID";
 
-        public static readonly string CPU_UTIL_PROP = "cpuUtil";
-        public static readonly string DISK_UTIL_PROP = "diskUtil";
-        public static readonly string MEM_UTIL_PROP = "memUtil";
+        public const string CPU_UTIL_PROP = "cpuUtil";
+        public const string DISK_UTIL_PROP = "diskUtil";
+        public const string MEM_UTIL_PROP = "memUtil";
 
-        public static readonly string ACTION_ID_PROP = "actionID";
-        public static readonly string DATA_URI_PROP = "dataURI";
-        public static readonly string MESSAGE_PROP = "message";
-        public static readonly string ENCODING_NAME_PROP = "encodingName";
-        public static readonly string RAW_DATA_PROP = "rawData";
-        public static readonly string SEQUENCE_NUMBER_PROP = "seqNo";
-        public static readonly string USE_SEQUENCE_NUMBER_PROP = "useSeqNo";
-        public static readonly string SEQUENCE_NUMBER_TOTAL_PROP = "seqNoTotal";
+        public const string ACTION_ID_PROP = "actionID";
+        public const string DATA_URI_PROP = "dataURI";
+        public const string MESSAGE_PROP = "message";
+        public const string ENCODING_NAME_PROP = "encodingName";
+        public const string RAW_DATA_PROP = "rawData";
+        public const string SEQUENCE_NUMBER_PROP = "seqNo";
+        public const string USE_SEQUENCE_NUMBER_PROP = "useSeqNo";
+        public const string SEQUENCE_NUMBER_TOTAL_PROP = "seqNoTotal";
 
-        public static readonly string DATA_VALUES_PROP = "dataValues";
-        public static readonly string UNIT_PROP = "unit";
-        public static readonly string VALUE_PROP = "value";
-        public static readonly string TARGET_VALUE_PROP = "targetValue";
-        public static readonly string RANGE_NOMINAL_FLOOR_PROP = "rangeNominalFloor";
-        public static readonly string RANGE_NOMINAL_CEILING_PROP = "rangeNominalCeiling";
-        public static readonly string RANGE_MAX_FLOOR_PROP = "rangeMaxFloor";
-        public static readonly string RANGE_MAX_CEILING_PROP = "rangeMaxCeiling";
-        public static readonly string NOMINAL_VALUE_DELTA_PROP = "nominalValueDelta";
-        public static readonly string MAX_VALUE_DELTA_PROP = "maxValueDelta";
+        public const string DATA_VALUES_PROP = "dataValues";
+        public const string UNIT_PROP = "unit";
+        public const string VALUE_PROP = "value";
+        public const string TARGET_VALUE_PROP = "targetValue";
+        public const string RANGE_NOMINAL_FLOOR_PROP = "rangeNominalFloor";
+        public const string RANGE_NOMINAL_CEILING_PROP = "rangeNominalCeiling";
+        public const string RANGE_MAX_FLOOR_PROP = "rangeMaxFloor";
+        public const string RANGE_MAX_CEILING_PROP = "rangeMaxCeiling";
+        public const string NOMINAL_VALUE_DELTA_PROP = "nominalValueDelta";
+        public const string MAX_VALUE_DELTA_PROP = "maxValueDelta";
 
-        public static readonly string SEND_RESOURCE_NAME_PROP = "sendResourceName";
-        public static readonly string RECEIVE_RESOURCE_NAME_PROP = "receiveResourceName";
-        public static readonly string IS_PING_PROP = "isPing";
+        public const string SEND_RESOURCE_NAME_PROP = "sendResourceName";
+        public const string RECEIVE_RESOURCE_NAME_PROP = "receiveResourceName";
+        public const string IS_PING_PROP = "isPing";
 
-        public static readonly string MESSAGE_DATA_PROP = "msgData";
+        public const string MESSAGE_DATA_PROP = "msgData";
 
-        public static readonly string HOST_NAME_PROP = "hostName";
-        public static readonly string HOST_PORT_PROP = "hostPort";
-        public static readonly string MESSAGE_IN_COUNT_PROP = "msgInCount";
-        public static readonly string MESSAGE_OUT_COUNT_PROP = "msgOutCount";
-        public static readonly string IS_CONNECTING_PROP = "isConnecting";
-        public static readonly string IS_CONNECTED_PROP = "isConnected";
-        public static readonly string IS_DISCONNECTED_PROP = "isDisconnected";
+        public const string HOST_NAME_PROP = "hostName";
+        public const string HOST_PORT_PROP = "hostPort";
+        public const string MESSAGE_IN_COUNT_PROP = "msgInCount";
+        public const string MESSAGE_OUT_COUNT_PROP = "msgOutCount";
+        public const string IS_CONNECTING_PROP = "isConnecting";
+        public const string IS_CONNECTED_PROP = "isConnected";
+        public const string IS_DISCONNECTED_PROP = "isDisconnected";
 
-        public static readonly string CMD_DATA_PERSISTENCE_NAME = "pdt-cmd-data";
-        public static readonly string CONN_DATA_PERSISTENCE_NAME = "pdt-conn-data";
-        public static readonly string SENSOR_DATA_PERSISTENCE_NAME = "pdt-sensor-data";
-        public static readonly string SYS_DATA_PERSISTENCE_NAME = "pdt-sys-data";
+        public const string CMD_DATA_PERSISTENCE_NAME = "pdt-cmd-data";
+        public const string CONN_DATA_PERSISTENCE_NAME = "pdt-conn-data";
+        public const string SENSOR_DATA_PERSISTENCE_NAME = "pdt-sensor-data";
+        public const string SYS_DATA_PERSISTENCE_NAME = "pdt-sys-data";
 
         //////////
         // Resource and Topic Names
         //
 
-        public static readonly string ACTUATOR_CMD = "ActuatorCmd";
-        public static readonly string ACTUATOR_RESPONSE = "ActuatorResponse";
-        public static readonly string MGMT_STATUS_MSG = "MgmtStatusMsg";
-        public static readonly string MGMT_STATUS_CMD = "MgmtStatusCmd";
-        public static readonly string MEDIA_MSG = "MediaMsg";
-        public static readonly string SENSOR_MSG = "SensorMsg";
-        public static readonly string SYSTEM_PERF_MSG = "SystemPerfMsg";
+        public const string ACTUATOR_CMD = "ActuatorCmd";
+        public const string ACTUATOR_RESPONSE = "ActuatorResponse";
+        public const string MGMT_STATUS_MSG = "MgmtStatusMsg";
+        public const string MGMT_STATUS_CMD = "MgmtStatusCmd";
+        public const string MEDIA_MSG = "MediaMsg";
+        public const string SENSOR_MSG = "SensorMsg";
+        public const string SYSTEM_PERF_MSG = "SystemPerfMsg";
 
-        public static readonly string UPDATE_NOTIFICATIONS_MSG = "UpdateMsg";
-        public static readonly string RESOURCE_REGISTRATION_REQUEST = "ResourceRegRequest";
+        public const string UPDATE_NOTIFICATIONS_MSG = "UpdateMsg";
+        public const string RESOURCE_REGISTRATION_REQUEST = "ResourceRegRequest";
 
-        public static readonly string LED_ACTUATOR_NAME = "LedActuator";
-        public static readonly string SYSTEM_PERF_NAME = "SystemPerformance";
-        public static readonly string CAMERA_SENSOR_NAME = "CameraSensor";
+        public const string LED_ACTUATOR_NAME = "LedActuator";
+        public const string SYSTEM_PERF_NAME = "SystemPerformance";
+        public const string CAMERA_SENSOR_NAME = "CameraSensor";
 
         public const int COMMAND_ON = 1;
         public const int COMMAND_OFF = 2;
         public const int COMMAND_MSG_ONLY = 5;
 
-        public static readonly string COMMAND_KEY = "Command";
+        public const string COMMAND_KEY = "Command";
 
-        public static readonly string ON_KEY = "ON";
-        public static readonly string OFF_KEY = "OFF";
-        public static readonly string RUNNING_KEY = "Running";
+        public const string ON_KEY = "ON";
+        public const string OFF_KEY = "OFF";
+        public const string RUNNING_KEY = "Running";
 
         public const int DEFAULT_TYPE_ID = 0;
         public const int DEFAULT_TYPE_CATEGORY_ID = 0;
@@ -305,45 +305,45 @@ namespace LabBenchStudios.Pdt.Common
         public const int MESSAGE_TYPE_CATEGORY = 10000;
         public const int MESSAGE_TYPE = 10001;
 
-        public static readonly string HUMIDIFIER_NAME = "Humidifier";
-        public static readonly string THERMOSTAT_NAME = "Thermostat";
-        public static readonly string PRESSURE_NAME = "BarometricPressure";
-        public static readonly string FLUID_PUMP_NAME = "FluidPump";
-        public static readonly string WIND_TURBINE_NAME = "WindTurbine";
+        public const string HUMIDIFIER_NAME = "Humidifier";
+        public const string THERMOSTAT_NAME = "Thermostat";
+        public const string PRESSURE_NAME = "BarometricPressure";
+        public const string FLUID_PUMP_NAME = "FluidPump";
+        public const string WIND_TURBINE_NAME = "WindTurbine";
 
-        public static readonly string HUMIDIFIER_ACTUATOR_NAME = "HumidifierActuator";
-        public static readonly string HVAC_ACTUATOR_NAME = "HvacActuator";
-        public static readonly string CIRCULATOR_PUMP_ACTUATOR_NAME = "CirculatorPumpActuator";
+        public const string HUMIDIFIER_ACTUATOR_NAME = "HumidifierActuator";
+        public const string HVAC_ACTUATOR_NAME = "HvacActuator";
+        public const string CIRCULATOR_PUMP_ACTUATOR_NAME = "CirculatorPumpActuator";
 
-        public static readonly string HUMIDITY_SENSOR_NAME = "Hygrometer";
-        //public static readonly string HUMIDITY_SENSOR_NAME = "RelativeHumidity";
-        public static readonly string PRESSURE_SENSOR_NAME = "PressureSensor";
-        public static readonly string TEMP_SENSOR_NAME = "Temperature";
-        //public static readonly string TEMP_SENSOR_NAME = "Temperature";
+        public const string HUMIDITY_SENSOR_NAME = "Hygrometer";
+        //public const string HUMIDITY_SENSOR_NAME = "RelativeHumidity";
+        public const string PRESSURE_SENSOR_NAME = "PressureSensor";
+        public const string TEMP_SENSOR_NAME = "Temperature";
+        //public const string TEMP_SENSOR_NAME = "Temperature";
 
-        public static readonly string VISCOSITY_NAME = "Viscosity";
-        public static readonly string FLOW_RATE_NAME = "FlowRate";
-        public static readonly string RPM_NAME = "RPM";
+        public const string VISCOSITY_NAME = "Viscosity";
+        public const string FLOW_RATE_NAME = "FlowRate";
+        public const string RPM_NAME = "RPM";
 
-        public static readonly string MEDIA_TYPE_NAME = "MediaType";
+        public const string MEDIA_TYPE_NAME = "MediaType";
 
-        public static readonly string LUMENS_NAME = "Lumens";
-        public static readonly string DECIBELS_NAME = "Decibels";
-        public static readonly string COLOR_NAME = "Color";
-        public static readonly string PLAYING_NAME = "Playing";
+        public const string LUMENS_NAME = "Lumens";
+        public const string DECIBELS_NAME = "Decibels";
+        public const string COLOR_NAME = "Color";
+        public const string PLAYING_NAME = "Playing";
 
-        public static readonly string STORAGE_LEVEL_NAME = "StorageLevel";
-        public static readonly string STORAGE_DRAW_NAME = "StorageDraw";
+        public const string STORAGE_LEVEL_NAME = "StorageLevel";
+        public const string STORAGE_DRAW_NAME = "StorageDraw";
 
-        public static readonly string WATTAGE_NAME = "Wattage";
-        public static readonly string AMPERAGE_NAME = "Amperage";
-        public static readonly string VOLTAGE_NAME = "Voltage";
+        public const string WATTAGE_NAME = "Wattage";
+        public const string AMPERAGE_NAME = "Amperage";
+        public const string VOLTAGE_NAME = "Voltage";
 
-        public static readonly string RESOURCE_MGMT_NAME = "ResourceMgmt";
+        public const string RESOURCE_MGMT_NAME = "ResourceMgmt";
 
-        public static readonly string CPU_UTIL_NAME = "DeviceCpuUtil";
-        public static readonly string DISK_UTIL_NAME = "DeviceDiskUtil";
-        public static readonly string MEM_UTIL_NAME = "DeviceMemUtil";
+        public const string CPU_UTIL_NAME = "DeviceCpuUtil";
+        public const string DISK_UTIL_NAME = "DeviceDiskUtil";
+        public const string MEM_UTIL_NAME = "DeviceMemUtil";
 
         //////////
         // status codes
@@ -359,7 +359,7 @@ namespace LabBenchStudios.Pdt.Common
         public const int CONN_FAILURE_STATUS_CODE = 400;
         public const int MSG_SEND_FAILURE_STATUS_CODE = 401;
 
-        public static readonly string NO_STATUS_MSG = "No_Status";
+        public const string NO_STATUS_MSG = "No_Status";
 
         public static readonly ReadOnlyDictionary<int, string> STATUS_MSG_TABLE =
             new ReadOnlyDictionary<int, string>(
@@ -402,101 +402,101 @@ namespace LabBenchStudios.Pdt.Common
         // NOTE: You may need to update these paths if you change
         // the directory structure for python-components
 
-        public static readonly string LOCAL = "Local";
-        public static readonly string MQTT = "Mqtt";
-        public static readonly string DATA = "Data";
+        public const string LOCAL = "Local";
+        public const string MQTT = "Mqtt";
+        public const string DATA = "Data";
 
-        public static readonly string DEVICE_ID_KEY = "deviceID";
-        public static readonly string DEVICE_LOCATION_ID_KEY = "deviceLocationID";
+        public const string DEVICE_ID_KEY = "deviceID";
+        public const string DEVICE_LOCATION_ID_KEY = "deviceLocationID";
 
-        public static readonly string CLOUD_GATEWAY_SERVICE = CLOUD + "." + GATEWAY_SERVICE;
-        public static readonly string MQTT_GATEWAY_SERVICE = MQTT + "." + GATEWAY_SERVICE;
-        public static readonly string DATA_GATEWAY_SERVICE = DATA + "." + GATEWAY_SERVICE;
+        public const string CLOUD_GATEWAY_SERVICE = CLOUD + "." + GATEWAY_SERVICE;
+        public const string MQTT_GATEWAY_SERVICE = MQTT + "." + GATEWAY_SERVICE;
+        public const string DATA_GATEWAY_SERVICE = DATA + "." + GATEWAY_SERVICE;
 
-        public static readonly string CRED_SECTION = "Credentials";
+        public const string CRED_SECTION = "Credentials";
 
-        public static readonly string FROM_ADDRESS_KEY = "fromAddr";
-        public static readonly string TO_ADDRESS_KEY = "toAddr";
-        public static readonly string TO_MEDIA_ADDRESS_KEY = "toMediaAddr";
-        public static readonly string TO_TXT_ADDRESS_KEY = "toTxtAddr";
+        public const string FROM_ADDRESS_KEY = "fromAddr";
+        public const string TO_ADDRESS_KEY = "toAddr";
+        public const string TO_MEDIA_ADDRESS_KEY = "toMediaAddr";
+        public const string TO_TXT_ADDRESS_KEY = "toTxtAddr";
 
-        public static readonly string HOST_KEY = "host";
-        public static readonly string PORT_KEY = "port";
-        public static readonly string SECURE_PORT_KEY = "securePort";
+        public const string HOST_KEY = "host";
+        public const string PORT_KEY = "port";
+        public const string SECURE_PORT_KEY = "securePort";
 
-        public static readonly string ROOT_CERT_ALIAS = "root";
+        public const string ROOT_CERT_ALIAS = "root";
 
-        public static readonly string KEY_STORE_CLIENT_IDENTITY_KEY = "keyStoreClientIdentity";
-        public static readonly string KEY_STORE_SERVER_IDENTITY_KEY = "keyStoreServerIdentity";
+        public const string KEY_STORE_CLIENT_IDENTITY_KEY = "keyStoreClientIdentity";
+        public const string KEY_STORE_SERVER_IDENTITY_KEY = "keyStoreServerIdentity";
 
-        public static readonly string KEY_STORE_FILE_KEY = "keyStoreFile";
-        public static readonly string KEY_STORE_AUTH_KEY = "keyStoreAuth";
-        public static readonly string TRUST_STORE_FILE_KEY = "trustStoreFile";
-        public static readonly string TRUST_STORE_ALIAS_KEY = "trustStoreAlias";
-        public static readonly string TRUST_STORE_AUTH_KEY = "trustStoreAuth";
-        public static readonly string USER_NAME_TOKEN_KEY = "userToken";
-        public static readonly string USER_AUTH_TOKEN_KEY = "authToken";
-        public static readonly string API_TOKEN_KEY = "apiToken";
-        public static readonly string CLIENT_TOKEN_KEY = "clientToken";
+        public const string KEY_STORE_FILE_KEY = "keyStoreFile";
+        public const string KEY_STORE_AUTH_KEY = "keyStoreAuth";
+        public const string TRUST_STORE_FILE_KEY = "trustStoreFile";
+        public const string TRUST_STORE_ALIAS_KEY = "trustStoreAlias";
+        public const string TRUST_STORE_AUTH_KEY = "trustStoreAuth";
+        public const string USER_NAME_TOKEN_KEY = "userToken";
+        public const string USER_AUTH_TOKEN_KEY = "authToken";
+        public const string API_TOKEN_KEY = "apiToken";
+        public const string CLIENT_TOKEN_KEY = "clientToken";
 
-        public static readonly string ORGANIZATION_ID_KEY = "orgID";
-        public static readonly string ENV_DATA_BUCKET_ID = "envDataBucketID";
-        public static readonly string STATE_DATA_BUCKET_ID = "stateDataBucketID";
-        public static readonly string SYS_PERF_DATA_BUCKET_ID = "sysPerfDataBucketID";
-        public static readonly string CMD_DATA_BUCKET_ID = "cmdDataBucketID";
+        public const string ORGANIZATION_ID_KEY = "orgID";
+        public const string ENV_DATA_BUCKET_ID = "envDataBucketID";
+        public const string STATE_DATA_BUCKET_ID = "stateDataBucketID";
+        public const string SYS_PERF_DATA_BUCKET_ID = "sysPerfDataBucketID";
+        public const string CMD_DATA_BUCKET_ID = "cmdDataBucketID";
 
-        public static readonly string CERT_FILE_KEY = "certFile";
-        public static readonly string CRED_FILE_KEY = "credFile";
-        public static readonly string ENABLE_AUTH_KEY = "enableAuth";
-        public static readonly string ENABLE_CRYPT_KEY = "enableCrypt";
-        public static readonly string ENABLE_SIMULATOR_KEY = "enableSimulator";
-        public static readonly string ENABLE_EMULATOR_KEY = "enableEmulator";
-        public static readonly string ENABLE_SENSE_HAT_KEY = "enableSenseHAT";
-        public static readonly string ENABLE_LOGGING_KEY = "enableLogging";
-        public static readonly string USE_WEB_ACCESS_KEY = "useWebAccess";
-        public static readonly string POLL_CYCLES_KEY = "pollCycleSecs";
-        public static readonly string KEEP_ALIVE_KEY = "keepAlive";
-        public static readonly string DEFAULT_QOS_KEY = "defaultQos";
+        public const string CERT_FILE_KEY = "certFile";
+        public const string CRED_FILE_KEY = "credFile";
+        public const string ENABLE_AUTH_KEY = "enableAuth";
+        public const string ENABLE_CRYPT_KEY = "enableCrypt";
+        public const string ENABLE_SIMULATOR_KEY = "enableSimulator";
+        public const string ENABLE_EMULATOR_KEY = "enableEmulator";
+        public const string ENABLE_SENSE_HAT_KEY = "enableSenseHAT";
+        public const string ENABLE_LOGGING_KEY = "enableLogging";
+        public const string USE_WEB_ACCESS_KEY = "useWebAccess";
+        public const string POLL_CYCLES_KEY = "pollCycleSecs";
+        public const string KEEP_ALIVE_KEY = "keepAlive";
+        public const string DEFAULT_QOS_KEY = "defaultQos";
 
-        public static readonly string ENABLE_MQTT_CLIENT_KEY = "enableMqttClient";
+        public const string ENABLE_MQTT_CLIENT_KEY = "enableMqttClient";
 
-        public static readonly string ENABLE_SYSTEM_PERF_KEY = "enableSystemPerformance";
-        public static readonly string ENABLE_SENSING_KEY = "enableSensing";
+        public const string ENABLE_SYSTEM_PERF_KEY = "enableSystemPerformance";
+        public const string ENABLE_SENSING_KEY = "enableSensing";
 
-        public static readonly string HUMIDITY_SIM_FLOOR_KEY = "humiditySimFloor";
-        public static readonly string HUMIDITY_SIM_CEILING_KEY = "humiditySimCeiling";
-        public static readonly string PRESSURE_SIM_FLOOR_KEY = "pressureSimFloor";
-        public static readonly string PRESSURE_SIM_CEILING_KEY = "pressureSimCeiling";
-        public static readonly string TEMP_SIM_FLOOR_KEY = "tempSimFloor";
-        public static readonly string TEMP_SIM_CEILING_KEY = "tempSimCeiling";
+        public const string HUMIDITY_SIM_FLOOR_KEY = "humiditySimFloor";
+        public const string HUMIDITY_SIM_CEILING_KEY = "humiditySimCeiling";
+        public const string PRESSURE_SIM_FLOOR_KEY = "pressureSimFloor";
+        public const string PRESSURE_SIM_CEILING_KEY = "pressureSimCeiling";
+        public const string TEMP_SIM_FLOOR_KEY = "tempSimFloor";
+        public const string TEMP_SIM_CEILING_KEY = "tempSimCeiling";
 
-        public static readonly string HANDLE_TEMP_CHANGE_ON_DEVICE_KEY = "handleTempChangeOnDevice";
-        public static readonly string TRIGGER_HVAC_TEMP_FLOOR_KEY = "triggerHvacTempFloor";
-        public static readonly string TRIGGER_HVAC_TEMP_CEILING_KEY = "triggerHvacTempCeiling";
+        public const string HANDLE_TEMP_CHANGE_ON_DEVICE_KEY = "handleTempChangeOnDevice";
+        public const string TRIGGER_HVAC_TEMP_FLOOR_KEY = "triggerHvacTempFloor";
+        public const string TRIGGER_HVAC_TEMP_CEILING_KEY = "triggerHvacTempCeiling";
 
-        public static readonly string RUN_FOREVER_KEY = "runForever";
-        public static readonly string TEST_EMPTY_APP_KEY = "testEmptyApp";
+        public const string RUN_FOREVER_KEY = "runForever";
+        public const string TEST_EMPTY_APP_KEY = "testEmptyApp";
 
-        public static readonly string STREAM_HOST_ADDR_KEY = "streamHostAddr";
-        public static readonly string STREAM_HOST_LABEL_KEY = "streamHostLabel";
-        public static readonly string STREAM_PORT_KEY = "streamPort";
-        public static readonly string STREAM_PROTOCOL_KEY = "streamProtocol";
-        public static readonly string STREAM_PATH_KEY = "streamPath";
-        public static readonly string STREAM_ENCODING_KEY = "streamEncoding";
-        public static readonly string STREAM_FRAME_WIDTH_KEY = "streamFrameWidth";
-        public static readonly string STREAM_FRAME_HEIGHT_KEY = "streamFrameHeight";
-        public static readonly string STREAM_FPS_KEY = "streamFps";
-        public static readonly string IMAGE_FILE_EXT_KEY = "imageFileExt";
-        public static readonly string VIDEO_FILE_EXT_KEY = "videoFileExt";
-        public static readonly string MIN_MOTION_PIXELS_DIFF_KEY = "minMotionPixelsDiff";
+        public const string STREAM_HOST_ADDR_KEY = "streamHostAddr";
+        public const string STREAM_HOST_LABEL_KEY = "streamHostLabel";
+        public const string STREAM_PORT_KEY = "streamPort";
+        public const string STREAM_PROTOCOL_KEY = "streamProtocol";
+        public const string STREAM_PATH_KEY = "streamPath";
+        public const string STREAM_ENCODING_KEY = "streamEncoding";
+        public const string STREAM_FRAME_WIDTH_KEY = "streamFrameWidth";
+        public const string STREAM_FRAME_HEIGHT_KEY = "streamFrameHeight";
+        public const string STREAM_FPS_KEY = "streamFps";
+        public const string IMAGE_FILE_EXT_KEY = "imageFileExt";
+        public const string VIDEO_FILE_EXT_KEY = "videoFileExt";
+        public const string MIN_MOTION_PIXELS_DIFF_KEY = "minMotionPixelsDiff";
 
-        public static readonly string IMAGE_ENCODING_KEY = "imageEncoding";
-        public static readonly string IMAGE_DATA_STORE_PATH = "imageDataStorePath";
-        public static readonly string VIDEO_DATA_STORE_PATH = "videoDataStorePath";
-        public static readonly string MAX_MOTION_FRAMES_BEFORE_ACTION_KEY = "maxMotionFramesBeforeAction";
-        public static readonly string MAX_CACHED_FRAMES_KEY = "maxCachedFrames";
-        public static readonly string STORE_INTERIM_FRAMES_KEY = "storeInterimFrames";
-        public static readonly string INCLUDE_RAW_IMAGE_DATA_IN_MSG_KEY = "includeRawImageDataInMsg";
+        public const string IMAGE_ENCODING_KEY = "imageEncoding";
+        public const string IMAGE_DATA_STORE_PATH = "imageDataStorePath";
+        public const string VIDEO_DATA_STORE_PATH = "videoDataStorePath";
+        public const string MAX_MOTION_FRAMES_BEFORE_ACTION_KEY = "maxMotionFramesBeforeAction";
+        public const string MAX_CACHED_FRAMES_KEY = "maxCachedFrames";
+        public const string STORE_INTERIM_FRAMES_KEY = "storeInterimFrames";
+        public const string INCLUDE_RAW_IMAGE_DATA_IN_MSG_KEY = "includeRawImageDataInMsg";
 
     }
 }

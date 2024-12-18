@@ -51,7 +51,13 @@ namespace LabBenchStudios.Pdt.Common
         /// 
         /// </summary>
         /// <returns></returns>
-        public string GetFilePath();
+        public string GetCacheFilePath();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string GetRootFilePath();
 
         /// <summary>
         /// 
@@ -90,7 +96,7 @@ namespace LabBenchStudios.Pdt.Common
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public bool SetFilePath(string filePath);
+        public bool SetRootFilePath(string filePath);
 
         /// <summary>
         /// 
