@@ -27,12 +27,12 @@ namespace LabBenchStudios.Pdt.Common
     /// <summary>
     /// 
     /// </summary>
-    public class DataHistorianState
+    public class MediaPlayerState
     {
         /// <summary>
         /// 
         /// </summary>
-        public enum DataHistorianReplayDirection
+        public enum PlaybackDirection
         {
             Forward,
             Reverse,
@@ -42,7 +42,7 @@ namespace LabBenchStudios.Pdt.Common
         /// <summary>
         /// 
         /// </summary>
-        public enum DataHistorianReplayState
+        public enum PlaybackState
         {
             Play,
             Pause,

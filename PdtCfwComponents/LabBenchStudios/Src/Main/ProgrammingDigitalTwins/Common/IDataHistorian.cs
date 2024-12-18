@@ -103,7 +103,7 @@ namespace LabBenchStudios.Pdt.Common
         /// </summary>
         /// <param name="cacheName"></param>
         /// <param name="direction"></param>
-        public void SetReplayDirection(string cacheName, DataHistorianState.DataHistorianReplayDirection direction);
+        public void SetReplayDirection(string cacheName, MediaPlayerState.PlaybackDirection direction);
 
     }
 }

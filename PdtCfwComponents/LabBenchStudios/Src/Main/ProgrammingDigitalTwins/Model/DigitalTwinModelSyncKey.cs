@@ -94,6 +94,29 @@ namespace LabBenchStudios.Pdt.Model
             return this.name;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string GetSyncKey()
+        {
+            return this.modelSyncKey;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string GetSyncKeyWithGuid()
+        {
+            return this.modelSyncGuidKey;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public bool IsEqual(DigitalTwinModelSyncKey key)
         {
             if (key != null)
@@ -104,6 +127,11 @@ namespace LabBenchStudios.Pdt.Model
             return false;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public bool IsSourceEqual(DigitalTwinModelSyncKey key)
         {
             if (key != null)
@@ -122,7 +150,7 @@ namespace LabBenchStudios.Pdt.Model
         /// <returns></returns>
         public override string ToString()
         {
-            return this.modelSyncGuidKey;
+            return this.GetSyncKeyWithGuid();
         }
 
         // private methods

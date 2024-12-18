@@ -1,11 +1,33 @@
-﻿using System;
-using System.Data.SqlTypes;
+﻿/**
+ * MIT License
+ * 
+ * Copyright (c) 2024 Andrew D. King
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+using System;
 using System.Diagnostics;
 using System.Threading;
 
 using LabBenchStudios.Pdt.Common;
 using LabBenchStudios.Pdt.Data;
-using LabBenchStudios.Pdt.Util;
 
 namespace LabBenchStudios.Pdt.Historian
 {
@@ -22,8 +44,8 @@ namespace LabBenchStudios.Pdt.Historian
 
         private ISystemStatusEventListener eventListener;
 
-        private DataHistorianState.DataHistorianReplayState replayState =
-            DataHistorianState.DataHistorianReplayState.Uninitialized;
+        private MediaPlayerState.PlaybackState playbackState =
+            MediaPlayerState.PlaybackState.Uninitialized;
 
         private IDataHistorianCache historianCache = null;
 
@@ -101,26 +123,26 @@ namespace LabBenchStudios.Pdt.Historian
         /// 
         /// </summary>
         /// <returns></returns>
-        public DataHistorianState.DataHistorianReplayState GetCacheReplayState()
+        public MediaPlayerState.PlaybackState GetPlaybackState()
         {
-            return this.replayState;
+            return this.playbackState;
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public DataHistorianState.DataHistorianReplayDirection GetCacheReplayDirection()
+        public MediaPlayerState.PlaybackDirection GetPlaybackDirection()
         {
             if (this.HasValidCache())
             {
-                return this.historianCache.GetCacheReplayDirection();
+                return this.historianCache.GetPlaybackDirection();
             } else
             {
                 Console.WriteLine($"Data historian player {this.playerName} has no valid backing cache. Ignoring.");
             }
 
-            return DataHistorianState.DataHistorianReplayDirection.Uninitialized;
+            return MediaPlayerState.PlaybackDirection.Uninitialized;
         }
         
         /// <summary>
@@ -206,26 +228,9 @@ namespace LabBenchStudios.Pdt.Historian
         /// 
         /// </summary>
         /// <returns></returns>
-        public DataHistorianState.DataHistorianReplayDirection GetReplayDirection()
+        public MediaPlayerState.PlaybackState GetReplayState()
         {
-            if (this.HasValidCache())
-            {
-                return this.historianCache.GetCacheReplayDirection();
-            } else
-            {
-                Console.WriteLine($"Data historian player {this.playerName} has no valid backing cache. Ignoring.");
-            }
-
-            return DataHistorianState.DataHistorianReplayDirection.Uninitialized;
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public DataHistorianState.DataHistorianReplayState GetReplayState()
-        {
-            return this.replayState;
+            return this.playbackState;
         }
 
         /// <summary>
@@ -371,7 +376,7 @@ namespace LabBenchStudios.Pdt.Historian
         {
             if (this.HasValidCache())
             {
-                return (this.replayState == DataHistorianState.DataHistorianReplayState.Play);
+                return (this.playbackState == MediaPlayerState.PlaybackState.Play);
             } else
             {
                 Console.WriteLine($"Data historian player {this.playerName} has no valid backing cache. Ignoring.");
@@ -410,8 +415,8 @@ namespace LabBenchStudios.Pdt.Historian
             if (this.HasValidCache() && this.playbackEnabled)
             {
                 this.playbackModeActive = true;
-                this.historianCache.SetCacheState(DataHistorianState.DataHistorianReplayState.Play);
-                this.replayState = this.historianCache.GetCacheReplayState();
+                this.historianCache.SetCacheState(MediaPlayerState.PlaybackState.Play);
+                this.playbackState = this.historianCache.GetPlaybackState();
 
                 if (this.enableThreadedPlayback)
                 {
@@ -470,8 +475,8 @@ namespace LabBenchStudios.Pdt.Historian
             {
                 // just need to set the replay state to Pause - the thread's runner will then
                 // stop processing messages and will not send any to the event listener
-                this.historianCache.SetCacheState(DataHistorianState.DataHistorianReplayState.Pause);
-                this.replayState = this.historianCache.GetCacheReplayState();
+                this.historianCache.SetCacheState(MediaPlayerState.PlaybackState.Pause);
+                this.playbackState = this.historianCache.GetPlaybackState();
 
                 try
                 {
@@ -522,7 +527,7 @@ namespace LabBenchStudios.Pdt.Historian
                     this.Clear();
                 }
 
-                this.replayState = this.historianCache.GetCacheReplayState();
+                this.playbackState = this.historianCache.GetPlaybackState();
             } else
             {
                 Console.WriteLine($"Data historian player {this.playerName} has no valid backing cache. Ignoring.");
@@ -543,8 +548,8 @@ namespace LabBenchStudios.Pdt.Historian
             // handle the action
             if (this.HasValidCache() && this.playbackEnabled)
             {
-                this.historianCache.SetCacheState(DataHistorianState.DataHistorianReplayState.Stop);
-                this.replayState = this.historianCache.GetCacheReplayState();
+                this.historianCache.SetCacheState(MediaPlayerState.PlaybackState.Stop);
+                this.playbackState = this.historianCache.GetPlaybackState();
 
                 if (this.enableThreadedPlayback)
                 {
@@ -677,7 +682,7 @@ namespace LabBenchStudios.Pdt.Historian
         /// 
         /// </summary>
         /// <param name="direction"></param>
-        public void SetReplayDirection(DataHistorianState.DataHistorianReplayDirection direction)
+        public void SetPlaybackDirection(MediaPlayerState.PlaybackDirection direction)
         {
             if (this.HasValidCache())
             {
@@ -761,9 +766,9 @@ namespace LabBenchStudios.Pdt.Historian
             {
                 try
                 {
-                    switch (this.replayState)
+                    switch (this.playbackState)
                     {
-                        case DataHistorianState.DataHistorianReplayState.Play:
+                        case MediaPlayerState.PlaybackState.Play:
                             this.HandleNextPlaybackCacheEvent(true);
 
                             break;
@@ -852,16 +857,16 @@ namespace LabBenchStudios.Pdt.Historian
             {
                 if (cacheEntry.HasActuatorData())
                 {
-                    this.eventListener.OnMessagingSystemDataReceived(cacheEntry.GetActuatorData());
+                    this.eventListener?.OnMessagingSystemDataReceived(cacheEntry.GetActuatorData());
                 } else if (cacheEntry.HasConnectionStateData())
                 {
-                    this.eventListener.OnMessagingSystemDataReceived(cacheEntry.GetConnectionStateData());
+                    this.eventListener?.OnMessagingSystemDataReceived(cacheEntry.GetConnectionStateData());
                 } else if (cacheEntry.HasSensorData())
                 {
-                    this.eventListener.OnMessagingSystemDataReceived(cacheEntry.GetSensorData());
+                    this.eventListener?.OnMessagingSystemDataReceived(cacheEntry.GetSensorData());
                 } else if (cacheEntry.HasSystemPerformanceData())
                 {
-                    this.eventListener.OnMessagingSystemDataReceived(cacheEntry.GetSystemPerformanceData());
+                    this.eventListener?.OnMessagingSystemDataReceived(cacheEntry.GetSystemPerformanceData());
                 }
             }
         }

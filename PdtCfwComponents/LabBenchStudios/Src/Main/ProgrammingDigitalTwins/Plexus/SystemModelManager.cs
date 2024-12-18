@@ -56,6 +56,7 @@ namespace LabBenchStudios.Pdt.Plexus
         HashSet<string> customDigitalTwinModelPathSet = null;
         HashSet<string> digitalTwinModelPathSet = null;
         HashSet<string> configTypeModelPathSet = null;
+        HashSet<string> deviceIDSet = null;
 
         /// <summary>
         /// Default constructor. Uses the default model file path specified
@@ -68,6 +69,7 @@ namespace LabBenchStudios.Pdt.Plexus
 
             this.digitalTwinModelPathSet = new HashSet<string>();
             this.configTypeModelPathSet = new HashSet<string>();
+            this.deviceIDSet = new HashSet<string>();
         }
 
         // public methods
@@ -167,18 +169,27 @@ namespace LabBenchStudios.Pdt.Plexus
         /// 
         /// </summary>
         /// <returns></returns>
-        public DigitalTwinModelManager GetDigitalTwinModelManager()
+        public ConfigTypeModelManager GetConfigTypeModelManager()
         {
-            return this.digitalTwinModelManager;
+            return this.configTypeModelManager;
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public ConfigTypeModelManager GetConfigTypeModelManager()
+        public HashSet<string> GetAllRegisteredDeviceIDs()
         {
-            return this.configTypeModelManager;
+            return this.deviceIDSet;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public DigitalTwinModelManager GetDigitalTwinModelManager()
+        {
+            return this.digitalTwinModelManager;
         }
 
         /// <summary>
@@ -188,6 +199,8 @@ namespace LabBenchStudios.Pdt.Plexus
         /// <returns></returns>
         public bool HandleIncomingTelemetry(IotDataContext data)
         {
+            this.RegisterDeviceID(data);
+
             return this.digitalTwinModelManager.HandleIncomingTelemetry(data);
         }
 
@@ -197,6 +210,8 @@ namespace LabBenchStudios.Pdt.Plexus
         /// <param name="data"></param>
         public void HandleActuatorData(ActuatorData data)
         {
+            this.RegisterDeviceID(data);
+
             this.digitalTwinModelManager.HandleActuatorData(data);
         }
 
@@ -206,6 +221,8 @@ namespace LabBenchStudios.Pdt.Plexus
         /// <param name="data"></param>
         public void HandleConnectionStateData(ConnectionStateData data)
         {
+            this.RegisterDeviceID(data);
+
             this.digitalTwinModelManager.HandleConnectionStateData(data);
         }
 
@@ -215,6 +232,8 @@ namespace LabBenchStudios.Pdt.Plexus
         /// <param name="data"></param>
         public void HandleMessageData(MessageData data)
         {
+            this.RegisterDeviceID(data);
+
             this.digitalTwinModelManager.HandleMessageData(data);
         }
 
@@ -224,6 +243,8 @@ namespace LabBenchStudios.Pdt.Plexus
         /// <param name="data"></param>
         public void HandleSensorData(SensorData data)
         {
+            this.RegisterDeviceID(data);
+
             this.digitalTwinModelManager.HandleSensorData(data);
         }
 
@@ -233,6 +254,8 @@ namespace LabBenchStudios.Pdt.Plexus
         /// <param name="data"></param>
         public void HandleSystemPerformanceData(SystemPerformanceData data)
         {
+            this.RegisterDeviceID(data);
+
             this.digitalTwinModelManager.HandleSystemPerformanceData(data);
         }
 
@@ -260,7 +283,6 @@ namespace LabBenchStudios.Pdt.Plexus
                 this.eventListener = listener;
 
                 this.digitalTwinModelManager.SetSystemStatusEventListener(listener);
-                //this.configTypeModelManager.SetSystemStatusEventListener(listener);
             }
         }
 
@@ -271,11 +293,28 @@ namespace LabBenchStudios.Pdt.Plexus
         /// <returns></returns>
         public bool UpdateRemoteSystemState(IotDataContext dataContext)
         {
+            this.RegisterDeviceID(dataContext);
+
             return this.digitalTwinModelManager.UpdateRemoteSystemState(dataContext);
         }
 
         // private methods
 
+        /// <summary>
+        /// Stores the data context's device ID in the local device ID set
+        /// if not already stored.
+        /// </summary>
+        /// <param name="dataContext"></param>
+        private void RegisterDeviceID(IotDataContext dataContext)
+        {
+            string deviceID = dataContext.GetDeviceID();
+
+            if (!this.deviceIDSet.Contains(deviceID))
+            {
+                this.deviceIDSet.Add(deviceID);
+            }
+        }
 
     }
+
 }

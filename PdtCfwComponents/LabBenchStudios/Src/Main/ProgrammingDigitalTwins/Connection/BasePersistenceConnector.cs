@@ -217,7 +217,7 @@ namespace LabBenchStudios.Pdt.Connection
         {
             TimeDuration duration = new TimeDuration(startDate, endDate);
 
-            Console.WriteLine($"Attempting to load connection replayState data. Play: {duration.GetStartTime()}. End: {duration.GetEndTime()}.");
+            Console.WriteLine($"Attempting to load connection playbackState data. Play: {duration.GetStartTime()}. End: {duration.GetEndTime()}.");
 
             return this.HandleLoadConnectionStateData(resource, duration);
         }

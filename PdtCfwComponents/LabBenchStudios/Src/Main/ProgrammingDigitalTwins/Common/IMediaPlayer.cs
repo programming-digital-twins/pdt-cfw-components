@@ -22,48 +22,15 @@
  * SOFTWARE.
  */
 
-using LabBenchStudios.Pdt.Data;
-
 namespace LabBenchStudios.Pdt.Common
 {
-    public interface IDataHistorianPlayer : IDataContextEventListener, IUserEventStateListener
+    public interface IMediaPlayer
     {
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public string GetCacheFileName();
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="index"></param>
-        /// <returns></returns>
-        public DataCacheEntryContainer GetCacheEntryAtIndex(int index);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public double GetCacheMemoryUsage();
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public string GetCacheName();
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public int GetCacheSize();
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public string GetCacheStorageUri();
+        public string GetName();
 
         /// <summary>
         /// 
@@ -93,63 +60,13 @@ namespace LabBenchStudios.Pdt.Common
         /// 
         /// </summary>
         /// <returns></returns>
-        public bool HasValidCache();
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public bool IsCacheFillingEnabled();
+        public bool HasValidContent();
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
         public bool IsPlaybackEnabled();
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="enabled"></param>
-        public void SetCacheFillingEnabledFlag(bool enabled);
-
-        /// <summary>
-        /// If true, only data events (e.g., Actuator, Sensor, Performance).
-        /// Else, cache all events (incl. Connection and Message).
-        /// </summary>
-        /// <param name="enabled"></param>
-        public void SetCacheOnlyDataEventsFlag(bool enabled);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="dataLoader"></param>
-        public void SetDataLoader(IDataLoader dataLoader);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="dataStorer"></param>
-        public void SetDataStorer(IDataStorer dataStorer);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="displayName"></param>
-        public void SetDisplayName(string displayName);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="enabled"></param>
-        /// <returns></returns>
-        public void SetPlaybackEnabledFlag(bool enabled);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="enabled"></param>
-        public void SetEnableThreadedPlaybackFlag(bool enabled);
 
         /// <summary>
         /// 
@@ -197,6 +114,25 @@ namespace LabBenchStudios.Pdt.Common
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="displayName"></param>
+        public void SetDisplayName(string displayName);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="enabled"></param>
+        /// <returns></returns>
+        public void SetPlaybackEnabledFlag(bool enabled);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="enabled"></param>
+        public void SetEnableThreadedPlaybackFlag(bool enabled);
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="delayFactor"></param>
         public void SetPlaybackDelayFactor(float delayFactor);
 
@@ -210,25 +146,13 @@ namespace LabBenchStudios.Pdt.Common
         /// 
         /// </summary>
         /// <param name="direction"></param>
-        public void SetPlaybackDirection(MediaPlayerState.PlaybackDirection direction);
+        public void SetReplayDirection(MediaPlayerState.PlaybackDirection direction);
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public bool LoadHistorianCache();
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public bool StoreHistorianCache();
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public double TriggerNextCachePlaybackEvent();
+        public double TriggerNextPlaybackEvent();
 
     }
 }

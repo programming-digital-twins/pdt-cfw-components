@@ -1,8 +1,3 @@
-
-
-using System;
-
-
 /**
  * MIT License
  * 
@@ -26,6 +21,9 @@ using System;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
+using System;
+
 namespace LabBenchStudios.Pdt.Common
 {
     public interface IDataHistorianFileEventListener

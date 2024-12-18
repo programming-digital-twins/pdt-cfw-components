@@ -502,6 +502,20 @@ namespace LabBenchStudios.Pdt.Model
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="prefix"></param>
+        public void SetResourcePrefix(string prefix)
+        {
+            if (!string.IsNullOrEmpty(prefix))
+            {
+                this.resourcePrefix = prefix;
+
+                this.digitalTwinModelMgrCache.SetResourcePrefix(prefix);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="listener"></param>
         public void SetSystemStatusEventListener(ISystemStatusEventListener listener)
         {
@@ -573,20 +587,6 @@ namespace LabBenchStudios.Pdt.Model
             return false;
         }
         
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="prefix"></param>
-        public void SetResourcePrefix(string prefix)
-        {
-            if (! string.IsNullOrEmpty(prefix))
-            {
-                this.resourcePrefix = prefix;
-
-                this.digitalTwinModelMgrCache.SetResourcePrefix(prefix);
-            }
-        }
-
         /// <summary>
         /// 
         /// </summary>

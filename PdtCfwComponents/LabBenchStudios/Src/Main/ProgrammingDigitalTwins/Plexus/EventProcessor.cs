@@ -732,6 +732,17 @@ namespace LabBenchStudios.Pdt.Plexus
         // private methods
 
         /// <summary>
+        /// NOTE: This is the most critical call in the event processing
+        /// chain! UpdateInternalState(IotDataContext) processes all
+        /// incoming events that extend IotDataContext and delegates
+        /// them to the requisite listeners contained within the
+        /// SystemModelManager instance.
+        /// 
+        /// This includes:
+        ///   - DigitalTwinModelManager
+        ///   - ConfigTypeModelManager
+        ///   - DataHistorianManager (soon)
+        /// 
         /// Updates the internal caches that contain information such
         /// as the current list of device ID's (connected devices),
         /// the connection status for each, and the telemetry keys
@@ -747,6 +758,9 @@ namespace LabBenchStudios.Pdt.Plexus
             this.UpdateDataSyncKeyCache(data);
 
             // notify DT model manager of the data update
+            //
+            // -- this is the critically important delegation call --
+            //
             this.systemModelManager.HandleIncomingTelemetry(data);
         }
 

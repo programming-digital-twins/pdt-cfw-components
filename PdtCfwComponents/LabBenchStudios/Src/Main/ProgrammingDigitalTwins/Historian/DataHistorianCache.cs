@@ -1,8 +1,33 @@
-﻿using System;
+﻿/**
+ * MIT License
+ * 
+ * Copyright (c) 2024 Andrew D. King
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Text;
+
 using LabBenchStudios.Pdt.Common;
 using LabBenchStudios.Pdt.Data;
 using LabBenchStudios.Pdt.Util;
@@ -71,8 +96,8 @@ namespace LabBenchStudios.Pdt.Historian
         private string cacheFileName = null;
         private string cacheFilePath = null;
 
-        private DataHistorianState.DataHistorianReplayState replayState;
-        private DataHistorianState.DataHistorianReplayDirection replayDirection;
+        private MediaPlayerState.PlaybackState replayState;
+        private MediaPlayerState.PlaybackDirection replayDirection;
 
         private int curCacheIndex = 0;
         private int cacheIndexIncrement = 1;
@@ -240,7 +265,7 @@ namespace LabBenchStudios.Pdt.Historian
         /// 
         /// </summary>
         /// <returns></returns>
-        public DataHistorianState.DataHistorianReplayState GetCacheReplayState()
+        public MediaPlayerState.PlaybackState GetPlaybackState()
         {
             return this.replayState;
         }
@@ -249,7 +274,7 @@ namespace LabBenchStudios.Pdt.Historian
         /// 
         /// </summary>
         /// <returns></returns>
-        public DataHistorianState.DataHistorianReplayDirection GetCacheReplayDirection()
+        public MediaPlayerState.PlaybackDirection GetPlaybackDirection()
         {
             return this.replayDirection;
         }
@@ -342,7 +367,7 @@ namespace LabBenchStudios.Pdt.Historian
         /// <returns></returns>
         public bool LoadDataCache(bool storeNewEntries)
         {
-            //this.SetCacheState(DataHistorianState.DataHistorianReplayState.Stop);
+            //this.SetCacheState(DataHistorianState.PlaybackState.Stop);
             //this.SetCacheAccessDirection(this.replayDirection);
 
             if (storeNewEntries)
@@ -385,7 +410,7 @@ namespace LabBenchStudios.Pdt.Historian
         /// </summary>
         public void ResetCache()
         {
-            //this.SetCacheState(DataHistorianState.DataHistorianReplayState.Stop);
+            //this.SetCacheState(DataHistorianState.PlaybackState.Stop);
 
             this.ClearCache();
         }
@@ -396,7 +421,7 @@ namespace LabBenchStudios.Pdt.Historian
         /// <returns></returns>
         public bool StoreDataCache()
         {
-            //this.SetCacheState(DataHistorianState.DataHistorianReplayState.Stop);
+            //this.SetCacheState(DataHistorianState.PlaybackState.Stop);
             //this.SetCacheAccessDirection(this.replayDirection);
 
             if (this.dataStorer != null && this.HasCachedEntries())
@@ -479,17 +504,17 @@ namespace LabBenchStudios.Pdt.Historian
         /// </summary>
         /// <param name="direction"></param>
         public void SetCacheAccessDirection(
-            DataHistorianState.DataHistorianReplayDirection direction)
+            MediaPlayerState.PlaybackDirection direction)
         {
             this.replayDirection = direction;
 
             switch (this.replayDirection)
             {
-                case DataHistorianState.DataHistorianReplayDirection.Forward:
+                case MediaPlayerState.PlaybackDirection.Forward:
                     this.cacheIndexIncrement = 1;
                     break;
 
-                case DataHistorianState.DataHistorianReplayDirection.Reverse:
+                case MediaPlayerState.PlaybackDirection.Reverse:
                     this.cacheIndexIncrement = -1;
                     break;
             }
@@ -500,7 +525,7 @@ namespace LabBenchStudios.Pdt.Historian
         /// </summary>
         /// <param name="state"></param>
         public void SetCacheState(
-            DataHistorianState.DataHistorianReplayState state)
+            MediaPlayerState.PlaybackState state)
         {
             this.replayState = state;
         }
