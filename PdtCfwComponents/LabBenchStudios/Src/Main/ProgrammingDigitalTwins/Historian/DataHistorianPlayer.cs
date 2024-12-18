@@ -40,6 +40,7 @@ namespace LabBenchStudios.Pdt.Historian
         private bool playbackEnabled = false;
         private bool playbackModeActive = false;
         private bool enablePlaybackLoopOnStart = false;
+        private bool needsCacheLoad = true;
         private float playbackDelayFactor = 0.0f;
         private int maxJoinMillis = 500;
 
@@ -51,8 +52,6 @@ namespace LabBenchStudios.Pdt.Historian
             this.historianCache = new DataHistorianCache();
 
             this.InitPlayerProperties();
-
-            //this.Reset();
         }
 
         /// <summary>
@@ -65,8 +64,6 @@ namespace LabBenchStudios.Pdt.Historian
             this.historianCache.SetCacheName(cacheName);
 
             this.InitPlayerProperties();
-
-            //this.Reset();
         }
 
         /// <summary>
@@ -389,6 +386,8 @@ namespace LabBenchStudios.Pdt.Historian
         /// <returns></returns>
         public bool Clear()
         {
+            this.needsCacheLoad = true;
+
             return this.historianCache.ClearCache();
         }
 
@@ -399,7 +398,13 @@ namespace LabBenchStudios.Pdt.Historian
         public bool Play()
         {
             // store the cache - in case updates were made before this call
-            this.StoreHistorianCache();
+            if (this.needsCacheLoad)
+            {
+                this.LoadHistorianCache();
+            } else
+            {
+                this.StoreHistorianCache();
+            }
 
             // handle the action
             if (this.HasValidCache() && this.playbackEnabled)
@@ -514,7 +519,7 @@ namespace LabBenchStudios.Pdt.Historian
 
                 if (clearCache)
                 {
-                    this.historianCache.ClearCache();
+                    this.Clear();
                 }
 
                 this.replayState = this.historianCache.GetCacheReplayState();
@@ -522,8 +527,6 @@ namespace LabBenchStudios.Pdt.Historian
             {
                 Console.WriteLine($"Data historian player {this.playerName} has no valid backing cache. Ignoring.");
             }
-
-            //this.InitializePlayer();
 
             return true;
         }
@@ -647,11 +650,6 @@ namespace LabBenchStudios.Pdt.Historian
         public void SetPlaybackEnabledFlag(bool enabled)
         {
             this.playbackEnabled = enabled;
-
-            if (! this.playbackEnabled)
-            {
-                this.Reset();
-            }
         }
 
         /// <summary>
@@ -701,6 +699,14 @@ namespace LabBenchStudios.Pdt.Historian
                 Console.WriteLine($"Loading cache for player: {this.playerName}. Name: {this.historianCache.GetCacheName()}");
                 
                 bool success = this.historianCache.LoadDataCache();
+
+                if (success)
+                {
+                    this.needsCacheLoad = false;
+                } else
+                {
+                    Console.WriteLine($"Failed to load cache for player: {this.playerName}.");
+                }
 
                 return success;
             } else
