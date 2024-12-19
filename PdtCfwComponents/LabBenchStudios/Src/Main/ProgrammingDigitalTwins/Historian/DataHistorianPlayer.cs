@@ -142,6 +142,15 @@ namespace LabBenchStudios.Pdt.Historian
         /// 
         /// </summary>
         /// <returns></returns>
+        public DataCacheEntryContainer GetLastProcessedEventData()
+        {
+            return this.historianCache.GetCurrentEntry();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public MediaPlayerState.PlaybackDirection GetPlaybackDirection()
         {
             if (this.HasValidCache())
@@ -804,7 +813,7 @@ namespace LabBenchStudios.Pdt.Historian
         }
 
         /// <summary>
-        /// 
+        /// Returns milliseconds before next event should be triggered.
         /// </summary>
         /// <param name="blockCall"></param>
         /// <returns></returns>

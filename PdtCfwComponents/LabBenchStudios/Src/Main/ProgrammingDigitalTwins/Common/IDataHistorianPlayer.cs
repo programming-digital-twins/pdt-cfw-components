@@ -82,6 +82,12 @@ namespace LabBenchStudios.Pdt.Common
         /// 
         /// </summary>
         /// <returns></returns>
+        public DataCacheEntryContainer GetLastProcessedEventData();
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public float GetPlaybackDelayFactor();
 
         /// <summary>

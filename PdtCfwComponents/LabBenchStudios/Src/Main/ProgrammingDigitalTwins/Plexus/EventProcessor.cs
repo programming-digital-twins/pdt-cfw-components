@@ -229,6 +229,8 @@ namespace LabBenchStudios.Pdt.Plexus
         {
             IDataHistorianPlayer player = this.dataHistorianManager.CreateDataHistorianPlayer();
 
+            player.SetEventListener(this);
+
             this.UpdateDeviceIDContent(player.GetCacheEntries());
 
             return player;
@@ -242,6 +244,8 @@ namespace LabBenchStudios.Pdt.Plexus
         public IDataHistorianPlayer GetDataHistorianPlayer(string cacheName)
         {
             IDataHistorianPlayer player = this.dataHistorianManager.GetDataHistorianPlayer(cacheName);
+
+            player.SetEventListener(this);
 
             this.UpdateDeviceIDContent(player.GetCacheEntries());
 
