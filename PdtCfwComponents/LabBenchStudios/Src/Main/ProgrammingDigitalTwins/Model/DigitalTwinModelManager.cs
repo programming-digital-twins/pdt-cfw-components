@@ -149,45 +149,9 @@ namespace LabBenchStudios.Pdt.Model
             ModelNameUtil.DtmiControllerEnum controllerID,
             IDataContextEventListener stateUpdateListener)
         {
-            return this.CreateModelState(
-                dataSyncKey, false, controllerID, stateUpdateListener);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="dataSyncKey"></param>
-        /// <param name="useGuid"></param>
-        /// <param name="controllerID"></param>
-        /// <param name="stateUpdateListener"></param>
-        /// <returns></returns>
-        public DigitalTwinModelState CreateModelState(
-            DigitalTwinDataSyncKey dataSyncKey,
-            bool useGuid,
-            ModelNameUtil.DtmiControllerEnum controllerID,
-            IDataContextEventListener stateUpdateListener)
-        {
             var dtModelState = new DigitalTwinModelState(dataSyncKey);
 
             return this.ConfigureAndStoreModelState(dtModelState, controllerID, stateUpdateListener);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="deviceID"></param>
-        /// <param name="locationID"></param>
-        /// <param name="controllerID"></param>
-        /// <param name="stateUpdateListener"></param>
-        /// <returns></returns>
-        public DigitalTwinModelState CreateModelState(
-            string deviceID,
-            string locationID,
-            ModelNameUtil.DtmiControllerEnum controllerID,
-            IDataContextEventListener stateUpdateListener)
-        {
-            return this.CreateModelState(
-                deviceID, locationID, false, controllerID, stateUpdateListener);
         }
 
         /// <summary>
@@ -234,55 +198,6 @@ namespace LabBenchStudios.Pdt.Model
             var dtModelState = new DigitalTwinModelState(deviceID, deviceID, locationID, typeCategoryID, typeID);
 
             return this.ConfigureAndStoreModelState(dtModelState, controllerID, stateUpdateListener);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="deviceID"></param>
-        /// <param name="locationID"></param>
-        /// <param name="typeName"></param>
-        /// <param name="stateUpdateListener"></param>
-        /// <returns></returns>
-        public DigitalTwinModelState CreateModelState(
-            string deviceID,
-            string locationID,
-            string typeName,
-            IDataContextEventListener stateUpdateListener)
-        {
-            return this.CreateModelState(deviceID, locationID, false, typeName, stateUpdateListener);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="deviceID"></param>
-        /// <param name="locationID"></param>
-        /// <param name="useGuid"></param>
-        /// <param name="typeName"></param>
-        /// <param name="stateUpdateListener"></param>
-        /// <returns></returns>
-        public DigitalTwinModelState CreateModelState(
-            string deviceID,
-            string locationID,
-            bool useGuid,
-            string typeName,
-            IDataContextEventListener stateUpdateListener)
-        {
-            if (!string.IsNullOrEmpty(typeName)) {
-                ModelNameUtil.DtmiControllerEnum controllerID = ModelNameUtil.DtmiControllerEnum.Custom;
-
-                int typeCategoryID = ConfigConst.DEFAULT_TYPE_CATEGORY_ID;
-                int typeID = ConfigConst.DEFAULT_TYPE_ID;
-
-                var dtModelState = new DigitalTwinModelState(typeName, deviceID, locationID, typeCategoryID, typeID);
-
-                return this.ConfigureAndStoreModelState(dtModelState, controllerID, stateUpdateListener);
-            } else {
-                Console.Error.WriteLine($"Can't create model state. Type name invalid. Device ID: {deviceID}");
-
-                return null;
-            }
         }
 
         /// <summary>
