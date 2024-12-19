@@ -28,6 +28,7 @@ using System.IO;
 
 using LabBenchStudios.Pdt.Common;
 using LabBenchStudios.Pdt.Data;
+using LabBenchStudios.Pdt.Historian;
 using LabBenchStudios.Pdt.Model;
 
 namespace LabBenchStudios.Pdt.Plexus
@@ -49,8 +50,11 @@ namespace LabBenchStudios.Pdt.Plexus
         // the DTDL model manager
         DigitalTwinModelManager digitalTwinModelManager = null;
 
-        // the type config mapping model maanger
+        // the type config mapping model manager
         ConfigTypeModelManager configTypeModelManager = null;
+
+        // the data historian manager
+        IDataHistorian dataHistorianManager = null;
 
         HashSet<string> coreDigitalTwinModelPathSet = null;
         HashSet<string> customDigitalTwinModelPathSet = null;
@@ -66,6 +70,7 @@ namespace LabBenchStudios.Pdt.Plexus
         {
             this.digitalTwinModelManager = new DigitalTwinModelManager();
             this.configTypeModelManager = new ConfigTypeModelManager();
+            this.dataHistorianManager = new DataHistorianManager();
 
             this.digitalTwinModelPathSet = new HashSet<string>();
             this.configTypeModelPathSet = new HashSet<string>();
@@ -181,6 +186,15 @@ namespace LabBenchStudios.Pdt.Plexus
         public HashSet<string> GetAllRegisteredDeviceIDs()
         {
             return this.deviceIDSet;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public IDataHistorian GetDataHistorianManager()
+        {
+            return this.dataHistorianManager;
         }
 
         /// <summary>

@@ -123,9 +123,7 @@ namespace LabBenchStudios.Pdt.Plexus
 
             this.digitalTwinModelManager = this.systemModelManager.GetDigitalTwinModelManager();
             this.configTypeModelManager = this.systemModelManager.GetConfigTypeModelManager();
-
-            // TODO: need a way to set user-specific file path for the historian
-            this.dataHistorianManager = new DataHistorianManager(this);
+            this.dataHistorianManager = this.systemModelManager.GetDataHistorianManager();
 
             this.dataContextEventListenerList = new List<IDataContextEventListener>();
             this.systemStatusEventListenerList = new List<ISystemStatusEventListener>();
@@ -229,7 +227,11 @@ namespace LabBenchStudios.Pdt.Plexus
         /// <returns></returns>
         public IDataHistorianPlayer GetDataHistorianPlayer()
         {
-            return this.dataHistorianManager.CreateDataHistorianPlayer();
+            IDataHistorianPlayer player = this.dataHistorianManager.CreateDataHistorianPlayer();
+
+            this.UpdateDeviceIDContent(player.GetCacheEntries());
+
+            return player;
         }
 
         /// <summary>
@@ -239,7 +241,11 @@ namespace LabBenchStudios.Pdt.Plexus
         /// <returns></returns>
         public IDataHistorianPlayer GetDataHistorianPlayer(string cacheName)
         {
-            return this.dataHistorianManager.GetDataHistorianPlayer(cacheName);
+            IDataHistorianPlayer player = this.dataHistorianManager.GetDataHistorianPlayer(cacheName);
+
+            this.UpdateDeviceIDContent(player.GetCacheEntries());
+
+            return player;
         }
 
         /// <summary>
@@ -726,6 +732,50 @@ namespace LabBenchStudios.Pdt.Plexus
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataCacheEntries"></param>
+        public void UpdateDeviceIDContent(List<DataCacheEntryContainer> dataCacheEntries)
+        {
+            if (dataCacheEntries != null && dataCacheEntries.Count > 0)
+            {
+                foreach (DataCacheEntryContainer entry in dataCacheEntries)
+                {
+                    if (entry.HasActuatorData())
+                    {
+                        this.UpdateDeviceIDSet(entry.GetActuatorData());
+                    }
+
+                    if (entry.HasConnectionStateData())
+                    {
+                        this.UpdateDeviceIDSet(entry.GetConnectionStateData());
+                    }
+
+                    if (entry.HasMessageData())
+                    {
+                        this.UpdateDeviceIDSet(entry.GetMessageData());
+                    }
+
+                    if (entry.HasSensorData())
+                    {
+                        this.UpdateDeviceIDSet(entry.GetSensorData());
+                    }
+
+                    if (entry.HasSystemPerformanceData())
+                    {
+                        this.UpdateDeviceIDSet(entry.GetSystemPerformanceData());
+                    }
+                }
+
+                ConnectionStateData data = new ConnectionStateData();
+                data.SetIsInternalMessage(true);
+
+                // this will trigger a re-read of device ID's by any listeners
+                this.OnMessagingSystemStatusUpdate(data);
+            }
         }
 
 

@@ -23,6 +23,7 @@
  */
 
 using LabBenchStudios.Pdt.Data;
+using System.Collections.Generic;
 
 namespace LabBenchStudios.Pdt.Common
 {
@@ -33,6 +34,12 @@ namespace LabBenchStudios.Pdt.Common
         /// </summary>
         /// <returns></returns>
         public string GetCacheFileName();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public List<DataCacheEntryContainer> GetCacheEntries();
 
         /// <summary>
         /// 

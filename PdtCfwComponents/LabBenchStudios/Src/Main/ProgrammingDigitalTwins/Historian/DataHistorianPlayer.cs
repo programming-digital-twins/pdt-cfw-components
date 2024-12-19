@@ -23,6 +23,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 
@@ -108,6 +109,15 @@ namespace LabBenchStudios.Pdt.Historian
 
 
         // public methods
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public List<DataCacheEntryContainer> GetCacheEntries()
+        {
+            return this.historianCache.GetCacheEntries();
+        }
 
         /// <summary>
         /// 

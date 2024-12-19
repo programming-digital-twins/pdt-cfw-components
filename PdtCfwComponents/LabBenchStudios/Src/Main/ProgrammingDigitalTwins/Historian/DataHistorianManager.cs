@@ -576,6 +576,9 @@ namespace LabBenchStudios.Pdt.Historian
             historianPlayer.SetDataLoader(this.persistenceConnector);
             historianPlayer.SetDataStorer(this.persistenceConnector);
 
+            // update EventProcessor with any newly registered device ID's
+            //EventProcessor.GetInstance().UpdateDeviceIDContent(historianPlayer.GetCacheEntries());
+
             if (registerForEvents)
             {
                 // register the player for incoming events (from EventProcessor)
