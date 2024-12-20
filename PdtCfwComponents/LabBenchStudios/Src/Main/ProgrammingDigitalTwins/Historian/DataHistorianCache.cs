@@ -283,6 +283,15 @@ namespace LabBenchStudios.Pdt.Historian
         /// 
         /// </summary>
         /// <returns></returns>
+        public int GetCurrentIndex()
+        {
+            return this.curCacheIndex;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public DataCacheEntryContainer GetCurrentEntry()
         {
             return this.curCacheEntry;
@@ -412,7 +421,8 @@ namespace LabBenchStudios.Pdt.Historian
         {
             //this.SetCacheState(DataHistorianState.PlaybackState.Stop);
 
-            this.ClearCache();
+            this.curCacheIndex = 0;
+            this.curCacheEntry = this.GetCacheEntryAtIndex(this.curCacheIndex);
         }
 
         /// <summary>
@@ -528,6 +538,24 @@ namespace LabBenchStudios.Pdt.Historian
             MediaPlayerState.PlaybackState state)
         {
             this.replayState = state;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public bool SetStartingIndex(int index)
+        {
+            if (index <= 0 && index < this.dataEntryCache.Count)
+            {
+                this.curCacheIndex = index;
+                this.curCacheEntry = this.GetCacheEntryAtIndex(this.curCacheIndex);
+
+                return true;
+            }
+
+            return false;
         }
 
 

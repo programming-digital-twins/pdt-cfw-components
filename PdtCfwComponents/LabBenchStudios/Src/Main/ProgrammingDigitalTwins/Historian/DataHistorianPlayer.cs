@@ -63,6 +63,7 @@ namespace LabBenchStudios.Pdt.Historian
         private bool playbackEnabled = false;
         private bool playbackModeActive = false;
         private bool enablePlaybackLoopOnStart = false;
+        private bool enableLoopAtEnd = false;
         private bool needsCacheLoad = true;
         private float playbackDelayFactor = 0.0f;
         private int maxJoinMillis = 500;
@@ -232,6 +233,15 @@ namespace LabBenchStudios.Pdt.Historian
         public string GetDisplayName()
         {
             return this.displayName;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public int GetLastProcessedEventIndex()
+        {
+            return this.historianCache.GetCurrentIndex();
         }
 
         /// <summary>
@@ -661,6 +671,15 @@ namespace LabBenchStudios.Pdt.Historian
         /// 
         /// </summary>
         /// <param name="enabled"></param>
+        public void SetEnableLoopAtEndFlag(bool enabled)
+        {
+            this.enableLoopAtEnd = enabled;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="enabled"></param>
         public void SetEnableThreadedPlaybackFlag(bool enabled)
         {
             this.enableThreadedPlayback = enabled;
@@ -710,6 +729,16 @@ namespace LabBenchStudios.Pdt.Historian
             {
                 Console.WriteLine($"Data historian player {this.playerName} has no valid backing cache. Ignoring.");
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public bool SetStartingIndex(int index)
+        {
+            return this.historianCache.SetStartingIndex(index);
         }
 
         /// <summary>
@@ -859,7 +888,19 @@ namespace LabBenchStudios.Pdt.Historian
                     }
                 }
 
-                this.HandlePlaybackCacheListenerNotification(nextCacheEntry);
+                if (nextCacheEntry == null)
+                {
+                    if (this.enableLoopAtEnd)
+                    {
+                        this.historianCache.ResetCache();
+                    } else
+                    {
+                        this.Stop();
+                    }
+                } else
+                {
+                    this.HandlePlaybackCacheListenerNotification(nextCacheEntry);
+                }
             }
 
             return delayMillis;

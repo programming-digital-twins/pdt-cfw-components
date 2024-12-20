@@ -82,6 +82,12 @@ namespace LabBenchStudios.Pdt.Common
         /// 
         /// </summary>
         /// <returns></returns>
+        public int GetLastProcessedEventIndex();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public DataCacheEntryContainer GetLastProcessedEventData();
         
         /// <summary>
@@ -155,6 +161,12 @@ namespace LabBenchStudios.Pdt.Common
         /// 
         /// </summary>
         /// <param name="enabled"></param>
+        public void SetEnableLoopAtEndFlag(bool enabled);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="enabled"></param>
         /// <returns></returns>
         public void SetPlaybackEnabledFlag(bool enabled);
 
@@ -163,6 +175,13 @@ namespace LabBenchStudios.Pdt.Common
         /// </summary>
         /// <param name="enabled"></param>
         public void SetEnableThreadedPlaybackFlag(bool enabled);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public bool SetStartingIndex(int index);
 
         /// <summary>
         /// 

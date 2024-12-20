@@ -96,6 +96,12 @@ namespace LabBenchStudios.Pdt.Common
         /// 
         /// </summary>
         /// <returns></returns>
+        public int GetCurrentIndex();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public DataCacheEntryContainer GetCurrentEntry();
 
         /// <summary>
@@ -183,6 +189,13 @@ namespace LabBenchStudios.Pdt.Common
         /// <param name="state"></param>
         public void SetCacheState(
             MediaPlayerState.PlaybackState state);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public bool SetStartingIndex(int index);
 
     }
 
