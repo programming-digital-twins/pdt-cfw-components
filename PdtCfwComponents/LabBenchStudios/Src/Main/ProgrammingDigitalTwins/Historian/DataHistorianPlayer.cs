@@ -29,6 +29,7 @@ using System.Threading;
 
 using LabBenchStudios.Pdt.Common;
 using LabBenchStudios.Pdt.Data;
+using LabBenchStudios.Pdt.Util;
 
 namespace LabBenchStudios.Pdt.Historian
 {
@@ -701,10 +702,11 @@ namespace LabBenchStudios.Pdt.Historian
         /// <param name="delayFactor"></param>
         public void SetPlaybackDelayFactor(float delayFactor)
         {
-            if (delayFactor >= 0.0f)
+            if (delayFactor > 0.0f)
             {
                 this.playbackDelayFactor = delayFactor;
             }
+            //this.playbackDelayFactor = (float) NumberUtil.CalculateDelayFactor(delayFactor);
         }
 
         /// <summary>
@@ -864,11 +866,7 @@ namespace LabBenchStudios.Pdt.Historian
                     // calculate the time delay before processing the next cache entry
                     // and include any playback delay factor (if > 0)
                     delayMillis = (long) nextCacheEntry.GetElapsedEpochMillisDelta(curCacheEntry);
-
-                    if (this.playbackDelayFactor > 0.0f)
-                    {
-                        delayMillis *= (double) this.playbackDelayFactor;
-                    }
+                    delayMillis *= this.playbackDelayFactor;
 
                     if (blockCall)
                     {

@@ -547,7 +547,7 @@ namespace LabBenchStudios.Pdt.Historian
         /// <returns></returns>
         public bool SetStartingIndex(int index)
         {
-            if (index <= 0 && index < this.dataEntryCache.Count)
+            if (index >= 0 && index < this.dataEntryCache.Count)
             {
                 this.curCacheIndex = index;
                 this.curCacheEntry = this.GetCacheEntryAtIndex(this.curCacheIndex);

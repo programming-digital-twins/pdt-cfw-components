@@ -29,12 +29,47 @@ namespace LabBenchStudios.Pdt.Util
 {
     public class NumberUtil
     {
+        public const int DELAY_DEC_ROUNDING = 4;
+
         public const int KB = 1024;
         public const int MB = KB * KB;
         public const int GB = KB * MB;
 
         public const string DEFAULT_DEC_PLACES = "N3";
         public const string NO_DEC_PLACES = "N0";
+
+        /// <summary>
+        /// Calculates a delay factor based on the positive or negative value
+        /// of the passed in delay factor.
+        /// 
+        /// If > 0.0f, the delay factor will be calculated as a fraction of 1.0f
+        ///   E.g., '10.0f' will result in a delay factor of 0.1d
+        /// If < 0.0f, the delay factor will be calculated as a multiple of 1.0f
+        ///   E.g., '-10.0f' will result in a delay factor of 10.0d
+        /// If 0.0f, the delay factor will be 1.0f
+        /// </summary>
+        /// <param name="delayFactor"></param>
+        /// <returns></returns>
+        public static double CalculateDelayFactor(float delayFactor)
+        {
+            double updatedDelayFactor = 1.0d;
+
+            if (delayFactor > 0.0f)
+            {
+                // speed up calculated
+                // e.g.,
+                //   factor of 10: 1.0d / 10.0f = 0.1d x [time] before next event
+                updatedDelayFactor /= delayFactor;
+            } else if (delayFactor < 0.0f)
+            {
+                // slow down calculated
+                // e.g.,
+                //   factor of -10: 1.0d * 10.0f = 10.0d x [time] before next event
+                updatedDelayFactor *= Math.Abs(delayFactor);
+            }
+
+            return Math.Round(updatedDelayFactor, NumberUtil.DELAY_DEC_ROUNDING);
+        }
 
         /// <summary>
         /// 
