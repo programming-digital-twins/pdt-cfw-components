@@ -861,7 +861,7 @@ namespace LabBenchStudios.Pdt.Historian
                 // if current cache entry is set, calculate the time delay before the
                 // next cached entry should be processed; if it's null (not set), then
                 // process the next cached entry immediately
-                if (curCacheEntry != null)
+                if (curCacheEntry != null && nextCacheEntry != null)
                 {
                     // calculate the time delay before processing the next cache entry
                     // and include any playback delay factor (if > 0)
