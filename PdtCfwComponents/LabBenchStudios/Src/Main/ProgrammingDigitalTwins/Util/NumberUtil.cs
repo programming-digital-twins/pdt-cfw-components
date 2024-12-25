@@ -42,9 +42,13 @@ namespace LabBenchStudios.Pdt.Util
         /// Calculates a delay factor based on the positive or negative value
         /// of the passed in delay factor.
         /// 
-        /// If > 0.0f, the delay factor will be calculated as a fraction of 1.0f
+        /// NOTE: If the value is greater than -1.0 or less than +1.0, 0.0 will
+        /// be used as the factoring algorithm only works with values at
+        /// -1.0 and less, or +1.0 and greater.
+        /// 
+        /// If >= +1.0f, the delay factor will be calculated as a fraction of 1.0f
         ///   E.g., '10.0f' will result in a delay factor of 0.1d
-        /// If < 0.0f, the delay factor will be calculated as a multiple of 1.0f
+        /// If <= -1.0f, the delay factor will be calculated as a multiple of 1.0f
         ///   E.g., '-10.0f' will result in a delay factor of 10.0d
         /// If 0.0f, the delay factor will be 1.0f
         /// </summary>
@@ -54,13 +58,13 @@ namespace LabBenchStudios.Pdt.Util
         {
             double updatedDelayFactor = 1.0d;
 
-            if (delayFactor > 0.0f)
+            if (delayFactor >= 1.0f)
             {
                 // speed up calculated
                 // e.g.,
                 //   factor of 10: 1.0d / 10.0f = 0.1d x [time] before next event
                 updatedDelayFactor /= delayFactor;
-            } else if (delayFactor < 0.0f)
+            } else if (delayFactor <= -1.0f)
             {
                 // slow down calculated
                 // e.g.,
