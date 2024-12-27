@@ -70,6 +70,9 @@ namespace LabBenchStudios.Pdt.Util
                 // e.g.,
                 //   factor of -10: 1.0d * 10.0f = 10.0d x [time] before next event
                 updatedDelayFactor *= Math.Abs(delayFactor);
+            } else
+            {
+                return updatedDelayFactor;
             }
 
             return Math.Round(updatedDelayFactor, NumberUtil.DELAY_DEC_ROUNDING);
