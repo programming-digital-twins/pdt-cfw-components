@@ -28,9 +28,12 @@
 		<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.0" />
 		<PackageReference Include="System.Text.Json" Version="9.0.0" />
 		<PackageReference Include="System.Threading.Tasks.Extensions" Version="4.6.0" />
-		<PackageReference Include="NUnit" Version="3.14.0" />
-		<PackageReference Include="NUnit.Analyzers" Version="3.9.0" />
-		<PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+		<PackageReference Include="NUnit" Version="4.3.2" />
+		<PackageReference Include="NUnit.Analyzers" Version="4.5.0">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
 	</ItemGroup>
   <ItemGroup>
 	    <ProjectReference Include="..\PdtCfwComponents\PdtCfwComponents.csproj" />

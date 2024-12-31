@@ -256,6 +256,15 @@ namespace LabBenchStudios.Pdt.Plexus
         /// 
         /// </summary>
         /// <returns></returns>
+        public SystemModelManager GetSystemModelManager()
+        {
+            return this.systemModelManager;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public bool LoadConfigTypeMappingModels()
         {
             return this.LoadConfigTypeMappingModels(ConfigConst.DEFAULT_CONFIG_TYPE_FILE_PATH);
