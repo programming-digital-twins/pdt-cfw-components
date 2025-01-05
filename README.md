@@ -20,30 +20,39 @@ These components are all written in C#, and have been partially tested using .NE
 
 ## How to navigate the directory structure for this repository
 
+### PdtCfwComponents
+
 This repository is comprised of the following top level paths:
 - [PdtCfwComponents](https://github.com/programming-digital-twins/pdt-cfw-components/tree/alpha/PdtCfwComponents): Contains the following source trees:
-  - LabBenchStudios/Models
+  - [LabBenchStudios/Models](https://github.com/programming-digital-twins/pdt-cfw-components/tree/alpha/PdtCfwComponents/LabBenchStudios/Models)
     - [Dtdl](https://github.com/programming-digital-twins/pdt-cfw-components/tree/alpha/PdtCfwComponents/LabBenchStudios/Models/Dtdl): Contains sample DTDL models.
-  - LabBenchStudios/Src/Main/ProgrammingDigitalTwins
+    - [Types](https://github.com/programming-digital-twins/pdt-cfw-components/tree/alpha/PdtCfwComponents/LabBenchStudios/Models/Types): Contains type config mapping JSON model files - used for mapping telemetry to sample DTDL models.
+  - [LabBenchStudios/Src/Main/ProgrammingDigitalTwins](https://github.com/programming-digital-twins/pdt-cfw-components/tree/alpha/PdtCfwComponents/LabBenchStudios/Src/Main/ProgrammingDigitalTwins)
     - [Common](https://github.com/programming-digital-twins/pdt-cfw-components/tree/master/PdtCfwComponents/LabBenchStudios/Src/Main/ProgrammingDigitalTwins/Common): Contains shared components.
     - [Connection](https://github.com/programming-digital-twins/pdt-cfw-components/tree/master/PdtCfwComponents/LabBenchStudios/Src/Main/ProgrammingDigitalTwins/Connection): Contains integration-related components (e.g., MQTT, persistence, etc.).
     - [Data](https://github.com/programming-digital-twins/pdt-cfw-components/tree/master/PdtCfwComponents/LabBenchStudios/Src/Main/ProgrammingDigitalTwins/Data): Contains data serialization / deserialization / translation components.
+    - [Historian](https://github.com/programming-digital-twins/pdt-cfw-components/tree/master/PdtCfwComponents/LabBenchStudios/Src/Main/ProgrammingDigitalTwins/Historian): Contains data historian and caching components.
+    - [Model](https://github.com/programming-digital-twins/pdt-cfw-components/tree/master/PdtCfwComponents/LabBenchStudios/Src/Main/ProgrammingDigitalTwins/Model): Contains model mapping and parsing logic components.
+    - [Plexus](https://github.com/programming-digital-twins/pdt-cfw-components/tree/master/PdtCfwComponents/LabBenchStudios/Src/Main/ProgrammingDigitalTwins/Plexus): Contains the central 'nervous system' components (facilitating model integration).
+    - [Util](https://github.com/programming-digital-twins/pdt-cfw-components/tree/master/PdtCfwComponents/LabBenchStudios/Src/Main/ProgrammingDigitalTwins/Util): Contains basic utility classes.
+
+### PdtCfwComponents.Tests
+
 This repository is comprised of the following top level paths:
 - [PdtCfwComponents.Tests](https://github.com/programming-digital-twins/pdt-cfw-components/tree/alpha/PdtCfwComponents.Tests): Contains the following test (source) trees:
-  - LabBenchStudios/Src/Test/ProgrammingDigitalTwins
+  - [LabBenchStudios/Src/Test/ProgrammingDigitalTwins](https://github.com/programming-digital-twins/pdt-cfw-components/tree/alpha/PdtCfwComponents.Tests/LabBenchStudios/Src/Test/ProgrammingDigitalTwins)
     - [Connection](https://github.com/programming-digital-twins/pdt-cfw-components/tree/alpha/PdtCfwComponents.Tests/LabBenchStudios/Src/Test/ProgrammingDigitalTwins/Connection): Contains unit / integration tests for the integration-related components (e.g., MQTT, persistence, etc.).
     - [Data](https://github.com/programming-digital-twins/pdt-cfw-components/tree/alpha/PdtCfwComponents.Tests/LabBenchStudios/Src/Test/ProgrammingDigitalTwins/Data): Contains unit tests for the data serialization / deserialization / translation components.
+    - [Historian](https://github.com/programming-digital-twins/pdt-cfw-components/tree/alpha/PdtCfwComponents.Tests/LabBenchStudios/Src/Test/ProgrammingDigitalTwins/Historian): Contains unit tests for the data historian components.
+    - [Util](https://github.com/programming-digital-twins/pdt-cfw-components/tree/alpha/PdtCfwComponents.Tests/LabBenchStudios/Src/Test/ProgrammingDigitalTwins/Util): Contains unit tests for the utility components.
 
 Here are some other files at the top level that are important to review:
 - [PdtCfwComponents.sln](https://github.com/programming-digital-twins/pdt-cfw-components/blob/alpha/PdtCfwComponents.sln): The Visual Studio solution file.
 - [README.md](https://github.com/programming-digital-twins/pdt-cfw-components/blob/alpha/README.md): This README.
-- [LICENSE](https://github.com/programming-digital-twins/pdt-cfw-components/blob/alpha/LICENSE): The repository's non-code artifact LICENSE file (e.g., documentation, model files, etc.)
-- [LICENSE-CODE](https://github.com/programming-digital-twins/pdt-cfw-components/blob/alpha/LICENSE-CODE): The repository's code artifact LICENSE file (e.g., source code [mostly C#])
+- [LICENSE-MODELS.md](https://github.com/programming-digital-twins/pdt-cfw-components/blob/alpha/LICENSE-MODELS.md): The repository's non-code artifact LICENSE file (e.g., documentation, model files, etc.)
+- [LICENSE-CODE.md](https://github.com/programming-digital-twins/pdt-cfw-components/blob/alpha/LICENSE-CODE.md): The repository's code artifact LICENSE file (e.g., source code [mostly C#])
 
-Lastly, here are some 'dot' ('.{filename}') files pertaining to dev environment setup that you may find useful (or not - if so, just delete them after cloning the repo):
-- [.gitignore](https://github.com/programming-digital-twins/pdt-cfw-components/blob/alpha/.gitignore): The obligatory .gitignore that you should probably keep in place, with any additions that are relevant for your own cloned instance.
-
-NOTE: The directory structure and all files are subject to change based on feedback I receive from readers of my blog and students in my Building Digital Twins class, as well as improvements I find to be helpful for overall repo betterment.
+NOTE: The directory structure and all files are subject to change based on feedback I receive from readers of my blog and students in my Building Digital Twins class, as well as improvements I find to be helpful for overall repo betterment. Any 'dot' files (those files beginning with a '.', such as [.gitignore](https://github.com/programming-digital-twins/pdt-cfw-components/blob/alpha/.gitignore) are in place to help make development more efficient and will likely undergo significant change and / or replacement and / or removal as needs require.
 
 # Other things to know
 
@@ -85,4 +94,5 @@ If any code samples or other technology this work contains, describes, and / or 
 # LICENSE
 
 - JSON models (DTDL and Config): See [LICENSE-MODELS.md](https://github.com/programming-digital-twins/pdt-cfw-components/blob/alpha/LICENSE-MODELS.md) if you plan to use the non-code resources (e.g., JSON model files, etc.)
+
 - Source codes (C#): See [LICENSE-CODE.md](https://github.com/programming-digital-twins/pdt-cfw-components/blob/alpha/LICENSE-CODE.md) if you plan to use this code (e.g., C# code, etc.)
