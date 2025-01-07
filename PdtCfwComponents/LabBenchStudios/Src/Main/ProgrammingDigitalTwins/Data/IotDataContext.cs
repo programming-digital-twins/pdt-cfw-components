@@ -50,6 +50,9 @@ namespace LabBenchStudios.Pdt.Data
         private string typeName = ConfigConst.NOT_SET;
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        private string typeCategoryName = ConfigConst.NOT_SET;
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private string deviceUUID = ConfigConst.NOT_SET;
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
@@ -134,6 +137,8 @@ namespace LabBenchStudios.Pdt.Data
 
         public string GetTypeName() { return this.typeName; }
 
+        public string GetTypeCategoryName() { return this.typeCategoryName; }
+
         public void OverrideTimeStamp(string timeStamp) { this.timeStamp = timeStamp; }
 
         public void SetLatitude(float val) { this.latitude = val; this.UpdateTimeStamp(); }
@@ -192,6 +197,15 @@ namespace LabBenchStudios.Pdt.Data
             }
         }
 
+        public void SetTypeCategoryName(string name)
+        {
+            if (!string.IsNullOrEmpty(name))
+            {
+                this.typeCategoryName = name;
+                this.UpdateTimeStamp();
+            }
+        }
+
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
@@ -201,6 +215,7 @@ namespace LabBenchStudios.Pdt.Data
             sb.Append(ConfigConst.TYPE_NAME_PROP).Append('=').Append(this.typeName).Append(',');
             sb.Append(ConfigConst.TYPE_ID_PROP).Append('=').Append(this.typeID).Append(',');
             sb.Append(ConfigConst.TYPE_CATEGORY_ID_PROP).Append('=').Append(this.typeCategoryID).Append(',');
+            sb.Append(ConfigConst.TYPE_CATEGORY_NAME_PROP).Append('=').Append(this.typeCategoryName).Append(',');
             sb.Append(ConfigConst.TIMESTAMP_PROP).Append('=').Append(this.timeStamp).Append(',');
             sb.Append(ConfigConst.STATUS_CODE_PROP).Append('=').Append(this.statusCode).Append(',');
             sb.Append(ConfigConst.HAS_ERROR_PROP).Append('=').Append(this.hasError).Append(',');
@@ -219,7 +234,9 @@ namespace LabBenchStudios.Pdt.Data
                 this.name = data.GetName();
                 this.deviceID = data.GetDeviceID();
                 this.typeID = data.GetTypeID();
+                this.typeName = data.GetTypeName();
                 this.typeCategoryID = data.GetTypeCategoryID();
+                this.typeCategoryName = data.GetTypeCategoryName();
                 this.statusCode = data.GetStatusCode();
                 this.hasError = data.hasError;
                 this.locationID = data.GetLocationID();

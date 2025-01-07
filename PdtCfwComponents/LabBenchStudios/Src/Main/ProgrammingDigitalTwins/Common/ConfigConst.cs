@@ -123,6 +123,7 @@ namespace LabBenchStudios.Pdt.Common
         public const string TYPE_CATEGORY_ID_PROP = "typeCategoryID";
         public const string TYPE_ID_PROP = "typeID";
         public const string TYPE_NAME_PROP = "typeName";
+        public const string TYPE_CATEGORY_NAME_PROP = "typeCategoryName";
         public const string TIMESTAMP_PROP = "timeStamp";
         public const string HAS_ERROR_PROP = "hasError";
         public const string STATUS_CODE_PROP = "statusCode";

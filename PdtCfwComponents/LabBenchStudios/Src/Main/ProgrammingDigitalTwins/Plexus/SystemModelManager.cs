@@ -143,6 +143,37 @@ namespace LabBenchStudios.Pdt.Plexus
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="deviceID"></param>
+        /// <param name="locationID"></param>
+        /// <param name="typeCategoryName"></param>
+        /// <param name="modelName"></param>
+        /// <returns></returns>
+        public IotDataContext GenerateCustomDataContext(
+            string deviceID, string locationID, string typeCategoryName, string modelName)
+        {
+            if (string.IsNullOrEmpty(modelName))
+            {
+                Console.WriteLine("Can't generate custom data context. Model name is null / empty. Ignoring.");
+
+                return null;
+            }
+
+            IotDataContext dataContext = ModelNameUtil.GenerateCustomDataContext(deviceID, locationID, typeCategoryName, modelName);
+
+            ConfigTypeModelEntry modelEntry = configTypeModelManager.GetConfigEntryByTypeName(modelName);
+
+            if (modelEntry != null)
+            {
+                dataContext.SetTypeCategoryID(modelEntry.GetTypeCategoryId());
+                dataContext.SetTypeID(modelEntry.GetId());
+            }
+
+            return dataContext;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="controllerID"></param>
         /// <param name="deviceID"></param>
         /// <param name="locationID"></param>
@@ -165,7 +196,6 @@ namespace LabBenchStudios.Pdt.Plexus
                 dataContext.SetTypeCategoryID(modelEntry.GetTypeCategoryId());
                 dataContext.SetTypeID(modelEntry.GetId());
             }
-
 
             return dataContext;
         }

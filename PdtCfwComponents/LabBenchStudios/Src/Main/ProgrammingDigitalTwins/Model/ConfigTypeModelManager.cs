@@ -129,6 +129,24 @@ namespace LabBenchStudios.Pdt.Model
         /// <summary>
         /// 
         /// </summary>
+        /// <returns></returns>
+        public List<string> GetLoadedConfigTypeNames()
+        {
+            return this.configTypeMgrCache.GetLoadedConfigTypeNames();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetLoadedAndMappedModelNames()
+        {
+            return this.configTypeMgrCache.GetLoadedAndMappedModelNames();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="configTypeFilePathSet"></param>
         /// <returns></returns>
         public bool UpdateConfigTypeFilePaths(HashSet<string> configTypeFilePathSet)

@@ -30,7 +30,6 @@ using Newtonsoft.Json;
 
 using LabBenchStudios.Pdt.Common;
 using LabBenchStudios.Pdt.Data;
-using System.Diagnostics.Tracing;
 
 namespace LabBenchStudios.Pdt.Model
 {
@@ -99,6 +98,16 @@ namespace LabBenchStudios.Pdt.Model
                 base.SetLocationID(dataSyncKey.GetLocationID());
             }
 
+            this.InitState();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="modelName"></param>
+        public DigitalTwinModelState(string modelName) :
+            base(modelName, ConfigConst.NOT_SET, ConfigConst.NOT_SET)
+        {
             this.InitState();
         }
 

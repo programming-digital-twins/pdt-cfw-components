@@ -35,6 +35,7 @@ namespace LabBenchStudios.Pdt.Model
     [JsonObject(MemberSerialization.OptIn)]
     public class ConfigTypeModelEntry : ConfigTypeModelContext
     {
+        // keep a reference to the containing 'container' for this entry
         private ConfigTypeModelContainer configTypeContainer = null;
 
         [JsonProperty]

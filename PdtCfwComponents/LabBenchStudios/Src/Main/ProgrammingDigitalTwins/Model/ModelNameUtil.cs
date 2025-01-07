@@ -230,6 +230,7 @@ namespace LabBenchStudios.Pdt.Model
         /// <param name="controllerID"></param>
         /// <param name="deviceID"></param>
         /// <param name="locationID"></param>
+        /// <param name="typeName"></param>
         /// <returns></returns>
         public static IotDataContext GenerateDataContext(
             DtmiControllerEnum controllerID, string deviceID, string locationID, string typeName)
@@ -304,6 +305,27 @@ namespace LabBenchStudios.Pdt.Model
                 default:
                     break;
             }
+
+            return dataContext;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="deviceID"></param>
+        /// <param name="locationID"></param>
+        /// <param name="typeCategoryName"></param>
+        /// <param name="modelName"></param>
+        /// <returns></returns>
+        public static IotDataContext GenerateCustomDataContext(
+            string deviceID, string locationID, string typeCategoryName, string modelName)
+        {
+            IotDataContext dataContext = new IotDataContext(modelName, deviceID, locationID);
+            dataContext.SetTypeCategoryName(typeCategoryName);
+            dataContext.SetTypeName(modelName);
+
+            dataContext.SetTypeCategoryID(ConfigConst.DEFAULT_TYPE_CATEGORY_ID);
+            dataContext.SetTypeID(ConfigConst.DEFAULT_TYPE_ID);
 
             return dataContext;
         }

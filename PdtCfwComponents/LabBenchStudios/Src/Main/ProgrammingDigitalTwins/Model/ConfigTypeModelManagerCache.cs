@@ -49,6 +49,12 @@ namespace LabBenchStudios.Pdt.Model
         private Dictionary<string, ConfigTypeModelContext> configTypeModelMappingTable = null;
 
         /// <summary>
+        /// This table is a simple name to name lookup - using the config type name to
+        /// find its associated model name.
+        /// </summary>
+        private Dictionary<string, string> configTypeNameToModelNameMappingTable = null;
+
+        /// <summary>
         /// This table maps all unique type ID's to their respective container name, also known
         /// as the model ID (e.g., the integer representing windTurbine, thermostat, etc.). This allows
         /// for simple lookups of the parent container name when only the type ID is known.
@@ -64,23 +70,12 @@ namespace LabBenchStudios.Pdt.Model
         {
             this.configTypeContainerTable = new Dictionary<string, ConfigTypeModelContainer>();
             this.configTypeModelMappingTable = new Dictionary<string, ConfigTypeModelContext>();
+            this.configTypeNameToModelNameMappingTable = new Dictionary<string, string>();
             this.typeIdToContainerNameMappingTable = new Dictionary<int, string>();
         }
 
 
         // public methods
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="categoryInfo"></param>
-        public void AddConfigTypeContainerInfo(ConfigTypeModelContainer categoryInfo)
-        {
-            if (categoryInfo != null)
-            {
-                this.configTypeContainerTable.Add(categoryInfo.GetConfigTypeName(), categoryInfo);
-            }
-        }
 
         /// <summary>
         /// 
@@ -187,6 +182,28 @@ namespace LabBenchStudios.Pdt.Model
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetLoadedConfigTypeNames()
+        {
+            List<string> configTypeNames = new List<string>(this.configTypeContainerTable.Keys);
+
+            return configTypeNames;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetLoadedAndMappedModelNames()
+        {
+            List<string> mappedModelNames = new List<string>(this.configTypeModelMappingTable.Keys);
+
+            return mappedModelNames;
+        }
+
+        /// <summary>
         /// Attempts to load all type config JSON model files from the given
         /// path.
         /// 
@@ -266,24 +283,39 @@ namespace LabBenchStudios.Pdt.Model
 
                                 // update the mapping tables
 
+                                //
                                 // add the type to the internal container cache
+                                //
                                 if (this.configTypeModelMappingTable.ContainsKey(entryModelName))
                                 {
                                     Console.WriteLine($"Entry config type name already loaded: {entryModelName}. Replacing old with new.");
                                     this.configTypeModelMappingTable.Remove(entryModelName);
                                 }
 
-                                this.configTypeModelMappingTable.Add(entryModelName, entry);
+                                // add or overwrite existing entry
+                                this.configTypeModelMappingTable[entryModelName] = entry;
+                                //this.configTypeModelMappingTable.Add(entryModelName, entry);
 
+                                //
                                 // add the type ID to the internal container cache
+                                //
                                 if (this.typeIdToContainerNameMappingTable.ContainsKey(entry.GetId()))
                                 {
                                     Console.WriteLine($"Entry config type ID name already loaded: {entry.GetId()}. Replacing old with new.");
                                     this.typeIdToContainerNameMappingTable.Remove(entry.GetId());
                                 }
 
-                                this.typeIdToContainerNameMappingTable.Add(entry.GetId(), entryModelName);
+                                // add or overwrite existing entry
+                                this.typeIdToContainerNameMappingTable[entry.GetId()] = entryModelName;
+                                //this.typeIdToContainerNameMappingTable.Add(entry.GetId(), entryModelName);
 
+                                //
+                                // add the type name to model name mapping entry
+                                //
+
+                                // add or overwrite existing entry
+                                this.configTypeNameToModelNameMappingTable[entryTypeName] = entryModelName;
+                                //this.configTypeNameToModelNameMappingTable.Add(entryTypeName, entryModelName);
                             }
                         }
                         catch (Exception e)
