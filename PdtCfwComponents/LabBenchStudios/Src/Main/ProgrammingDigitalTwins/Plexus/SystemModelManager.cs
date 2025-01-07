@@ -89,7 +89,10 @@ namespace LabBenchStudios.Pdt.Plexus
             {
                 if (Directory.Exists(path))
                 {
-                    this.configTypeModelPathSet.Add(path);
+                    if (!this.configTypeModelPathSet.Contains(path))
+                    {
+                        this.configTypeModelPathSet.Add(path);
+                    }
                 }
             }
         }
@@ -104,7 +107,10 @@ namespace LabBenchStudios.Pdt.Plexus
             {
                 if (Directory.Exists(path))
                 {
-                    this.digitalTwinModelPathSet.Add(path);
+                    if (!this.digitalTwinModelPathSet.Contains(path))
+                    {
+                        this.digitalTwinModelPathSet.Add(path);
+                    }
                 }
             }
         }
@@ -117,24 +123,43 @@ namespace LabBenchStudios.Pdt.Plexus
         {
             bool success = false;
 
-            success = this.digitalTwinModelManager.UpdateModelFilePaths(digitalTwinModelPathSet);
-
-            if (success)
+            if (this.digitalTwinModelPathSet.Count > 0)
             {
-                Console.WriteLine($"Successfully (re)built all digital twin models from existing file paths. DTMI URI's: {this.digitalTwinModelManager.GetAllDtmiValues()}");
+                success = this.digitalTwinModelManager.UpdateModelFilePaths(this.digitalTwinModelPathSet);
+
+                if (success)
+                {
+                    Console.WriteLine($"Successfully (re)built all digital twin models from existing file paths. DTMI URI's: {this.digitalTwinModelManager.GetAllDtmiValues()}");
+                } else
+                {
+                    Console.WriteLine($"Failed to (re)build all digital twin models from existing file paths. Cached DTMI URI's: {this.digitalTwinModelManager.GetAllDtmiValues()}");
+
+                    Exception e = new Exception();
+                    Console.WriteLine(e.Message);
+                    Console.WriteLine(e.StackTrace);
+                }
             } else
             {
-                Console.WriteLine($"Failed to (re)build all digital twin models from existing file paths. Cached DTMI URI's: {this.digitalTwinModelManager.GetAllDtmiValues()}");
+                Console.WriteLine($"No paths added to digital twin model search. Ignoring. {new Exception().StackTrace}");
             }
 
-            success = this.configTypeModelManager.UpdateConfigTypeFilePaths(configTypeModelPathSet);
+            if (this.configTypeModelPathSet.Count > 0) {
+                success = this.configTypeModelManager.UpdateConfigTypeFilePaths(this.configTypeModelPathSet);
 
-            if (success)
-            {
-                Console.WriteLine($"Successfully (re)built all digital twin models from existing file paths. DTMI URI's: {this.configTypeModelManager}");
+                if (success)
+                {
+                    Console.WriteLine($"Successfully (re)built all digital twin models from existing file paths. DTMI URI's: {this.configTypeModelManager.GetLoadedAndMappedModelNames()}");
+                } else
+                {
+                    Console.WriteLine($"Failed to (re)build all digital twin models from existing file paths. Cached DTMI URI's: {this.configTypeModelManager.GetLoadedAndMappedModelNames()}");
+
+                    Exception e = new Exception();
+                    Console.WriteLine(e.Message);
+                    Console.WriteLine(e.StackTrace);
+                }
             } else
             {
-                Console.WriteLine($"Failed to (re)build all digital twin models from existing file paths. Cached DTMI URI's: {this.configTypeModelManager}");
+                Console.WriteLine($"No paths added to config type model search. Ignoring. {new Exception().StackTrace}");
             }
 
             return success;

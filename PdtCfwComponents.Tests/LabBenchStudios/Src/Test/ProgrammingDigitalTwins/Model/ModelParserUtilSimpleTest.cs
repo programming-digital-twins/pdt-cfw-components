@@ -27,7 +27,7 @@ using System.Collections.Generic;
 
 using LabBenchStudios.Pdt.Model;
 
-namespace LabBenchStudios.Pdt.Test.Data
+namespace LabBenchStudios.Pdt.Test.Model
 {
     public class ModelParserUtilSimpleTest
     {

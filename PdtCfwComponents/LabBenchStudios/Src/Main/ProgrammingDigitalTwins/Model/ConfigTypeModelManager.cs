@@ -193,9 +193,15 @@ namespace LabBenchStudios.Pdt.Model
                 Console.WriteLine($"Model config type path already configured. Re-testing access: {modelFilePath}");
             }
 
-            if (IsConfigTypeFilePathValid(modelFilePath))
+            if (this.IsConfigTypeFilePathValid(modelFilePath))
             {
-                this.configTypeFilePaths.Add(modelFilePath);
+                if (!this.configTypeFilePaths.Contains(modelFilePath))
+                {
+                    this.configTypeFilePaths.Add(modelFilePath);
+                } else
+                {
+                    Console.WriteLine($"Model config type path already added: {modelFilePath}. Ignoring.");
+                }
 
                 if (reloadModels)
                 {

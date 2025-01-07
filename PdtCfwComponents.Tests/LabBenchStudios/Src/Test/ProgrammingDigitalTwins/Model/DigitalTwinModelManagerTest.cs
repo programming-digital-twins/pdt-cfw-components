@@ -28,7 +28,7 @@ using LabBenchStudios.Pdt.Common;
 using LabBenchStudios.Pdt.Data;
 using LabBenchStudios.Pdt.Model;
 
-namespace LabBenchStudios.Pdt.Test.Data
+namespace LabBenchStudios.Pdt.Test.Model
 {
     public class DigitalTwinModelManagerTest
     {
@@ -40,7 +40,7 @@ namespace LabBenchStudios.Pdt.Test.Data
         {
             this.dtModelManager = new DigitalTwinModelManager();
             this.dtModelManager.UpdateModelFilePaths(ConfigConst.TEST_DIGITAL_TWIN_MODEL_FILE_PATH);
-            //this.dtModelManager.BuildModelData();
+            //this.sysModelManager.BuildModelData();
         }
 
         [Test]

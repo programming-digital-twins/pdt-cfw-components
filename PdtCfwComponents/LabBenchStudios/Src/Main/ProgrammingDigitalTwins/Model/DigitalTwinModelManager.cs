@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Xml.Schema;
 using DTDLParser.Models;
 
 using LabBenchStudios.Pdt.Common;
@@ -473,6 +474,8 @@ namespace LabBenchStudios.Pdt.Model
                 }
             }
 
+            Console.WriteLine($"Update model file paths: counter = {counter}; file count = {modelFileCount}");
+
             return (counter > 0 && modelFileCount == counter ? true : false);
         }
 
@@ -486,17 +489,26 @@ namespace LabBenchStudios.Pdt.Model
         {
             if (this.IsModelFilePathValid(modelFilePath))
             {
-                this.modelFilePaths.Add(modelFilePath);
+                if (!this.modelFilePaths.Contains(modelFilePath))
+                {
+                    this.modelFilePaths.Add(modelFilePath);
+                } else
+                {
+                    Console.WriteLine($"DTDL model path already added: {modelFilePath}. Ignoring.");
+                }
 
                 if (reloadModels)
                 {
-                    if (! this.BuildModelData())
+                    if (!this.BuildModelData())
                     {
                         Console.WriteLine("Failed to reload models. Check DTDL manager log output.");
                     }
                 }
 
                 return true;
+            } else
+            {
+                Console.WriteLine($"Model file path is invalid: {modelFilePath}. Ignoring path update request.");
             }
 
             return false;
@@ -651,7 +663,7 @@ namespace LabBenchStudios.Pdt.Model
                 }
             }
 
-            Console.WriteLine($"Loaded and validated {counter} DTDL interfaces from {records} files.");
+            Console.WriteLine($"Loaded and validated {counter} DTDL interfaces from {records} file(s).");
 
             if (invalidFileSet.Count > 0) {
                 foreach (string invalidFile in invalidFileSet) {
