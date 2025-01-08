@@ -202,6 +202,33 @@ namespace LabBenchStudios.Pdt.Model
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="deviceID"></param>
+        /// <param name="locationID"></param>
+        /// <param name="typeCategoryID"></param>
+        /// <param name="typeID"></param>
+        /// <param name="useGuid"></param>
+        /// <param name="customName"></param>
+        /// <param name="stateUpdateListener"></param>
+        /// <returns></returns>
+        public DigitalTwinModelState CreateModelState(
+            string deviceID,
+            string locationID,
+            int typeCategoryID,
+            int typeID,
+            bool useGuid,
+            string customName,
+            IDataContextEventListener stateUpdateListener)
+        {
+            var dtModelState = new DigitalTwinModelState(deviceID, deviceID, locationID, typeCategoryID, typeID);
+
+            dtModelState.SetName(customName);
+
+            return this.ConfigureAndStoreModelState(dtModelState, ModelNameUtil.DtmiControllerEnum.Custom, stateUpdateListener);
+        }
+
+        /// <summary>
         /// Generates a new List<string> of DTMI absolute URI's when called.
         /// </summary>
         /// <returns></returns>
@@ -495,7 +522,7 @@ namespace LabBenchStudios.Pdt.Model
                 } else
                 {
                     Console.WriteLine($"DTDL model path already added: {modelFilePath}. Ignoring.");
-                }
+                 }
 
                 if (reloadModels)
                 {
@@ -568,11 +595,26 @@ namespace LabBenchStudios.Pdt.Model
         {
             // DigitalTwinModelState implements the Builder patter for most methods
             //  - set properties first, then build the requisite internal structures
-            dtModelState
-                .SetModelControllerID(controllerID)
-                .SetModelJson(this.digitalTwinModelMgrCache.GetDigitalTwinModelJson(controllerID))
-                .SetVirtualAssetListener(stateUpdateListener)
-                .SetResourcePrefix(this.resourcePrefix);
+            switch (controllerID)
+            {
+                case ModelNameUtil.DtmiControllerEnum.Custom:
+                    string name = dtModelState.GetName();
+
+                    dtModelState
+                        .SetModelControllerID(controllerID)
+                        .SetModelJson(this.digitalTwinModelMgrCache.GetDigitalTwinModelJson(name))
+                        .SetVirtualAssetListener(stateUpdateListener)
+                        .SetResourcePrefix(this.resourcePrefix);
+                    break;
+
+                default:
+                    dtModelState
+                        .SetModelControllerID(controllerID)
+                        .SetModelJson(this.digitalTwinModelMgrCache.GetDigitalTwinModelJson(controllerID))
+                        .SetVirtualAssetListener(stateUpdateListener)
+                        .SetResourcePrefix(this.resourcePrefix);
+                    break;
+            }
 
             dtModelState
                 .BuildDataSyncKey()
