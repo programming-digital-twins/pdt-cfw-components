@@ -57,11 +57,21 @@ namespace LabBenchStudios.Pdt.Data
         [JsonProperty]
         private float sysUptimeSeconds = 0.0f;
 
-        // necessary for JSON serialization / deserialization
+        // empty constructor necessary for JSON serialization / deserialization
+
+        /// <summary>
+        /// 
+        /// </summary>
         public OperationalStateData() : base() { }
 
+        /// <summary>
+        /// Use the OPS_STATE_CATEGORY for the type category. Type ID and name can
+        /// be set by the source system, but will default to OPS_STATE_TYPE.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="deviceID"></param>
         public OperationalStateData(string name, string deviceID) :
-            base(name, deviceID, ConfigConst.SYSTEM_TYPE_CATEGORY, ConfigConst.OPS_STATE_TYPE)
+            base(name, deviceID, ConfigConst.OPS_STATE_CATEGORY, ConfigConst.OPS_STATE_TYPE)
         {
 
         }
