@@ -144,6 +144,8 @@ namespace LabBenchStudios.Pdt.Common
         public const string DISK_UTIL_PROP = "diskUtil";
         public const string MEM_UTIL_PROP = "memUtil";
 
+        public const string SYS_START_TIME_PROP = "sysStartTime";
+        
         public const string ACTION_ID_PROP = "actionID";
         public const string DATA_URI_PROP = "dataURI";
         public const string MESSAGE_PROP = "message";
@@ -302,6 +304,7 @@ namespace LabBenchStudios.Pdt.Common
         public const int CPU_UTIL_TYPE = 9001;
         public const int MEM_UTIL_TYPE = 9002;
         public const int DISK_UTIL_TYPE = 9003;
+        public const int OPS_STATE_TYPE = 9500;
 
         public const int MESSAGE_TYPE_CATEGORY = 10000;
         public const int MESSAGE_TYPE = 10001;
