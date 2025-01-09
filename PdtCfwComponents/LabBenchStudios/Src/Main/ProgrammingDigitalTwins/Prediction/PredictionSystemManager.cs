@@ -68,6 +68,12 @@ namespace LabBenchStudios.Pdt.Prediction
         private Dictionary<string, PredictionSystemQueryCache> queryCacheMap = null;
 
         /// <summary>
+        /// Key: uri
+        /// Value: prediction model names as a List
+        /// </summary>
+        private Dictionary<string, List<string>> modelCacheMap = null;
+
+        /// <summary>
         /// 
         /// </summary>
         private IPredictionModelListener predictionModelListener = null;
@@ -81,6 +87,7 @@ namespace LabBenchStudios.Pdt.Prediction
             this.sessionToConnectorMap = new Dictionary<string, string>();
             this.queryCacheMap = new Dictionary<string, PredictionSystemQueryCache>();
             this.predictionConnectorMap = new Dictionary<string, IPredictionModelConnector>();
+            this.modelCacheMap = new Dictionary<string, List<string>>();
         }
 
         // public methods
@@ -130,6 +137,24 @@ namespace LabBenchStudios.Pdt.Prediction
 
                 return null;
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="uri"></param>
+        /// <returns></returns>
+        public List<string> GetCachedModelList(string uri)
+        {
+            if (!string.IsNullOrEmpty(uri))
+            {
+                if (this.modelCacheMap.ContainsKey(uri))
+                {
+                    return this.modelCacheMap[uri];
+                }
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -394,6 +419,12 @@ namespace LabBenchStudios.Pdt.Prediction
         /// <param name="modelListContainer"></param>
         public void OnModelListRetrieved(ModelListContainer modelListContainer)
         {
+            string uri = modelListContainer.GetUri();
+            List<string> modelList = modelListContainer.GetModelList();
+
+            // add or overwrite existing entries - don't care which
+            this.modelCacheMap[uri] = modelList;
+
             this.predictionModelListener?.OnModelListRetrieved(modelListContainer);
         }
 

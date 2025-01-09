@@ -37,6 +37,7 @@ namespace LabBenchStudios.Pdt.Model
         private string sessionID = ConfigConst.DEFAULT_QUERY_SESSION_ID;
 
         private string latestQueryMsg = null;
+        private string latestResponseMsg = null;
 
         private string modelName = "llama3.2";
 
@@ -108,6 +109,8 @@ namespace LabBenchStudios.Pdt.Model
                 builder.Append(queryResponse);
 
                 this.queryResponseList.Add(builder.ToString());
+
+                this.latestResponseMsg = queryResponse;
             }
         }
 
@@ -140,12 +143,66 @@ namespace LabBenchStudios.Pdt.Model
         }
 
         /// <summary>
+        /// By default, this will 'pop' the latest response message,
+        /// clearing the value for the 'latest response'.
         /// 
+        /// Note that this does NOT affect the cache, only the
+        /// convenience of referencing the latest via a separate
+        /// separate string.
+        /// </summary>
+        /// <returns></returns>
+        public string GetLatestResponseMessage()
+        {
+            return this.GetLatestResponseMessage(true);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        /// <param name="clearOnRequest"></param>
+        /// 
+        public string GetLatestResponseMessage(bool clearOnRequest)
+        {
+            string msg = this.latestResponseMsg;
+
+            if (clearOnRequest)
+            {
+                this.latestResponseMsg = null;
+            }
+
+            return msg;
+        }
+
+        /// <summary>
+        /// By default, this will 'pop' the latest query message,
+        /// clearing the value for the 'latest query'.
+        /// 
+        /// Note that this does NOT affect the cache, only the
+        /// convenience of referencing the latest via a separate
+        /// separate string.
         /// </summary>
         /// <returns></returns>
         public string GetLatestQueryMessage()
         {
-            return this.latestQueryMsg;
+            return this.GetLatestQueryMessage(true);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        /// <param name="clearOnRequest"></param>
+        public string GetLatestQueryMessage(bool clearOnRequest)
+        {
+            string msg = this.latestQueryMsg;
+
+            if (clearOnRequest)
+            {
+                this.latestQueryMsg = null;
+            }
+
+            return msg;
         }
 
         /// <summary>
