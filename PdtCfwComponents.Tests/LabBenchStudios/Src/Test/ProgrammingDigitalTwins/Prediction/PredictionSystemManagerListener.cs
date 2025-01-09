@@ -56,42 +56,47 @@ namespace LabBenchStudios.Pdt.Prediction
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="uri"></param>
-        /// <param name="modelList"></param>
-        public void OnModelListRetrieved(string uri, List<string> modelList)
+        /// <param name="modelListContainer"></param>
+        public void OnModelListRetrieved(ModelListContainer modelListContainer)
         {
             StringBuilder builder = new StringBuilder();
 
-            if (modelList != null && modelList.Count > 0)
+            if (modelListContainer != null)
             {
-                builder.Append($"{modelList.Count} models found.");
+                List<string> modelList = modelListContainer.GetModelList();
 
-                foreach (string model in modelList)
+                if (modelList != null && modelList.Count > 0)
                 {
-                    builder.Append('\n').Append(model);
-                }
-            } else
-            {
-                builder.Append("No models found.");
-            }
+                    builder.Append($"{modelList.Count} models found.");
 
-            Console.WriteLine($"Received model list: {uri} - {builder.ToString()}");
+                    foreach (string model in modelList)
+                    {
+                        builder.Append('\n').Append(model);
+                    }
+                } else
+                {
+                    builder.Append("No models found.");
+                }
+
+                Console.WriteLine($"Received model list: {modelListContainer.GetUri()} - {builder.ToString()}");
+            }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="sessionID"></param>
-        /// <param name="uri"></param>
-        /// <param name="response"></param>
-        public void OnQueryResponseReceived(string sessionID, string uri, string response)
+        /// <param name="queryResponseContainer"></param>
+        public void OnQueryResponseReceived(QueryResponseContainer queryResponseContainer)
         {
-            StringBuilder builder = new StringBuilder();
+            if (queryResponseContainer != null)
+            {
+                StringBuilder builder = new StringBuilder();
 
-            builder.Append($"Query response received: {uri} - {uri}.");
-            builder.Append($"Response:\n").Append(response);
+                builder.Append($"Query response received: {queryResponseContainer.GetSessionID()} - {queryResponseContainer.GetUri()}.");
+                builder.Append($"Response:\n").Append(queryResponseContainer.GetResponse());
 
-            Console.WriteLine(builder.ToString());
+                Console.WriteLine(builder.ToString());
+            }
         }
         
     }

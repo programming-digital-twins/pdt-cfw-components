@@ -1,7 +1,6 @@
-
+﻿
 
 using System.Collections.Generic;
-
 
 /**
  * MIT License
@@ -28,11 +27,48 @@ using System.Collections.Generic;
  */
 namespace LabBenchStudios.Pdt.Common
 {
-    public interface IPredictionModelListener
+    /// <summary>
+    /// This class is a simple wrapper around a prediction engine's
+    /// model list for ease of transport.
+    /// </summary>
+    public class ModelListContainer
     {
-        public void OnModelListRetrieved(ModelListContainer modelListContainer);
+        private string uri = null;
+        private List<string> modelList = null;
 
-        public void OnQueryResponseReceived(QueryResponseContainer queryResponseContainer);
+        // constructors
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="uri"></param>
+        /// <param name="modelList"></param>
+        public ModelListContainer(string uri, List<string> modelList)
+        {
+            this.uri = uri;
+            this.modelList = modelList;
+        }
+
+        // public methods
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string GetUri()
+        {
+            return uri;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetModelList()
+        {
+            return modelList;
+        }
 
     }
+
 }

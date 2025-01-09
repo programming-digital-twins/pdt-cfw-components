@@ -137,8 +137,8 @@ namespace LabBenchStudios.Pdt.Connection
             this.eventListener?.LogDebugMessage($"Getting registered models: {this.serverUri}.");
 
             //_ = this.HandleGetModels();
-            var task = this.HandleGetModels();
 
+            var task = this.HandleGetModels();
             task.Wait(DEFAULT_TIMEOUT_MILLIS);
 
             return null;
@@ -218,8 +218,8 @@ namespace LabBenchStudios.Pdt.Connection
             }
 
             //_ = this.HandlePredictionEngineQuery(queryMsg);
-            var task = this.HandlePredictionEngineQuery(queryMsg);
 
+            var task = this.HandlePredictionEngineQuery(queryMsg);
             task.Wait(DEFAULT_TIMEOUT_MILLIS);
 
             return false;
@@ -302,7 +302,8 @@ namespace LabBenchStudios.Pdt.Connection
                     
                     this.eventListener?.LogDebugMessage(msg);
 
-                    this.predictionListener?.OnModelListRetrieved(this.serverUri, modelList);
+                    var modelListContainer = new ModelListContainer(this.serverUri, modelList);
+                    this.predictionListener?.OnModelListRetrieved(modelListContainer);
                 } else
                 {
                     Console.WriteLine($"No models retrieved from prediction engine: {this.serverUri}");
@@ -341,7 +342,8 @@ namespace LabBenchStudios.Pdt.Connection
 
                 this.eventListener?.LogDebugMessage($"Received query response from prediction engine: {this.serverUri}. Len: {response}");
                 
-                this.predictionListener?.OnQueryResponseReceived(this.sessionID, this.serverUri, response);
+                var queryResponseContainer = new QueryResponseContainer(this.sessionID, this.serverUri, response);
+                this.predictionListener?.OnQueryResponseReceived(queryResponseContainer);
             }
         }
 

@@ -24,6 +24,8 @@
 
 using LabBenchStudios.Pdt.Connection;
 using LabBenchStudios.Pdt.Prediction;
+using System;
+using System.Threading;
 
 namespace LabBenchStudios.Pdt.Test.Prediction
 {
@@ -50,6 +52,14 @@ namespace LabBenchStudios.Pdt.Test.Prediction
         public void GetAllModels()
         {
             this.aiClient.GetRegisteredModels();
+
+            try
+            {
+                Thread.Sleep(5000);
+            } catch (Exception e)
+            {
+                // ignore
+            }
         }
 
         [Test]

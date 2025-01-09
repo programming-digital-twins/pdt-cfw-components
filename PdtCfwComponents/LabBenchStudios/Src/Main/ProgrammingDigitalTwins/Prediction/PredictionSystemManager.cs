@@ -274,6 +274,9 @@ namespace LabBenchStudios.Pdt.Prediction
         public void ClearAllCachedQueries()
         {
             this.ClearAllCachedQueries(true);
+
+            this.sessionToConnectorMap.Clear();
+            this.predictionConnectorMap.Clear();
         }
 
         /// <summary>
@@ -388,32 +391,35 @@ namespace LabBenchStudios.Pdt.Prediction
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="uri"></param>
-        /// <param name="modelList"></param>
-        public void OnModelListRetrieved(string uri, List<string> modelList)
+        /// <param name="modelListContainer"></param>
+        public void OnModelListRetrieved(ModelListContainer modelListContainer)
         {
-            this.predictionModelListener?.OnModelListRetrieved(uri, modelList);
+            this.predictionModelListener?.OnModelListRetrieved(modelListContainer);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="sessionID"></param>
-        /// <param name="uri"></param>
-        /// <param name="response"></param>
-        public void OnQueryResponseReceived(string sessionID, string uri, string response)
+        /// <param name="queryResponseContainer"></param>
+        public void OnQueryResponseReceived(QueryResponseContainer queryResponseContainer)
         {
-            if (!string.IsNullOrEmpty(sessionID))
+            if (queryResponseContainer != null)
             {
-                if (this.queryCacheMap.ContainsKey(sessionID))
+                string sessionID = queryResponseContainer.GetSessionID();
+                string response = queryResponseContainer.GetResponse();
+
+                if (!string.IsNullOrEmpty(sessionID))
                 {
-                    PredictionSystemQueryCache queryCache = this.queryCacheMap[sessionID];
+                    if (this.queryCacheMap.ContainsKey(sessionID))
+                    {
+                        PredictionSystemQueryCache queryCache = this.queryCacheMap[sessionID];
 
-                    queryCache.AddQueryResponse(response);
+                        queryCache.AddQueryResponse(response);
+                    }
                 }
-            }
 
-            this.predictionModelListener?.OnQueryResponseReceived(sessionID, uri, response);
+                this.predictionModelListener?.OnQueryResponseReceived(queryResponseContainer);
+            }
         }
 
         /// <summary>
