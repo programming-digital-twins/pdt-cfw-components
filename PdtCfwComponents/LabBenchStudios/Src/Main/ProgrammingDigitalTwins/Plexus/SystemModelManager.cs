@@ -30,6 +30,7 @@ using LabBenchStudios.Pdt.Common;
 using LabBenchStudios.Pdt.Data;
 using LabBenchStudios.Pdt.Historian;
 using LabBenchStudios.Pdt.Model;
+using LabBenchStudios.Pdt.Prediction;
 
 namespace LabBenchStudios.Pdt.Plexus
 {
@@ -56,6 +57,9 @@ namespace LabBenchStudios.Pdt.Plexus
         // the data historian manager
         IDataHistorian dataHistorianManager = null;
 
+        // the prediction system manager
+        PredictionSystemManager predictionSystemManager = null;
+
         HashSet<string> coreDigitalTwinModelPathSet = null;
         HashSet<string> customDigitalTwinModelPathSet = null;
         HashSet<string> digitalTwinModelPathSet = null;
@@ -71,6 +75,7 @@ namespace LabBenchStudios.Pdt.Plexus
             this.digitalTwinModelManager = new DigitalTwinModelManager();
             this.configTypeModelManager = new ConfigTypeModelManager();
             this.dataHistorianManager = new DataHistorianManager();
+            this.predictionSystemManager = new PredictionSystemManager();
 
             this.digitalTwinModelPathSet = new HashSet<string>();
             this.configTypeModelPathSet = new HashSet<string>();
@@ -259,6 +264,15 @@ namespace LabBenchStudios.Pdt.Plexus
         public DigitalTwinModelManager GetDigitalTwinModelManager()
         {
             return this.digitalTwinModelManager;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public PredictionSystemManager GetPredictionSystemManager()
+        {
+            return this.predictionSystemManager;
         }
 
         /// <summary>

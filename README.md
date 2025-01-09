@@ -34,6 +34,7 @@ This repository is comprised of the following top level paths:
     - [Historian](https://github.com/programming-digital-twins/pdt-cfw-components/tree/master/PdtCfwComponents/LabBenchStudios/Src/Main/ProgrammingDigitalTwins/Historian): Contains data historian and caching components.
     - [Model](https://github.com/programming-digital-twins/pdt-cfw-components/tree/master/PdtCfwComponents/LabBenchStudios/Src/Main/ProgrammingDigitalTwins/Model): Contains model mapping and parsing logic components.
     - [Plexus](https://github.com/programming-digital-twins/pdt-cfw-components/tree/master/PdtCfwComponents/LabBenchStudios/Src/Main/ProgrammingDigitalTwins/Plexus): Contains the central 'nervous system' components (facilitating model integration).
+    - [Prediction](https://github.com/programming-digital-twins/pdt-cfw-components/tree/master/PdtCfwComponents/LabBenchStudios/Src/Main/ProgrammingDigitalTwins/Prediction): Contains a very basic prediction abstracton engine for interacting with LLM's.
     - [Util](https://github.com/programming-digital-twins/pdt-cfw-components/tree/master/PdtCfwComponents/LabBenchStudios/Src/Main/ProgrammingDigitalTwins/Util): Contains basic utility classes.
 
 ### PdtCfwComponents.Tests
@@ -44,6 +45,9 @@ This repository is comprised of the following top level paths:
     - [Connection](https://github.com/programming-digital-twins/pdt-cfw-components/tree/alpha/PdtCfwComponents.Tests/LabBenchStudios/Src/Test/ProgrammingDigitalTwins/Connection): Contains unit / integration tests for the integration-related components (e.g., MQTT, persistence, etc.).
     - [Data](https://github.com/programming-digital-twins/pdt-cfw-components/tree/alpha/PdtCfwComponents.Tests/LabBenchStudios/Src/Test/ProgrammingDigitalTwins/Data): Contains unit tests for the data serialization / deserialization / translation components.
     - [Historian](https://github.com/programming-digital-twins/pdt-cfw-components/tree/alpha/PdtCfwComponents.Tests/LabBenchStudios/Src/Test/ProgrammingDigitalTwins/Historian): Contains unit tests for the data historian components.
+    - [Model](https://github.com/programming-digital-twins/pdt-cfw-components/tree/alpha/PdtCfwComponents.Tests/LabBenchStudios/Src/Test/ProgrammingDigitalTwins/Model): Contains unit tests for the data model components.
+    - [Plexus](https://github.com/programming-digital-twins/pdt-cfw-components/tree/alpha/PdtCfwComponents.Tests/LabBenchStudios/Src/Test/ProgrammingDigitalTwins/Plexus): Contains unit tests for the plexus components.
+    - [Prediction](https://github.com/programming-digital-twins/pdt-cfw-components/tree/alpha/PdtCfwComponents.Tests/LabBenchStudios/Src/Test/ProgrammingDigitalTwins/Prediction): Contains unit tests for the prediction components.
     - [Util](https://github.com/programming-digital-twins/pdt-cfw-components/tree/alpha/PdtCfwComponents.Tests/LabBenchStudios/Src/Test/ProgrammingDigitalTwins/Util): Contains unit tests for the utility components.
 
 Here are some other files at the top level that are important to review:
@@ -78,6 +82,8 @@ This repository has external dependencies on other open source projects. I'm gra
   - Reference: James Newton-King. Json.NET JSON framework for .NET. (2024) [Online]. Available: https://github.com/JamesNK/Newtonsoft.Json.
 - [NUnit](https://nunit.org/)
   - Reference: Charlie Poole, Rob Prouse. Nunit unit testing framework for .NET languages. (2024) [Online]. Available: https://github.com/nunit.
+- [OllamaSharp](https://github.com/awaescher/OllamaSharp)
+  - Reference: Andreas Wäscher. Provides .NET bindings for the Ollama API. (2025) [Online]. Available: https://github.com/awaescher/OllamaSharp.
 
 NOTE: This list will be updated as others are incorporated.
 

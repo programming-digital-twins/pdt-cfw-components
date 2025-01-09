@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.AccessControl;
 using System.Text;
 using LabBenchStudios.Pdt.Common;
 using LabBenchStudios.Pdt.Data;
@@ -130,6 +131,53 @@ namespace LabBenchStudios.Pdt.Util
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public static bool IsAccessible(string fileName)
+        {
+            return IsAccessible(fileName, true);
+        }
+
+        /// <summary>
+        /// A simple and reasonably quick check if a file might be accessible.
+        /// This avoids the obligatory DirectorySecurity checks and such, as
+        /// it's non-atomic and can't guarantee access.
+        /// 
+        /// As such, this is a best guess with performance and simplicity paramount.
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="inclWriteable"></param>
+        /// <returns></returns>
+        public static bool IsAccessible(string fileName, bool inclWriteable)
+        {
+            if (!string.IsNullOrWhiteSpace(fileName))
+            {
+                FileInfo fileInfo = new FileInfo(fileName);
+
+                if ((fileInfo.Attributes & FileAttributes.Directory) != 0)
+                {
+                    return false;
+                }
+
+                if (inclWriteable)
+                {
+                    if ((fileInfo.Attributes & FileAttributes.ReadOnly) != 0)
+                    {
+                        return false;
+                    }
+                }
+
+                // if we get this far, it's probably a writeable file, although
+                // there are no guarantees it's writeable by the calling user
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>

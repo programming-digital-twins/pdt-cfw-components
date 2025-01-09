@@ -102,6 +102,8 @@ namespace LabBenchStudios.Pdt.Common
         public const string DEVICE = "Device";
         public const string SERVICE = "Service";
 
+        public const string DEFAULT_QUERY_SESSION_ID = PRODUCT_NAME + "_QuerySession";
+
         public const string PRODUCT_NAME_KEY = "productName";
         public const string DEVICE_NAME_KEY = "deviceName";
         public const string TYPE_NAME_KEY = "typeName";
