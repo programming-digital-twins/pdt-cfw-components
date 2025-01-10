@@ -234,6 +234,7 @@ namespace LabBenchStudios.Pdt.Model
                             string containerTypeName = typeContainer.GetConfigTypeName();
 
                             // add the container to the internal container cache
+                            // NOTE: can just use table[key] = value
                             if (this.configTypeContainerTable.ContainsKey(containerTypeName))
                             {
                                 Console.WriteLine($"Container config type name already loaded: {containerTypeName}. Replacing old with new.");
@@ -250,6 +251,7 @@ namespace LabBenchStudios.Pdt.Model
                             }
 
                             // add the container to the internal container cache
+                            // NOTE: can just use table[key] = value
                             if (this.configTypeModelMappingTable.ContainsKey(containerModelName))
                             {
                                 Console.WriteLine($"Config type model already loaded: {containerModelName}. Replacing old with new.");

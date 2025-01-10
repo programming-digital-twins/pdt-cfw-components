@@ -129,6 +129,34 @@ namespace LabBenchStudios.Pdt.Model
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="modelName"></param>
+        /// <returns></returns>
+        public ConfigTypeModelContainer GetConfigCategoryByModelName(string modelName)
+        {
+            ConfigTypeModelContext modelContext = this.configTypeMgrCache.GetConfigTypeContextFromModelName(modelName);
+
+            if (modelContext != null)
+            {
+                if (modelContext.IsTypeCategory())
+                {
+                    return (ConfigTypeModelContainer) modelContext;
+                } else
+                {
+                    Console.WriteLine($"Model name maps to a ConfigTypeModelEntry, not a ConfigTypeModelContainer. Ignoring: {modelName}");
+
+                    return null;
+                }
+            } else
+            {
+                Console.WriteLine($"Model name is not cached as a ConfigTypeModelEntry or ConfigTypeModelContainer. Ignoring: {modelName}");
+
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <returns></returns>
         public List<string> GetLoadedConfigTypeNames()
         {

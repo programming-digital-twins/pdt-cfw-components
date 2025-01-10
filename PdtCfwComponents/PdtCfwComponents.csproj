@@ -58,8 +58,4 @@
 		<PackageReference Include="System.Threading.Tasks.Extensions" Version="4.6.0" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<Folder Include="LabBenchStudios\Models\Types\Test\" />
-	</ItemGroup>
-
 </Project>

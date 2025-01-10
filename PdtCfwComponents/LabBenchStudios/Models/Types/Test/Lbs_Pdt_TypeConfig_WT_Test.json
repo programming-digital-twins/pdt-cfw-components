@@ -1,0 +1,97 @@
+{
+  "typeName": "windTurbine",
+  "version": "2024-11-18",
+  "description": "Wind Turbine utility category configuration.",
+  "displayName": "Wind Turbine Utility Category",
+  "modelName": "dtmi:LabBenchStudios:PDT:windTurbine;1",
+  "id": 4300,
+  "minId": 4301,
+  "maxId": 4399,
+  "modelConstraints": {
+    "enableConstraints": true,
+    "enableDutyCycle": true,
+    "dutyCycleSeconds": "60.0",
+    "minDutyCycle": "0.0",
+    "maxDutyCycle": "80.0",
+    "optimalDutyCycle": "60.0"
+  },
+  "typeEntries": {
+    "windTurbineBrakeSystemActuator": {
+      "typeName": "windTurbineBrakeSystemActuator",
+      "description": "Wind turbine brake system actuator type configuration.",
+      "displayName": "Wind Turbine Brake System Actuator",
+      "modelName": "runWindTurbine",
+      "resourceName": "{productName}/{groupdID}/{locationID}/{deviceID}/{typeName}",
+      "dataContainerType": "LabBenchStudios.Pdt.Data.ActuatorData",
+      "id": 4320,
+      "modelConstraints": {
+        "enableConstraints": false,
+        "enableDutyCycle": false
+      }
+    },
+    "windTurbinePowerOutput": {
+      "typeName": "windTurbinePowerOutput",
+      "description": "Wind turbine power output type configuration.",
+      "displayName": "Wind Turbine Power Output",
+      "modelName": "outputPower",
+      "resourceName": "{productName}/{groupdID}/{locationID}/{deviceID}/{typeName}",
+      "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
+      "id": 4301,
+      "modelConstraints": {
+        "enableConstraints": true,
+        "enableDutyCycle": false,
+        "minReading": "0.0",
+        "maxReading": "0.0",
+        "optimalReading": "0.0"
+      }
+    },
+    "windTurbineGeneratorTemperature": {
+      "typeName": "windTurbineGeneratorTemperature",
+      "description": "Wind turbine generator temperature type configuration.",
+      "displayName": "Wind Turbine Generator Temperature",
+      "modelName": "generatorTemperature",
+      "resourceName": "{productName}/{groupdID}/{locationID}/{deviceID}/{typeName}",
+      "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
+      "id": 4302,
+      "modelConstraints": {
+        "enableConstraints": true,
+        "enableDutyCycle": false,
+        "minReading": "0.0",
+        "maxReading": "0.0",
+        "optimalReading": "0.0"
+      }
+    },
+    "windTurbineRotationalSpeed": {
+      "typeName": "windTurbineRotationalSpeed",
+      "description": "Wind turbine rotational speed type configuration.",
+      "displayName": "Wind Turbine Rotational Speed",
+      "modelName": "currentRevolutionPerMinute",
+      "resourceName": "{productName}/{groupdID}/{locationID}/{deviceID}/{typeName}",
+      "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
+      "id": 4303,
+      "modelConstraints": {
+        "enableConstraints": true,
+        "enableDutyCycle": false,
+        "minReading": "0.0",
+        "maxReading": "0.0",
+        "optimalReading": "0.0"
+      }
+    },
+    "windTurbineAirSpeed": {
+      "typeName": "windTurbineAirSpeed",
+      "description": "Wind turbine air speed type configuration.",
+      "displayName": "Wind Turbine Air Speed",
+      "modelName": "airSpeed",
+      "resourceName": "{productName}/{groupdID}/{locationID}/{deviceID}/{typeName}",
+      "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
+      "id": 4304,
+      "modelConstraints": {
+        "enableConstraints": true,
+        "enableDutyCycle": false,
+        "minReading": "0.0",
+        "maxReading": "0.0",
+        "optimalReading": "0.0"
+      }
+    }
+  }
+}
