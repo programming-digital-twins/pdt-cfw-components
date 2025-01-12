@@ -29,7 +29,6 @@ using System.IO;
 using LabBenchStudios.Pdt.Common;
 using LabBenchStudios.Pdt.Connection;
 using LabBenchStudios.Pdt.Data;
-using LabBenchStudios.Pdt.Historian;
 using LabBenchStudios.Pdt.Model;
 using LabBenchStudios.Pdt.Util;
 
@@ -45,6 +44,8 @@ namespace LabBenchStudios.Pdt.Prediction
     {
         // flag to check if default file paths should be included
         private bool useDefaultFilePaths = true;
+
+        private string rootPathName = ConfigConst.DEFAULT_FILE_STORAGE_PATH;
 
         // useful for passing event messages and debugging
         private ISystemStatusEventListener eventListener = null;
@@ -79,6 +80,11 @@ namespace LabBenchStudios.Pdt.Prediction
         private IPredictionModelListener predictionModelListener = null;
 
         /// <summary>
+        /// 
+        /// </summary>
+        private IPersistenceConnector persistenceConnector = null;
+
+        /// <summary>
         /// Default constructor. Uses the default model file path specified
         /// in ModelNameUtil.
         /// </summary>
@@ -88,6 +94,8 @@ namespace LabBenchStudios.Pdt.Prediction
             this.queryCacheMap = new Dictionary<string, PredictionSystemQueryCache>();
             this.predictionConnectorMap = new Dictionary<string, IPredictionModelConnector>();
             this.modelCacheMap = new Dictionary<string, List<string>>();
+
+            this.InitPersistenceLayer();
         }
 
         // public methods
@@ -107,14 +115,15 @@ namespace LabBenchStudios.Pdt.Prediction
                 if (this.queryCacheMap.ContainsKey(sessionID))
                 {
                     queryCache = this.queryCacheMap[sessionID];
+                    queryCache.SetModelName(modelName);
+                    queryCache.AddQueryMessage(queryMsg);
                 } else
                 {
                     queryCache = new PredictionSystemQueryCache(sessionID, modelName);
+                    queryCache.AddQueryMessage(queryMsg);
 
                     this.queryCacheMap.Add(sessionID, queryCache);
                 }
-
-                queryCache.AddQueryMessage(queryMsg);
             }
         }
 
@@ -155,6 +164,30 @@ namespace LabBenchStudios.Pdt.Prediction
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string GetCacheFilePath()
+        {
+            if (this.persistenceConnector != null)
+            {
+                return this.persistenceConnector.GetDataStoreUri();
+            } else
+            {
+                return this.rootPathName;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string GetRootFilePath()
+        {
+            return this.rootPathName;
         }
 
         /// <summary>
@@ -231,6 +264,70 @@ namespace LabBenchStudios.Pdt.Prediction
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="rootFilePath"></param>
+        /// <returns></returns>
+        public bool SetRootFilePath(string rootFilePath)
+        {
+            if (!string.IsNullOrEmpty(rootFilePath))
+            {
+                if (rootFilePath.Equals(".") || rootFilePath.Equals("..") || rootFilePath.Contains("..."))
+                {
+                    rootFilePath = ConfigConst.DEFAULT_FILE_STORAGE_PATH;
+                    Console.WriteLine($"New file path is using invalid char's. Setting to default: {rootFilePath}");
+                }
+            }
+
+            if (string.IsNullOrEmpty(rootFilePath) && this.persistenceConnector != null)
+            {
+                rootFilePath = ConfigConst.DEFAULT_FILE_STORAGE_PATH;
+                Console.WriteLine($"New file path is null or empty. Setting to default: {rootFilePath}");
+            }
+
+            bool initPersistence = false;
+
+            if (this.rootPathName.Equals(rootFilePath) && this.persistenceConnector == null)
+            {
+                initPersistence = true;
+            }
+
+            if (!this.rootPathName.Equals(rootFilePath))
+            {
+                initPersistence = true;
+            }
+
+            // validate file path
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(rootFilePath))
+                {
+                    if (Directory.Exists(rootFilePath))
+                    {
+                        this.rootPathName = rootFilePath;
+                    } else
+                    {
+                        Console.WriteLine($"Path {rootFilePath} doesn't exist. Using default: {this.rootPathName}");
+                    }
+                } else
+                {
+                    Console.WriteLine($"No path specified. Using default: {this.rootPathName}");
+                }
+            } catch (Exception e)
+            {
+                Console.WriteLine($"Failed to validate path {rootFilePath}. Using default: {this.rootPathName}");
+            }
+
+            // check if we need to init (or re-init) persistence layer
+            if (initPersistence)
+            {
+                this.InitPersistenceLayer();
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="sessionID"></param>
         /// <param name="modelName"></param>
         /// <param name="uri"></param>
@@ -251,17 +348,31 @@ namespace LabBenchStudios.Pdt.Prediction
 
                 Console.WriteLine($"Retrieved prediction connector. Sending query: {sessionID} - {connector.GetServerUri()}.");
 
+                // add query request to cache
+                if (this.queryCacheMap.ContainsKey(sessionID))
+                {
+                    Console.WriteLine($"Retrieving query cache: Adding query msg and updating model name.");
+
+                    PredictionSystemQueryCache queryCache = this.queryCacheMap[sessionID];
+
+                    queryCache.AddQueryMessage(queryMsg);
+                    queryCache.SetModelName(modelName);
+                    queryCache.SetAnnotateResponseWithModelNameFlag(false);
+                } else
+                {
+                    Console.WriteLine($"Creating query cache: Adding query msg and updating model name.");
+
+                    PredictionSystemQueryCache queryCache = new PredictionSystemQueryCache(sessionID, modelName);
+
+                    queryCache.AddQueryMessage(queryMsg);
+                    queryCache.SetAnnotateResponseWithModelNameFlag(false);
+
+                    this.queryCacheMap.Add(sessionID, queryCache);
+                }
+
                 if (connector.SendRequest(queryMsg))
                 {
                     Console.WriteLine($"Query submission SUCCESS: {sessionID} - {connector.GetServerUri()}");
-
-                    // add query request to cache
-                    if (this.queryCacheMap.ContainsKey(sessionID))
-                    {
-                        PredictionSystemQueryCache queryCache = this.queryCacheMap[sessionID];
-
-                        queryCache.AddQueryMessage(queryMsg);
-                    }
 
                     return true;
                 } else
@@ -337,11 +448,43 @@ namespace LabBenchStudios.Pdt.Prediction
             {
                 if (saveCache)
                 {
-                    this.SaveQueryCache(sessionID, queryCache);
+                    this.SavePredictionCache(sessionID, queryCache);
                 }
 
                 queryCache.ClearCache();
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sessionID"></param>
+        /// <param name="queryCache"></param>
+        /// <returns></returns>
+        public bool SavePredictionCache(string sessionID)
+        {
+            return this.SavePredictionCache(sessionID, this.GetQueryCache(sessionID));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sessionID"></param>
+        /// <param name="queryCache"></param>
+        /// <returns></returns>
+        public bool SavePredictionCache(string sessionID, PredictionSystemQueryCache queryCache)
+        {
+            string fileName = FileUtil.CreatePredictionFileName(this.rootPathName, sessionID);
+            string queryMsgs = queryCache.GetAggregatedQueryMessages();
+            string queryResponses = queryCache.GetAggregatedResponseMessages();
+
+            RequestResponseData rrData = new RequestResponseData();
+            rrData.SetSessionID(queryCache.GetSessionID());
+            rrData.SetModelName(queryCache.GetModelName());
+            rrData.SetRequestMsg(queryMsgs);
+            rrData.SetResponseMsg(queryResponses);
+
+            return this.persistenceConnector.StoreData(rrData);
         }
 
         /// <summary>
@@ -454,6 +597,24 @@ namespace LabBenchStudios.Pdt.Prediction
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="persistenceConnector"></param>
+        public void SetPersistenceConnector(IPersistenceConnector persistenceConnector)
+        {
+            if (persistenceConnector != null)
+            {
+                if (this.persistenceConnector != null)
+                {
+                    this.persistenceConnector.DisconnectClient();
+                }
+
+                this.persistenceConnector = persistenceConnector;
+                this.persistenceConnector.ConnectClient();
+            }
+        }
+
+        /// <summary>
         /// Allows redirection of responses to another listener.
         /// </summary>
         /// <param name="listener"></param>
@@ -499,45 +660,10 @@ namespace LabBenchStudios.Pdt.Prediction
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="sessionID"></param>
-        /// <returns></returns>
-        private string CreateQueryCacheFileName(string sessionID)
+        /// <param name="filePath"></param>
+        private void InitPersistenceLayer()
         {
-            // TODO: create file name
-            string fileName = sessionID;
-
-            if (!string.IsNullOrEmpty(fileName))
-            {
-                fileName = Path.GetFullPath(fileName);
-
-                if (File.Exists(fileName))
-                {
-                    // log a message indicating the existing cache will be overwritten
-                    Console.WriteLine($"AI query cache file name exists. Any save will overwrite.");
-                }
-
-                if (FileUtil.IsAccessible(fileName))
-                {
-                    Console.WriteLine($"Cache file name now set: {fileName}");
-                }
-            }
-
-            return fileName;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sessionID"></param>
-        /// <param name="queryCache"></param>
-        /// <returns></returns>
-        private bool SaveQueryCache(string sessionID, PredictionSystemQueryCache queryCache)
-        {
-            bool success = false;
-
-            string fileName = this.CreateQueryCacheFileName(sessionID);
-
-            return success;
+            this.SetPersistenceConnector(new FilePersistenceConnector(this.rootPathName, FileUtil.PersistenceDataTypeEnum.Prediction));
         }
         
     }

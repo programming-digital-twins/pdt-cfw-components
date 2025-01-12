@@ -48,7 +48,7 @@ namespace LabBenchStudios.Pdt.Connection
     /// will then commence against the stored file.
     /// 
     /// If any incoming read operation is attempting to retrieve the latest
-    /// item only, it will be read from the internal cache, which will
+    /// item only, it will be read from the internal cacheList, which will
     /// store only one instance of the latest object type.
     /// For instance, the latest written SensorData will be kept on hand,
     /// as will the latest SystemPerformanceData and ActuatorData. Should
@@ -69,7 +69,12 @@ namespace LabBenchStudios.Pdt.Connection
 
         private bool isConnected = false;
 
-        private IDataContextEventListener eventListener = null;
+        private int typeID = ConfigConst.DEFAULT_TYPE_ID;
+
+        private FileUtil.PersistenceDataTypeEnum persistenceDataType = FileUtil.PersistenceDataTypeEnum.IotData;
+
+        private ISystemStatusEventListener eventListener = null;
+        private IDataContextEventListener dataListener = null;
 
         private ConnectionStateData connStateData = null;
 
@@ -78,7 +83,10 @@ namespace LabBenchStudios.Pdt.Connection
         /// <summary>
         /// 
         /// </summary>
-        public BasePersistenceConnector() : this(ConfigConst.PRODUCT_NAME, null)
+        /// <param name="persistenceDataType"></param>"
+        /// <param name="typeID"></param>
+        public BasePersistenceConnector(FileUtil.PersistenceDataTypeEnum persistenceDataType, int typeID) :
+            this(ConfigConst.PRODUCT_NAME, persistenceDataType, typeID, null)
         {
             // nothing to do
         }
@@ -87,13 +95,19 @@ namespace LabBenchStudios.Pdt.Connection
         /// 
         /// </summary>
         /// <param name="productName"></param>
+        /// <param name="persistenceDataType"></param>"
+        /// <param name="typeID"></param>
         /// <param name="eventListener"></param>
-        public BasePersistenceConnector(string productName, IDataContextEventListener eventListener)
+        public BasePersistenceConnector(
+            string productName, FileUtil.PersistenceDataTypeEnum persistenceDataType, int typeID, ISystemStatusEventListener eventListener)
         {
             if (!string.IsNullOrWhiteSpace(productName))
             {
                 this.productName = productName;
             }
+
+            this.persistenceDataType = persistenceDataType;
+            this.typeID = typeID;
 
             this.SetEventListener(eventListener);
         }
@@ -139,28 +153,77 @@ namespace LabBenchStudios.Pdt.Connection
         /// </summary>
         /// <param name="cacheName"></param>
         /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public string CreateDataHistorianCacheFileName(string cacheName)
+        public string CreateDataStoreName(string cacheName)
         {
-            return this.HandleCreateHistorianCacheFileName(cacheName);
+            switch (this.persistenceDataType)
+            {
+                case FileUtil.PersistenceDataTypeEnum.Historian:
+                    return this.HandleCreateHistorianCacheName(cacheName);
+
+                case FileUtil.PersistenceDataTypeEnum.Prediction:
+                    return this.HandleCreatePredictionCacheName(cacheName);
+
+                case FileUtil.PersistenceDataTypeEnum.IotData:
+                    return this.HandleCreateDataStoreName(cacheName);
+
+                case FileUtil.PersistenceDataTypeEnum.Text:
+                    return this.HandleCreateTextCacheName(cacheName);
+            }
+
+            // should never get here
+            return null;
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public string GetDataHistorianCacheUri()
+        public string GetDataStoreUri()
         {
-            return this.HandleGetHistorianCacheUri();
+            switch (this.persistenceDataType)
+            {
+                case FileUtil.PersistenceDataTypeEnum.Historian:
+                    return this.HandleGetHistorianCacheUri();
+
+                case FileUtil.PersistenceDataTypeEnum.Prediction:
+                    return this.HandleGetPredictionCacheUri();
+
+                case FileUtil.PersistenceDataTypeEnum.IotData:
+                    return this.HandleGetObjectStoreUri();
+
+                case FileUtil.PersistenceDataTypeEnum.Text:
+                    return this.HandleGetTextCacheUri();
+            }
+
+            // should never get here
+            return null;
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public string GetDataObjectStoreUri()
+        public IDataContextEventListener GetDataListener()
         {
-            return this.HandleGetObjectStoreUri();
+            return this.dataListener;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public ISystemStatusEventListener GetEventListener()
+        {
+            return this.eventListener;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public FileUtil.PersistenceDataTypeEnum GetPersistenceDataType()
+        {
+            return this.persistenceDataType;
         }
 
         /// <summary>
@@ -169,9 +232,7 @@ namespace LabBenchStudios.Pdt.Connection
 		/// given parameters.
         /// 
         /// </summary>
-		/// <param name="resource"> The resource container with load meta data / additional search criteria.</param>
-		/// <param name="startDate"> The start timeStamp.</param>
-		/// <param name="endDate"> The end timeStamp.</param>
+		/// <param name="cacheName"> The name of the cache to load. The filename will be auto-generated from the name.</param>
 		/// <returns type="List<DataCacheEntryContainer>">The data instance(s) associated with the lookup parameters.</returns>
 		public List<DataCacheEntryContainer> LoadDataCache(string cacheName)
         {
@@ -181,6 +242,30 @@ namespace LabBenchStudios.Pdt.Connection
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+		/// <param name="cacheName"> The name of the cache to load. The filename will be auto-generated from the name.</param>
+        /// <returns></returns>
+        public string LoadTextDataCache(string cacheName)
+        {
+            Console.WriteLine($"Attempting to load text data. Name: {cacheName}.");
+
+            return this.HandleLoadTextDataCache(cacheName);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheName"> The name of the cache to load. The filename will be auto-generated from the name.</param>
+        /// <returns></returns>
+        public RequestResponseData LoadRequestResponseData(string cacheName)
+        {
+            Console.WriteLine($"Attempting to load request response data. Name: {cacheName}.");
+
+            return this.HandleLoadRequestResponseData(cacheName);
         }
 
         /**
@@ -264,7 +349,19 @@ namespace LabBenchStudios.Pdt.Connection
         /// 
         /// </summary>
         /// <param name="listener"></param>
-        public void SetEventListener(IDataContextEventListener listener)
+        public void SetDataListener(IDataContextEventListener listener)
+        {
+            if (listener != null)
+            {
+                this.dataListener = listener;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="listener"></param>
+        public void SetEventListener(ISystemStatusEventListener listener)
         {
             if (listener != null)
             {
@@ -272,11 +369,32 @@ namespace LabBenchStudios.Pdt.Connection
 
                 this.connStateData = new ConnectionStateData();
                 this.connStateData.SetTypeCategoryID(ConfigConst.SYSTEM_TYPE_CATEGORY);
-                this.connStateData.SetTypeID(this.GetPersistenceSystemTypeID());
-                this.connStateData.SetMessage($"Default persistence connector initialized for {this.productName}.");
+                this.connStateData.SetTypeID(this.typeID);
+                this.connStateData.SetMessage($"Persistence connector initialized for {this.productName}: {this.persistenceDataType.ToString()}.");
 
-                this.eventListener?.HandleConnectionStateData(GetConnectionStateCopy());
+                this.eventListener?.OnMessagingSystemStatusUpdate(GetConnectionStateCopy());
             }
+        }
+
+        /// <summary>
+		/// Attempts to write the source data instance to the persistence server.
+        /// </summary>
+        /// <param name="cacheName"></param>
+        /// <param name="dataCache"></param>
+        /// <returns type="int">On success, returns the total bytes stored. If no bytes
+        /// are written and no errors, returns 0. If errored, returns -1.</returns>
+        public int StoreTextDataCache(string cacheName, string dataCache)
+        {
+            if (!string.IsNullOrEmpty(dataCache))
+            {
+                string fileName = this.CreateDataStoreName(cacheName);
+
+                return this.HandleStoreTextDataCache(fileName, dataCache);
+            } else {
+                Console.WriteLine($"No cacheList data to write to cacheList name {cacheName}. Ignoring store request.");
+            }
+
+            return 0;
         }
 
         /// <summary>
@@ -305,7 +423,7 @@ namespace LabBenchStudios.Pdt.Connection
                     }
                 } else
                 {
-                    Console.WriteLine($"No cache data to write to cache name {cacheName}. Ignoring store request.");
+                    Console.WriteLine($"No cacheList data to write to cacheList name {cacheName}. Ignoring store request.");
                 }
             }
 
@@ -316,22 +434,40 @@ namespace LabBenchStudios.Pdt.Connection
 		/// Attempts to write the source data instance to the persistence server.
         /// </summary>
         /// <param name="cacheName"></param>
-        /// <param name="cache"></param>
+        /// <param name="cacheList"></param>
         /// <returns type="int">On success, returns the total bytes stored. If no bytes
         /// are written and no errors, returns 0. If errored, returns -1.</returns>
-        public int StoreDataCache(string cacheName, List<DataCacheEntryContainer> cache)
+        public int StoreDataCache(string cacheName, List<DataCacheEntryContainer> cacheList)
         {
             if (!string.IsNullOrWhiteSpace(cacheName))
             {
-                if (cache != null && cache.Count > 0)
+                if (cacheList != null && cacheList.Count > 0)
                 {
-                    return this.HandleStoreDataCache(cacheName, cache);
+                    return this.HandleStoreDataCache(cacheName, cacheList);
                 }
             }
 
-            Console.WriteLine($"No cache data to write to cache name {cacheName}. Ignoring store request.");
+            Console.WriteLine($"No cacheList data to write to cacheList name {cacheName}. Ignoring store request.");
 
             return 0;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public bool StoreData(RequestResponseData data)
+        {
+            if (data != null && data.HasSessionID())
+            {
+                return this.HandleStoreData(data);
+            } else
+            {
+                Console.WriteLine($"Request response data is null or does not have a session ID (needed for file name generation).");
+            }
+
+            return false;
         }
 
         /**
@@ -483,13 +619,46 @@ namespace LabBenchStudios.Pdt.Connection
         /// </summary>
         /// <param name="cacheName"></param>
         /// <returns></returns>
-        protected abstract string HandleCreateHistorianCacheFileName(string cacheName);
+        protected abstract string HandleCreateHistorianCacheName(string cacheName);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheName"></param>
+        /// <returns></returns>
+        protected abstract string HandleCreatePredictionCacheName(string cacheName);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheName"></param>
+        /// <returns></returns>
+        protected abstract string HandleCreateTextCacheName(string cacheName);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheName"></param>
+        /// <returns></returns>
+        protected abstract string HandleCreateDataStoreName(string cacheName);
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
         protected abstract string HandleGetHistorianCacheUri();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        protected abstract string HandleGetPredictionCacheUri();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        protected abstract string HandleGetTextCacheUri();
 
         /// <summary>
         /// 
@@ -502,7 +671,21 @@ namespace LabBenchStudios.Pdt.Connection
         /// </summary>
         /// <param name="cacheName"></param>
         /// <returns></returns>
+        protected abstract string HandleLoadTextDataCache(string cacheName);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheName"></param>
+        /// <returns></returns>
         protected abstract List<DataCacheEntryContainer> HandleLoadDataCache(string cacheName);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheName"></param>
+        /// <returns></returns>
+        protected abstract RequestResponseData HandleLoadRequestResponseData(string cacheName);
 
         /// <summary>
         /// 
@@ -539,6 +722,14 @@ namespace LabBenchStudios.Pdt.Connection
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="dataCache"></param>
+        /// <returns></returns>
+        protected abstract int HandleStoreTextDataCache(string fileName, string dataCache);
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="cacheName"></param>
         /// <param name="cache"></param>
         /// <returns></returns>
@@ -551,6 +742,13 @@ namespace LabBenchStudios.Pdt.Connection
         /// <param name="cache"></param>
         /// <returns></returns>
         protected abstract int HandleStoreDataCache(IDataHistorianCache historianCache);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        protected abstract bool HandleStoreData(RequestResponseData data);
 
         /// <summary>
         /// 

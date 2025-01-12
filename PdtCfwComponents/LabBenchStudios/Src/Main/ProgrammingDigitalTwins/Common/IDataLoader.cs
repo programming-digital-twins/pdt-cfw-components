@@ -37,11 +37,29 @@ namespace LabBenchStudios.Pdt.Common
 		/// given parameters.
         /// 
         /// </summary>
-		/// <param name="resource"> The resource container with load meta data / additional search criteria.</param>
-		/// <param name="startDate"> The start timeStamp.</param>
-		/// <param name="endDate"> The end timeStamp.</param>
+		/// <param name="cacheName"> The name of the cache. The file name will be auto-generated.</param>
 		/// <returns type="List<DataCacheEntryContainer>">The data instance(s) associated with the lookup parameters.</returns>
 		public List<DataCacheEntryContainer> LoadDataCache(string cacheName);
+
+        /// <summary>
+		/// Attempts to retrieve the named data instance from the persistence server.
+        /// Will return null if there's no data matching the given type with the
+		/// given parameters.
+        /// 
+        /// </summary>
+		/// <param name="cacheName"> The name of the cache. The file name will be auto-generated.</param>
+		/// <returns type="string">The text data associated with the lookup parameters.</returns>
+		public string LoadTextDataCache(string cacheName);
+
+		/// <summary>
+		/// Attempts to retrieve the named data instance from the persistence server.
+		/// Will return null if there's no data matching the given type with the
+		/// given parameters.
+		/// 
+		/// </summary>
+		/// <param name="cacheName"> The name of the cache. The file name will be auto-generated.</param>
+		/// <returns type="string">The text data associated with the lookup parameters.</returns>
+		public RequestResponseData LoadRequestResponseData(string cacheName);
 
         /// <summary>
 		/// Attempts to retrieve the named data instance from the persistence server.

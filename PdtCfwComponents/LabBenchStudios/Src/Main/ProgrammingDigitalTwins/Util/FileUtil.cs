@@ -25,8 +25,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Security.AccessControl;
 using System.Text;
+
 using LabBenchStudios.Pdt.Common;
 using LabBenchStudios.Pdt.Data;
 
@@ -42,14 +42,36 @@ namespace LabBenchStudios.Pdt.Util
         /// <summary>
         /// 
         /// </summary>
+        public enum PersistenceDataTypeEnum
+        {
+            Historian,
+            Prediction,
+            IotData,
+            Text
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="cacheName"></param>
         /// <returns></returns>
-        public static string CreateDataHistorianFile(string cacheName)
+        public static string CreateDataHistorianFileName(string cacheName)
         {
-            string historianPath = CreateAbsHistorianCachePath(ConfigConst.DEFAULT_FILE_STORAGE_PATH);
-            string historianFile = CreateAbsHistorianCacheFileName(cacheName, historianPath);
+            return CreateDataHistorianFileName(ConfigConst.DEFAULT_FILE_STORAGE_PATH, cacheName);
+        }
 
-            return historianFile;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pathPrefix"></param>
+        /// <param name="cacheName"></param>
+        /// <returns></returns>
+        public static string CreateDataHistorianFileName(string pathPrefix, string cacheName)
+        {
+            string historianCachePath = CreateHistorianCacheFilePath(pathPrefix);
+            string historianCacheFile = CreateDataCacheFileName(cacheName, historianCachePath);
+
+            return historianCacheFile;
         }
 
         /// <summary>
@@ -57,9 +79,33 @@ namespace LabBenchStudios.Pdt.Util
         /// </summary>
         /// <param name="pathPrefix"></param>
         /// <returns></returns>
-        public static string CreateAbsHistorianCachePath(string pathPrefix)
+        public static string CreateHistorianCacheFilePath(string pathPrefix)
         {
-            return InitializeStoragePath(pathPrefix, ConfigConst.HISTORIAN_CACHE_NAME);
+            return InitializeDataFilePath(pathPrefix, ConfigConst.HISTORIAN_CACHE_NAME);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheName"></param>
+        /// <returns></returns>
+        public static string CreatePredictionFileName(string cacheName)
+        {
+            return CreatePredictionFileName(ConfigConst.DEFAULT_FILE_STORAGE_PATH, cacheName);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pathPrefix"></param>
+        /// <param name="cacheName"></param>
+        /// <returns></returns>
+        public static string CreatePredictionFileName(string pathPrefix, string cacheName)
+        {
+            string predictionCachePath = CreatePredictionCacheFilePath(pathPrefix);
+            string predictionCacheFile = CreateDataCacheFileName(cacheName, predictionCachePath);
+
+            return predictionCacheFile;
         }
 
         /// <summary>
@@ -67,9 +113,77 @@ namespace LabBenchStudios.Pdt.Util
         /// </summary>
         /// <param name="pathPrefix"></param>
         /// <returns></returns>
-        public static string CreateAbsObjectStorePath(string pathPrefix)
+        public static string CreatePredictionCacheFilePath(string pathPrefix)
         {
-            return InitializeStoragePath(pathPrefix, ConfigConst.DATA_STORE_NAME);
+            return InitializeDataFilePath(pathPrefix, ConfigConst.PREDICTION_CACHE_NAME);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheName"></param>
+        /// <returns></returns>
+        public static string CreateTextCacheFileName(string cacheName)
+        {
+            return CreateTextCacheFileName(ConfigConst.DEFAULT_FILE_STORAGE_PATH, cacheName);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pathPrefix"></param>
+        /// <param name="cacheName"></param>
+        /// <returns></returns>
+        public static string CreateTextCacheFileName(string pathPrefix, string cacheName)
+        {
+            string textCachePath = CreateTextCacheFilePath(pathPrefix);
+            string textCacheFile = CreateDataCacheFileName(cacheName, textCachePath);
+
+            return textCacheFile;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pathPrefix"></param>
+        /// <returns></returns>
+        public static string CreateTextCacheFilePath(string pathPrefix)
+        {
+            return InitializeDataFilePath(pathPrefix, ConfigConst.TEXT_CACHE_NAME);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheName"></param>
+        /// <returns></returns>
+        public static string CreateObjectStoreFileName(string cacheName)
+        {
+            return CreateObjectStoreFileName(ConfigConst.DEFAULT_FILE_STORAGE_PATH, cacheName);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pathPrefix"></param>
+        /// <param name="cacheName"></param>
+        /// <returns></returns>
+        public static string CreateObjectStoreFileName(string pathPrefix, string cacheName)
+        {
+            string objectStorePath = CreateObjectStoreFilePath(pathPrefix);
+            string objectStoreFile = CreateDataCacheFileName(cacheName, objectStorePath);
+
+            return objectStoreFile;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pathPrefix"></param>
+        /// <returns></returns>
+        public static string CreateObjectStoreFilePath(string pathPrefix)
+        {
+            return InitializeDataFilePath(pathPrefix, ConfigConst.DATA_STORE_NAME);
         }
 
         /// <summary>
@@ -78,55 +192,62 @@ namespace LabBenchStudios.Pdt.Util
         /// <param name="pathPrefix"></param>
         /// <param name="subPath"></param>
         /// <returns></returns>
-        public static string InitializeStoragePath(string pathPrefix, string subPath)
+        public static string InitializeDataFilePath(string pathPrefix, string subPath)
         {
             if (string.IsNullOrEmpty(pathPrefix))
             {
                 pathPrefix = ConfigConst.DEFAULT_FILE_STORAGE_PATH;
 
-                Console.WriteLine($"Invalid data store path prefix. Using default: {pathPrefix}");
+                Console.WriteLine($"Null or empty data file path prefix. Using default: {pathPrefix}");
             }
 
-            string storagePath = null;
+            if (!Directory.Exists(pathPrefix))
+            {
+                pathPrefix = ConfigConst.DEFAULT_FILE_STORAGE_PATH;
+
+                Console.WriteLine($"Data file path doesn't exist. Attempting to use default: {pathPrefix}");
+            }
+
+            string dataFilePath = null;
 
             if (string.IsNullOrWhiteSpace(subPath))
             {
-                storagePath = pathPrefix;
+                dataFilePath = pathPrefix;
             } else
             {
-                storagePath = Path.Combine(pathPrefix, subPath);
+                dataFilePath = Path.Combine(pathPrefix, subPath);
             }
 
-            storagePath = Path.GetFullPath(storagePath);
+            dataFilePath = Path.GetFullPath(dataFilePath);
 
             // make sure the path exists
-            if (!Directory.Exists(storagePath))
+            if (!Directory.Exists(dataFilePath))
             {
                 // path doesn't exist - try to create it
                 try
                 {
-                    DirectoryInfo dirInfo = Directory.CreateDirectory(storagePath);
+                    DirectoryInfo dirInfo = Directory.CreateDirectory(dataFilePath);
 
-                    Console.WriteLine($"File persistence - path created: {storagePath}. Info: {dirInfo}");
+                    Console.WriteLine($"Data file path created: {dataFilePath}. Info: {dirInfo}");
 
-                    return storagePath;
+                    return dataFilePath;
                 } catch (Exception e)
                 {
-                    Console.WriteLine($"Failed to create storage path {storagePath}. Error: {e.Message}");
+                    Console.WriteLine($"Failed to create data file path {dataFilePath}. Error: {e.Message}");
                 }
             } else
             {
                 // path already exists - try to access it
                 try
                 {
-                    string pathInfo = Directory.GetDirectoryRoot(storagePath);
+                    string pathInfo = Directory.GetDirectoryRoot(dataFilePath);
 
-                    Console.WriteLine($"File persistence - path exists: {storagePath}. Info: {pathInfo}");
+                    Console.WriteLine($"Data file path exists: {dataFilePath}. Info: {pathInfo}");
 
-                    return storagePath;
+                    return dataFilePath;
                 } catch (Exception e)
                 {
-                    Console.WriteLine($"Failed to access existing storage path {storagePath}. Error: {e.Message}");
+                    Console.WriteLine($"Failed to access existing data file path {dataFilePath}. Error: {e.Message}");
                 }
             }
 
@@ -186,9 +307,9 @@ namespace LabBenchStudios.Pdt.Util
         /// <param name="resource"></param>
         /// <param name="pathPrefix"></param>
         /// <returns></returns>
-        public static string CreateAbsResourceFileName(ResourceNameContainer resource, string pathPrefix)
+        public static string CreateResourceFileName(ResourceNameContainer resource, string pathPrefix)
         {
-            return CreateAbsResourceFileName(resource, pathPrefix, true);
+            return CreateResourceFileName(resource, pathPrefix, true);
         }
 
         /// <summary>
@@ -198,7 +319,7 @@ namespace LabBenchStudios.Pdt.Util
         /// <param name="pathPrefix"></param>
         /// <param name="useDate"></param>
         /// <returns></returns>
-        public static string CreateAbsResourceFileName(ResourceNameContainer resource, string pathPrefix, bool useDate)
+        public static string CreateResourceFileName(ResourceNameContainer resource, string pathPrefix, bool useDate)
         {
             string deviceID = resource.DeviceName;
             string locationID = resource.DeviceLocation;
@@ -257,21 +378,9 @@ namespace LabBenchStudios.Pdt.Util
         /// <param name="cacheName"></param>
         /// <param name="pathPrefix"></param>
         /// <returns></returns>
-        public static string CreateAbsHistorianCacheFileName(string cacheName, string pathPrefix)
+        public static string CreateDataCacheFileName(string cacheName, string pathPrefix)
         {
-            return CreateAbsHistorianCacheFileName(cacheName, pathPrefix, false, true);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="cacheName"></param>
-        /// <param name="pathPrefix"></param>
-        /// <param name="useDate"></param>
-        /// <returns></returns>
-        public static string CreateAbsHistorianCacheFileName(string cacheName, string pathPrefix, bool useDate)
-        {
-            return CreateAbsHistorianCacheFileName(cacheName, pathPrefix, useDate, true);
+            return CreateDataCacheFileName(cacheName, pathPrefix, false, true);
         }
 
         /// <summary>
@@ -282,7 +391,7 @@ namespace LabBenchStudios.Pdt.Util
         /// <param name="useDate"></param>
         /// <param name="useJsonExt"></param>
         /// <returns></returns>
-        public static string CreateAbsHistorianCacheFileName(string cacheName, string pathPrefix, bool useDate, bool useJsonExt)
+        public static string CreateDataCacheFileName(string cacheName, string pathPrefix, bool useDate, bool useJsonExt)
         {
             string fileName = cacheName;
 
@@ -431,6 +540,78 @@ namespace LabBenchStudios.Pdt.Util
 
             return null;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public static string ReadDataFromFile(string fileName)
+        {
+            try
+            {
+                string data = File.ReadAllText(fileName);
+
+                int bytesRead = data.Length;
+
+                return data;
+            } catch (Exception e)
+            {
+                Console.WriteLine($"Failed to read data cache from file {fileName}. Error: {e.Message}");
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="data"></param>
+        /// <param name="overwrite"></param>
+        /// <returns></returns>
+        public static int WriteDataToFile(string fileName, string data, bool overwrite)
+        {
+            int bytesWritten = 0;
+
+            if (!string.IsNullOrEmpty(fileName) && !string.IsNullOrEmpty(data))
+            {
+                Console.WriteLine($"Storing {data.Length} bytes to data cache at location {fileName}.");
+
+                try
+                {
+                    if (overwrite)
+                    {
+                        File.Create(fileName).Close();
+                    }
+
+                    File.WriteAllText(fileName, data);
+
+                    bytesWritten = data.Length;
+
+                    if (bytesWritten > 0)
+                    {
+                        Console.WriteLine($"Successfully stored data cache to location {fileName}. Total bytes: {bytesWritten}.");
+                    } else
+                    {
+                        Console.WriteLine($"No data stored for data cache to location {fileName}.");
+                    }
+                } catch (Exception e)
+                {
+                    bytesWritten = -1;
+
+                    Console.WriteLine($"Failed to write data cache to file {fileName}. Error: {e.Message}");
+                }
+
+                return bytesWritten;
+            } else
+            {
+                Console.WriteLine($"Failed to write text data to file. Filename {fileName} or text is null or empty.");
+            }
+
+            return 0;
+        }
+
     }
 
 }

@@ -167,6 +167,22 @@ namespace LabBenchStudios.Pdt.Data
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
+        public static string RequestResponseDataToJson(RequestResponseData data)
+        {
+            string jsonData = JsonConvert.SerializeObject(data, new JsonSerializerSettings
+            {
+                ContractResolver = camelCaseResolver,
+                Formatting = Formatting.Indented
+            });
+
+            return jsonData;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public static string SensorDataToJson(SensorData data)
         {
             Console.WriteLine(data);
@@ -336,6 +352,27 @@ namespace LabBenchStudios.Pdt.Data
             jsonData = NormalizeData(jsonData);
 
             MessageData data = new MessageData();
+            JsonConvert.PopulateObject(jsonData, data, new JsonSerializerSettings
+            {
+                ContractResolver = camelCaseResolver,
+                Formatting = Formatting.Indented
+            });
+
+            return data;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="jsonData"></param>
+        /// <returns></returns>
+        public static RequestResponseData JsonToRequestResponseData(string jsonData)
+        {
+            if (string.IsNullOrEmpty(jsonData)) { return null; }
+
+            jsonData = NormalizeData(jsonData);
+
+            RequestResponseData data = new RequestResponseData();
             JsonConvert.PopulateObject(jsonData, data, new JsonSerializerSettings
             {
                 ContractResolver = camelCaseResolver,

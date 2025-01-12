@@ -110,6 +110,8 @@ namespace LabBenchStudios.Pdt.Common
 
         public const string DATA_STORE_NAME = "objectStore";
         public const string HISTORIAN_CACHE_NAME = "historianCache";
+        public const string PREDICTION_CACHE_NAME = "predictionCache";
+        public const string TEXT_CACHE_NAME = "textCache";
 
         public const string CONSTRAINED_DEVICE = CONSTRAINED + DEVICE;
         public const string EDGE_DEVICE = EDGE + DEVICE;

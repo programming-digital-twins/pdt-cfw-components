@@ -143,6 +143,38 @@ namespace LabBenchStudios.Pdt.Model
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string GetAggregatedQueryMessages()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (string message in this.queryMsgList)
+            {
+                sb.Append(message).Append('\n');
+            }
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string GetAggregatedResponseMessages()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (string message in this.queryResponseList)
+            {
+                sb.Append(message).Append('\n');
+            }
+
+            return sb.ToString();
+        }
+
+        /// <summary>
         /// By default, this will 'pop' the latest response message,
         /// clearing the value for the 'latest response'.
         /// 

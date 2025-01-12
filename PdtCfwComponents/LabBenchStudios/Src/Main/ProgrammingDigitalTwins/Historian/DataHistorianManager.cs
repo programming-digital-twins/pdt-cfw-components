@@ -30,6 +30,7 @@ using LabBenchStudios.Pdt.Common;
 using LabBenchStudios.Pdt.Connection;
 using LabBenchStudios.Pdt.Data;
 using LabBenchStudios.Pdt.Plexus;
+using LabBenchStudios.Pdt.Util;
 
 namespace LabBenchStudios.Pdt.Historian
 {
@@ -280,7 +281,7 @@ namespace LabBenchStudios.Pdt.Historian
         {
             if (this.persistenceConnector != null)
             {
-                return this.persistenceConnector.GetDataHistorianCacheUri();
+                return this.persistenceConnector.GetDataStoreUri();
             } else
             {
                 return this.rootPathName;
@@ -595,7 +596,7 @@ namespace LabBenchStudios.Pdt.Historian
         /// <param name="filePath"></param>
         private void InitPersistenceLayer()
         {
-            this.SetPersistenceConnector(new FilePersistenceConnector(this.rootPathName));
+            this.SetPersistenceConnector(new FilePersistenceConnector(this.rootPathName, FileUtil.PersistenceDataTypeEnum.Historian));
         }
 
         /// <summary>

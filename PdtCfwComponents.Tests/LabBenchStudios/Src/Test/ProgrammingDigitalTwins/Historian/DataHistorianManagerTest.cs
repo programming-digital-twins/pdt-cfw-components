@@ -30,6 +30,7 @@ using LabBenchStudios.Pdt.Connection;
 using LabBenchStudios.Pdt.Data;
 using LabBenchStudios.Pdt.Historian;
 using LabBenchStudios.Pdt.Plexus;
+using LabBenchStudios.Pdt.Util;
 
 namespace LabBenchStudios.Pdt.Test.Historian
 {
@@ -125,7 +126,7 @@ namespace LabBenchStudios.Pdt.Test.Historian
 
             this.WritePlayerInfoToConsole(player);
 
-            FilePersistenceConnector filePersistenceConnector = new FilePersistenceConnector();
+            FilePersistenceConnector filePersistenceConnector = new FilePersistenceConnector(FileUtil.PersistenceDataTypeEnum.Historian);
             player.SetDataStorer(filePersistenceConnector);
 
             SensorData sensorData = new SensorData();

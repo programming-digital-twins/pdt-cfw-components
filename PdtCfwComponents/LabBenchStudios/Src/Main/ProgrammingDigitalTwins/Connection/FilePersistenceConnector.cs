@@ -25,7 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-
+using System.Runtime.InteropServices;
 using LabBenchStudios.Pdt.Common;
 using LabBenchStudios.Pdt.Data;
 using LabBenchStudios.Pdt.Util;
@@ -95,24 +95,30 @@ namespace LabBenchStudios.Pdt.Connection
         private string primaryStoragePath = null;
         private string productName = ConfigConst.PRODUCT_NAME;
 
+        private string persistenceTypePath = null;
+
         private string objectStorePath = null;
         private string historianCachePath = null;
+        private string predictionCachePath = null;
+        private string textCachePath = null;
+
 
         private bool isEncoded = false;
         private bool isPathInitialized = false;
         private bool isConnected = false;
         private bool areIncomingMessagesPaused = false;
 
-        private ISystemStatusEventListener eventListener = null;
+        private FileUtil.PersistenceDataTypeEnum persistenceDataType = FileUtil.PersistenceDataTypeEnum.IotData;
 
-        private ConnectionStateData connStateData = null;
 
         // constructors
 
         /// <summary>
         /// The system user's default temp path will be used.
         /// </summary>
-        public FilePersistenceConnector() : this(null, ConfigConst.PRODUCT_NAME, null)
+        /// <param name="persistenceDataType"></param>"
+        public FilePersistenceConnector(FileUtil.PersistenceDataTypeEnum persistenceDataType) :
+            this(null, ConfigConst.PRODUCT_NAME, persistenceDataType, null)
         {
             // nothing to do
         }
@@ -121,7 +127,9 @@ namespace LabBenchStudios.Pdt.Connection
         /// If storagePath is invalid, the system user's default temp path will be used.
         /// </summary>
         /// <param name="storagePath"></param>
-        public FilePersistenceConnector(string storagePath) : this(storagePath, ConfigConst.PRODUCT_NAME, null)
+        /// <param name="persistenceDataType"></param>"
+        public FilePersistenceConnector(string storagePath, FileUtil.PersistenceDataTypeEnum persistenceDataType) :
+            this(storagePath, ConfigConst.PRODUCT_NAME, persistenceDataType, null)
         {
             // nothing to do
         }
@@ -132,7 +140,10 @@ namespace LabBenchStudios.Pdt.Connection
         /// <param name="storagePath"></param>
         /// <param name="productName"></param>
         /// <param name="eventListener"></param>
-        public FilePersistenceConnector(string storagePath, string productName, ISystemStatusEventListener eventListener)
+        /// <param name="persistenceDataType"></param>"
+        public FilePersistenceConnector(
+            string storagePath, string productName, FileUtil.PersistenceDataTypeEnum persistenceDataType, ISystemStatusEventListener eventListener) :
+            base(productName, persistenceDataType, ConfigConst.FILE_SYSTEM_TYPE, eventListener)
         {
             // quick init of primary storage path
             if (string.IsNullOrWhiteSpace(storagePath)) {
@@ -142,17 +153,6 @@ namespace LabBenchStudios.Pdt.Connection
             this.primaryStoragePath = storagePath;
 
             this.InitStoragePaths();
-
-            // set the event listener (for system status events)
-            this.eventListener = eventListener;
-
-            // create the initial conn state message and send to listener (if non-null)
-            this.connStateData = new ConnectionStateData();
-            this.connStateData.SetTypeCategoryID(ConfigConst.SYSTEM_TYPE_CATEGORY);
-            this.connStateData.SetTypeID(ConfigConst.FILE_SYSTEM_TYPE);
-            this.connStateData.SetResourcePrefix(storagePath);
-            this.connStateData.SetMessage($"Default file persistence connector initialized.");
-            this.eventListener?.OnMessagingSystemStatusUpdate(GetConnectionStateCopy());
         }
 
 
@@ -202,9 +202,39 @@ namespace LabBenchStudios.Pdt.Connection
         /// </summary>
         /// <param name="cacheName"></param>
         /// <returns></returns>
-        protected override string HandleCreateHistorianCacheFileName(string cacheName)
+        protected override string HandleCreateHistorianCacheName(string cacheName)
         {
-            return FileUtil.CreateAbsHistorianCacheFileName(cacheName, this.historianCachePath);
+            return FileUtil.CreateDataCacheFileName(cacheName, this.historianCachePath);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheName"></param>
+        /// <returns></returns>
+        protected override string HandleCreatePredictionCacheName(string cacheName)
+        {
+            return FileUtil.CreateDataCacheFileName(cacheName, this.predictionCachePath);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheName"></param>
+        /// <returns></returns>
+        protected override string HandleCreateTextCacheName(string cacheName)
+        {
+            return FileUtil.CreateDataCacheFileName(cacheName, this.textCachePath);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheName"></param>
+        /// <returns></returns>
+        protected override string HandleCreateDataStoreName(string cacheName)
+        {
+            return FileUtil.CreateDataCacheFileName(cacheName, this.objectStorePath);
         }
 
         /// <summary>
@@ -214,6 +244,24 @@ namespace LabBenchStudios.Pdt.Connection
         protected override string HandleGetHistorianCacheUri()
         {
             return this.historianCachePath;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        protected override string HandleGetPredictionCacheUri()
+        {
+            return this.predictionCachePath;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        protected override string HandleGetTextCacheUri()
+        {
+            return this.textCachePath;
         }
 
         /// <summary>
@@ -232,14 +280,14 @@ namespace LabBenchStudios.Pdt.Connection
         /// <returns></returns>
         protected override List<DataCacheEntryContainer> HandleLoadDataCache(string cacheName)
         {
-            string fileName = FileUtil.CreateAbsHistorianCacheFileName(cacheName, this.historianCachePath);
+            string fileName = FileUtil.CreateDataCacheFileName(cacheName, this.historianCachePath);
             int bytesRead = 0;
 
             Console.WriteLine($"Loading data cache {cacheName} from location {fileName}.");
 
             try
             {
-                string jsonData = File.ReadAllText(fileName);
+                string jsonData = FileUtil.ReadDataFromFile(fileName);
 
                 bytesRead = jsonData.Length;
 
@@ -254,6 +302,80 @@ namespace LabBenchStudios.Pdt.Connection
                 }
 
                 return dataCache;
+
+            } catch (Exception e)
+            {
+                Console.WriteLine($"Failed to read data cache {cacheName} from file {fileName}. Error: {e.Message}");
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheName"></param>
+        /// <returns></returns>
+        protected override string HandleLoadTextDataCache(string cacheName)
+        {
+            string fileName = FileUtil.CreateDataCacheFileName(cacheName, this.textCachePath);
+            int bytesRead = 0;
+
+            Console.WriteLine($"Loading data cache {cacheName} from location {fileName}.");
+
+            try
+            {
+                string data = File.ReadAllText(fileName);
+
+                bytesRead = data.Length;
+
+                if (data != null)
+                {
+                    Console.WriteLine($"Successfully loaded data cache {cacheName} from location {fileName}. Total bytes: {bytesRead}.");
+                } else
+                {
+                    Console.WriteLine($"No data loaded for data cache {cacheName} from location {fileName}.");
+                }
+
+                return data;
+
+            } catch (Exception e)
+            {
+                Console.WriteLine($"Failed to read data cache {cacheName} from file {fileName}. Error: {e.Message}");
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheName"></param>
+        /// <returns></returns>
+        protected override RequestResponseData HandleLoadRequestResponseData(string cacheName)
+        {
+            string fileName = FileUtil.CreateDataCacheFileName(cacheName, this.predictionCachePath);
+            int bytesRead = 0;
+
+            Console.WriteLine($"Loading data cache {cacheName} from location {fileName}.");
+
+            try
+            {
+                string jsonData = File.ReadAllText(fileName);
+
+                bytesRead = jsonData.Length;
+
+                RequestResponseData data = DataUtil.JsonToRequestResponseData(jsonData);
+
+                if (data != null)
+                {
+                    Console.WriteLine($"Successfully loaded data cache {cacheName} from location {fileName}. Total bytes: {bytesRead}.");
+                } else
+                {
+                    Console.WriteLine($"No data loaded for data cache {cacheName} from location {fileName}.");
+                }
+
+                return data;
 
             } catch (Exception e)
             {
@@ -320,9 +442,11 @@ namespace LabBenchStudios.Pdt.Connection
         /// <returns></returns>
         protected override int HandleStoreDataCache(string cacheName, List<DataCacheEntryContainer> dataCache)
         {
-            string fileName = FileUtil.CreateAbsHistorianCacheFileName(cacheName, this.historianCachePath, true, true);
+            string fileName = FileUtil.CreateDataCacheFileName(cacheName, this.objectStorePath, true, true);
 
-            return this.HandleStoreDataCache(cacheName, fileName, dataCache);
+            Console.WriteLine($"Storing data cache entries at location {fileName}.");
+
+            return this.HandleStoreDataCache(cacheName, fileName, dataCache, true);
         }
 
         /// <summary>
@@ -335,9 +459,58 @@ namespace LabBenchStudios.Pdt.Connection
             string cacheName = historianCache.GetCacheName();
             string fileName = historianCache.GetStorageFileName();
 
+            Console.WriteLine($"Storing historian data cache at location {fileName}.");
+
             List<DataCacheEntryContainer> dataCache = historianCache.GetCacheEntries();
 
-            return this.HandleStoreDataCache(cacheName, fileName, dataCache);
+            return this.HandleStoreDataCache(cacheName, fileName, dataCache, true);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="dataCache"></param>
+        /// <returns></returns>
+        protected override int HandleStoreTextDataCache(string fileName, string dataCache)
+        {
+            Console.WriteLine($"Storing text data cache at location {fileName}.");
+
+            return FileUtil.WriteDataToFile(fileName, dataCache, true);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <param name="qos"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        protected override bool HandleStoreData(RequestResponseData data)
+        {
+            if (data != null)
+            {
+                string fileName = FileUtil.CreateDataCacheFileName(data.GetSessionID(), this.predictionCachePath);
+
+                Console.WriteLine($"Storing prediction data cache at location {fileName}.");
+
+                string jsonData = DataUtil.RequestResponseDataToJson(data);
+
+                int bytesWritten = FileUtil.WriteDataToFile(fileName, jsonData, true);
+
+                if (bytesWritten > 0)
+                {
+                    return true;
+                } else
+                {
+                    Console.WriteLine($"Failed to write bytes to file {fileName}.");
+                }
+            } else
+            {
+                Console.WriteLine("Failed to write RequestResponseData to filesystem. Data object is null.");
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -401,51 +574,15 @@ namespace LabBenchStudios.Pdt.Connection
         /// <param name="cacheName"></param>
         /// <param name="fileName"></param>
         /// <param name="dataCache"></param>
-        /// <returns></returns>
-        private int HandleStoreDataCache(string cacheName, string fileName, List<DataCacheEntryContainer> dataCache)
-        {
-            return this.HandleStoreDataCache(cacheName, fileName, dataCache, true);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="cacheName"></param>
-        /// <param name="fileName"></param>
-        /// <param name="dataCache"></param>
         /// <param name="overwrite"></param>
         /// <returns></returns>
         private int HandleStoreDataCache(string cacheName, string fileName, List<DataCacheEntryContainer> dataCache, bool overwrite)
         {
             string jsonData = DataUtil.DataCacheEntryListToJson(dataCache);
-            int bytesWritten = 0;
 
             Console.WriteLine($"Storing {jsonData.Length} bytes to data cache {cacheName} at location {fileName}.");
 
-            try
-            {
-                if (overwrite)
-                {
-                    File.Create(fileName).Close();
-                }
-
-                File.WriteAllText(fileName, jsonData);
-
-                bytesWritten = jsonData.Length;
-
-                if (bytesWritten > 0)
-                {
-                    Console.WriteLine($"Successfully stored data cache {cacheName} to location {fileName}. Total bytes: {bytesWritten}.");
-                } else
-                {
-                    Console.WriteLine($"No data stored for data cache {cacheName} to location {fileName}.");
-                }
-            } catch (Exception e)
-            {
-                bytesWritten = -1;
-
-                Console.WriteLine($"Failed to write data cache {cacheName} to file {fileName}. Error: {e.Message}");
-            }
+            int bytesWritten = FileUtil.WriteDataToFile(fileName, jsonData, overwrite);
 
             return bytesWritten;
         }
@@ -456,14 +593,36 @@ namespace LabBenchStudios.Pdt.Connection
         private void InitStoragePaths()
         {
             // init primary path
-            Console.WriteLine($"Initializing primary historian cache path...");
-            this.historianCachePath = FileUtil.CreateAbsHistorianCachePath(this.primaryStoragePath);
-            Console.WriteLine($"Historian cache path: {this.historianCachePath}");
+            string cachePathName = "";
 
-            Console.WriteLine($"Initializing primary data (object) store path...");
-            this.objectStorePath = FileUtil.CreateAbsObjectStorePath(this.primaryStoragePath);
-            Console.WriteLine($"Object store path: {this.objectStorePath}");
+            switch (base.GetPersistenceDataType())
+            {
+                case FileUtil.PersistenceDataTypeEnum.Historian:
+                    cachePathName = "historian cache";
+                    this.historianCachePath = FileUtil.CreateHistorianCacheFilePath(this.primaryStoragePath);
 
+                    break;
+
+                case FileUtil.PersistenceDataTypeEnum.Prediction:
+                    cachePathName = "prediction cache";
+                    this.predictionCachePath = FileUtil.CreatePredictionCacheFilePath(this.primaryStoragePath);
+
+                    break;
+
+                case FileUtil.PersistenceDataTypeEnum.Text:
+                    cachePathName = "text data cache";
+                    this.textCachePath = FileUtil.CreateTextCacheFilePath(this.primaryStoragePath);
+
+                    break;
+
+                case FileUtil.PersistenceDataTypeEnum.IotData:
+                    cachePathName = "iot data store";
+                    this.objectStorePath = FileUtil.CreateObjectStoreFilePath(this.primaryStoragePath);
+
+                    break;
+            }
+
+            Console.WriteLine($"Initialized {cachePathName} cache path: {this.persistenceTypePath}");
             this.isPathInitialized = true;
         }
 

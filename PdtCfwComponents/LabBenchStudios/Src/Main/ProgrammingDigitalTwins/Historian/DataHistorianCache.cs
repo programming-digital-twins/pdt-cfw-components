@@ -587,7 +587,7 @@ namespace LabBenchStudios.Pdt.Historian
         /// </summary>
         private void InitCacheProperties()
         {
-            this.cacheFileName = FileUtil.CreateDataHistorianFile(this.cacheName);
+            this.cacheFileName = FileUtil.CreateDataHistorianFileName(this.cacheName);
             this.cacheFilePath = Path.GetDirectoryName(this.cacheFileName);
 
             Console.WriteLine($"Cache props: Name = {this.cacheName}; File = {this.cacheFileName}; Path = {this.cacheFilePath}");

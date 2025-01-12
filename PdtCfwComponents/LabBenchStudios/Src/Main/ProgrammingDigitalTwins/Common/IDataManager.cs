@@ -31,19 +31,13 @@ namespace LabBenchStudios.Pdt.Common
         /// </summary>
         /// <param name="cacheName"></param>
         /// <returns></returns>
-        public string CreateDataHistorianCacheFileName(string cacheName);
+        public string CreateDataStoreName(string cacheName);
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public string GetDataHistorianCacheUri();
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public string GetDataObjectStoreUri();
+        public string GetDataStoreUri();
 
     }
 }

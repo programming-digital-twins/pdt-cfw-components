@@ -34,6 +34,15 @@ namespace LabBenchStudios.Pdt.Common
         /// <summary>
 		/// Attempts to write the source data instance to the persistence server.
         /// </summary>
+        /// <param name="cacheName"></param>
+        /// <param name="dataCache"></param>
+        /// <returns type="int">On success, returns the total bytes stored. If no bytes
+        /// are written and no errors, returns 0. If errored, returns -1.</returns>
+        public int StoreTextDataCache(string cacheName, string dataCache);
+
+        /// <summary>
+		/// Attempts to write the source data instance to the persistence server.
+        /// </summary>
         /// <param name="historianCache"></param>
         /// <returns type="int">On success, returns the total bytes stored. If no bytes
         /// are written and no errors, returns 0. If errored, returns -1.</returns>
@@ -47,6 +56,14 @@ namespace LabBenchStudios.Pdt.Common
         /// <returns type="int">On success, returns the total bytes stored. If no bytes
         /// are written and no errors, returns 0. If errored, returns -1.</returns>
         public int StoreDataCache(string cacheName, List<DataCacheEntryContainer> cache);
+
+        /// <summary>
+		/// Attempts to write the source data instance to the persistence server.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns type="int">On success, returns the total bytes stored. If no bytes
+        /// are written and no errors, returns 0. If errored, returns -1.</returns>
+        public bool StoreData(RequestResponseData data);
 
         /// <summary>
         /// Attempts to write the source data instance to the persistence server.
