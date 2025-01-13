@@ -8,7 +8,7 @@ These classes and their relationships respresent a notional design that aligns w
 
 ### Project Objectives
 
-The [LabBenchStudios-PDT-Unity](https://github.com/programming-digital-twins/LabBenchStudios-PDT-Unity) project is intended to be used with [pdt-cfw-components](https://github.com/programming-digital-twins/pdt-cfw-components) repository has three primary objectives:
+The [LabBenchStudios-PDT-Unity](https://github.com/programming-digital-twins/LabBenchStudios-PDT-Unity) research project is intended to be used with [pdt-cfw-components](https://github.com/programming-digital-twins/pdt-cfw-components) repository has three primary objectives:
 
 (1) Build a largely F/OSS Digital Twin framework that can work with other [Programming Digital Twins projects](https://github.com/programming-digital-twins) and their repositories to sync live data, DTDL models, and a JSON-based constraint mapping layer, and render within a COTS physics sim engine (e.g., Unity 6).
 
