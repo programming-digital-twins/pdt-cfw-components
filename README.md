@@ -1,26 +1,51 @@
 # Programming Digital Twins - Client Framework Components
 
+## Overview
+
 This is the source repository for client framework software components (written primarily in C#) related to my Digital Twins Programming course at Northeastern University. The intent of this repository is to provide students with a baseline client framework library that provides core integration functionality for the digital twin application components (which are housed in a separate repository). For convenience to the reader, much of the basic functionality has already been implemented (such as configuration logic, consts, interfaces, and test cases).
 
 These classes and their relationships respresent a notional design that aligns with the requirements listed in [Programming Digital Twins Requirements](https://github.com/orgs/programming-digital-twins/projects/1). These requirements encapsulate the programming exercises presented in my course [Buliding Digital Twins](TBD).
 
-## Links, Exercises, Updates, Errata, and Clarifications
+### Project Objectives
 
-Please see the following links to access exercises for this project. Please note that many of the exercises and sample source code in this repository is based on the Constrained Device Application design and exercises from my book, [Programming the Internet of Things Book](https://learning.oreilly.com/library/view/programming-the-internet/9781492081401/).
- - [Programming Digital Twins Requirements](https://github.com/orgs/programming-digital-twins/projects/1)
- - [Programming the Internet of Things Book](https://learning.oreilly.com/library/view/programming-the-internet/9781492081401/)
+The [LabBenchStudios-PDT-Unity](https://github.com/programming-digital-twins/LabBenchStudios-PDT-Unity) project is intended to be used with [pdt-cfw-components](https://github.com/programming-digital-twins/pdt-cfw-components) and repository has three primary objectives:
 
-## How to use this repository
+(1) Build a largely F/OSS Digital Twin framework that can work with other [Programming Digital Twins projects](https://github.com/programming-digital-twins) and their repositories to sync live data, DTDL models, and a JSON-based constraint mapping layer, and render within a COTS physics sim engine (e.g., Unity 6).
 
-If you're reading [Programming the Internet of Things: An Introduction to Building Integrated, Device to Cloud IoT Solutions](https://learning.oreilly.com/library/view/programming-the-internet/9781492081401), you'll see a partial tie-in with the exercises described in some of the chapters and lab modules exercises. While Programming the IoT exercises are mostly Python and Java, this repository is implemented in C#; it does, however, share some of the same functionality as the Programming the IoT Gateway Device App (GDA), but without the application wrapper and state machine component.
+(2) Use a digital twin asset's configuration data to auto-generate a GPT AI prompt to query one or more locally running LLM's to retrieve predictive maintenance recommendations for the specific system within the Digital Twin environment.
 
-## This repository aligns to exercises in Programming Digital Twins, and partially to Programming the Internet of Things
+(3) Provide a baseline technology platform for my Northeastern University College of Engineering graduate students (and me) to learn and experiment with various Digital Twin use cases.
+
+### Helpful Links
+
+PDT Kanban Board: [Programming Digital Twins Requirements](https://github.com/orgs/programming-digital-twins/projects/1)
+
+Please see the following links for some helpful information about the PDT exercises and other associated repositories. Please note that many of the exercises and sample source code in this repository is based on some of the patterns and exercises from my book, [Programming the Internet of Things Book](https://learning.oreilly.com/library/view/programming-the-internet/9781492081401/).
+ - Programming Digital Twins (PDT) specific:
+   - [Programming Digital Twins Exercises (aka PDT Kanban Board)](https://github.com/orgs/programming-digital-twins/projects/1)
+   - [Programming Digital Twins - LBS PDT Unity Package](https://github.com/programming-digital-twins/LabBenchStudios-PDT-Unity/)
+   - [Programming Digital Twins Client Framework Repository](https://github.com/programming-digital-twins/pdt-cfw-components)
+   - [Programming Digital Twins Edge Components Repository](https://github.com/programming-digital-twins/pdt-edge-components)
+   - [Programming Digital Twins Exercise Doc Templates Repository](https://github.com/programming-digital-twins/pdt-exercise-docs)
+ - Other reading links:
+   - [Programming the Internet of Things Exercises (aka PIOT Kanban Board)](https://github.com/orgs/programming-the-iot/projects/5)
+   - [Programming the Internet of Things Book](https://learning.oreilly.com/library/view/programming-the-internet/9781492081401/)
+
+## Usage
+
+See the instructions in [PDT-CFW-01-001](https://github.com/programming-digital-twins/pdt-exercise-tasks/issues/45) for details on building this library and its dependencies.
+
+NOTE: If you're reading [Programming the Internet of Things: An Introduction to Building Integrated, Device to Cloud IoT Solutions](https://learning.oreilly.com/library/view/programming-the-internet/9781492081401), you'll see a partial tie-in with the exercises described in some of the chapters and lab modules exercises. While Programming the IoT exercises are mostly Python and Java, this repository is implemented in C#; it does, however, share some of the same functionality as the Programming the IoT Gateway Device App (GDA), but without the application wrapper and state machine component.
+
+### This repository aligns to exercises in Programming Digital Twins, and partially to Programming the Internet of Things
 
 These components are all written in C#, and have been partially tested using .NET 4.1 on Windows 11. It is intended that this library be built into a dll and then linked into the Digital Twin App (housed in a separate repository).
 
-## How to navigate the directory structure for this repository
+## Organization
 
-### PdtCfwComponents
+### Repository Navigation
+
+#### PdtCfwComponents
 
 This repository is comprised of the following top level paths:
 - [PdtCfwComponents](https://github.com/programming-digital-twins/pdt-cfw-components/tree/alpha/PdtCfwComponents): Contains the following source trees:
@@ -37,7 +62,7 @@ This repository is comprised of the following top level paths:
     - [Prediction](https://github.com/programming-digital-twins/pdt-cfw-components/tree/master/PdtCfwComponents/LabBenchStudios/Src/Main/ProgrammingDigitalTwins/Prediction): Contains a very basic prediction abstracton engine for interacting with LLM's.
     - [Util](https://github.com/programming-digital-twins/pdt-cfw-components/tree/master/PdtCfwComponents/LabBenchStudios/Src/Main/ProgrammingDigitalTwins/Util): Contains basic utility classes.
 
-### PdtCfwComponents.Tests
+#### PdtCfwComponents.Tests
 
 This repository is comprised of the following top level paths:
 - [PdtCfwComponents.Tests](https://github.com/programming-digital-twins/pdt-cfw-components/tree/alpha/PdtCfwComponents.Tests): Contains the following test (source) trees:
@@ -58,15 +83,16 @@ Here are some other files at the top level that are important to review:
 
 NOTE: The directory structure and all files are subject to change based on feedback I receive from readers of my blog and students in my Building Digital Twins class, as well as improvements I find to be helpful for overall repo betterment. Any 'dot' files (those files beginning with a '.', such as [.gitignore](https://github.com/programming-digital-twins/pdt-cfw-components/blob/alpha/.gitignore) are in place to help make development more efficient and will likely undergo significant change and / or replacement and / or removal as needs require.
 
-# Other things to know
+## Other things to know
 
-## Pull requests
+### Pull requests
 
 PR's are disabled while the codebase is being developed.
 
-## Updates
+### Updates
 
-Much of this repository, and in particular unit and integration tests, will continue to evolve, so please check back regularly for potential updates. Please note that API changes can - and likely will - occur at any time.
+Much of this repository, and in particular unit and integration tests, will continue to evolve, so please check back regularly for potential updates.
+Please note that API changes can - and likely will - occur at any time.
 
 # REFERENCES
 
@@ -83,13 +109,9 @@ This repository has external dependencies on other open source projects. I'm gra
 - [NUnit](https://nunit.org/)
   - Reference: Charlie Poole, Rob Prouse. Nunit unit testing framework for .NET languages. (2024) [Online]. Available: https://github.com/nunit.
 - [OllamaSharp](https://github.com/awaescher/OllamaSharp)
-  - Reference: Andreas Wäscher. Provides .NET bindings for the Ollama API. (2025) [Online]. Available: https://github.com/awaescher/OllamaSharp.
+  - Reference: Andreas WÃ¤scher. Provides .NET bindings for the Ollama API. (2025) [Online]. Available: https://github.com/awaescher/OllamaSharp.
 
 NOTE: This list will be updated as others are incorporated.
-
-# FAQ
-
-For typical questions (and answers) to the repositories of the Programming the IoT project, please see the [FAQ](https://github.com/programming-the-iot/book-exercise-tasks/blob/default/FAQ.md).
 
 # IMPORTANT NOTES
 
