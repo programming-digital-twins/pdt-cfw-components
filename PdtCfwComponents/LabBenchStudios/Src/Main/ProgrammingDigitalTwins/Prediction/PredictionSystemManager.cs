@@ -474,17 +474,31 @@ namespace LabBenchStudios.Pdt.Prediction
         /// <returns></returns>
         public bool SavePredictionCache(string sessionID, PredictionSystemQueryCache queryCache)
         {
-            string fileName = FileUtil.CreatePredictionFileName(this.rootPathName, sessionID);
-            string queryMsgs = queryCache.GetAggregatedQueryMessages();
-            string queryResponses = queryCache.GetAggregatedResponseMessages();
+            if (!string.IsNullOrEmpty(sessionID))
+            {
+                if (queryCache != null)
+                {
+                    string fileName = FileUtil.CreatePredictionFileName(this.rootPathName, sessionID);
+                    string queryMsgs = queryCache.GetAggregatedQueryMessages();
+                    string queryResponses = queryCache.GetAggregatedResponseMessages();
 
-            RequestResponseData rrData = new RequestResponseData();
-            rrData.SetSessionID(queryCache.GetSessionID());
-            rrData.SetModelName(queryCache.GetModelName());
-            rrData.SetRequestMsg(queryMsgs);
-            rrData.SetResponseMsg(queryResponses);
+                    RequestResponseData rrData = new RequestResponseData();
+                    rrData.SetSessionID(queryCache.GetSessionID());
+                    rrData.SetModelName(queryCache.GetModelName());
+                    rrData.SetRequestMsg(queryMsgs);
+                    rrData.SetResponseMsg(queryResponses);
 
-            return this.persistenceConnector.StoreData(rrData);
+                    return this.persistenceConnector.StoreData(rrData);
+                } else
+                {
+                    Console.WriteLine($"Query cache for session ID {sessionID} is null. Ignoring save request.");
+                }
+            } else
+            {
+                Console.WriteLine("Invalid session ID. Can't save prediction cache.");
+            }
+
+            return false;
         }
 
         /// <summary>
