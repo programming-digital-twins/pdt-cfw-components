@@ -40,13 +40,26 @@ namespace LabBenchStudios.Pdt.Data
         private DataValueContainer dataValues = new DataValueContainer();
 
         // necessary for JSON serialization / deserialization
+
+        /// <summary>
+        /// 
+        /// </summary>
         public SensorData() : base()
         {
+            this.dataValues.SetPropertyName(base.GetName());
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="deviceID"></param>
+        /// <param name="typeCategoryID"></param>
+        /// <param name="typeID"></param>
         public SensorData(string name, string deviceID, int typeCategoryID, int typeID) :
             base(name, deviceID, typeCategoryID, typeID)
         {
+            this.dataValues.SetPropertyName(base.GetName());
         }
 
         // public methods

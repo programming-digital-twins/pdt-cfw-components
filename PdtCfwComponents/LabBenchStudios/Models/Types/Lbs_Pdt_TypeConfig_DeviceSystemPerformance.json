@@ -27,9 +27,14 @@
       "modelConstraints": {
         "enableConstraints": true,
         "enableDutyCycle": false,
-        "minReading": "0.0",
-        "maxReading": "0.0",
-        "optimalReading": "0.0"
+        "unit": "%",
+        "targetValue": "5.0",
+        "nominalValueDelta": "0.0",
+        "maxValueDelta": "0.0",
+        "rangeNominalFloor": "5.0",
+        "rangeNominalCeiling": "50.0",
+        "rangeMaxFloor": "0.0",
+        "rangeMaxCeiling": "85.0"
       }
     },
     "diskUtil": {
@@ -43,9 +48,14 @@
       "modelConstraints": {
         "enableConstraints": true,
         "enableDutyCycle": false,
-        "minReading": "0.0",
-        "maxReading": "0.0",
-        "optimalReading": "0.0"
+        "unit": "%",
+        "targetValue": "25.0",
+        "nominalValueDelta": "0.0",
+        "maxValueDelta": "0.0",
+        "rangeNominalFloor": "5.0",
+        "rangeNominalCeiling": "35.0",
+        "rangeMaxFloor": "0.1",
+        "rangeMaxCeiling": "75.0"
       }
     },
     "memUtil": {
@@ -59,9 +69,14 @@
       "modelConstraints": {
         "enableConstraints": true,
         "enableDutyCycle": false,
-        "minReading": "0.0",
-        "maxReading": "0.0",
-        "optimalReading": "0.0"
+        "unit": "%",
+        "targetValue": "5.0",
+        "nominalValueDelta": "0.0",
+        "maxValueDelta": "0.0",
+        "rangeNominalFloor": "1.0",
+        "rangeNominalCeiling": "25.0",
+        "rangeMaxFloor": "0.0",
+        "rangeMaxCeiling": "75.0"
       }
     }
   }

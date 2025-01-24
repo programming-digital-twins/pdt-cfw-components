@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 using LabBenchStudios.Pdt.Common;
@@ -173,6 +174,90 @@ namespace LabBenchStudios.Pdt.Model
         }
 
         /// <summary>
+        /// This call uses the shared model ID (DTMI) to apply any loaded
+        /// type config constraints to the passed in DigitalTwinModelState.
+        /// 
+        /// A DigitalTwinModelState has two key ID entries:
+        ///  - The model ID (DTMI) - basically the template ID
+        ///  - The data sync key ('guid') - a unique ID for each instance
+        ///  
+        /// When telemetry is passed to the DigitalTwinModelManager, an
+        /// algorithm generates a data sync key which is used to map
+        /// the data to the appropriate state instance. However, the
+        /// DTMI maps to the model template, which may be shared across
+        /// many instances, with the objective being that a digital twin
+        /// 'type' will represent shared properties across all instances.
+        /// 
+        /// This method will map those properties and constraints, loaded
+        /// from the type config model path, into the model state, as the
+        /// digital twin model representation (DTML) is loaded separately.
+        /// </summary>
+        /// <param name="dtModelState"></param>
+        /// <returns></returns>
+        public bool InitModelConstraints(DigitalTwinModelState dtModelState)
+        {
+            if (dtModelState != null)
+            {
+                string modelIDName = dtModelState.GetModelID();
+                string modelShortName = dtModelState.GetModelShortName();
+
+                // we don't care if the model context is a type configTypeModels or type entry,
+                // as they both have constraints - just grab the constraints from the generic
+                // model context and apply to the state
+                ConfigTypeModelContext modelContext = this.configTypeMgrCache.GetConfigTypeContextFromModelName(modelIDName);
+                ConfigTypeModelConstraints modelContraints = modelContext.GetModelConstraints();
+
+                if (modelContext != null && modelContraints != null)
+                {
+                    if (modelContraints.GetPropertyName().Equals(ConfigConst.NOT_SET))
+                    {
+                        modelContraints.SetPropertyName(modelContext.GetConfigTypeName());
+                    }
+
+                    dtModelState.SetPrimaryModelConstraints(modelContraints);
+
+                    // now handle all properties
+                    List<string> modelPropNames = dtModelState.GetAllModelKeys();
+                    ConfigTypeModelContainer configTypeModels = this.configTypeMgrCache.GetConfigTypeContainer(modelContraints?.GetPropertyName());
+
+                    // if a property has a set of constraints, this loop will find it;
+                    // if constraints are found, apply them to the property
+                    foreach (string propName in modelPropNames)
+                    {
+                        // property name needed to look up the model and config type entries
+                        DigitalTwinProperty dtProp = dtModelState.GetModelProperty(propName);
+                        ConfigTypeModelEntry configTypeEntry = configTypeModels.GetConfigType(propName);
+
+                        if (dtProp != null && configTypeEntry != null)
+                        {
+                            Console.WriteLine($" -> Applying DT model property constraints [model->prop]: {modelShortName}->{propName}");
+
+                            ConfigTypeModelConstraints constraint = configTypeEntry.GetModelConstraints();
+                            dtProp.UpdatePropertyConstraints(constraint);
+                        }
+                    }
+
+                    return true;
+                } else
+                {
+                    Console.WriteLine($"Can't locate model context or constraints for model ID name {modelIDName}. Ignoring model constraint init for DigitalTwinModelState instance.");
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="modelFilePath"></param>
+        /// <returns></returns>
+        public bool IsConfigTypeFilePathConfigured(string modelFilePath)
+        {
+            return this.configTypeFilePaths.Contains(modelFilePath);
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="configTypeFilePathSet"></param>
@@ -245,16 +330,6 @@ namespace LabBenchStudios.Pdt.Model
             return false;
         }
         
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="modelFilePath"></param>
-        /// <returns></returns>
-        public bool IsConfigTypeFilePathConfigured(string modelFilePath)
-        {
-            return this.configTypeFilePaths.Contains(modelFilePath);
-        }
-
         // protected methods
 
 

@@ -1,5 +1,5 @@
 {
-  "typeName": "windTurbineUtility",
+  "typeName": "windTurbine",
   "version": "2024-11-18",
   "description": "Wind Turbine utility category configuration.",
   "displayName": "Wind Turbine Utility Category",
@@ -10,14 +10,22 @@
   "modelConstraints": {
     "enableConstraints": true,
     "enableDutyCycle": true,
-    "dutyCycleSeconds": "60.0",
-    "minDutyCycle": "0.0",
-    "maxDutyCycle": "80.0",
-    "optimalDutyCycle": "60.0"
+    "dutyCycleSeconds": "86400.0",
+    "minDutyCycle": "10.0",
+    "maxDutyCycle": "90.0",
+    "optimalDutyCycle": "50.0",
+    "unit": "TBD",
+    "targetValue": "0.0",
+    "nominalValueDelta": "0.0",
+    "maxValueDelta": "0.0",
+    "rangeNominalFloor": "0.0",
+    "rangeNominalCeiling": "0.0",
+    "rangeMaxFloor": "0.0",
+    "rangeMaxCeiling": "0.0"
   },
   "typeEntries": {
-    "windTurbineBrakeSystemActuator": {
-      "typeName": "windTurbineBrakeSystemActuator",
+    "enableWindTurbine": {
+      "typeName": "enableWindTurbine",
       "description": "Wind turbine brake system actuator type configuration.",
       "displayName": "Wind Turbine Brake System Actuator",
       "modelName": "runWindTurbine",
@@ -29,8 +37,8 @@
         "enableDutyCycle": false
       }
     },
-    "windTurbinePowerOutput": {
-      "typeName": "windTurbinePowerOutput",
+    "outputPower": {
+      "typeName": "outputPower",
       "description": "Wind turbine power output type configuration.",
       "displayName": "Wind Turbine Power Output",
       "modelName": "outputPower",
@@ -40,15 +48,20 @@
       "modelConstraints": {
         "enableConstraints": true,
         "enableDutyCycle": false,
-        "minReading": "0.0",
-        "maxReading": "0.0",
-        "optimalReading": "0.0"
+        "unit": "KW",
+        "targetValue": "2.5",
+        "nominalValueDelta": "0.0",
+        "maxValueDelta": "0.0",
+        "rangeNominalFloor": "1.0",
+        "rangeNominalCeiling": "3.5",
+        "rangeMaxFloor": "0.0",
+        "rangeMaxCeiling": "5.0"
       }
     },
-    "windTurbineGeneratorTemperature": {
-      "typeName": "windTurbineGeneratorTemperature",
-      "description": "Wind turbine generator temperature type configuration.",
-      "displayName": "Wind Turbine Generator Temperature",
+    "generatorTemperature": {
+      "typeName": "generatorTemperature",
+      "description": "Wind turbine operational temperature type configuration.",
+      "displayName": "Wind Turbine Operational Temperature",
       "modelName": "generatorTemperature",
       "resourceName": "{productName}/{groupdID}/{locationID}/{deviceID}/{typeName}",
       "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
@@ -56,29 +69,60 @@
       "modelConstraints": {
         "enableConstraints": true,
         "enableDutyCycle": false,
-        "minReading": "0.0",
-        "maxReading": "0.0",
-        "optimalReading": "0.0"
+        "unit": "C",
+        "targetValue": "15.0",
+        "nominalValueDelta": "0.0",
+        "maxValueDelta": "0.0",
+        "rangeNominalFloor": "0.0",
+        "rangeNominalCeiling": "30.0",
+        "rangeMaxFloor": "-10.0",
+        "rangeMaxCeiling": "40.0"
       }
     },
-    "windTurbineRotationalSpeed": {
-      "typeName": "windTurbineRotationalSpeed",
-      "description": "Wind turbine rotational speed type configuration.",
-      "displayName": "Wind Turbine Rotational Speed",
-      "modelName": "currentRevolutionPerMinute",
+    "thresholdRevolutionPerMinute": {
+      "typeName": "thresholdRevolutionPerMinute",
+      "description": "Wind turbine threshold revolutions per minute type configuration.",
+      "displayName": "Wind Turbine Threshold Revolutions per Minute Speed",
+      "modelName": "thresholdRevolutionPerMinute",
       "resourceName": "{productName}/{groupdID}/{locationID}/{deviceID}/{typeName}",
       "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
       "id": 4303,
       "modelConstraints": {
         "enableConstraints": true,
         "enableDutyCycle": false,
-        "minReading": "0.0",
-        "maxReading": "0.0",
-        "optimalReading": "0.0"
+        "unit": "RPM",
+        "targetValue": "15.0",
+        "nominalValueDelta": "0.0",
+        "maxValueDelta": "0.0",
+        "rangeNominalFloor": "7.0",
+        "rangeNominalCeiling": "20.0",
+        "rangeMaxFloor": "0.0",
+        "rangeMaxCeiling": "25.0"
       }
     },
-    "windTurbineAirSpeed": {
-      "typeName": "windTurbineAirSpeed",
+    "maxRevolutionPerMinute": {
+      "typeName": "maxRevolutionPerMinute",
+      "description": "Wind turbine max revolutions per minute type configuration.",
+      "displayName": "Wind Turbine Max Revolutions per Minute Speed",
+      "modelName": "maxRevolutionPerMinute",
+      "resourceName": "{productName}/{groupdID}/{locationID}/{deviceID}/{typeName}",
+      "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
+      "id": 4303,
+      "modelConstraints": {
+        "enableConstraints": true,
+        "enableDutyCycle": false,
+        "unit": "RPM",
+        "targetValue": "15.0",
+        "nominalValueDelta": "0.0",
+        "maxValueDelta": "0.0",
+        "rangeNominalFloor": "5.0",
+        "rangeNominalCeiling": "20.0",
+        "rangeMaxFloor": "0.0",
+        "rangeMaxCeiling": "30.0"
+      }
+    },
+    "airSpeed": {
+      "typeName": "airSpeed",
       "description": "Wind turbine air speed type configuration.",
       "displayName": "Wind Turbine Air Speed",
       "modelName": "airSpeed",
@@ -88,9 +132,14 @@
       "modelConstraints": {
         "enableConstraints": true,
         "enableDutyCycle": false,
-        "minReading": "0.0",
-        "maxReading": "0.0",
-        "optimalReading": "0.0"
+        "unit": "m/s",
+        "targetValue": "12.5",
+        "nominalValueDelta": "0.0",
+        "maxValueDelta": "0.0",
+        "rangeNominalFloor": "10.0",
+        "rangeNominalCeiling": "15.0",
+        "rangeMaxFloor": "5.0",
+        "rangeMaxCeiling": "20.0"
       }
     }
   }

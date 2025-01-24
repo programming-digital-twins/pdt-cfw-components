@@ -45,9 +45,13 @@ namespace LabBenchStudios.Pdt.Model
     {
         private string resourcePrefix = ConfigConst.PRODUCT_NAME;
 
-        // this is the DTMI for the model (e.g., dtmi:LabBenchStudios.Pdt.{modelName};1)
+        // this is the DTMI for the model (e.g., dtmi:LabBenchStudios:PDT:{modelShortName};1
+        // such as 'dtmi:LabBenchStudios:PDT:windTurbine;1')
         private string modelID = ModelNameUtil.IOT_MODEL_CONTEXT_MODEL_ID;
         private string modelGUID = Guid.NewGuid().ToString();
+
+        // this is the short name for the model (e.g., {modelName} such as 'windTurbine')
+        private string modelShortName = ConfigConst.NOT_SET;
 
         private DigitalTwinModelSyncKey modelSyncKey = null;
         private DigitalTwinDataSyncKey dataSyncKey = null;
@@ -66,6 +70,7 @@ namespace LabBenchStudios.Pdt.Model
         private string modelJson = null;
 
         private DigitalTwinModelState parentState = null;
+        private ConfigTypeModelConstraints modelConstraints = null;
 
         private bool hasParent = false;
         private bool enableIncomingTelemetryProcessing = true;
@@ -196,6 +201,42 @@ namespace LabBenchStudios.Pdt.Model
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="modelIDName"></param>"
+        /// <param name="modelConstraints"></param>
+        /// <returns></returns>
+        public bool ApplyModelConstraints(string modelIDName, ConfigTypeModelConstraints modelConstraints)
+        {
+            if (modelConstraints != null && !string.IsNullOrEmpty(modelIDName))
+            {
+                if (this.modelProperties.ContainsKey(modelIDName))
+                {
+                    Console.WriteLine($"Applying model constraints to {this.modelID} for model entry {modelIDName}.");
+
+                    if (modelConstraints.GetPropertyName().Equals(ConfigConst.NOT_SET))
+                    {
+                        modelConstraints.SetPropertyName(modelIDName);
+                    }
+
+                    DigitalTwinProperty dtProps = this.modelProperties[modelIDName];
+
+                    dtProps.UpdatePropertyConstraints(modelConstraints);
+
+                    return true;
+                } else
+                {
+                    Console.WriteLine($"Can't apply model constraints to {this.modelID} for model entry {modelIDName}. No properties match name.");
+                }
+            } else
+            {
+                Console.WriteLine($"Can't apply model constraints to {this.modelID}. Constraints and / or model ID name are null.");
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <returns></returns>
         public DigitalTwinModelState BuildDataSyncKey()
         {
@@ -247,6 +288,19 @@ namespace LabBenchStudios.Pdt.Model
                 this.modelID = ModelNameUtil.CreateModelID(this.GetModelControllerName());
             } else {
                 this.modelID = ModelNameUtil.CreateModelID(this.controllerID);
+            }
+
+            int begIndex = this.modelID.LastIndexOf(':') + 1; // inclusive, so add 1 to index
+            int endIndex = this.modelID.LastIndexOf(';'); // exclusive, so just use the index as is
+
+            if (begIndex > 0 && endIndex > begIndex)
+            {
+                this.modelShortName = this.modelID.Substring(begIndex, endIndex - begIndex);
+                Console.WriteLine($"Created model short name from ID: {this.modelID} - {this.modelShortName}");
+            } else
+            {
+                // shouldn't happen - unless DTDL is improperly defined but somehow still parsed
+                Console.WriteLine($"Can't create model short name from ID: {this.modelID}. Indeces: {begIndex} to {endIndex}");
             }
 
             this.modelSyncKey = new DigitalTwinModelSyncKey(this.modelID);
@@ -404,6 +458,15 @@ namespace LabBenchStudios.Pdt.Model
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public ConfigTypeModelConstraints GetPrimaryModelConstraints()
+        {
+            return this.modelConstraints;
+        }
+
+        /// <summary>
         /// This string is used to uniquely represent this model's assigned
         /// unique telemetry data. It represents the previous sync key used,
         /// in the case where the connection state is updated.
@@ -475,6 +538,19 @@ namespace LabBenchStudios.Pdt.Model
         public string GetModelGUID()
         {
             return this.modelGUID;
+        }
+
+        /// <summary>
+        /// Returns the short name for this model, which will be the name
+        /// between the last '.' and ';'.
+        /// 
+        /// For instance, if the DTMI is 'dtmi:LabBenchStudios.pdt.windTurbine;1',
+        /// this method will return 'windTurbine'.
+        /// </summary>
+        /// <returns></returns>
+        public string GetModelShortName()
+        {
+            return this.modelShortName;
         }
 
         /// <summary>
@@ -742,6 +818,33 @@ namespace LabBenchStudios.Pdt.Model
             }
 
             return this;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public void SetPrimaryModelConstraints(ConfigTypeModelConstraints modelConstraints)
+        {
+            if (modelConstraints != null)
+            {
+                Console.WriteLine($"Applying model constraints for {this.modelID}.");
+
+                if (this.modelConstraints == null)
+                {
+                    this.modelConstraints = new ConfigTypeModelConstraints();
+                }
+
+                if (this.modelConstraints.GetPropertyName().Equals(ConfigConst.NOT_SET))
+                {
+                    this.modelConstraints.SetPropertyName(this.modelID);
+                }
+
+                this.modelConstraints.UpdateData(modelConstraints);
+            } else
+            {
+                Console.WriteLine($"Can't apply model constraints for {this.modelID}. Null constraint ref. Ignoring.");
+            }
         }
 
         /// <summary>

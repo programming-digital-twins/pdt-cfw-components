@@ -27,9 +27,14 @@
       "modelConstraints": {
         "enableConstraints": true,
         "enableDutyCycle": false,
-        "minReading": "0.0",
-        "maxReading": "0.0",
-        "optimalReading": "0.0"
+        "unit": "%",
+        "targetValue": "45.0",
+        "nominalValueDelta": "0.0",
+        "maxValueDelta": "0.0",
+        "rangeNominalFloor": "30.0",
+        "rangeNominalCeiling": "50.0",
+        "rangeMaxFloor": "20.0",
+        "rangeMaxCeiling": "80.0"
       }
     },
     "barometricPressure": {
@@ -43,9 +48,14 @@
       "modelConstraints": {
         "enableConstraints": true,
         "enableDutyCycle": false,
-        "minReading": "0.0",
-        "maxReading": "0.0",
-        "optimalReading": "0.0"
+        "unit": "mbar",
+        "targetValue": "1010.0",
+        "nominalValueDelta": "0.0",
+        "maxValueDelta": "0.0",
+        "rangeNominalFloor": "990.0",
+        "rangeNominalCeiling": "1020.0",
+        "rangeMaxFloor": "975.0",
+        "rangeMaxCeiling": "1025.0"
       }
     },
     "temperature": {
@@ -59,9 +69,14 @@
       "modelConstraints": {
         "enableConstraints": true,
         "enableDutyCycle": false,
-        "minReading": "0.0",
-        "maxReading": "0.0",
-        "optimalReading": "0.0"
+        "unit": "C",
+        "targetValue": "24.0",
+        "nominalValueDelta": "0.0",
+        "maxValueDelta": "0.0",
+        "rangeNominalFloor": "18.0",
+        "rangeNominalCeiling": "27.0",
+        "rangeMaxFloor": "15.0",
+        "rangeMaxCeiling": "30.0"
       }
     }
   }

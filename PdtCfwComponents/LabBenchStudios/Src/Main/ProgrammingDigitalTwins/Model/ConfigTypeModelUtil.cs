@@ -138,6 +138,8 @@ namespace LabBenchStudios.Pdt.Model
                 Formatting = Formatting.Indented
             });
 
+            data.SetJsonData(jsonData);
+
             return data;
         }
 

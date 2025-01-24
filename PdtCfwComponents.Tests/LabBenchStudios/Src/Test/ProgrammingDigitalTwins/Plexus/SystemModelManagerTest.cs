@@ -95,6 +95,30 @@ namespace LabBenchStudios.Pdt.Test.Plexus
             Console.WriteLine(strBuilder.ToString());
         }
 
+        [Test]
+        public void CreateAndDisplayDigitalTwinModelState()
+        {
+            ModelNameUtil.DtmiControllerEnum controllerID = ModelNameUtil.DtmiControllerEnum.WindTurbine;
+
+            string deviceID = "testDevice001";
+            string locationID = deviceID;
+
+            IotDataContext dataContext =
+                ModelNameUtil.GenerateDataContext(controllerID, deviceID, locationID);
+
+            DigitalTwinModelState dtModelState =
+                this.sysModelManager.CreateDigitalTwinModelState(
+                    dataContext, controllerID, false, (IDataContextEventListener) null);
+
+            ConfigTypeModelContainer container =
+                this.sysModelManager.GetConfigTypeModelManager().GetConfigCategoryByModelName(dtModelState.GetModelID());
+
+            string modelJson = container.GetJsonData();
+
+            Console.WriteLine($"Model info: name ID={dtModelState.GetModelID()}, GUID={dtModelState.GetModelGUID()}, short name={dtModelState.GetModelShortName()}");
+            Console.WriteLine($"Model JSON:\n{modelJson}");
+        }
 
     }
+
 }

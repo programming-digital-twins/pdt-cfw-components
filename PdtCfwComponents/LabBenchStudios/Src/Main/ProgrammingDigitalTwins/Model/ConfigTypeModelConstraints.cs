@@ -22,8 +22,10 @@
  * SOFTWARE.
  */
 
+using System.Collections.Generic;
 using System.Text;
-
+using System.Xml.Linq;
+using LabBenchStudios.Pdt.Data;
 using Newtonsoft.Json;
 
 /// 
@@ -35,12 +37,12 @@ namespace LabBenchStudios.Pdt.Model
     /// 
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
-    public class ConfigTypeModelConstraints
+    public class ConfigTypeModelConstraints : DataValueContainer
     {
-        [JsonProperty]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private bool enableConstraints = false;
 
-        [JsonProperty]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private bool enableDutyCycle = false;
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
@@ -54,15 +56,6 @@ namespace LabBenchStudios.Pdt.Model
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private float optimalDutyCycle = 50.0f;
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        private float minReading = 0.0f;
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        private float maxReading = 100.0f;
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        private float optimalReading = 50.0f;
 
 
         // necessary for JSON serialization / deserialization
@@ -84,6 +77,37 @@ namespace LabBenchStudios.Pdt.Model
         public bool AreConstraintsEnabled()
         {
             return this.enableConstraints;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public Dictionary<string, string> GetAllDataAsTable()
+        {
+            Dictionary<string, string> dataTable = new Dictionary<string, string>();
+
+            dataTable.Add("propName", base.GetPropertyName());
+            dataTable.Add("dutyCycleSeconds", this.dutyCycleSeconds.ToString());
+            dataTable.Add("unit", base.GetUnit());
+            dataTable.Add("maxReading", base.GetMaxReading().ToString());
+            dataTable.Add("minReading", base.GetMinReading().ToString());
+            dataTable.Add("targetVal", base.GetTargetValue().ToString());
+            dataTable.Add("nomDutyCycle", this.optimalDutyCycle.ToString());
+            dataTable.Add("minDutyCycle", this.minDutyCycle.ToString());
+            dataTable.Add("maxDutyCycle", this.maxDutyCycle.ToString());
+            dataTable.Add("rangeNomCeiling", base.GetRangeNominalCeiling().ToString());
+            dataTable.Add("rangeNomFloor", base.GetRangeNominalFloor().ToString());
+            dataTable.Add("rangeMaxCeil", base.GetRangeMaxCeiling().ToString());
+            dataTable.Add("rangeMaxFloor", base.GetRangeMaxFloor().ToString());
+            dataTable.Add("maxCeilCrossings", base.GetMaxCeilingCrossings().ToString());
+            dataTable.Add("maxFloorCrossings", base.GetMaxFloorCrossings().ToString());
+            dataTable.Add("maxDeltaCrossings", base.GetMaxDeltaCrossings().ToString());
+            dataTable.Add("nomDeltaVal", base.GetNominalDeltaValue().ToString());
+            dataTable.Add("maxDeltaVal", base.GetMaxDeltaValue().ToString());
+            dataTable.Add("maxMeasuredDeltaVal", base.GetMaxMeasuredDeltaValue().ToString());
+
+            return dataTable;
         }
 
         /// <summary>
@@ -120,33 +144,6 @@ namespace LabBenchStudios.Pdt.Model
         public float GetOptimalDutyCycle()
         {
             return this.optimalDutyCycle;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public float GetMinReading()
-        {
-            return this.minReading;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public float GetMaxReading()
-        {
-            return this.maxReading;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public float GetOptimalReading()
-        {
-            return this.optimalReading;
         }
 
         /// <summary>
@@ -232,28 +229,20 @@ namespace LabBenchStudios.Pdt.Model
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="val"></param>
-        public void SetMinReading(float val)
+        /// <param name="constraints"></param>
+        public void UpdateData(ConfigTypeModelConstraints constraints)
         {
-            this.minReading = val;
-        }
+            if (constraints != null)
+            {
+                base.UpdateData((DataValueContainer) constraints);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="val"></param>
-        public void SetMaxReading(float val)
-        {
-            this.maxReading = val;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="val"></param>
-        public void SetOptimalReading(float val)
-        {
-            this.optimalReading = val;
+                this.enableConstraints = constraints.AreConstraintsEnabled();
+                this.enableDutyCycle = constraints.IsDutyCycleEnabled();
+                this.dutyCycleSeconds = constraints.GetDutyCycleSeconds();
+                this.minDutyCycle = constraints.GetMinDutyCycle();
+                this.maxDutyCycle = constraints.GetMaxDutyCycle();
+                this.optimalDutyCycle = constraints.GetOptimalDutyCycle();
+            }
         }
 
         /// <summary>
@@ -262,7 +251,7 @@ namespace LabBenchStudios.Pdt.Model
         /// <returns></returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder(base.ToString());
 
             sb.Append(",enableConstraints=").Append(this.enableConstraints);
             sb.Append(",enableDutyCycle=").Append(this.enableDutyCycle);
@@ -270,9 +259,6 @@ namespace LabBenchStudios.Pdt.Model
             sb.Append(",minDutyCycle=").Append(this.minDutyCycle);
             sb.Append(",maxDutyCycle=").Append(this.maxDutyCycle);
             sb.Append(",optimalDutyCycle=").Append(this.optimalDutyCycle);
-            sb.Append(",minReading=").Append(this.minReading);
-            sb.Append(",maxReading=").Append(this.maxReading);
-            sb.Append(",optimalReading=").Append(this.optimalReading);
 
             return sb.ToString();
         }

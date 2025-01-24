@@ -60,8 +60,6 @@ namespace LabBenchStudios.Pdt.Plexus
         // the prediction system manager
         PredictionSystemManager predictionSystemManager = null;
 
-        HashSet<string> coreDigitalTwinModelPathSet = null;
-        HashSet<string> customDigitalTwinModelPathSet = null;
         HashSet<string> digitalTwinModelPathSet = null;
         HashSet<string> configTypeModelPathSet = null;
         HashSet<string> deviceIDSet = null;
@@ -130,6 +128,7 @@ namespace LabBenchStudios.Pdt.Plexus
 
             if (this.digitalTwinModelPathSet.Count > 0)
             {
+                // this call will update the model manager's path(s) and reload all models at that / those path(s)
                 success = this.digitalTwinModelManager.UpdateModelFilePaths(this.digitalTwinModelPathSet);
 
                 if (success)
@@ -140,8 +139,7 @@ namespace LabBenchStudios.Pdt.Plexus
                     Console.WriteLine($"Failed to (re)build all digital twin models from existing file paths. Cached DTMI URI's: {this.digitalTwinModelManager.GetAllDtmiValues()}");
 
                     Exception e = new Exception();
-                    Console.WriteLine(e.Message);
-                    Console.WriteLine(e.StackTrace);
+                    Console.WriteLine($"Error stack trace: {e.StackTrace}");
                 }
             } else
             {
@@ -149,6 +147,7 @@ namespace LabBenchStudios.Pdt.Plexus
             }
 
             if (this.configTypeModelPathSet.Count > 0) {
+                // this call will update the config type manager's path(s) and reload all models at that / those path(s)
                 success = this.configTypeModelManager.UpdateConfigTypeFilePaths(this.configTypeModelPathSet);
 
                 if (success)
@@ -159,8 +158,7 @@ namespace LabBenchStudios.Pdt.Plexus
                     Console.WriteLine($"Failed to (re)build all digital twin models from existing file paths. Cached DTMI URI's: {this.configTypeModelManager.GetLoadedAndMappedModelNames()}");
 
                     Exception e = new Exception();
-                    Console.WriteLine(e.Message);
-                    Console.WriteLine(e.StackTrace);
+                    Console.WriteLine($"Error stack trace: {e.StackTrace}");
                 }
             } else
             {
@@ -168,6 +166,110 @@ namespace LabBenchStudios.Pdt.Plexus
             }
 
             return success;
+        }
+        
+        /// <summary>
+        /// Creates a DigitalTwinModelState using a custom mapping name.
+        /// 
+        /// This allows the caller to specify a customized config type model
+        /// with mapping key to a custom (or pre-defined) DTMI reference.
+        /// 
+        /// It will attempt to load all mapping constraints for the named
+        /// model to the newly instanced DigitalTwinModelState, while also
+        /// registering the state object with the DigitalTwinModelManager.
+        /// 
+        /// This call uses both the ConfigTypeModelManager and DigitalTwinModelManager
+        /// to accomplish these tasks.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="customName"></param>
+        /// <param name="useGuidInInstanceKey"></param>
+        /// <param name="listener"></param>
+        /// <returns></returns>
+        public DigitalTwinModelState CreateDigitalTwinModelState(
+            IotDataContext context, string customName,
+            bool useGuidInInstanceKey, IDataContextEventListener listener)
+        {
+            DigitalTwinModelState dtModelState = null;
+
+            if (context != null && ! string.IsNullOrEmpty(customName))
+            {
+                // create the model state
+                dtModelState =
+                    this.digitalTwinModelManager.CreateModelState(
+                        context.GetDeviceID(),
+                        context.GetLocationID(),
+                        context.GetTypeCategoryID(),
+                        context.GetTypeID(),
+                        useGuidInInstanceKey,
+                        customName,
+                        listener);
+
+                // link the model to its constraints
+                if (this.configTypeModelManager.InitModelConstraints(dtModelState))
+                {
+                    Console.WriteLine($"Created new DT Model State with constraint links: {dtModelState?.GetModelID()}.");
+                } else
+                {
+                    Console.WriteLine($"Failed to apply constraint links to DT Model State: {dtModelState?.GetModelID()}.");
+                }
+            } else
+            {
+                Console.WriteLine($"Invalid parameters. Can't create DigitalTwinModelState. Ignoring.");
+            }
+
+            return dtModelState;
+        }
+
+        /// <summary>
+        /// Creates a DigitalTwinModelState using a pre-defined mapping name,
+        /// which is referenced via an existing ModelNameUitl.DtmiControllerEnum type.
+        /// 
+        /// It will attempt to load all mapping constraints for the named
+        /// model to the newly instanced DigitalTwinModelState, while also
+        /// registering the state object with the DigitalTwinModelManager.
+        /// 
+        /// This call uses both the ConfigTypeModelManager and DigitalTwinModelManager
+        /// to accomplish these tasks.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="dtmiControllerType"></param>
+        /// <param name="useGuidInInstanceKey"></param>
+        /// <param name="listener"></param>
+        /// <returns></returns>
+        public DigitalTwinModelState CreateDigitalTwinModelState(
+            IotDataContext context, ModelNameUtil.DtmiControllerEnum dtmiControllerType,
+            bool useGuidInInstanceKey, IDataContextEventListener listener)
+        {
+            DigitalTwinModelState dtModelState = null;
+
+            if (context != null)
+            {
+                // create the model state
+                dtModelState =
+                    this.digitalTwinModelManager.CreateModelState(
+                        context.GetDeviceID(),
+                        context.GetLocationID(),
+                        context.GetTypeCategoryID(),
+                        context.GetTypeID(),
+                        useGuidInInstanceKey,
+                        dtmiControllerType,
+                        listener);
+
+                // link the model to its constraints
+                if (this.configTypeModelManager.InitModelConstraints(dtModelState))
+                {
+                    Console.WriteLine($"Created new DT Model State with constraint links: {dtModelState?.GetModelID()}.");
+                } else
+                {
+                    Console.WriteLine($"Failed to apply constraint links to DT Model State: {dtModelState?.GetModelID()}.");
+                }
+            } else
+            {
+                Console.WriteLine($"Invalid parameters. Can't create DigitalTwinModelState. Ignoring.");
+            }
+
+            return dtModelState;
         }
 
         /// <summary>

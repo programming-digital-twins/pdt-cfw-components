@@ -17,8 +17,16 @@
       "dataContainerType": "LabBenchStudios.Pdt.Data.ActuatorData",
       "id": 1001,
       "modelConstraints": {
-        "enableConstraints": false,
-        "enableDutyCycle": false
+        "enableConstraints": true,
+        "enableDutyCycle": false,
+        "unit": "C",
+        "targetValue": "24.0",
+        "nominalValueDelta": "0.0",
+        "maxValueDelta": "0.0",
+        "rangeNominalFloor": "18.0",
+        "rangeNominalCeiling": "27.0",
+        "rangeMaxFloor": "15.0",
+        "rangeMaxCeiling": "30.0"
       }
     },
     "targetHumidity": {
@@ -30,8 +38,16 @@
       "dataContainerType": "LabBenchStudios.Pdt.Data.ActuatorData",
       "id": 1002,
       "modelConstraints": {
-        "enableConstraints": false,
-        "enableDutyCycle": false
+        "enableConstraints": true,
+        "enableDutyCycle": false,
+        "unit": "%",
+        "targetValue": "45.0",
+        "nominalValueDelta": "0.0",
+        "maxValueDelta": "0.0",
+        "rangeNominalFloor": "30.0",
+        "rangeNominalCeiling": "50.0",
+        "rangeMaxFloor": "20.0",
+        "rangeMaxCeiling": "80.0"
       }
     }
   }

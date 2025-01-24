@@ -48,6 +48,9 @@ namespace LabBenchStudios.Pdt.Model
         [JsonProperty]
         private Dictionary<string, ConfigTypeModelEntry> typeEntries = new Dictionary<string, ConfigTypeModelEntry>();
 
+        // not serialized
+        private string jsonData = "";
+
         // necessary for JSON serialization / deserialization
 
         /// <summary>
@@ -137,6 +140,15 @@ namespace LabBenchStudios.Pdt.Model
         /// 
         /// </summary>
         /// <returns></returns>
+        public string GetJsonData()
+        {
+            return this.jsonData;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public string GetVersion()
         {
             return this.version;
@@ -167,6 +179,18 @@ namespace LabBenchStudios.Pdt.Model
         public void SetConfigTypeMaxId(int id)
         {
             this.maxId = id;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="jsonData"></param>
+        public void SetJsonData(string jsonData)
+        {
+            if (! string.IsNullOrEmpty(jsonData))
+            {
+                this.jsonData = jsonData;
+            }
         }
 
         /// <summary>
