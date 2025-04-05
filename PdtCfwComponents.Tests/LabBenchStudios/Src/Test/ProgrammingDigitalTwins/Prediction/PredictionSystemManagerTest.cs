@@ -32,7 +32,9 @@ namespace LabBenchStudios.Pdt.Test.Prediction
     public class PredictionSystemManagerTest
     {
         private string sessionID = "Pred_SysMgr_Test_001";
-        private string serverUri = "http://192.168.4.105:11434";
+
+        // assumes use of Ollama running locally (localhost)
+        private string serverUri = "http://localhost:11434";
 
         private IPredictionModelConnector aiClient = null;
 

@@ -28,6 +28,7 @@ namespace LabBenchStudios.Pdt.Test.Connection
 {
     public class MqttClientConnectorTest
     {
+        // assumes use of MQTT broker running locally (localhost)
         private string hostName = "localhost";
         private int hostPort = 1883;
 

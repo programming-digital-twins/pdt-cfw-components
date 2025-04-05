@@ -1,0 +1,104 @@
+{
+  "typeName": "itemProductionWorkcell",
+  "version": "2024-11-18",
+  "description": "Factory item production workcell category configuration.",
+  "displayName": "Factory Item Production Workcell Category",
+  "modelName": "dtmi:LabBenchStudios:PDT:itemProductionWorkcell;1",
+  "id": 6300,
+  "minId": 6301,
+  "maxId": 6399,
+  "modelConstraints": {
+    "enableConstraints": true,
+    "enableDutyCycle": true,
+    "dutyCycleSeconds": "86400.0",
+    "minDutyCycle": "10.0",
+    "maxDutyCycle": "90.0",
+    "optimalDutyCycle": "50.0",
+    "unit": "TBD",
+    "targetValue": "0.0",
+    "nominalValueDelta": "0.0",
+    "maxValueDelta": "0.0",
+    "rangeNominalFloor": "0.0",
+    "rangeNominalCeiling": "0.0",
+    "rangeMaxFloor": "0.0",
+    "rangeMaxCeiling": "0.0"
+  },
+  "typeEntries": {
+    "enableProduction": {
+      "typeName": "enableProduction",
+      "description": "Workcell enable production actuator type configuration.",
+      "displayName": "Workcell Enable Production Actuator",
+      "modelName": "enableProduction",
+      "resourceName": "{productName}/{groupdID}/{locationID}/{deviceID}/{typeName}",
+      "dataContainerType": "LabBenchStudios.Pdt.Data.ActuatorData",
+      "id": 6320,
+      "modelConstraints": {
+        "enableConstraints": false,
+        "enableDutyCycle": false
+      }
+    },
+    "powerDraw": {
+      "typeName": "powerDraw",
+      "description": "Workcell power draw type configuration.",
+      "displayName": "Workcell Power Draw",
+      "modelName": "powerDraw",
+      "resourceName": "{productName}/{groupdID}/{locationID}/{deviceID}/{typeName}",
+      "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
+      "id": 6301,
+      "modelConstraints": {
+        "enableConstraints": true,
+        "enableDutyCycle": false,
+        "unit": "KW",
+        "targetValue": "2.5",
+        "nominalValueDelta": "0.250",
+        "maxValueDelta": "0.500",
+        "rangeNominalFloor": "2.0",
+        "rangeNominalCeiling": "3.0",
+        "rangeMaxFloor": "1.0",
+        "rangeMaxCeiling": "5.0"
+      }
+    },
+    "ambientTemperature": {
+      "typeName": "ambientTemperature",
+      "description": "Workcell operational ambient temperature type configuration.",
+      "displayName": "Workcell Operational Ambient Temperature",
+      "modelName": "ambientTemperature",
+      "resourceName": "{productName}/{groupdID}/{locationID}/{deviceID}/{typeName}",
+      "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
+      "id": 6302,
+      "modelConstraints": {
+        "enableConstraints": true,
+        "enableDutyCycle": false,
+        "unit": "C",
+        "targetValue": "20.0",
+        "nominalValueDelta": "0.0",
+        "maxValueDelta": "0.0",
+        "rangeNominalFloor": "18.0",
+        "rangeNominalCeiling": "22.0",
+        "rangeMaxFloor": "5.0",
+        "rangeMaxCeiling": "35.0"
+      }
+    },
+    "itemsProducedPerMinute": {
+      "typeName": "itemsProducedPerMinute",
+      "description": "Wind turbine threshold revolutions per minute type configuration.",
+      "displayName": "Wind Turbine Threshold Revolutions per Minute Speed",
+      "modelName": "itemsProducedPerMinute",
+      "resourceName": "{productName}/{groupdID}/{locationID}/{deviceID}/{typeName}",
+      "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
+      "id": 6303,
+      "modelConstraints": {
+        "enableConstraints": true,
+        "enableDutyCycle": false,
+        "unit": "RPM",
+        "targetValue": "12.0",
+        "nominalValueDelta": "1.0",
+        "maxValueDelta": "1.0",
+        "rangeNominalFloor": "10.0",
+        "rangeNominalCeiling": "50.0",
+        "rangeMaxFloor": "0.0",
+        "rangeMaxCeiling": "60.0"
+      }
+    }
+  }
+}

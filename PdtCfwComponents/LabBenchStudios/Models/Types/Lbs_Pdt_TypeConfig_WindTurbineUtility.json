@@ -107,7 +107,7 @@
       "modelName": "maxRevolutionPerMinute",
       "resourceName": "{productName}/{groupdID}/{locationID}/{deviceID}/{typeName}",
       "dataContainerType": "LabBenchStudios.Pdt.Data.SensorData",
-      "id": 4303,
+      "id": 4310,
       "modelConstraints": {
         "enableConstraints": true,
         "enableDutyCycle": false,
