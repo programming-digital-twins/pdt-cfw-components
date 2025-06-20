@@ -25,7 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-
+using System.Text;
 using LabBenchStudios.Pdt.Common;
 using LabBenchStudios.Pdt.Data;
 using LabBenchStudios.Pdt.Historian;
@@ -46,7 +46,7 @@ namespace LabBenchStudios.Pdt.Plexus
         private bool useDefaultFilePaths = true;
 
         // useful for passing event messages and debugging
-        private ISystemStatusEventListener eventListener = null;
+        private ISystemStatusEventListener sysStatusEventListener = null;
 
         // the DTDL model manager
         DigitalTwinModelManager digitalTwinModelManager = null;
@@ -78,6 +78,11 @@ namespace LabBenchStudios.Pdt.Plexus
             this.digitalTwinModelPathSet = new HashSet<string>();
             this.configTypeModelPathSet = new HashSet<string>();
             this.deviceIDSet = new HashSet<string>();
+
+            if (this.useDefaultFilePaths)
+            {
+                this.AddDefaultFilePaths();
+            }
         }
 
         // public methods
@@ -380,6 +385,15 @@ namespace LabBenchStudios.Pdt.Plexus
         /// <summary>
         /// 
         /// </summary>
+        /// <returns></returns>
+        public ISystemStatusEventListener GetSystemStatusEventListener()
+        {
+            return this.sysStatusEventListener;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
         public bool HandleIncomingTelemetry(IotDataContext data)
@@ -465,7 +479,7 @@ namespace LabBenchStudios.Pdt.Plexus
         {
             if (listener != null)
             {
-                this.eventListener = listener;
+                this.sysStatusEventListener = listener;
 
                 this.digitalTwinModelManager.SetSystemStatusEventListener(listener);
             }
@@ -484,6 +498,20 @@ namespace LabBenchStudios.Pdt.Plexus
         }
 
         // private methods
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void AddDefaultFilePaths()
+        {
+            StringBuilder sbModelsPathPrefix = new StringBuilder();
+            sbModelsPathPrefix.Append("..").Append(Path.PathSeparator).Append("Models").Append(Path.PathSeparator);
+
+            String modelsPathPrefix = sbModelsPathPrefix.ToString();
+
+            this.AddConfigTypeModelSearchPath(modelsPathPrefix + "Types");
+            this.AddDigitalTwinModelSearchPath(modelsPathPrefix + "Dtdl");
+        }
 
         /// <summary>
         /// Stores the data context's device ID in the local device ID set
