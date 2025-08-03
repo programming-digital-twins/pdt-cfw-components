@@ -43,14 +43,14 @@
 
 	<ItemGroup>
 		<PackageReference Include="DTDLParser" Version="1.0.52" />
-		<PackageReference Include="InfluxDB.Client" Version="4.16.0" />
 		<PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net481" Version="1.0.3">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="MQTTnet" Version="4.3.6.1152" />
-		<PackageReference Include="MQTTnet.Extensions.ManagedClient" Version="4.3.6.1152" />
+		<PackageReference Include="MQTTnet" Version="4.3.7.1207" />
+		<PackageReference Include="MQTTnet.Extensions.ManagedClient" Version="4.3.7.1207" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="System.Text.Json" Version="9.0.0" />
 	</ItemGroup>
 
 </Project>
