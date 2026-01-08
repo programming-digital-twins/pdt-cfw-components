@@ -35,19 +35,19 @@ namespace LabBenchStudios.Pdt.Model
         //////////
         // 
         // Types (for compatibility with IotDataContext using consts from ConfigConst).
-        //  why? this ensures an appropriate, but VERY simple, mapping of ID's so
-        //  any commands sent from within the Twin Model can be effectively parsed
-        //  and interpreted by the recipient system (e.g., the Edge Device App - EDA)
+        // why? this ensures an appropriate, but VERY simple, mapping of ID's so
+        // any commands sent from within the Twin Model can be effectively parsed
+        // and interpreted by the recipient system (e.g., the Edge Device App - EDA)
         //
-        //  in the future, these types are expected to be synchronized - the approach
-        //  indicated here is simply to facilitate backwards compatibility
+        // In the future, these types are expected to be synchronized - the approach
+        // indicated here is simply to facilitate backwards compatibility
         //
-        //  note: a Humidifier will have sensing and actuation capabilities; however,
-        //  the actual mapping of received telemetry (sensor data) and 'to be sent'
-        //  actuation commands will be handled within IotModelContext, which is the
-        //  base class for all model types
+        // Note: a Humidifier will have sensing and actuation capabilities; however,
+        // the actual mapping of received telemetry (sensor data) and 'to be sent'
+        // actuation commands will be handled within IotModelContext, which is the
+        // base class for all model types
         //
-        //  the consts indicated in this section simply facilitate the mapping
+        // The consts indicated in this section simply facilitate the mapping
         //
         public const int HUMIDIFIER_DEVICE_TYPE = ConfigConst.HUMIDIFIER_ACTUATOR_TYPE;
         public const int THERMOSTAT_DEVICE_TYPE = ConfigConst.HVAC_ACTUATOR_TYPE;
@@ -139,15 +139,15 @@ namespace LabBenchStudios.Pdt.Model
         //////////
         //
         // DTDL model ID's - these are dynamically generated on class load
-        //  the objective is to ensure consistency in naming and versioning
-        //  while allocating appropriate static readonly identifiers
-        //  for use within the library and across other dependents
+        // the objective is to ensure consistency in naming and versioning
+        // while allocating appropriate static readonly identifiers
+        // for use within the library and across other dependents
         //
-        //  e.g., the DTA can look up a property within the model
-        //  using a DTML parsing library and one of the naming costs
+        // e.g., the DTA can look up a property within the model
+        // using a DTML parsing library and one of the naming costs
         //
-        //  these consts are not expected to change, although the
-        //  static readonly values may change from release to release
+        // These consts are not expected to change, although the
+        // static readonly values may change from release to release
         //
         // Example:
         //  readonly string identifier: IOT_MODEL_CONTEXT_MODEL_ID
@@ -173,6 +173,9 @@ namespace LabBenchStudios.Pdt.Model
         public static readonly string PRODUCT_NAME_PLACEHOLDER = "PRODUCT_NAME";
         public static readonly string MODEL_NAME_PLACEHOLDER = "MODEL_NAME";
 
+        /// <summary>
+        /// Definitions of the DTMI controller labels as an enum.
+        /// </summary>
         public enum DtmiControllerEnum
         {
             Barometer,
@@ -187,6 +190,12 @@ namespace LabBenchStudios.Pdt.Model
             Custom
         }
 
+        /// <summary>
+        /// Returns the DTML model file name based on the given controller enum
+        /// label.
+        /// </summary>
+        /// <param name="controllerID"></param>
+        /// <returns></returns>
         public static string GetModelFileName(DtmiControllerEnum controllerID)
         {
             string modelFileName = BASE_IOT_MODEL_CONTEXT_DTDL_MODEL;
@@ -228,7 +237,10 @@ namespace LabBenchStudios.Pdt.Model
         }
 
         /// <summary>
-        /// 
+        /// Generates the data synchronization key used for connecting incoming
+        /// telemetry with internally stored model instances within the digital
+        /// twin. This will NOT be globally unique, as the useGuid flag will
+        /// default to false.
         /// </summary>
         /// <param name="data"></param>
         public static string GenerateDataSyncKey(IotDataContext data)
@@ -237,7 +249,9 @@ namespace LabBenchStudios.Pdt.Model
         }
 
         /// <summary>
-        /// 
+        /// Generates the data synchronization key used for connecting incoming
+        /// telemetry with internally stored model instances within the digital
+        /// twin. This will be globally unique when the useGuid flag is true.
         /// </summary>
         /// <param name="data"></param>
         /// <param name="useGuid"></param>
@@ -255,7 +269,10 @@ namespace LabBenchStudios.Pdt.Model
         }
 
         /// <summary>
-        /// 
+        /// Generates the data synchronization key used for connecting incoming
+        /// telemetry with internally stored model instances within the digital
+        /// twin. This will NOT be globally unique, as the useGuid flag will
+        /// default to false.
         /// </summary>
         /// <param name="name"></param>
         /// <param name="deviceID"></param>
@@ -267,7 +284,10 @@ namespace LabBenchStudios.Pdt.Model
         }
 
         /// <summary>
-        /// 
+        /// Generates the data synchronization key used for connecting incoming
+        /// telemetry with internally stored model instances within the digital
+        /// twin. This will NOT be globally unique, as the useGuid flag will
+        /// default to false.
         /// </summary>
         /// <param name="name"></param>
         /// <param name="groupID"></param>
@@ -280,7 +300,9 @@ namespace LabBenchStudios.Pdt.Model
         }
 
         /// <summary>
-        /// 
+        /// Generates the data synchronization key used for connecting incoming
+        /// telemetry with internally stored model instances within the digital
+        /// twin. This will be globally unique when the useGuid flag is true.
         /// </summary>
         /// <param name="name"></param>
         /// <param name="groupID"></param>
@@ -377,11 +399,23 @@ namespace LabBenchStudios.Pdt.Model
             return sb.ToString();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="controllerID"></param>
+        /// <returns></returns>
         public static string CreateModelID(DtmiControllerEnum controllerID)
         {
             return CreateModelID(controllerID, ModelNameUtil.DTMI_CURRENT_VERSION);
         }
 
+        /// <summary>
+        /// Generates a new model ID using the given DTMI controller enum label
+        /// and DTML version. This will assume the default DTMI prefix.
+        /// </summary>
+        /// <param name="controllerID"></param>
+        /// <param name="version"></param>
+        /// <returns></returns>
         public static string CreateModelID(DtmiControllerEnum controllerID, int version)
         {
             string modelName = IOT_MODEL_CONTEXT_NAME;
@@ -434,11 +468,26 @@ namespace LabBenchStudios.Pdt.Model
             return ModelNameUtil.CreateModelID(ModelNameUtil.DTMI_PREFIX, modelName, version);
         }
 
+        /// <summary>
+        /// Generates a new model ID using the given model name and DTML version.
+        /// This will assume the default DTMI prefix.
+        /// </summary>
+        /// <param name="modelName"></param>
+        /// <param name="version"></param>
+        /// <returns></returns>
         public static string CreateModelID(string modelName, int version)
         {
             return ModelNameUtil.CreateModelID(ModelNameUtil.DTMI_PREFIX, modelName, version);
         }
 
+        /// <summary>
+        /// Generates a new model ID using the given DTMI prefix, model name,
+        /// and DTML version.
+        /// </summary>
+        /// <param name="dtmiPrefix"></param>
+        /// <param name="modelName"></param>
+        /// <param name="version"></param>
+        /// <returns></returns>
         public static string CreateModelID(string dtmiPrefix, string modelName, int version)
         {
             if (! string.IsNullOrEmpty(dtmiPrefix) &&
@@ -454,6 +503,11 @@ namespace LabBenchStudios.Pdt.Model
             return ModelNameUtil.IOT_MODEL_CONTEXT_MODEL_ID;
         }
 
+        /// <summary>
+        /// Extracts the model name from the given DTMI URI.
+        /// </summary>
+        /// <param name="dtmiURI"></param>
+        /// <returns></returns>
         public static string GetNameFromDtmiURI(string dtmiURI)
         {
             if (dtmiURI != null)
@@ -469,14 +523,19 @@ namespace LabBenchStudios.Pdt.Model
             return ModelNameUtil.IOT_MODEL_CONTEXT_NAME;
         }
 
+        /// <summary>
+        /// Returns the model ID as a string from the given type ID integer.
+        /// </summary>
+        /// <param name="typeID"></param>
+        /// <returns></returns>
         public static string GetModelID(int typeID)
         {
             string modelID = null;
 
-            // set the DTMI (modelID) - only for those that may be deserialized from the EDA
+            // Set the DTMI (modelID) - only for those that may be deserialized from the EDA
             // all others will keep the default of ModelConst.IOT_MODEL_CONTEXT_MODEL_ID
             //
-            // for now, this will suffice as a simple 'mapping' table, and also mitigate
+            // For now, this will suffice as a simple 'mapping' table, and also mitigate
             // any need to update the EDA with knowledge of DTMI naming conventions
             switch (typeID)
             {
